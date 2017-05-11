@@ -8,6 +8,7 @@ class TaskView extends Component {
     this.taskName = props.taskName;
 
     this.task = this.model.tasksByName[this.taskName];
+    console.log("TaskView constructor")
   }
 
   render() {
