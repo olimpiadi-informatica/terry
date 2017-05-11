@@ -7,15 +7,15 @@
 
 import traceback
 
-import gevent
 import gevent.wsgi
 
 from gevent import monkey
-from werkzeug.exceptions import (BadRequest, HTTPException,
-                                 InternalServerError, NotFound)
+from werkzeug.exceptions import (HTTPException, InternalServerError, NotFound)
 from werkzeug.routing import Map, Rule, RequestRedirect
-from werkzeug.wrappers import Request, Response
+from werkzeug.wrappers import Request
 from werkzeug.wsgi import responder
+
+from handlers.ping_handler import PingHandler
 
 monkey.patch_all()
 
@@ -23,7 +23,17 @@ monkey.patch_all()
 class Server:
     """ Main server """
     def __init__(self):
-        self.router = Map([])
+        self.handlers = {
+            "ping": PingHandler()
+        }
+
+        # The router tries to match the rules, the endpoint MUST be a string with this format
+        #     CONTROLLER#ACTION
+        # Where CONTROLLER is an handler registered in self.handlers and ACTION is a valid
+        # method of that handler
+        self.router = Map([
+            Rule("/ping", methods=["GET"], endpoint="ping#ping")
+        ])
 
     @responder
     def __call__(self, environ, start_response):
@@ -42,9 +52,12 @@ class Server:
         except HTTPException:
             return NotFound()
 
-        # TODO process the request
+        request = Request(environ)
+        controller, action = endpoint.split("#")
 
+        res = self.handlers[controller].handle(action, args, request)
+        return res
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     server = gevent.wsgi.WSGIServer(('', 1234), Server())
     gevent.spawn(server.serve_forever).join()

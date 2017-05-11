@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+
+from .base_handler import BaseHandler
+
+from werkzeug.exceptions import BadRequest
+
+class PingHandler(BaseHandler):
+
+    def ping(self, route_args, request):
+        if "ping" not in request.args:
+            self.raise_exc(BadRequest, "MISSING_PARAMETER", "Missing parameter: ping")
+        return { "pong": request.args["ping"] }
