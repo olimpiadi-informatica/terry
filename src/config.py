@@ -12,7 +12,9 @@ class Config:
 
     loaded = False
     default_values = {
-        "logfile": "log.sqlite3"
+        "logfile": "log.sqlite3",
+        "address": "",
+        "port": 1234
     }
 
     @staticmethod

@@ -97,3 +97,6 @@ ENV/
 
 # Jetbrains products
 .idea/
+
+# Database file
+*.sqlite3

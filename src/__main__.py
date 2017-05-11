@@ -6,9 +6,12 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
 from .server import Server
-
+from .config import Config
+from .logger import Logger
 
 def main():
+    Config.set_config_file("config/config.yaml")
+    Logger.connect_to_database()
     server = Server()
     server.run()
 
