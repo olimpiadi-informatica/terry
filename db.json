@@ -1,0 +1,42 @@
+{
+  "generate_input": {},
+  "contest": {
+    "has_started": true,
+    "tasks": [
+      {
+        "name": "poldo",
+        "title": "La dieta di Poldo"
+      },
+      {
+        "name": "lino",
+        "title": "Lino il giornalaio"
+      },
+      {
+        "name": "mojito",
+        "title": "Gioca con Mojito"
+      }
+    ]
+  },
+  "input": [
+    {
+      "id": 42,
+      "user": "user1234",
+      "task": "poldo"
+    },
+    {
+      "user": "user5678",
+      "task": "lino",
+      "id": 44
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

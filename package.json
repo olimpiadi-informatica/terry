@@ -1,0 +1,7 @@
+{
+  "name": "territoriali-frontend",
+  "dependencies": {},
+  "devDependencies": {
+    "json-server": "^0.10.0"
+  }
+}
