@@ -10,6 +10,7 @@ gevent and sqlite3 play nice together."""
 
 import gevent.hub
 import sqlite3
+from sqlite3 import *
 from functools import wraps
 
 def _using_gevent_tp(method):
