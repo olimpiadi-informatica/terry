@@ -15,7 +15,7 @@ from werkzeug.routing import Map, Rule, RequestRedirect
 from werkzeug.wrappers import Request
 from werkzeug.wsgi import responder
 
-from handlers.ping_handler import PingHandler
+from .handlers.ping_handler import PingHandler
 
 monkey.patch_all()
 
@@ -58,6 +58,7 @@ class Server:
         res = self.handlers[controller].handle(action, args, request)
         return res
 
-if __name__ == "__main__":
-    server = gevent.wsgi.WSGIServer(('', 1234), Server())
-    gevent.spawn(server.serve_forever).join()
+    def run(self):
+        # TODO config the config from the config
+        server = gevent.wsgi.WSGIServer(('', 1234), self)
+        gevent.spawn(server.serve_forever).join()

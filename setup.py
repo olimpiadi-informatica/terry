@@ -28,6 +28,8 @@ setup(
         "Topic :: Scientific/Engineering"
     ],
     entry_points={
-        "console_scripts": []
+        "console_scripts": [
+            "terr-server = src.__main__:main"
+        ]
     }
 )
