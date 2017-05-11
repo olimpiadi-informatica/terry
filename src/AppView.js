@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import LoginView from './LoginView'
 import ContestView from './ContestView';
 import Model from './Model';
 
@@ -13,9 +14,11 @@ class AppView extends Component {
 
   render() {
     if (this.model.isContestLoaded()) {
-      return (
-        <ContestView model={this.model}/>
-      );
+      if(this.model.isLoggedIn()) {
+        return <ContestView model={this.model}/>;
+      } else {
+        return <LoginView model={this.model}/>;
+      }
     } else {
       return (
         <div>Loading...</div>

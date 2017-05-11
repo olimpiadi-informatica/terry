@@ -17,6 +17,13 @@
       }
     ]
   },
+  "user": [
+    {
+      "id": "secret",
+      "token": "secret",
+      "name": "John Doe"
+    }
+  ],
   "input": [
     {
       "id": 42,
