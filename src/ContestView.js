@@ -56,17 +56,6 @@ class ContestView extends Component {
   }
 
   render() {
-
-    const taskRoutes = [];
-
-    for (let t of this.model.contest.tasks) {
-      taskRoutes.push(
-        <Route path={'/:taskName'} render={ ({match}) =>
-            <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>
-        }/>
-      );
-    }
-
     return (
       <div>
         { this.getNavBar() }
@@ -74,11 +63,13 @@ class ContestView extends Component {
           <div className="row">
             { this.getSideBar() }
             <main className="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-              { taskRoutes }
+              <Route path={'/:taskName'} render={ ({match}) =>
+                  <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>
+              }/>
             </main>
           </div>
         </div>
-
+      </div>
     );
   }
 }
