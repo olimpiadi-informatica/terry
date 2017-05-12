@@ -14,6 +14,7 @@ class Config:
     loaded = False
     default_values = {
         "logfile": "log.sqlite3",
+        "db": "db.sqlite3",
         "address": "",
         "port": 1234
     }
