@@ -55,6 +55,7 @@ class Schema:
                 size INTEGER NOT NULL,
                 FOREIGN KEY (token) REFERENCES users(token),
                 FOREIGN KEY (task) REFERENCES tasks(name),
+                UNIQUE (id, token, task),
                 UNIQUE (token, task, attempt)
             );
 
@@ -64,7 +65,8 @@ class Schema:
                 date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 path TEXT NOT NULL,
                 size INTEGER DEFAULT NULL,
-                FOREIGN KEY (input) REFERENCES inputs(id)
+                FOREIGN KEY (input) REFERENCES inputs(id),
+                UNIQUE (id, input)
             );
 
             CREATE TABLE outputs (
@@ -74,7 +76,8 @@ class Schema:
                 path TEXT NOT NULL,
                 size INTEGER DEFAULT NULL,
                 result TEXT DEFAULT NULL,
-                FOREIGN KEY (input) REFERENCES inputs(id)
+                FOREIGN KEY (input) REFERENCES inputs(id),
+                UNIQUE (id, input)
             );
 
             CREATE TABLE submissions (
@@ -95,7 +98,7 @@ class Schema:
                 score REAL NOT NULL DEFAULT 0,
                 current_attempt INTEGER DEFAULT NULL,
                 FOREIGN KEY (token) REFERENCES users(token),
-                FOREIGN KEY (task) REFERENCES tasks(id),
+                FOREIGN KEY (task) REFERENCES tasks(name),
                 FOREIGN KEY (token, task, current_attempt) REFERENCES inputs(token, task, attempt),
                 CHECK (score >= 0)
             );
@@ -107,5 +110,16 @@ class Schema:
                 WHERE tasks.id = NEW.task
                   AND tasks.max_score < NEW.score;
             END;
+        """,
+        """
+            INSERT INTO "tasks" VALUES('poldo','La dieta di Poldo','/statement/poldo.pdf',42);
+            INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0,NULL);
+            INSERT INTO "inputs" VALUES('inputid','tokenid','poldo',1,12345,'/input/inputid/poldo_input_1.txt',42);
+            INSERT INTO "metadata" VALUES('start_time','1');
+            INSERT INTO "outputs" VALUES('outputid','inputid',123456,'/output/outputid/poldo.out',NULL,NULL);
+            INSERT INTO "sources" VALUES('sourceid','inputid',12345678,'/source/sourceid/soluzione_buggata.cpp',NULL);
+            INSERT INTO "submissions" ("id","token","task","input","output","source") VALUES
+                ('sub', 'tokenid', 'poldo', 'inputid', 'outputid', 'sourceid');
+            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 41, NULL);
         """
     ]
