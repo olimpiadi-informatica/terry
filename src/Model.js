@@ -1,5 +1,4 @@
 import axios from 'axios';
-import 'promise.prototype.finally';
 import wait from './utils';
 import Submission from './Submission';
 
