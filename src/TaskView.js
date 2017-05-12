@@ -39,7 +39,6 @@ class TaskView extends Component {
           borderRadius               : '4px',
           outline                    : 'none',
           padding                    : '20px',
-
         }
       };
 
@@ -130,7 +129,6 @@ class TaskView extends Component {
     return (
       <div>
         <h1>{this.getTask().title}</h1>
-        <p>Previous attempts: {userTask.previous_attempts}</p>
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
         <SubmissionListView model={this.model} taskName={this.taskName}></SubmissionListView>

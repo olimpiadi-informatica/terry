@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import { NavLink, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 import 'bootstrap/dist/css/bootstrap.css';
 import './style.css';
@@ -15,10 +15,10 @@ class ContestView extends Component {
 
   taskNavItem(item, i) {
     return (
-          <li key={i} className="nav-item">
-            <Link to={ "/" + item.name } activeClassName="nav-link active">{ item.name }</Link>
-          </li>
-        );
+      <li key={i} className="nav-item">
+        <NavLink to={ "/" + item.name } className="nav-link tasklist-item" activeClassName="active">{ item.name }</NavLink>
+      </li>
+    );
   }
 
   getSideBar() {
