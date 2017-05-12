@@ -4,6 +4,7 @@ import SubmissionView from './SubmissionView';
 import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
+import Modal from 'react-modal';
 
 class TaskView extends Component {
   constructor(props) {
@@ -15,6 +16,33 @@ class TaskView extends Component {
     console.log("TaskView constructor");
 
     this.loadTaskStatement();
+
+    this.modalStyle = {
+        overlay : {
+          position          : 'fixed',
+          top               : 0,
+          left              : 0,
+          right             : 0,
+          bottom            : 0,
+          backgroundColor   : 'rgba(42, 42, 42, 0.75)'
+        },
+        content : {
+          position                   : 'absolute',
+          top                        : '64px',
+          left                       : '40px',
+          right                      : '40px',
+          bottom                     : '64px',
+          border                     : '1px solid #ccc',
+          background                 : '#fff',
+          overflow                   : 'auto',
+          WebkitOverflowScrolling    : 'touch',
+          borderRadius               : '4px',
+          outline                    : 'none',
+          padding                    : '20px',
+
+        }
+      };
+
   }
 
   loadTaskStatement() {
@@ -79,7 +107,14 @@ class TaskView extends Component {
 
   renderSubmissionDialog() {
     if(this.currentSubmission === undefined) return null;
-    return <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />;
+    return (
+    <Modal
+      isOpen={true}
+      style={this.modalStyle}
+      contentLabel="No Overlay Click Modal">
+      <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />
+      </Modal>
+    );
   }
 
   renderTaskStatement() {

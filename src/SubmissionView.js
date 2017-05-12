@@ -100,7 +100,8 @@ class SubmissionView extends Component {
     } else {
       return <div>
         <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
-        <button onClick={() => this.close()}>Okay.</button>
+        <br/>
+        <button  className="btn btn-primary top-button" role="button" onClick={() => this.close()}>Close</button>
       </div>
     }
   }
