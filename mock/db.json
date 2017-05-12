@@ -21,13 +21,27 @@
     {
       "id": "secret",
       "token": "secret",
-      "name": "John Doe"
+      "name": "John Doe",
+      "tasks": {
+        "poldo": {
+          "previous_attempts": 0,
+          "current_input": {
+            "id": "42"
+          }
+        },
+        "lino": {
+          "previous_attempts": 4
+        },
+        "mojito": {
+          "previous_attempts": 2
+        }
+      }
     }
   ],
   "input": [
     {
-      "id": 42,
-      "user": "user1234",
+      "id": "42",
+      "user": "secret",
       "task": "poldo"
     },
     {

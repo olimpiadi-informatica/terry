@@ -30,15 +30,28 @@ class Model {
       return this.user !== undefined;
     }
 
+    loadUser(token) {
+      return axios.get('http://localhost:3001/user/' + token);
+    }
+
+    refreshUser() {
+      return this.loadUser(this.userToken)
+        .then((response) => {
+          this.user = response.data;
+          this.view.forceUpdate();
+        });
+    }
+
     attemptLogin(token) {
       delete this.user;
       this.loginAttempt = {};
 
       this.view.forceUpdate();
 
-      return axios.get('http://localhost:3001/user/' + token)
+      return this.loadUser(token)
         .then((response) => {
           this.user = response.data;
+          this.userToken = token;
           this.view.forceUpdate();
         })
         .catch((response) => {
