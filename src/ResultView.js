@@ -10,24 +10,26 @@ class ResultView extends Component {
 
   renderWarning(warning) {
     return (
-      <p><samp>{warning.code}</samp> {warning.severity}: {warning.message}</p>
+      <div className={ "alert alert-"+warning.severity } role="alert">
+        <samp>{warning.code}</samp> {warning.severity}: {warning.message}
+      </div>
     )
   }
 
   renderCase(testCase) {
     return (
-      <p>Case <samp>{testCase.id}</samp> <samp>{testCase.status}</samp> {testCase.message}</p>
+      <p>Case <samp>{testCase.id}</samp> <b>{testCase.status}</b> {testCase.message}</p>
     )
   }
 
   render() {
     return (
       <div>
-        <ul>{
+        <ul className="list-unstyled">{
             this.result.warnings.map((w, i) => <li key={i}>{ this.renderWarning(w) }</li>)
         }</ul>
-        <ul>{
-            this.result.cases.map((c, i) => <li key={i}>{ this.renderCase(c) }</li>)
+        <ul className="list-group">{
+            this.result.cases.map((c, i) => <li key={i} className="list-group-item">{ this.renderCase(c) }</li>)
         }</ul>
       </div>
     );
