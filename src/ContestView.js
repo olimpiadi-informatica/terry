@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 import 'bootstrap/dist/css/bootstrap.css';
+import './style.css';
+
+var FontAwesome = require('react-fontawesome');
 
 class ContestView extends Component {
   constructor(props) {
@@ -30,6 +33,10 @@ class ContestView extends Component {
     return (
       <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
+          <li className="nav-item title">
+            <h3>Task</h3>
+          </li>
+          <li className="divider-vertical"></li>
           { this.model.contest.tasks.map(this.taskNavItem.bind(this)) }
         </ul>
       </nav>
@@ -39,7 +46,7 @@ class ContestView extends Component {
   getNavBar()
   {
     return (
-      <nav className="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+      <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
         <a className="navbar-brand" href="#">Terry</a>
         <div className="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul className="navbar-nav mr-auto">
@@ -50,6 +57,14 @@ class ContestView extends Component {
               <a className="nav-link" href="#">Settings</a>
             </li>
           </ul>
+
+          <ul className="nav navbar-nav navbar-right">
+            <li className="nav-item">
+              <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
+                <FontAwesome name='rocket' /> Log Out</a>
+            </li>
+          </ul>
+
         </div>
       </nav>
     );
@@ -57,12 +72,12 @@ class ContestView extends Component {
 
   render() {
     return (
-      <div>
+      <div >
         { this.getNavBar() }
         <div className="container-fluid">
           <div className="row">
             { this.getSideBar() }
-            <main className="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+            <main className="col-sm-9 col-md-10">
               <Route path={'/:taskName'} render={ ({match}) =>
                   <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>
               }/>

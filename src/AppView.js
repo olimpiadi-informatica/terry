@@ -22,7 +22,6 @@ class AppView extends Component {
     return (
       <div>
         <ContestView model={this.model}/>
-        <button onClick={() => this.model.logout()}>Log out</button>
       </div>
     );
   }
