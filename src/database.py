@@ -11,6 +11,7 @@ from .logger import Logger
 
 from . import gevent_sqlite3 as sqlite3
 
+
 class Database:
     connected = False
 
@@ -53,54 +54,57 @@ class Database:
     @staticmethod
     def dictify(c, all=False):
         if all is False:
-            return dict(zip(next(zip(c.description)), c.fetchone()))
+            res = c.fetchone()
+            if res is None:
+                return None
+            return dict(zip(next(zip(*c.description)), res))
         else:
-            descr = next(zip(c.description))
+            descr = next(zip(*c.description))
             return [dict(zip(descr, row)) for row in c.fetchall()]
 
     @staticmethod
     def get_tasks():
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM tasks""")
-        return dictify(c)
+        return Database.dictify(c, all=True)
 
     @staticmethod
     def get_user(token):
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM users WHERE token=:token""", {"token": token})
-        return dictify(c)
+        return Database.dictify(c)
 
     @staticmethod
     def get_input(id=None, token=None, task=None, attempt=None):
         if (id is None) and (token is None or task is None or attempt is None):
-            raise InvalidArgumentException("Invalid parameters to get_input")
+            raise ValueError("Invalid parameters to get_input")
         c = Database.conn.cursor()
-        if id is None:
+        if id is not None:
             c.execute("""SELECT * FROM inputs WHERE id=:id""", {"id": id})
         else:
             c.execute("""
                 SELECT * FROM inputs
                 WHERE token=:token AND task=:task AND attempt=:attempt
             """, {"token": token, "task": task, "attempt": attempt})
-        return dictify(c)
+        return Database.dictify(c)
 
     @staticmethod
     def get_source(id):
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM sources WHERE id=:id""", {"id": id})
-        return dictify(c)
+        return Database.dictify(c)
 
     @staticmethod
     def get_output(id):
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM outputs WHERE id=:id""", {"id": id})
-        return dictify(c)
+        return Database.dictify(c)
 
     @staticmethod
     def get_submission(id):
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM submissions WHERE id=:id""", {"id": id})
-        return dictify(c)
+        return Database.dictify(c)
 
     @staticmethod
     def get_submissions(token, task):
@@ -113,7 +117,7 @@ class Database:
             WHERE token=:token AND task=:task
             ORDER BY inputs.attempt ASC
         """, {"token": token, "task": task})
-        return dictify(c, all=True)
+        return Database.dictify(c, all=True)
 
     @staticmethod
     def get_user_task(token, task):
@@ -122,7 +126,7 @@ class Database:
             SELECT * FROM user_tasks
             WHERE token=:token AND task=:task
         """, {"token": token, "task": task})
-        return dictify(c)
+        return Database.dictify(c)
 
     @staticmethod
     def has_ip(token, ip):
@@ -139,7 +143,7 @@ class Database:
         c.execute("""
             SELECT * FROM ips WHERE token=:token
         """, {"token": token})
-        return dictify(c, all=True)
+        return Database.dictify(c, all=True)
 
     @staticmethod
     def add_user(token, name, surname):

@@ -43,7 +43,9 @@ class Server:
         # method of that handler
         self.router = Map([
             Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
-            Rule("/demo", methods=["POST"], endpoint="upload#demo")
+            Rule("/input/<id>", methods=["GET"], endpoint="info#get_input"),
+            Rule("/output/<id>", methods=["GET"], endpoint="info#get_output"),
+            Rule("/source/<id>", methods=["GET"], endpoint="info#source_input")
         ])
 
     @responder

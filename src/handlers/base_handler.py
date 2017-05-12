@@ -49,9 +49,12 @@ class BaseHandler:
         try:
             data = self.__getattribute__(endpoint)(route_args, request)
             response = Response()
-            response.code = 200
-            response.mimetype = "application/json"
-            response.data = json.dumps(data)
+            if data is not None:
+                response.code = 200
+                response.mimetype = "application/json"
+                response.data = json.dumps(data)
+            else:
+                response.code = 204
             return response
         except HTTPException as e:
             return e

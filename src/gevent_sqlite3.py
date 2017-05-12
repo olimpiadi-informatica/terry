@@ -15,12 +15,13 @@ from functools import wraps
 
 import sys
 
+
 def _using_gevent_tp(method):
     def wrapped_method(*args, **kwargs):
         try:
             return method(*args, **kwargs), None
         except:
-            return None, sys.exc_info()[0]
+            return None, sys.exc_info()[1]
 
     @wraps(method, ['__name__', '__doc__'])
     def apply(*args, **kwargs):
