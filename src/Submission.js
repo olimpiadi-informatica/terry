@@ -1,4 +1,4 @@
-import wait from './utils';
+import axios from 'axios';
 import Source from './Source';
 import Output from './Output';
 
@@ -10,6 +10,7 @@ class Submission {
 
     setSource(file) {
       this.source = new Source(file, this);
+      this.source.upload();
       this.model.view.forceUpdate();
     }
 
@@ -27,7 +28,7 @@ class Submission {
 
     setOutput(file) {
       this.output = new Output(file, this);
-      this.output.process();
+      this.output.upload();
       this.model.view.forceUpdate();
     }
 
@@ -44,61 +45,27 @@ class Submission {
     }
 
     canSubmit() {
-      return this.hasOutput() && this.getOutput().isValidForSubmit();
+      return this.hasOutput() && this.getOutput().isValidForSubmit()
+        && this.hasSource() && this.getSource().isValidForSubmit();
     }
 
     submit() {
       if(!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
 
-      // TODO: dummy
-      wait(500).then(() => {
-        this.submission = {
-          id: "sub1",
-          input: this.input,
-          source: {
-            id: "src1",
-          },
-          output : {
-            id: "o1",
-          },
-          result: {
-            warnings: [
-              {
-                code: "partial_parse",
-                severity: "warning",
-                message: "Attention: the submitted file could not be fully processed.",
-              },
-            ],
-            cases: [
-              {
-                id: "1",
-                status: "correct",
-                message: "Output correct.",
-              },
-              {
-                id: "5",
-                status: "wrong",
-                message: "Your output is 5, but the cycle (4 6 8 1) has shorter length (4) !",
-              },
-              {
-                id: "4",
-                status: "wrong",
-                message: "Your output is 3, but there is no cycle of length 3.",
-              },
-            ]
-          },
-        };
+      const data = new FormData();
 
-        const userTask = this.model.user.tasks[this.input.task]
-        userTask.previous_attempts += 1;
-        delete userTask.current_input;
+      data.append("input", this.input.id);
+      data.append("source", this.getSource().data.id);
+      data.append("output", this.getOutput().data.id);
 
+      return axios.post("http://localhost:1234/submit", data).then((response) => {
+        this.data = response.data;
         this.model.view.forceUpdate();
-      })
+      });
     }
 
     isSubmitted() {
-      return this.submission !== undefined;
+      return this.data !== undefined;
     }
 }
 

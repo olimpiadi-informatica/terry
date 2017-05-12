@@ -1,5 +1,4 @@
 import axios from 'axios';
-import wait from './utils';
 import Submission from './Submission';
 import SubmissionList from './SubmissionList';
 import Cookies from 'universal-cookie';
@@ -14,7 +13,7 @@ class Model {
       delete this.contest;
       delete this.tasksByName;
 
-      return axios.get('http://localhost:3001/contest')
+      return axios.get('http://localhost:1234/contest')
         .then((response) => {
           this.contest = response.data;
           this.tasksByName = {};
@@ -31,7 +30,7 @@ class Model {
     }
 
     loadUser(token) {
-      return axios.get('http://localhost:3001/user/' + token);
+      return axios.get('http://localhost:1234/user/' + token);
     }
 
     isLoggedIn() {
@@ -89,26 +88,16 @@ class Model {
     getCurrentInput(taskName) {
       const data = this.user.tasks[taskName].current_input;
       if(data === undefined) return;
-      return Object.assign({
-        task: taskName
-      }, data);
+      return data;
     }
 
     generateInput(taskName) {
-      // TODO: dummy
-      return wait(500).then(() => {
-        return this.refreshUser();
-      }).then(() => {
-        this.user.tasks[taskName].current_input = {
-          id: "i2",
-        };
-        this.view.forceUpdate();
-      })
+      const data = new FormData();
 
-      return axios.post('http://localhost:3001/generate_input', {
-        user : this.user.id,
-        task : taskName
-      }).then((response) => {
+      data.append("user", this.user.token);
+      data.append("task", taskName);
+
+      return axios.post('http://localhost:3001/generate_input', data).then((response) => {
         return this.refreshUser();
       });
     }

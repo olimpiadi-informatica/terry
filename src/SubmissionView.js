@@ -37,6 +37,12 @@ class SubmissionView extends Component {
     this.onClose();
   }
 
+  renderSourceStatus(output) {
+    if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
+
+    return (<div><br/><h5>Okay.</h5></div>)
+  }
+
   renderSourceSelector() {
     if(!this.submission.hasSource()) {
       return (
@@ -57,6 +63,7 @@ class SubmissionView extends Component {
             <button key="present" type="button" className="btn btn-secondary" role="button" onClick={() => {this.resetSource(); return false;}} >
               <span aria-hidden="true" className="fa fa-trash"></span> Change source
             </button>
+            { this.renderSourceStatus(source) }
           </div>
         </div>
       );
@@ -64,11 +71,9 @@ class SubmissionView extends Component {
   }
 
   renderOutputStatus(output) {
-    if(!output.isCreated()) return (<div><br/><h5>Creating...</h5></div>);
-    if(!output.isUploaded()) return (<div><br/><h5>Uploading...</h5></div>);
-    if(!output.isValidated()) return (<div><br/><h5>Validating...</h5></div>);
+    if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><ResultView model={this.model} result={output.metadata.validation_result}></ResultView></div>)
+    return (<div><br/><ResultView model={this.model} result={output.data.validation_result}></ResultView></div>)
   }
 
   renderOutputSelector() {
