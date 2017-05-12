@@ -70,6 +70,7 @@ class SubmissionView extends Component {
           <div>{ this.renderSourceSelector() }</div>
           <div>{ this.renderOutputSelector() }</div>
           <div><input type="submit" value="Submit"></input></div>
+          <input type="reset" onClick={() => {this.close(); return false;}} value="Cancel"></input>
         </form>
       );
     } else {
