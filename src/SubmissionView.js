@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from "moment";
+import ResultView from './ResultView';
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -58,9 +59,7 @@ class SubmissionView extends Component {
     if(!output.isUploaded()) return <p>Uploading...</p>;
     if(!output.isValidated()) return <p>Validating...</p>;
 
-    return (
-      <p>TODO: validation result :)</p>
-    )
+    return <ResultView model={this.model} result={output.metadata.validation_result}></ResultView>;
   }
 
   renderOutputSelector() {
