@@ -51,7 +51,11 @@ class Connection(sqlite3.Connection):
 
     def __init__(self, *args, **kwargs):
         # Workaround gevent's thread id monkey patching
-        kwargs['check_same_thread'] = False
+
+        if len(args) > 1: # In PyPy args contains check_same_thread in args at the 5th parameter
+            args = tuple(list(args[:4]) + [False] + list(args[5:]))
+        else:
+            kwargs['check_same_thread'] = False
         super(Connection, self).__init__(*args, **kwargs)
 
     def cursor(self):

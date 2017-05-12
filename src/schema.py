@@ -121,7 +121,8 @@ class Schema:
             INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0,NULL);
             INSERT INTO "inputs" VALUES('inputid','tokenid','poldo',1,12345,'/input/inputid/poldo_input_1.txt',42);
             INSERT INTO "inputs" VALUES('inputid2','tokenid','poldo',2,12345,'/input/inputid/poldo_input_2.txt',324);
-            INSERT INTO "metadata" VALUES('start_time','1');
+            INSERT INTO "metadata" VALUES('start_time','1494621126');
+            INSERT INTO "metadata" VALUES('contest_duration','864000');
             INSERT INTO "outputs" VALUES('outputid','inputid',123456,'/output/outputid/poldo.out',NULL,NULL);
             INSERT INTO "sources" VALUES('sourceid','inputid',12345678,'/source/sourceid/soluzione_buggata.cpp',NULL);
             INSERT INTO "submissions" ("id","token","task","input","output","source") VALUES
