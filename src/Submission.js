@@ -1,4 +1,3 @@
-import axios from 'axios';
 import wait from './utils';
 import Source from './Source';
 import Output from './Output';

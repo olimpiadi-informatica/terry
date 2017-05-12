@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 function wait(ms) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {

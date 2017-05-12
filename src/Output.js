@@ -1,4 +1,3 @@
-import axios from 'axios';
 import wait from './utils';
 
 class Output {
@@ -21,7 +20,7 @@ class Output {
       return wait(500).then(() => {
         this.metadata = {
           id: "o1",
-        },
+        };
         this.model.view.forceUpdate();
       });
     }

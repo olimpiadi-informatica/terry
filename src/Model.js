@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 class Model {
     constructor(props) {
       this.view = props.view;
-      this.cookies = new Cookies;
+      this.cookies = new Cookies();
     }
 
     loadContest() {
