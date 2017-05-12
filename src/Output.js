@@ -47,6 +47,7 @@ class Output {
         this.metadata = {
           id: "o1",
           validation_result: {
+            valid_for_submit: true,
             warnings: [
               {
                 code: "partial_parse",
@@ -79,6 +80,10 @@ class Output {
 
     isValidated() {
       return this.isCreated() && this.metadata.validation_result !== undefined;
+    }
+
+    isValidForSubmit() {
+      return this.isValidated() && this.metadata.validation_result.valid_for_submit
     }
 
 }

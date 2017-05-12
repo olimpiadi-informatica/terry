@@ -43,6 +43,10 @@ class Submission {
       delete this.output;
     }
 
+    canSubmit() {
+      return this.hasOutput() && this.getOutput().isValidForSubmit();
+    }
+
     submit() {
       // TODO: dummy
       wait(500).then(() => {
