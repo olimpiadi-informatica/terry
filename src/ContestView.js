@@ -79,7 +79,6 @@ class ContestView extends Component {
           </div>
         </div>
 
-      </div>
     );
   }
 }
