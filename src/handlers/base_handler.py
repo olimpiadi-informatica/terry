@@ -7,7 +7,8 @@
 
 import json
 
-from werkzeug.exceptions import HTTPException
+from json import JSONDecodeError
+from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
 
 
@@ -54,3 +55,14 @@ class BaseHandler:
             return response
         except HTTPException as e:
             return e
+
+    def parse_body(self, request):
+        """
+        Parse the body part of the request in JSON
+        :param request: The request to be parsed
+        :return: A dict with the content of the body
+        """
+        try:
+            return json.loads(request.data)
+        except JSONDecodeError as e:
+            self.raise_exc(BadRequest, "MALFORMED_BODY", "The provided json is invalid: %s" % str(e))

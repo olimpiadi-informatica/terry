@@ -19,8 +19,10 @@ from werkzeug.wsgi import responder
 from .config import Config
 from .logger import Logger
 
-from .handlers.ping_handler import PingHandler
 from .handlers.contest_handler import ContestHandler
+from .handlers.info_handler import InfoHandler
+from .handlers.upload_handler import UploadHandler
+from .handlers.admin_handler import AdminHandler
 
 monkey.patch_all()
 
@@ -29,8 +31,10 @@ class Server:
     """ Main server """
     def __init__(self):
         self.handlers = {
-            "ping": PingHandler(),
-            "contest": ContestHandler()
+            "contest": ContestHandler(),
+            "info": InfoHandler(),
+            "upload": UploadHandler(),
+            "admin": AdminHandler()
         }
 
         # The router tries to match the rules, the endpoint MUST be a string with this format
@@ -38,8 +42,8 @@ class Server:
         # Where CONTROLLER is an handler registered in self.handlers and ACTION is a valid
         # method of that handler
         self.router = Map([
-            Rule("/ping", methods=["GET"], endpoint="ping#ping"),
-            Rule("/contest", methods=["GET"], endpoint="contest#get")
+            Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
+            Rule("/demo", methods=["POST"], endpoint="upload#demo")
         ])
 
     @responder

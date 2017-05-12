@@ -8,5 +8,7 @@
 from .base_handler import BaseHandler
 
 
-class ContestHandler(BaseHandler):
-    pass
+class InfoHandler(BaseHandler):
+
+    def get_contest(self, route_args, request):
+        return { "has_started": False }

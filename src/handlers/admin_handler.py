@@ -7,11 +7,6 @@
 
 from .base_handler import BaseHandler
 
-from werkzeug.exceptions import BadRequest
 
-class PingHandler(BaseHandler):
-
-    def ping(self, route_args, request):
-        if "ping" not in request.args:
-            self.raise_exc(BadRequest, "MISSING_PARAMETER", "Missing parameter: ping")
-        return { "pong": request.args["ping"] }
+class AdminHandler(BaseHandler):
+    pass

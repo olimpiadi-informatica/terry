@@ -8,5 +8,5 @@
 from .base_handler import BaseHandler
 
 
-class ContestHandler(BaseHandler):
+class UploadHandler(BaseHandler):
     pass
