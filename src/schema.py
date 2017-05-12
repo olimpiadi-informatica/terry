@@ -64,7 +64,7 @@ class Schema:
                 input TEXT NOT NULL,
                 date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 path TEXT NOT NULL,
-                size INTEGER DEFAULT NULL,
+                size INTEGER NOT NULL,
                 FOREIGN KEY (input) REFERENCES inputs(id),
                 UNIQUE (id, input)
             );
@@ -74,8 +74,8 @@ class Schema:
                 input TEXT NOT NULL,
                 date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 path TEXT NOT NULL,
-                size INTEGER DEFAULT NULL,
-                result TEXT DEFAULT NULL,
+                size INTEGER NOT NULL,
+                result TEXT NOT NULL,
                 FOREIGN KEY (input) REFERENCES inputs(id),
                 UNIQUE (id, input)
             );
@@ -87,9 +87,11 @@ class Schema:
                 input TEXT UNIQUE NOT NULL,
                 output TEXT NOT NULL,
                 source TEXT NOT NULL,
+                score REAL NOT NULL,
                 FOREIGN KEY (input, token, task) REFERENCES inputs(id, token, task),
                 FOREIGN KEY (output, input) REFERENCES outputs(id, input),
-                FOREIGN KEY (source, input) REFERENCES sources(id, input)
+                FOREIGN KEY (source, input) REFERENCES sources(id, input),
+                CHECK (score >= 0)
             );
 
             CREATE TABLE user_tasks (

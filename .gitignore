@@ -100,3 +100,6 @@ ENV/
 
 # Database file
 *.sqlite3
+
+# File store
+files/

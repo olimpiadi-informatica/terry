@@ -76,6 +76,8 @@ class InfoHandler(BaseHandler):
     def get_user(self, route_args, request):
         token = route_args["token"]
 
+        # TODO: register the ip address of the contestant
+
         user = Database.get_user(token)
         if user is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")

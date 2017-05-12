@@ -16,7 +16,8 @@ class Config:
         "logfile": "log.sqlite3",
         "db": "db.sqlite3",
         "address": "",
-        "port": 1234
+        "port": 1234,
+        "storedir": "./files/"
     }
 
     @staticmethod

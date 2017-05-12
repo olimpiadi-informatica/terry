@@ -5,3 +5,6 @@ port: 1234
 # Databases
 logfile: log.sqlite3
 db: db.sqlite3
+
+# Store dir for files
+storedir: ./files/

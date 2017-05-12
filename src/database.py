@@ -114,6 +114,7 @@ class Database:
         c.execute("""
             SELECT
                 submissions.id AS id, submissions.token AS token, submissions.task AS task,
+                submissions.score AS score,
                 inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
                 inputs.path AS input_path, inputs.size AS input_size,
                 outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
@@ -134,6 +135,7 @@ class Database:
         c.execute("""
             SELECT
                 submissions.id AS id, submissions.token AS token, submissions.task AS task,
+                submissions.score AS score,
                 inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
                 inputs.path AS input_path, inputs.size AS input_size,
                 outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
@@ -251,50 +253,30 @@ class Database:
         })
 
     @staticmethod
-    def add_source(id, input, path, autocommit=True):
+    def add_source(id, input, path, size, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT INTO sources (id, input, path)
-            VALUES (:id, :input, :path)
-        """, {"id": id, "input": input, "path": path})
+            INSERT INTO sources (id, input, path, size)
+            VALUES (:id, :input, :path, :size)
+        """, {"id": id, "input": input, "path": path, "size": size})
 
     @staticmethod
-    def add_output(id, input, path, autocommit=True):
+    def add_output(id, input, path, size, result, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT INTO outputs (id, input, path)
-            VALUES (:id, :input, :path)
-        """, {"id": id, "input": input, "path": path})
+            INSERT INTO outputs (id, input, path, size, result)
+            VALUES (:id, :input, :path, :size, :result)
+        """, {"id": id, "input": input, "path": path,
+              "size": size, "result": result})
 
     @staticmethod
-    def record_source_upload(id, size, autocommit=True):
-        return 1 == Database.do_write(autocommit, """
-            UPDATE sources SET size = :size
-            WHERE id = :id
-        """, {"id": id, "size": size})
-
-    @staticmethod
-    def record_output_upload(id, size, autocommit=True):
-        return 1 == Database.do_write(autocommit, """
-            UPDATE outputs SET size = :size
-            WHERE id = :id
-        """, {"id": id, "size": size})
-
-    @staticmethod
-    def record_output_result(id, result, autocommit=True):
-        return 1 == Database.do_write(autocommit, """
-            UPDATE outputs SET result = :result
-            WHERE id = :id
-        """, {"id": id, "result": result})
-
-    @staticmethod
-    def add_submission(input, output, source, autocommit=True):
+    def add_submission(input, output, source, score, autocommit=True):
         id = Database.gen_id()
         if 1 == Database.do_write(autocommit, """
-            INSERT INTO submissions (id, token, task, input, output, source)
-            SELECT :id, token, task, :input, :output, :source
+            INSERT INTO submissions (id, token, task, input, output, source, score)
+            SELECT :id, token, task, :input, :output, :source, :score
             FROM input
             WHERE id = :input
         """, {
-            "id": id, "output": output,
+            "id": id, "output": output, "score": score,
             "input": input, "source": source
         }):
             return id
@@ -311,6 +293,6 @@ class Database:
     @staticmethod
     def set_user_attempt(token, task, attempt, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            UPDATE user_tasks SET attempt = :attempt
+            UPDATE user_tasks SET current_attempt = :attempt
             WHERE token = :token AND task = :task
         """, {"token": token, "task": task, "attempt": attempt})
