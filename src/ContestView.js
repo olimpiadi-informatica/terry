@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import TaskView from './TaskView';
+import 'bootstrap/dist/css/bootstrap.css';
 
 class ContestView extends Component {
   constructor(props) {
@@ -16,22 +17,63 @@ class ContestView extends Component {
   }
 
   taskNavItem(item, i) {
+
     return (
-      <li key={ i }>
-        <button onClick={this.setCurrentTask.bind(this, item.name)}>{ item.name }</button>
+      <li key={ i } className="nav-item">
+        <a className={ (this.currentTaskName == item.name) ? "nav-link active" : "nav-link" } href="#" onClick={this.setCurrentTask.bind(this, item.name)}>{ item.name }</a>
       </li>
+    );
+  }
+
+  getSideBar()
+  {
+    return (
+      <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+        <ul className="nav nav-pills flex-column">
+          { this.model.contest.tasks.map(this.taskNavItem.bind(this)) }
+        </ul>
+      </nav>
+    );
+  }
+
+  getNavBar()
+  {
+    return (
+      <nav className="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+        <a className="navbar-brand" href="#">Terry</a>
+        <div className="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item active">
+              <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">Settings</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    );
+  }
+
+  getTaskView()
+  {
+    return (
+      <main className="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+        <TaskView model={this.model} key={this.currentTaskName} taskName={this.currentTaskName} />
+      </main>
     );
   }
 
   render() {
     return (
       <div>
-        <nav className="leftcol">
-          <ul>
-          { this.model.contest.tasks.map(this.taskNavItem.bind(this)) }
-          </ul>
-        </nav>
-        <TaskView model={this.model} key={this.currentTaskName} taskName={this.currentTaskName} />
+        { this.getNavBar() }
+        <div className="container-fluid">
+          <div className="row">
+            { this.getSideBar() }
+            { this.getTaskView() }
+          </div>
+        </div>
       </div>
     );
   }
