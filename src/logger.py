@@ -9,6 +9,9 @@ from .config import Config
 
 from . import gevent_sqlite3 as sqlite3
 
+import sys
+from colorama import Fore, Style, init
+
 class Logger:
     """A logger class that stores stuff on a database"""
 
@@ -17,6 +20,9 @@ class Logger:
     INFO = 1
     WARNING = 2
     HUMAN_MESSAGES = ["DEBUG", "INFO", "WARNING"]
+    LOG_LEVEL = DEBUG # TODO: change this at some point
+    COLOR = [Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.RED + Style.BRIGHT]
+    FMT = "%% %ds" % max(map(len, HUMAN_MESSAGES))
 
     @staticmethod
     def connect_to_database():
@@ -41,6 +47,13 @@ class Logger:
         Logger.conn.commit()
 
     @staticmethod
+    def set_log_level(lvl):
+        if isinstance(lvl, int):
+            Logger.LOG_LEVEL = lvl
+        else:
+            Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index("bar")
+
+    @staticmethod
     def log(level, category, message):
         """
         Add an entry to the log database and print it to the console
@@ -48,13 +61,19 @@ class Logger:
         :param category: A string with the category of the event
         :param message: What really happened, it is converted to string using str()
         """
+        if level >= Logger.LOG_LEVEL:
+            tag = Logger.FMT % Logger.HUMAN_MESSAGES[level]
+            print(
+                Logger.COLOR[level] + tag + Style.RESET_ALL,
+                "[%s] %s" % (category, message),
+                file=sys.stderr
+            )
         c = Logger.conn.cursor()
         c.execute("""
             INSERT INTO logs (level, category, message)
             VALUES (:level, :category, :message)
         """, {"level": level, "category": category, "message": str(message)})
         Logger.conn.commit()
-        print("[%s] [%s] %s" % (Logger.HUMAN_MESSAGES[level], category, message))
 
     @staticmethod
     def debug(*args, **kwargs):
