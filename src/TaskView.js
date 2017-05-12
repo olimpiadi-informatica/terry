@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SubmissionView from './SubmissionView';
 
 class TaskView extends Component {
   constructor(props) {
@@ -18,23 +19,39 @@ class TaskView extends Component {
     return this.model.user.tasks[this.taskName];
   }
 
+  generateInput() {
+    return this.model.generateInput(this.taskName);
+  }
+
+  createSubmission() {
+    const input = this.getUserTask().current_input;
+    this.currentSubmission = this.model.createSubmission(input);
+    this.forceUpdate();
+  }
+
   renderCommands() {
     const userTask = this.getUserTask();
 
     if(userTask.current_input) {
       return (
         <div>
-          <button onClick={this.downloadInput}>Download input</button>
-          <button onClick={this.createSubmission}>Submit solution</button>
+          <button onClick={() => this.downloadInput()}>Download input</button>
+          <button onClick={() => this.createSubmission()}>Submit solution</button>
         </div>
       )
     } else {
       return (
         <div>
-          <button onClick={this.generateInput}>Generate input</button>
+          <button onClick={() => this.generateInput()}>Generate input</button>
         </div>
       );
     }
+  }
+
+  renderSubmissionDialog() {
+    if(this.currentSubmission === undefined) return null;
+
+    return <SubmissionView model={this.model} submission={this.currentSubmission} />;
   }
 
   render() {
@@ -44,6 +61,7 @@ class TaskView extends Component {
         <h1>{this.getTask().title}</h1>
         <p>Previous attempts: {userTask.previous_attempts}</p>
         { this.renderCommands() }
+        { this.renderSubmissionDialog() }
       </div>
     );
   }

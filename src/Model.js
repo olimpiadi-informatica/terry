@@ -1,5 +1,7 @@
 import axios from 'axios';
 import 'promise.prototype.finally';
+import wait from './utils';
+import Submission from './Submission';
 
 class Model {
     constructor(props) {
@@ -59,6 +61,29 @@ class Model {
           this.loginAttempt.error = response;
           this.view.forceUpdate();
         });
+    }
+
+    generateInput(taskName) {
+      // TODO: dummy
+      return wait(500).then(() => {
+        return this.refreshUser();
+      }).then(() => {
+        this.user.tasks[taskName].current_input = {
+          id: "i2",
+        };
+        this.view.forceUpdate();
+      })
+
+      return axios.post('http://localhost:3001/generate_input', {
+        user : this.user.id,
+        task : taskName
+      }).then((response) => {
+        return this.refreshUser();
+      });
+    }
+
+    createSubmission(input) {
+      return new Submission(input);
     }
 }
 
