@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import moment from "moment";
 import ResultView from './ResultView';
+import FileView from './FileView';
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -42,12 +42,9 @@ class SubmissionView extends Component {
       return <input key="absent" type="file" name="source" onChange={() => this.onChangeSource()}></input>;
     } else {
       const source = this.submission.getSource();
-      console.log(source.file);
       return (
         <div key="present">
-          <p>File: {source.file.name}</p>
-          <p>Last Update: {moment(source.file.lastModifiedDate.toString()).startOf('hour').fromNow()}</p>
-          <p>Size: {source.file.size}</p>
+          <FileView file={source.file}></FileView>
           <input key="present" type="button" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
         </div>
       )
@@ -69,7 +66,7 @@ class SubmissionView extends Component {
       const output = this.submission.getOutput();
       return (
         <div key="present">
-          <p>File: {output.file.name}</p>
+          <FileView file={output.file}></FileView>
           <input type="button" value="Change output" onClick={() => { this.resetOutput(); return false; }}></input>
           { this.renderOutputStatus(output) }
         </div>
