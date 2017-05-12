@@ -97,7 +97,7 @@ class Model {
       data.append("user", this.user.token);
       data.append("task", taskName);
 
-      return axios.post('http://localhost:3001/generate_input', data).then((response) => {
+      return axios.post('http://localhost:1234/generate_input', data).then((response) => {
         return this.refreshUser();
       });
     }
