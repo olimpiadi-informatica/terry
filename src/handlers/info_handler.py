@@ -72,6 +72,40 @@ class InfoHandler(BaseHandler):
         submission = Database.get_submission(submission_id)
         return BaseHandler.format_dates(InfoHandler._parse_submission(submission))
 
+    def get_user(self, route_args, request):
+        token = route_args["token"]
+
+        user = Database.get_user(token)
+        if user is None:
+            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
+        del user["first_login"]
+        del user["extra_time"]
+
+        # TODO fix this
+        user["contest_end"] = 2123456789
+        user["tasks"] = {}
+
+        tasks = Database.get_user_task(token)
+        for task in tasks:
+            task_name = task["task"]
+
+            if task["current_attempt"] is not None:
+                current_input = Database.get_input(token=token, task=task_name, attempt=task["current_attempt"])
+            else:
+                current_input = None
+
+            user["tasks"][task_name] = {
+                "name": task_name,
+                "score": task["score"],
+                "current_input": current_input
+            }
+
+        return BaseHandler.format_dates(user, fields=["date", "contest_end"])
+
+
+
+
+
     @staticmethod
     def _parse_submission(submission):
         result = {}

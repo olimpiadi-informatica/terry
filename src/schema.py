@@ -19,9 +19,9 @@ class Schema:
                 token TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
                 surname TEXT NOT NULL,
-                extratime INTEGER NOT NULL DEFAULT 0,
+                extra_time INTEGER NOT NULL DEFAULT 0,
                 first_login INTEGER,
-                CHECK (extratime >= 0)
+                CHECK (extra_time >= 0)
             );
 
             CREATE TABLE tasks (
@@ -97,6 +97,7 @@ class Schema:
                 task TEXT NOT NULL,
                 score REAL NOT NULL DEFAULT 0,
                 current_attempt INTEGER DEFAULT NULL,
+                PRIMARY KEY (token, task),
                 FOREIGN KEY (token) REFERENCES users(token),
                 FOREIGN KEY (task) REFERENCES tasks(name),
                 FOREIGN KEY (token, task, current_attempt) REFERENCES inputs(token, task, attempt),
@@ -107,19 +108,23 @@ class Schema:
             BEGIN
                 SELECT RAISE(FAIL, "Invalid score")
                 FROM tasks
-                WHERE tasks.id = NEW.task
+                WHERE tasks.name = NEW.task
                   AND tasks.max_score < NEW.score;
             END;
         """,
+        # Dummy data
         """
             INSERT INTO "tasks" VALUES('poldo','La dieta di Poldo','/statement/poldo.pdf',42);
+            INSERT INTO "tasks" VALUES('easy1','Easy 1','/statement/easy1.pdf',58);
             INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0,NULL);
             INSERT INTO "inputs" VALUES('inputid','tokenid','poldo',1,12345,'/input/inputid/poldo_input_1.txt',42);
+            INSERT INTO "inputs" VALUES('inputid2','tokenid','poldo',2,12345,'/input/inputid/poldo_input_2.txt',324);
             INSERT INTO "metadata" VALUES('start_time','1');
             INSERT INTO "outputs" VALUES('outputid','inputid',123456,'/output/outputid/poldo.out',NULL,NULL);
             INSERT INTO "sources" VALUES('sourceid','inputid',12345678,'/source/sourceid/soluzione_buggata.cpp',NULL);
             INSERT INTO "submissions" ("id","token","task","input","output","source") VALUES
                 ('sub', 'tokenid', 'poldo', 'inputid', 'outputid', 'sourceid');
-            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 41, NULL);
+            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 40, 2);
+            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'easy1', 0, NULL);
         """
     ]

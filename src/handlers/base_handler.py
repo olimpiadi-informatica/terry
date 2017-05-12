@@ -72,10 +72,10 @@ class BaseHandler:
             self.raise_exc(BadRequest, "MALFORMED_BODY", "The provided json is invalid: %s" % str(e))
 
     @staticmethod
-    def format_dates(dct, field="date"):
+    def format_dates(dct, fields=["date"]):
         for k, v in dct.items():
             if isinstance(v, dict):
-                dct[k] = BaseHandler.format_dates(v, field)
-            elif k == field and v is not None:
+                dct[k] = BaseHandler.format_dates(v, fields)
+            elif k in fields and v is not None:
                 dct[k] = datetime.fromtimestamp(v).isoformat()
         return dct

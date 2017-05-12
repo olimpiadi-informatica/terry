@@ -152,7 +152,7 @@ class Database:
     @staticmethod
     def get_user_task(token, task=None):
         c = Database.conn.cursor()
-        if task is None:
+        if task is not None:
             c.execute("""
                 SELECT * FROM user_tasks
                 WHERE token=:token AND task=:task
