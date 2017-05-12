@@ -39,10 +39,10 @@ class SubmissionView extends Component {
     if(!this.submission.hasSource()) {
       return <input key="absent" type="file" name="source" onChange={() => this.onChangeSource()}></input>;
     } else {
-      const file = this.submission.getSourceFile();
+      const source = this.submission.getSource();
       return (
         <div key="present">
-          <p>File: {file.name}</p>
+          <p>File: {source.file.name}</p>
           <input key="present" type="button" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
         </div>
       )
@@ -53,10 +53,10 @@ class SubmissionView extends Component {
     if(!this.submission.hasOutput()) {
       return <input key="absent" type="file" name="output" onChange={() => this.onChangeOutput()}></input>;
     } else {
-      const file = this.submission.getOutputFile();
+      const output = this.submission.getOutput();
       return (
         <div key="present">
-          <p>File: {file.name}</p>
+          <p>File: {output.file.name}</p>
           <input type="button" value="Change output" onClick={() => { this.resetOutput(); return false; }}></input>
         </div>
       )
