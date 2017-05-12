@@ -150,13 +150,20 @@ class Database:
         return Database.dictify(c, all=True)
 
     @staticmethod
-    def get_user_task(token, task):
+    def get_user_task(token, task=None):
         c = Database.conn.cursor()
-        c.execute("""
-            SELECT * FROM user_tasks
-            WHERE token=:token AND task=:task
-        """, {"token": token, "task": task})
-        return Database.dictify(c)
+        if task is None:
+            c.execute("""
+                SELECT * FROM user_tasks
+                WHERE token=:token AND task=:task
+            """, {"token": token, "task": task})
+            return Database.dictify(c)
+        else:
+            c.execute("""
+                SELECT * FROM user_tasks
+                WHERE token=:token
+            """, {"token": token})
+            return Database.dictify(c, all=True)
 
     @staticmethod
     def get_ips(token):
