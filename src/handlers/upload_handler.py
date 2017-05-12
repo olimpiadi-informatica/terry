@@ -7,6 +7,39 @@
 
 from .base_handler import BaseHandler
 
+from ..database import Database
+from ..storage_manager import StorageManager
+
 
 class UploadHandler(BaseHandler):
-    pass
+
+    def upload_output(self, route_args, request):
+        file_content = UploadHandler._get_file_content(request)
+        file_name = UploadHandler._get_file_name(request)
+        output_id = Database.gen_id()
+
+        path = StorageManager.new_output_file(output_id, file_name)
+
+        StorageManager.save_file(path, file_content)
+        file_size = StorageManager.get_file_size(path)
+
+    def upload_source(self, route_args, request):
+        file_content = UploadHandler._get_file_content(request)
+        file_name = UploadHandler._get_file_name(request)
+        source_id = Database.gen_id()
+        input_id = request.form["input"]
+
+        path = StorageManager.new_source_file(source_id, file_name)
+        StorageManager.save_file(path, file_content)
+        file_size = StorageManager.get_file_size(path)
+
+        Database.add_source(source_id, input_id, path, file_size)
+        return { "id": source_id }
+
+    @staticmethod
+    def _get_file_name(request):
+        return request.files["file"].filename
+
+    @staticmethod
+    def _get_file_content(request):
+        return request.files["file"].stream.getvalue()

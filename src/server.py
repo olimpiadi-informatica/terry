@@ -50,7 +50,9 @@ class Server:
             Rule("/user/<token>", methods=["GET"], endpoint="info#get_user"),
             Rule("/user/<token>/submissions/<task>", methods=["GET"], endpoint="info#get_submissions"),
             Rule("/generate_input", methods=["POST"], endpoint="contest#generate_input"),
-            Rule("/submit", methods=["POST"], endpoint="contest#submit")
+            Rule("/submit", methods=["POST"], endpoint="contest#submit"),
+            Rule("/upload_source", methods=["POST"], endpoint="upload#upload_source"),
+            Rule("/upload_output", methods=["POST"], endpoint="upload#upload_output")
         ])
 
     @responder
