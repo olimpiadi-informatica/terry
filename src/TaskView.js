@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Link, Route } from 'react-router-dom';
 import SubmissionView from './SubmissionView';
+import SubmissionListView from './SubmissionListView';
 
 class TaskView extends Component {
   constructor(props) {
@@ -71,6 +73,7 @@ class TaskView extends Component {
         <p>Previous attempts: {userTask.previous_attempts}</p>
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
+        <SubmissionListView model={this.model} taskName={this.taskName}></SubmissionListView>
       </div>
     );
   }

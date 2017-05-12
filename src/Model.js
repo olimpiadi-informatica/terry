@@ -1,6 +1,7 @@
 import axios from 'axios';
 import wait from './utils';
 import Submission from './Submission';
+import SubmissionList from './SubmissionList';
 import Cookies from 'universal-cookie';
 
 class Model {
@@ -114,6 +115,10 @@ class Model {
 
     createSubmission(input) {
       return new Submission(input, this);
+    }
+
+    getSubmissionList(taskName) {
+      return new SubmissionList(taskName, this);
     }
 }
 

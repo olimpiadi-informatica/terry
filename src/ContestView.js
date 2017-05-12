@@ -24,16 +24,6 @@ class ContestView extends Component {
   }
 
   render() {
-    const taskRoutes = [];
-
-    for (let t of this.model.contest.tasks) {
-      taskRoutes.push(
-        <Route key={t.name} exact path={'/' + t.name} component={
-          () => <TaskView model={this.model} key={t.name} taskName={t.name}/>
-        }/>
-      );
-    }
-
     return (
       <div>
         <nav className="leftcol">
@@ -42,7 +32,9 @@ class ContestView extends Component {
           </ul>
         </nav>
 
-        { taskRoutes }
+        <Route path={'/:taskName'} component={
+          ({match}) => <TaskView model={this.model} taskName={match.params.taskName}/>
+        }/>
       </div>
     );
   }
