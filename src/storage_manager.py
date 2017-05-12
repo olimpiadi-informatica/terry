@@ -18,30 +18,68 @@ class StorageManager:
 
     @staticmethod
     def new_source_file(source_id, filename):
-        filename = StorageManager._escape(filename)
-        relative_path = os.path.join("source", source_id, filename)
-        absolute_path = StorageManager.get_absolute_path(relative_path)
-        StorageManager.create_dir(absolute_path)
-        return relative_path
+        """
+        Get the relative path to the source file with the specified filename
+        :param source_id: id of the source file
+        :param filename: name of the file, will be sanitized
+        :return: A path relative to the Config.storedir where save that file
+        """
+        filename = StorageManager._sanitize(filename)
+        return os.path.join("source", source_id, filename)
 
     @staticmethod
     def new_output_file(output_id, filename):
-        filename = StorageManager._escape(filename)
-        relative_path = os.path.join("output", output_id, filename)
-        absolute_path = StorageManager.get_absolute_path(relative_path)
-        StorageManager.create_dir(absolute_path)
-        return relative_path
+        """
+        Get the relative path to the output file with the specified filename
+        :param output_id: id of the output file
+        :param filename: name of the file, will be sanitized
+        :return: A path relative to the Config.storedir where save that file
+        """
+        filename = StorageManager._sanitize(filename)
+        return os.path.join("output", output_id, filename)
 
     @staticmethod
-    def create_dir(filename):
+    def get_file_size(filename):
+        """
+        Get the size of the filename in bytes
+        :param filename: Relative path of the file to check
+        :return: The number of bytes of the file
+        """
+        absolute_path = StorageManager.get_absolute_path(filename)
+        return os.stat(absolute_path).st_size
+
+    @staticmethod
+    def save_file(relative_path, file_content):
+        """
+        Store a file in the filesystem, creates the directories needed
+        :param relative_path: Relative path of the file
+        :param file_content: Content of the file
+        """
+        absolute_path = StorageManager.get_absolute_path(relative_path)
+        StorageManager._create_dir(absolute_path)
+        file = open(absolute_path, "wb")
+        file.write(file_content)
+        file.close()
+
+    @staticmethod
+    def get_absolute_path(relative_path):
+        """
+        Get the absolute path of a stored file
+        :param relative_path: Relative path of the file 
+        :return: The absolute path of the file 
+        """
+        return os.path.join(Config.storedir, relative_path)
+
+    @staticmethod
+    def _create_dir(filename):
+        """
+        Create a directory in the filesystem
+        :param filename: Absolute path of the file or its directory
+        """
         dirname = os.path.dirname(filename)
         os.makedirs(dirname)
 
     @staticmethod
-    def get_absolute_path(relative_path):
-        return os.path.join(Config.storedir, relative_path)
-
-    @staticmethod
-    def _escape(filename):
+    def _sanitize(filename):
         # TODO vvvvvvvv
         return filename
