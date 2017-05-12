@@ -97,11 +97,11 @@ class InfoHandler(BaseHandler):
         user = Database.get_user(token)
         if user is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
-        del user["first_login"]
-        del user["extra_time"]
 
         # TODO fix this
-        user["contest_end"] = 2123456789
+        user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
+        del user["first_login"]
+        del user["extra_time"]
         user["tasks"] = {}
 
         tasks = Database.get_user_task(token)
@@ -151,3 +151,17 @@ class InfoHandler(BaseHandler):
                 result[k] = v
 
         return result
+
+    @staticmethod
+    def _get_remaining_time(user_extra_time):
+        """
+        Compute the remaining time for a user
+        :param user_extra_time: Extra time specific for the user in seconds
+        :return: The number of seconds until the contest is finished
+        """
+        start = Database.get_meta('start_time', type=int)
+        contest_duration = Database.get_meta('contest_duration', type=int)
+        contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
+        now = int(datetime.now().timestamp())
+
+        return start + contest_duration - now + contest_extra_time + user_extra_time
