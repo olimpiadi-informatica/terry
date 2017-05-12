@@ -9,6 +9,7 @@ from .config import Config
 
 from . import gevent_sqlite3 as sqlite3
 
+import datetime
 import sys
 from colorama import Fore, Style
 
@@ -64,10 +65,12 @@ class Logger:
         :param message: What really happened, it is converted to string using str()
         """
         if level >= Logger.LOG_LEVEL:
-            tag = Logger.FMT % Logger.HUMAN_MESSAGES[level]
+            tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
+            tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
+            cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
             print(
                 Logger.COLOR[level] + tag + Style.RESET_ALL,
-                "[%s] %s" % (category, message),
+                "%s %s" % (cat, message),
                 file=sys.stderr
             )
         c = Logger.conn.cursor()
