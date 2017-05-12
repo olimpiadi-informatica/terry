@@ -28,44 +28,56 @@ class Logger:
         c.execute("""
             CREATE TABLE IF NOT EXISTS logs (
                 date INTEGER DEFAULT (strftime('%s','now')),
-                level INTEGER,
-                message TEXT)
+                category TEXT NOT NULL,
+                level INTEGER NOT NULL,
+                message TEXT NOT NULL)
+        """)
+        c.execute("""
+            CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level)
         """)
         Logger.conn.commit()
 
     @staticmethod
-    def log(level, message):
+    def log(level, category, message):
         c = Logger.conn.cursor()
         c.execute("""
-            INSERT INTO logs (level, message)
-            VALUES (:level, :message)
-        """, {"level": level, "message": message})
+            INSERT INTO logs (level, category, message)
+            VALUES (:level, :category, :message)
+        """, {"level": level, "category": category, "message": message})
         Logger.conn.commit()
 
     @staticmethod
-    def debug(message):
-        Logger.log(Logger.DEBUG, message)
+    def debug(*args, **kwargs):
+        Logger.log(Logger.DEBUG, *args, **kwargs)
 
     @staticmethod
-    def info(message):
-        Logger.log(Logger.INFO, message)
+    def info(*args, **kwargs):
+        Logger.log(Logger.INFO, *args, **kwargs)
 
     @staticmethod
-    def warning(message):
-        Logger.log(Logger.WARNING, message)
+    def warning(*args, **kwargs):
+        Logger.log(Logger.WARNING, *args, **kwargs)
 
     @staticmethod
-    def get_logs(level, begin, end):
+    def get_logs(level, category, begin, end):
         c = Logger.conn.cursor()
         ret = []
-        c.execute("""
-            SELECT date, level, message FROM logs
-            WHERE level >= :level AND date >= :begin AND date <= :end
-            ORDER BY date DESC
-        """, {"level": level, "begin": begin, "end": end})
+        if category is None:
+            c.execute("""
+                SELECT date, category, level, message FROM logs
+                WHERE level >= :level AND date >= :begin AND date <= :end
+                ORDER BY date DESC
+            """, {"level": level, "begin": begin, "end": end})
+        else:
+            c.execute("""
+                SELECT date, category, level, message FROM logs
+                WHERE level >= :level AND date >= :begin AND date <= :end AND category = :category
+                ORDER BY date DESC
+            """, {"level": level, "category": category, "begin": begin, "end": end})
         for row in c.fetchall():
             ret.append({
                 "date": row[0],
-                "level": Logger.HUMAN_MESSAGES[row[1]],
-                "message": row[2]})
+                "category": row[1],
+                "level": Logger.HUMAN_MESSAGES[row[2]],
+                "message": row[3]})
         return ret
