@@ -33,29 +33,27 @@ Il file output.txt è composto da una riga contenente un solo intero, che rappre
   </thead>
   <tbody>
     <tr>
-      <td>
-      8
-      6
-      1
-      2
-      5
-      10
-      20
-      50
-      100
-      200</td>
+      <td>8
+6
+1
+2
+5
+10
+20
+50
+100
+200</td>
       <td>5</td>
     </tr>
     <tr>
-      <td>
-      6
-      6
-      5
-      10
-      20
-      50
-      100
-      200</td>
+      <td>6
+6
+5
+10
+20
+50
+100
+200</td>
       <td>0</td>
     </tr>
   </tbody>

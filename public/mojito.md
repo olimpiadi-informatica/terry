@@ -76,24 +76,20 @@ ostacolato nel suo movimento da ragazzi presenti in una cella tra lui e la palla
   </thead>
   <tbody>
     <tr>
-      <td>
-5  3
-3  3
+      <td>5 3
+3 3
 2
-4  3  5  3
-5  1  1  1
-</td>
+4 3 5 3
+5 1 1 1</td>
       <td>1</td>
     </tr>
     <tr>
-      <td>
-8  3
-5  2
+      <td>8 3
+5 2
 3
-1  3  6  3
-7  1  3  3
-4  1  6  1
-</td>
+1 3 6 3
+7 1 3 3
+4 1 6 1</td>
       <td>3</td>
     </tr>
   </tbody>
