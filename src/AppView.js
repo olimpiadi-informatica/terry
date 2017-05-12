@@ -3,7 +3,6 @@ import { HashRouter, Route, Link } from 'react-router-dom';
 
 import ContestView from './ContestView';
 import LoginView from './LoginView';
-import AboutView from './AboutView';
 import Model from './Model';
 
 class AppView extends Component {
