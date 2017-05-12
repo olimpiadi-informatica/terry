@@ -39,13 +39,17 @@ class SubmissionView extends Component {
 
   renderSourceSelector() {
     if(!this.submission.hasSource()) {
-      return <input key="absent" type="file" name="source" onChange={() => this.onChangeSource()}></input>;
+      return (<label className="custom-file">
+          <input key="absent" name="source" type="file" id="source-file" className="custom-file-input" onChange={() => this.onChangeSource()} />
+          <span className="custom-file-control" id="source-file-span"></span>
+        </label>);
     } else {
       const source = this.submission.getSource();
       return (
-        <div key="present">
+        <div key="present" className="bs-callout bs-callout-info">
+          <h4 className="bs-callout-info-title">Source file info</h4>
           <FileView file={source.file}></FileView>
-          <input key="present" type="button" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
+          <input key="present" type="button" className="btn btn-secondary" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
         </div>
       )
     }
@@ -61,7 +65,10 @@ class SubmissionView extends Component {
 
   renderOutputSelector() {
     if(!this.submission.hasOutput()) {
-      return <input key="absent" type="file" name="output" onChange={() => this.onChangeOutput()}></input>;
+      return (<label className="custom-file">
+          <input key="absent" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.onChangeOutput()} />
+          <span className="custom-file-control" id="output-file-span"></span>
+        </label>);
     } else {
       const output = this.submission.getOutput();
       return (
@@ -77,11 +84,15 @@ class SubmissionView extends Component {
   renderDialog() {
     if(!this.submission.isSubmitted()) {
       return (
-        <form ref="form" onSubmit={(e) => {e.preventDefault(); this.submit();}}>
-          <div>{ this.renderSourceSelector() }</div>
-          <div>{ this.renderOutputSelector() }</div>
-          <div><input type="submit" value="Submit" disabled={!this.submission.canSubmit()}></input></div>
-          <input type="reset" onClick={() => {this.close(); return false;}} value="Cancel"></input>
+        <form className="submissionForm" ref="form" onSubmit={(e) => {e.preventDefault(); this.submit();}}>
+
+          <div className="form-group">{ this.renderSourceSelector() }</div>
+          <div className="form-group">{ this.renderOutputSelector() }</div>
+          <div className="form-group">
+
+            <input type="submit" className="btn btn-success top-button" role="button" value="Submit" disabled={!this.submission.canSubmit()}></input>
+            <input type="reset" className="btn btn-danger top-button" role="button" onClick={() => {this.close(); return false;}} value="Cancel"></input>
+          </div>
         </form>
       );
     } else {
@@ -94,7 +105,7 @@ class SubmissionView extends Component {
 
   render() {
     return (
-      <div>
+      <div className="submissionView">
         <h2>Submission for input <samp>{this.submission.input.id}</samp></h2>
         { this.renderDialog() }
       </div>

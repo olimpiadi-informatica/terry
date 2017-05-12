@@ -49,7 +49,7 @@ class Submission {
 
     submit() {
       if(!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
-      
+
       // TODO: dummy
       wait(500).then(() => {
         this.submission = {

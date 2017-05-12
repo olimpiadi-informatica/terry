@@ -10,10 +10,10 @@ class FileView extends Component {
 
   render() {
     return (
-      <div>
-        <p>File: {this.file.name}</p>
-        <p>Last Update: {moment(this.file.lastModifiedDate.toString()).startOf('hour').fromNow()}</p>
-        <p>Size: {this.file.size}</p>
+      <div className="fileView">
+        <div><b>File</b>: {this.file.name}</div>
+        <div><b>Last Update</b>: {moment(this.file.lastModifiedDate.toString()).startOf('hour').fromNow()}</div>
+        <div><b>Size</b>: {this.file.size}</div>
       </div>
     );
   }

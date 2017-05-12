@@ -53,14 +53,20 @@ class TaskView extends Component {
     if(userTask.current_input) {
       return (
         <div>
-          <button onClick={() => this.downloadInput()}>Download input</button>
-          <button onClick={() => this.createSubmission()}>Submit solution</button>
+          <a className="btn btn-primary top-button" role="button" onClick={() => this.donwloadInput()}>
+            Download input
+          </a>
+          <a className="btn btn-success top-button" role="button" onClick={() => this.createSubmission()}>
+            Submit solution
+          </a>
         </div>
       )
     } else {
       return (
         <div>
-          <button onClick={() => this.generateInput()}>Generate input</button>
+          <a className="btn btn-primary top-button" role="button" onClick={() => this.generateInput()}>
+            Generate input
+          </a>
         </div>
       );
     }
