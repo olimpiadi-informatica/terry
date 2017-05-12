@@ -12,6 +12,7 @@ import os.path
 from .base_handler import BaseHandler
 from ..database import Database
 from ..config import Config
+from ..storage_manager import StorageManager
 
 from gevent import monkey
 monkey.patch_all()
@@ -20,10 +21,6 @@ from datetime import datetime
 from werkzeug.exceptions import Forbidden, BadRequest
 
 class ContestHandler(BaseHandler):
-    def __init__(self):
-        self.storedir = os.path.abspath(Config.storedir)
-        os.makedirs(self.storedir, exist_ok=True)
-
     def compute_score(self, task, result):
         max_score = Database.get_task(task)["max_score"]
         percent = json.loads(result)["score"]
@@ -48,16 +45,13 @@ class ContestHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "No such task")
         if Database.get_user_task(token, task)["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
+        # TODO: really generate the input
         id = Database.get_id()
         attempt = Database.get_next_attempt()
-        filename = task + "_input_" + str(attempt) + ".txt"
-        directory = os.path.join(self.storedir, token, id)
-        os.makedirs(directory)
-        path = os.path.join(directory, filename)
-        # TODO: really generate the input
-        with open(path, "w"):
+        path = StorageManager.new_input_file(id, task, attempt)
+        with open(StorageManager.get_absolute_path(path), "w"):
             pass
-        size = os.path.getsize(path)
+        size = StorageManager.get_file_size(path)
         Database.begin()
         try:
             Database.add_input(token, task, attempt, path, size, autocommit=False)

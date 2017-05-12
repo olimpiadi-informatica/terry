@@ -39,6 +39,21 @@ class StorageManager:
         return os.path.join("output", output_id, filename)
 
     @staticmethod
+    def new_input_file(input_id, task_name, attempt):
+        """
+        Get the relative path to the input file for the specified attempt
+        on the specified task
+        :param input_id: id of the input file
+        :param task_name: name of the task
+        :param attempt: attempt on the task
+        :return: A path relative to the Config.storedir where that file is
+        """
+        filename = task_name + "_input_" + str(attempt) + ".txt"
+        filename = os.path.join("input", input_id, filename)
+        StorageManager._create_dir(StorageManager.get_absolute_path(filename))
+        return filename
+
+    @staticmethod
     def get_file_size(filename):
         """
         Get the size of the filename in bytes
