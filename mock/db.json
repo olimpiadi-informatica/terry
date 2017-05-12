@@ -44,14 +44,14 @@
       "id": "i1",
       "task": "poldo",
       "user": {
-        "id": "secret",
+        "id": "secret"
       }
     },
     {
       "id": "i2",
       "task": "lino",
       "user": {
-        "id": "secret",
+        "id": "secret"
       }
     }
   ],
