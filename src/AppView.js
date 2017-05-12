@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { HashRouter, Route, Link } from 'react-router-dom';
 
-import LoginView from './LoginView'
 import ContestView from './ContestView';
+import LoginView from './LoginView';
+import AboutView from './AboutView';
 import Model from './Model';
 
 class AppView extends Component {
@@ -21,7 +23,9 @@ class AppView extends Component {
 
     return (
       <div>
-        <ContestView model={this.model}/>
+        <HashRouter>
+          <ContestView model={this.model}/>
+        </HashRouter>
         <button onClick={() => this.model.logout()}>Log out</button>
       </div>
     );

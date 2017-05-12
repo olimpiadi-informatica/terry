@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 
 class ContestView extends Component {
@@ -17,12 +18,22 @@ class ContestView extends Component {
   taskNavItem(item, i) {
     return (
       <li key={ i }>
-        <button onClick={this.setCurrentTask.bind(this, item.name)}>{ item.name }</button>
+        <Link to={ "/" + item.name }> { item.name } </Link>
       </li>
     );
   }
 
   render() {
+    const taskRoutes = [];
+
+    for (let t of this.model.contest.tasks) {
+      taskRoutes.push(
+        <Route key={t.name} exact path={'/' + t.name} component={
+          () => <TaskView model={this.model} key={t.name} taskName={t.name}/>
+        }/>
+      );
+    }
+
     return (
       <div>
         <nav className="leftcol">
@@ -30,7 +41,8 @@ class ContestView extends Component {
           { this.model.contest.tasks.map(this.taskNavItem.bind(this)) }
           </ul>
         </nav>
-        <TaskView model={this.model} key={this.currentTaskName} taskName={this.currentTaskName} />
+
+        { taskRoutes }
       </div>
     );
   }
