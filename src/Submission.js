@@ -9,11 +9,36 @@ class Submission {
 
     setSource(file) {
       this.sourceFile = file;
-      console.log("source set:", file);
+      this.model.view.forceUpdate();
+    }
+
+    hasSource() {
+      return this.sourceFile !== undefined;
     }
 
     resetSource() {
       delete this.sourceFile;
+    }
+
+    getSourceFile() {
+      return this.sourceFile;
+    }
+
+    setOutput(file) {
+      this.outputFile = file;
+      this.model.view.forceUpdate();
+    }
+
+    hasOutput() {
+      return this.outputFile !== undefined;
+    }
+
+    resetOutput() {
+      delete this.outputFile;
+    }
+
+    getOutputFile() {
+      return this.outputFile;
     }
 
     submit() {
