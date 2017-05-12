@@ -53,7 +53,8 @@ class Schema:
                 path TEXT NOT NULL,
                 size INTEGER NOT NULL,
                 FOREIGN KEY (token) REFERENCES users(token),
-                FOREIGN KEY (task) REFERENCES tasks(name)
+                FOREIGN KEY (task) REFERENCES tasks(name),
+                UNIQUE (token, task, attempt)
             );
 
             CREATE TABLE sources (
