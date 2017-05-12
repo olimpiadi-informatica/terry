@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from "moment";
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -40,9 +41,12 @@ class SubmissionView extends Component {
       return <input key="absent" type="file" name="source" onChange={() => this.onChangeSource()}></input>;
     } else {
       const source = this.submission.getSource();
+      console.log(source.file);
       return (
         <div key="present">
           <p>File: {source.file.name}</p>
+          <p>Last Update: {moment(source.file.lastModifiedDate.toString()).startOf('hour').fromNow()}</p>
+          <p>Size: {source.file.size}</p>
           <input key="present" type="button" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
         </div>
       )
