@@ -7,6 +7,7 @@
 
 import yaml
 
+
 class Config:
     """ Main config file """
 
@@ -19,6 +20,10 @@ class Config:
 
     @staticmethod
     def set_config_file(config_file):
+        """
+        Set the config file globally. This method MUST be called once and only once
+        :param config_file: The path to the log file
+        """
         if Config.loaded is True:
             raise RuntimeError("The config file can be loaded only once")
         Config.loaded = True

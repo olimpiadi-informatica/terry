@@ -20,6 +20,9 @@ class Logger:
 
     @staticmethod
     def connect_to_database():
+        """
+        Connect to the log database, create the schema if needed. This method MUST be called once and only once.
+        """
         if Logger.connected is True:
             raise RuntimeError("Database already loaded")
         Logger.connected = True
@@ -39,12 +42,19 @@ class Logger:
 
     @staticmethod
     def log(level, category, message):
+        """
+        Add an entry to the log database and print it to the console
+        :param level: Level of the message, like Logger.DEBUG, Logger.INFO, Logger.WARNING
+        :param category: A string with the category of the event
+        :param message: What really happened, it is converted to string using str()
+        """
         c = Logger.conn.cursor()
         c.execute("""
             INSERT INTO logs (level, category, message)
             VALUES (:level, :category, :message)
-        """, {"level": level, "category": category, "message": message})
+        """, {"level": level, "category": category, "message": str(message)})
         Logger.conn.commit()
+        print("[%s] [%s] %s" % (Logger.HUMAN_MESSAGES[level], category, message))
 
     @staticmethod
     def debug(*args, **kwargs):
@@ -60,6 +70,14 @@ class Logger:
 
     @staticmethod
     def get_logs(level, category, begin, end):
+        """
+        Filter the logs with the specified parameters
+        :param level: All the events with level greater or equal
+        :param category: All the event with the specified category
+        :param begin: All the events from this date
+        :param end: All the events until this date
+        :return: A list of events
+        """
         c = Logger.conn.cursor()
         ret = []
         if category is None:

@@ -1,6 +1,6 @@
 # Address to bind the server to
 address: 0.0.0.0
-port: 8080
+port: 1234
 
 # Database for the log
 logfile: log.sqlite3
