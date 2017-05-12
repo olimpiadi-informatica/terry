@@ -137,15 +137,6 @@ class Database:
         return Database.dictify(c)
 
     @staticmethod
-    def has_ip(token, ip):
-        c = Database.conn.cursor()
-        c.execute("""
-            SELECT * FROM ips
-            WHERE token=:token AND ip=:ip
-        """, {"token": token, "ip": ip})
-        return c.fetchone() is not None
-
-    @staticmethod
     def get_ips(token):
         c = Database.conn.cursor()
         c.execute("""
@@ -194,17 +185,103 @@ class Database:
 
     @staticmethod
     def add_user(token, name, surname, autocommit=True):
-        Database.do_write(autocommit, """
+        return 1 == Database.do_write(autocommit, """
             INSERT INTO users (token, name, surname)
             VALUES (:token, :name, :surname)
         """, {"token": token, "name": name, "surname": surname})
 
     @staticmethod
+    def add_user_task(token, task, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT INTO user_tasks (token, task)
+            VALUES (:token, :task)
+        """, {"token": token, "task": task})
+
+    @staticmethod
+    def register_ip(token, ip, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT OR IGNORE INTO ips (token, ip)
+            VALUES (:token, :ip)
+        """, {"token": token, "ip": ip})
+
+    @staticmethod
+    def register_admin_ip(ip, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT OR IGNORE INTO admin_ips (ip)
+            VALUES (:ip)
+        """, {"ip": ip})
+
+    @staticmethod
     def add_input(id, token, task, attempt, path, size, autocommit=True):
-        Database.do_write(autocommit, """
+        return 1 == Database.do_write(autocommit, """
             INSERT INTO inputs (id, token, task, attempt, path, size)
             VALUES (:id, :token, :task, :attempt, :path, :size)
         """, {
             "token": token, "task": task, "attempt": attempt,
             "path": path, "size": size, "id": id
         })
+
+    @staticmethod
+    def add_source(id, input, path, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT INTO sources (id, input, path)
+            VALUES (:id, :input, :path)
+        """, {"id": id, "input": input, "path": path})
+
+    @staticmethod
+    def add_output(id, input, path, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT INTO outputs (id, input, path)
+            VALUES (:id, :input, :path)
+        """, {"id": id, "input": input, "path": path})
+
+    @staticmethod
+    def record_source_upload(id, size):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE sources SET size = :size
+            WHERE id = :id
+        """, {"id": id, "size": size})
+
+    @staticmethod
+    def record_output_upload(id, size):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE outputs SET size = :size
+            WHERE id = :id
+        """, {"id": id, "size": size})
+
+    @staticmethod
+    def record_output_result(id, result):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE outputs SET result = :result
+            WHERE id = :id
+        """, {"id": id, "result": result})
+
+    @staticmethod
+    def add_submission(input, output, source):
+        id = Database.gen_id()
+        if 1 == Database.do_write(autocommit, """
+            INSERT INTO submissions (id, token, task, input, output, source)
+            SELECT :id, token, task, :input, :output, :source
+            FROM input
+            WHERE id = :input
+        """, {
+            "id": id, "output": output,
+            "input": input, "source": source
+        }):
+            return id
+        else:
+            return None
+
+    @staticmethod
+    def set_user_score(token, task, score, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE user_tasks SET score = :score
+            WHERE token = :token AND task = :task
+        """, {"token": token, "task": task, "score": score})
+
+    @staticmethod
+    def set_user_attempt(token, task, attempt, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE user_tasks SET attempt = :attempt
+            WHERE token = :token AND task = :task
+        """, {"token": token, "task": task, "attempt": attempt})
