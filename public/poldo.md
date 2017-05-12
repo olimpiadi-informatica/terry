@@ -1,154 +1,76 @@
-Paragraphs are separated by a blank line.
+#### Descrizione del problema
 
-2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
-look like:
+Il dottore ordina a Poldo di seguire una dieta. Ad ogni pasto non può mai mangiare un panino che abbia
+un peso maggiore o uguale a quello appena mangiato. Quando Poldo passeggia per la via del suo paese, da
+ogni ristorante esce un cameriere proponendo il menù del giorno. Ciascun menù è composto da una serie di
+panini, che verranno serviti in un ordine ben definito, e dal peso di ciascun panino. Poldo, per non violare
+la regola della sua dieta, una volta scelto un menù, può decidere di mangiare o rifiutare un panino; se lo
+rifiuta il cameriere gli servirà il successivo e quello rifiutato non gli sarà più servito.
 
-  * this one
-  * that one
-  * the other one
+Si deve scrivere un programma che permetta a Poldo, leggendo un menù, di capire qual è il numero
+massimo di panini che può mangiare per quel menù senza violare la regola della sua dieta.
+Riassumendo, Poldo può mangiare un panino se e solo se soddisfa una delle due condizioni:
+* Il panino è il primo che mangia in un determinato pasto;
+* Il panino non ha un peso maggiore o uguale all’ultimo panino che ha mangiato in un determinato
+pasto.
 
-Note that --- not considering the asterisk --- the actual text
-content starts at 4-columns in.
+#### File di input
 
-> Block quotes are
-> written like so.
->
-> They can span multiple paragraphs,
-> if you like.
+Il programma deve leggere da un file di nome input.txt. Nella prima è presente un intero N, il numero
+di panini nel menu. Le successive N righe contengono il peso in grammi p del panino che verrà servito. I
+panini vengono serviti nell’ordine presentato.
 
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
-in chapters 12--14"). Three dots ... will be converted to an ellipsis.
-Unicode is supported. ☺
+#### File di output
 
+Il programma deve scrivere in un file di nome output.txt. Deve venire stampato un unico intero, il
+numero massimo di panini che Poldo può mangiare.
 
+#### Assunzioni
+* 1 ≤ N ≤ 10 000
+* 0 ≤ p < 10 000
 
-An h2 header
-------------
+#### Subtask
 
-Here's a numbered list:
+* **Subtask 1 [ 5 punti]**: casi di esempio.
+* **Subtask 2 [30 punti]**: N ≤ 100.
+* **Subtask 3 [25 punti]**: N ≤ 1000.
+* **Subtask 4 [25 punti]**: N ≤ 3000.
+* **Subtask 5 [15 punti]**: nessuna limitazione specifica.
 
- 1. first item
- 2. second item
- 3. third item
+#### Esempio di input/output
 
-Note again how the actual text starts at 4 columns in (4 characters
-from the left side). Here's a code sample:
+<table class="table table-bordered sample-case">
+  <thead class="thead-default">
+    <tr>
+      <th>input.txt</th>
+      <th>output.txt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>8
+0
+9
+8
+5
+1
+8
+4
+7</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>5
+3
+6
+7
+5
+3</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
 
-    # Let me re-iterate ...
-    for i in 1 .. 10 { do-something(i) }
-
-As you probably guessed, indented 4 spaces. By the way, instead of
-indenting the block, you can use delimited blocks, if you like:
-
-~~~
-define foobar() {
-    print "Welcome to flavor country!";
-}
-~~~
-
-(which makes copying & pasting easier). You can optionally mark the
-delimited block for Pandoc to syntax highlight it:
-
-~~~python
-import time
-# Quick, count to ten!
-for i in range(10):
-    # (but not *too* quick)
-    time.sleep(0.5)
-    print i
-~~~
-
-
-
-### An h3 header ###
-
-Now a nested list:
-
- 1. First, get these ingredients:
-
-      * carrots
-      * celery
-      * lentils
-
- 2. Boil some water.
-
- 3. Dump everything in the pot and follow
-    this algorithm:
-
-        find wooden spoon
-        uncover pot
-        stir
-        cover pot
-        balance wooden spoon precariously on pot handle
-        wait 10 minutes
-        goto first step (or shut off burner when done)
-
-    Do not bump wooden spoon or it will fall.
-
-Notice again how text always lines up on 4-space indents (including
-that last line which continues item 3 above).
-
-Here's a link to [a website](http://foo.bar), to a [local
-doc](local-doc.html), and to a [section heading in the current
-doc](#an-h2-header). Here's a footnote [^1].
-
-[^1]: Footnote text goes here.
-
-Tables can look like this:
-
-size  material      color
-----  ------------  ------------
-9     leather       brown
-10    hemp canvas   natural
-11    glass         transparent
-
-Table: Shoes, their sizes, and what they're made of
-
-(The above is the caption for the table.) Pandoc also supports
-multi-line tables:
-
---------  -----------------------
-keyword   text
---------  -----------------------
-red       Sunsets, apples, and
-          other red or reddish
-          things.
-
-green     Leaves, grass, frogs
-          and other things it's
-          not easy being.
---------  -----------------------
-
-A horizontal rule follows.
-
-***
-
-Here's a definition list:
-
-apples
-  : Good for making applesauce.
-oranges
-  : Citrus!
-tomatoes
-  : There's no "e" in tomatoe.
-
-Again, text is indented 4 spaces. (Put a blank line between each
-term/definition pair to spread things out more.)
-
-Here's a "line block":
-
-| Line one
-|   Line too
-| Line tree
-
-and images can be specified like so:
-
-![example image](example-image.jpg "An exemplary image")
-
-Inline math equations go in like so: $\omega = d\phi / dt$. Display
-math should get its own line and be put in in double-dollarsigns:
-
-$$I = \int \rho R^{2} dV$$
-
-And note that you can backslash-escape any punctuation characters
-which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.
+#### Note
+Nel primo esempio, Poldo può mangiare i panini 6, 5, 3. Nel secondo esempio Poldo può mangiare i
+panini 9, 8, 5, 4 rispettando la sua dieta.
