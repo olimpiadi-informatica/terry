@@ -10,7 +10,8 @@ from .config import Config
 from . import gevent_sqlite3 as sqlite3
 
 import sys
-from colorama import Fore, Style, init
+from colorama import Fore, Style
+
 
 class Logger:
     """A logger class that stores stuff on a database"""
@@ -19,9 +20,10 @@ class Logger:
     DEBUG = 0
     INFO = 1
     WARNING = 2
-    HUMAN_MESSAGES = ["DEBUG", "INFO", "WARNING"]
+    ERROR = 3
+    HUMAN_MESSAGES = ["DEBUG", "INFO", "WARNING", "ERROR"]
     LOG_LEVEL = DEBUG # TODO: change this at some point
-    COLOR = [Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.RED + Style.BRIGHT]
+    COLOR = [Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.YELLOW + Style.BRIGHT, Fore.RED + Style.BRIGHT]
     FMT = "%% %ds" % max(map(len, HUMAN_MESSAGES))
 
     @staticmethod
@@ -36,7 +38,7 @@ class Logger:
         c = Logger.conn.cursor()
         c.execute("""
             CREATE TABLE IF NOT EXISTS logs (
-                date INTEGER DEFAULT (strftime('%s','now')),
+                date TIMESTAMP DEFAULT (strftime('%s','now')) NOT NULL,
                 category TEXT NOT NULL,
                 level INTEGER NOT NULL,
                 message TEXT NOT NULL)
@@ -86,6 +88,10 @@ class Logger:
     @staticmethod
     def warning(*args, **kwargs):
         Logger.log(Logger.WARNING, *args, **kwargs)
+
+    @staticmethod
+    def error(*args, **kwargs):
+        Logger.log(Logger.ERROR, *args, **kwargs)
 
     @staticmethod
     def get_logs(level, category, begin, end):

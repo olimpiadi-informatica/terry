@@ -47,7 +47,7 @@ class Server:
         try:
             return self.wsgi_app(environ, start_response)
         except:
-            Logger.warning("ERROR_500", traceback.format_exc())
+            Logger.error("UNCAUGHT_EXCEPTION", traceback.format_exc())
             return InternalServerError()
 
     def wsgi_app(self, environ, start_response):
@@ -60,7 +60,7 @@ class Server:
             return e
         except HTTPException:
             # TODO find a way to get the real ip address
-            Logger.warning("ERROR_404", "%s %s %s" % (request.remote_addr, request.method, request.url))
+            Logger.warning("HTTP_ERROR", "%s %s %s 404" % (request.remote_addr, request.method, request.url))
             return NotFound()
 
         controller, action = endpoint.split("#")
@@ -76,8 +76,8 @@ class Server:
         try:
             server.init_socket()
         except OSError:
-            Logger.warning("PORT_ALREADY_IN_USE", "Address: '%s' Port: %d" % (Config.address, Config.port))
+            Logger.error("PORT_ALREADY_IN_USE", "Address: '%s' Port: %d" % (Config.address, Config.port))
             sys.exit(1)
         greenlet = gevent.spawn(server.serve_forever)
-        Logger.info("SERVER_STARTED", "Server started")
+        Logger.info("SERVER_STATUS", "Server started")
         greenlet.join()

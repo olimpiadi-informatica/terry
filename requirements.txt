@@ -1,3 +1,4 @@
+colorama
 appdirs==1.4.3
 gevent==1.2.1
 greenlet==0.4.12
