@@ -61,8 +61,8 @@ class ContestView extends Component {
 
     for (let t of this.model.contest.tasks) {
       taskRoutes.push(
-        <Route key={t.name} exact path={'/' + t.name} component={
-          () => <TaskView model={this.model} key={t.name} taskName={t.name}/>
+        <Route path={'/:taskName'} render={ ({match}) =>
+            <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>
         }/>
       );
     }
