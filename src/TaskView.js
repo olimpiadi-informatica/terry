@@ -28,10 +28,10 @@ class TaskView extends Component {
         },
         content : {
           position                   : 'absolute',
-          top                        : '64px',
-          left                       : '40px',
-          right                      : '40px',
-          bottom                     : '64px',
+          top                        : '10%',
+          left                       : '15%',
+          right                      : '15%',
+          bottom                     : '10%',
           border                     : '1px solid #ccc',
           background                 : '#fff',
           overflow                   : 'auto',
@@ -39,7 +39,6 @@ class TaskView extends Component {
           borderRadius               : '4px',
           outline                    : 'none',
           padding                    : '20px',
-
         }
       };
 
@@ -82,18 +81,18 @@ class TaskView extends Component {
       return (
         <div>
           <a className="btn btn-primary top-button" role="button" onClick={() => this.donwloadInput()}>
-            Download input
+            <span aria-hidden="true" className="fa fa-download"></span> Download input
           </a>
           <a className="btn btn-success top-button" role="button" onClick={() => this.createSubmission()}>
-            Submit solution
+          <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
           </a>
         </div>
       )
     } else {
       return (
         <div>
-          <a className="btn btn-primary top-button" role="button" onClick={() => this.generateInput()}>
-            Generate input
+          <a className="btn btn-success top-button" role="button" onClick={() => this.generateInput()}>
+            <span aria-hidden="true" className="fa fa-plus"></span> Generate input
           </a>
         </div>
       );
@@ -130,7 +129,6 @@ class TaskView extends Component {
     return (
       <div>
         <h1>{this.getTask().title}</h1>
-        <p>Previous attempts: {userTask.previous_attempts}</p>
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
         <SubmissionListView model={this.model} taskName={this.taskName}></SubmissionListView>
