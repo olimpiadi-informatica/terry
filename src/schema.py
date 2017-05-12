@@ -35,14 +35,14 @@ class Schema:
             CREATE TABLE ips (
                 token TEXT NOT NULL,
                 ip TEXT NOT NULL,
-                first_date INTEGER NOT NULL,
+                first_date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 PRIMARY KEY (token, ip),
                 FOREIGN KEY (token) REFERENCES users(token)
             );
 
             CREATE TABLE admin_ips (
                 ip TEXT PRIMARY KEY,
-                first_date INTEGER NOT NULL
+                first_date INTEGER NOT NULL DEFAULT (strftime('%s','now'))
             );
 
             CREATE TABLE inputs (
@@ -50,7 +50,7 @@ class Schema:
                 token TEXT NOT NULL,
                 task TEXT NOT NULL,
                 attempt INTEGER NOT NULL,
-                date INTEGER NOT NULL,
+                date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 path TEXT NOT NULL,
                 size INTEGER NOT NULL,
                 FOREIGN KEY (token) REFERENCES users(token),
@@ -61,7 +61,7 @@ class Schema:
             CREATE TABLE sources (
                 id TEXT PRIMARY KEY,
                 input TEXT NOT NULL,
-                date INTEGER NOT NULL,
+                date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 path TEXT NOT NULL,
                 size INTEGER DEFAULT NULL,
                 FOREIGN KEY (input) REFERENCES inputs(id)
@@ -70,16 +70,11 @@ class Schema:
             CREATE TABLE outputs (
                 id TEXT PRIMARY KEY,
                 input TEXT NOT NULL,
-                date INTEGER NOT NULL,
+                date INTEGER NOT NULL DEFAULT (strftime('%s','now')),
                 path TEXT NOT NULL,
                 size INTEGER DEFAULT NULL,
-                validation_result TEXT DEFAULT NULL,
-                submission_result TEXT DEFAULT NULL,
+                result TEXT DEFAULT NULL,
                 FOREIGN KEY (input) REFERENCES inputs(id)
-                CHECK (
-                    (submission_result IS NULL AND validation_result IS NULL) OR
-                    (submission_result IS NOT NULL AND validation_result IS NOT NULL)
-                )
             );
 
             CREATE TABLE submissions (

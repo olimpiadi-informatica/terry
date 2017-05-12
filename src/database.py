@@ -10,10 +10,18 @@ from .config import Config
 from .logger import Logger
 
 from . import gevent_sqlite3 as sqlite3
+from gevent.lock import BoundedSemaphore
+import uuid
 
 
 class Database:
     connected = False
+
+    connection_sem = BoundedSemaphore()
+
+    @staticmethod
+    def gen_id():
+        return str(uuid.uuid4())
 
     @staticmethod
     def get_meta(key, default=None, type=str):
@@ -146,10 +154,58 @@ class Database:
         return Database.dictify(c, all=True)
 
     @staticmethod
-    def add_user(token, name, surname):
+    def get_next_attempt(token, task):
         c = Database.conn.cursor()
         c.execute("""
+            SELECT COUNT(*) FROM inputs
+            WHERE token=:token AND task=:task
+        """, {"token": token, "task": task})
+        return c.fetchone()[0]+1
+
+    @staticmethod
+    def begin():
+        Database.connection_sem.acquire()
+
+    @staticmethod
+    def commit():
+        Database.conn.commit()
+        Database.connection_sem.release()
+
+    @staticmethod
+    def rollback():
+        Database.conn.rollback()
+        Database.connection_sem.release()
+
+    @staticmethod
+    def do_write(autocommit, query, params):
+        if autocommit:
+            Database.begin()
+            try:
+                c.Database.conn.cursor()
+                c.execute(query, params)
+                Database.commit()
+                return c.rowcount
+            except:
+                Database.rollback()
+                raise
+        else:
+            c.Database.conn.cursor()
+            c.execute(query, params)
+            return c.rowcount
+
+    @staticmethod
+    def add_user(token, name, surname, autocommit=True):
+        Database.do_write(autocommit, """
             INSERT INTO users (token, name, surname)
             VALUES (:token, :name, :surname)
         """, {"token": token, "name": name, "surname": surname})
 
+    @staticmethod
+    def add_input(id, token, task, attempt, path, size, autocommit=True):
+        Database.do_write(autocommit, """
+            INSERT INTO inputs (id, token, task, attempt, path, size)
+            VALUES (:id, :token, :task, :attempt, :path, :size)
+        """, {
+            "token": token, "task": task, "attempt": attempt,
+            "path": path, "size": size, "id": id
+        })
