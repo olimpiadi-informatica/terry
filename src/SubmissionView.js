@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import ResultView from './ResultView';
+import FileView from './FileView';
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -39,25 +41,34 @@ class SubmissionView extends Component {
     if(!this.submission.hasSource()) {
       return <input key="absent" type="file" name="source" onChange={() => this.onChangeSource()}></input>;
     } else {
-      const file = this.submission.getSourceFile();
+      const source = this.submission.getSource();
       return (
         <div key="present">
-          <p>File: {file.name}</p>
+          <FileView file={source.file}></FileView>
           <input key="present" type="button" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
         </div>
       )
     }
   }
 
+  renderOutputStatus(output) {
+    if(!output.isCreated()) return <p>Creating...</p>;
+    if(!output.isUploaded()) return <p>Uploading...</p>;
+    if(!output.isValidated()) return <p>Validating...</p>;
+
+    return <ResultView model={this.model} result={output.metadata.validation_result}></ResultView>;
+  }
+
   renderOutputSelector() {
     if(!this.submission.hasOutput()) {
       return <input key="absent" type="file" name="output" onChange={() => this.onChangeOutput()}></input>;
     } else {
-      const file = this.submission.getOutputFile();
+      const output = this.submission.getOutput();
       return (
         <div key="present">
-          <p>File: {file.name}</p>
+          <FileView file={output.file}></FileView>
           <input type="button" value="Change output" onClick={() => { this.resetOutput(); return false; }}></input>
+          { this.renderOutputStatus(output) }
         </div>
       )
     }
@@ -70,10 +81,14 @@ class SubmissionView extends Component {
           <div>{ this.renderSourceSelector() }</div>
           <div>{ this.renderOutputSelector() }</div>
           <div><input type="submit" value="Submit"></input></div>
+          <input type="reset" onClick={() => {this.close(); return false;}} value="Cancel"></input>
         </form>
       );
     } else {
-      return <button onClick={() => this.close()}>Okay.</button>
+      return <div>
+        <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
+        <button onClick={() => this.close()}>Okay.</button>
+      </div>
     }
   }
 

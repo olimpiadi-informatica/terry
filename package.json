@@ -5,9 +5,11 @@
   "dependencies": {
     "axios": "^0.16.1",
     "bootstrap": "4.0.0-alpha.6",
-    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "universal-cookie": "^2.0.5",
+    "react-router-dom": "^4.1.1"
   },
   "devDependencies": {
     "json-server": "^0.10.0",

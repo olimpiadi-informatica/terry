@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Link, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -20,7 +20,7 @@ class ContestView extends Component {
 
     return (
       <li key={ i } className="nav-item">
-        <a className={ (this.currentTaskName == item.name) ? "nav-link active" : "nav-link" } href="#" onClick={this.setCurrentTask.bind(this, item.name)}>{ item.name }</a>
+        <a href={ "#" + item.name } className={ (this.currentTaskName == item.name) ? "nav-link active" : "nav-link" } onClick={this.setCurrentTask.bind(this, item.name)}>{ item.name }</a>
       </li>
     );
   }
@@ -55,25 +55,30 @@ class ContestView extends Component {
     );
   }
 
-  getTaskView()
-  {
-    return (
-      <main className="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-        <TaskView model={this.model} key={this.currentTaskName} taskName={this.currentTaskName} />
-      </main>
-    );
-  }
-
   render() {
+
+    const taskRoutes = [];
+
+    for (let t of this.model.contest.tasks) {
+      taskRoutes.push(
+        <Route key={t.name} exact path={'/' + t.name} component={
+          () => <TaskView model={this.model} key={t.name} taskName={t.name}/>
+        }/>
+      );
+    }
+
     return (
       <div>
         { this.getNavBar() }
         <div className="container-fluid">
           <div className="row">
             { this.getSideBar() }
-            { this.getTaskView() }
+            <main className="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+              { taskRoutes }
+            </main>
           </div>
         </div>
+
       </div>
     );
   }

@@ -1,10 +1,12 @@
 import axios from 'axios';
 import wait from './utils';
 import Submission from './Submission';
+import Cookies from 'universal-cookie';
 
 class Model {
     constructor(props) {
       this.view = props.view;
+      this.cookies = new Cookies();
     }
 
     loadContest() {
@@ -27,16 +29,30 @@ class Model {
       return this.contest !== undefined;
     }
 
-    isLoggedIn() {
-      return this.user !== undefined;
-    }
-
     loadUser(token) {
       return axios.get('http://localhost:3001/user/' + token);
     }
 
+    isLoggedIn() {
+      const userToken = this.cookies.get('userToken');
+      return userToken !== undefined;
+    }
+
+    isUserLoaded() {
+      return this.user !== undefined;
+    }
+
+    maybeLoadUser() {
+      if(this.isLoggedIn()) {
+        this.refreshUser();
+      }
+    }
+
     refreshUser() {
-      return this.loadUser(this.userToken)
+      if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
+      const userToken = this.cookies.get('userToken');
+
+      return this.loadUser(userToken)
         .then((response) => {
           this.user = response.data;
           this.view.forceUpdate();
@@ -52,7 +68,7 @@ class Model {
       return this.loadUser(token)
         .then((response) => {
           this.user = response.data;
-          this.userToken = token;
+          this.cookies.set('userToken', token);
           this.view.forceUpdate();
         })
         .catch((response) => {
@@ -60,6 +76,13 @@ class Model {
           this.loginAttempt.error = response;
           this.view.forceUpdate();
         });
+    }
+
+    logout() {
+      if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
+      this.cookies.remove('userToken');
+      delete this.user;
+      this.view.forceUpdate();
     }
 
     getCurrentInput(taskName) {
