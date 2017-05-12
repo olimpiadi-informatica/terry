@@ -32,8 +32,8 @@ class ContestView extends Component {
           </ul>
         </nav>
 
-        <Route path={'/:taskName'} component={
-          ({match}) => <TaskView model={this.model} taskName={match.params.taskName}/>
+        <Route path={'/:taskName'} render={ ({match}) =>
+            <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>
         }/>
       </div>
     );

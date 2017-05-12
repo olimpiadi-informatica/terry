@@ -61,7 +61,6 @@ class TaskView extends Component {
 
   renderSubmissionDialog() {
     if(this.currentSubmission === undefined) return null;
-
     return <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />;
   }
 

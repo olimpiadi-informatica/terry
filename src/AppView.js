@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Link } from 'react-router-dom';
 
 import ContestView from './ContestView';
 import LoginView from './LoginView';
@@ -22,9 +21,7 @@ class AppView extends Component {
 
     return (
       <div>
-        <HashRouter>
-          <ContestView model={this.model}/>
-        </HashRouter>
+        <ContestView model={this.model}/>
         <button onClick={() => this.model.logout()}>Log out</button>
       </div>
     );
