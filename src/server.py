@@ -20,6 +20,7 @@ from .config import Config
 from .logger import Logger
 
 from .handlers.ping_handler import PingHandler
+from .handlers.contest_handler import ContestHandler
 
 monkey.patch_all()
 
@@ -28,7 +29,8 @@ class Server:
     """ Main server """
     def __init__(self):
         self.handlers = {
-            "ping": PingHandler()
+            "ping": PingHandler(),
+            "contest": ContestHandler()
         }
 
         # The router tries to match the rules, the endpoint MUST be a string with this format
@@ -36,7 +38,8 @@ class Server:
         # Where CONTROLLER is an handler registered in self.handlers and ACTION is a valid
         # method of that handler
         self.router = Map([
-            Rule("/ping", methods=["GET"], endpoint="ping#ping")
+            Rule("/ping", methods=["GET"], endpoint="ping#ping"),
+            Rule("/contest", methods=["GET"], endpoint="contest#get")
         ])
 
     @responder
