@@ -56,6 +56,32 @@ class Submission {
           output : {
             id: "o1",
           },
+          result: {
+            warnings: [
+              {
+                code: "partial_parse",
+                severity: "warning",
+                message: "Attention: the submitted file could not be fully processed.",
+              },
+            ],
+            cases: [
+              {
+                id: "1",
+                status: "correct",
+                message: "Output correct.",
+              },
+              {
+                id: "5",
+                status: "wrong",
+                message: "Your output is 5, but the cycle (4 6 8 1) has shorter length (4) !",
+              },
+              {
+                id: "4",
+                status: "wrong",
+                message: "Your output is 3, but there is no cycle of length 3.",
+              },
+            ]
+          },
         };
 
         const userTask = this.model.user.tasks[this.input.task]

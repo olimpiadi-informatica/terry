@@ -88,7 +88,10 @@ class SubmissionView extends Component {
         </form>
       );
     } else {
-      return <button onClick={() => this.close()}>Okay.</button>
+      return <div>
+        <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
+        <button onClick={() => this.close()}>Okay.</button>
+      </div>
     }
   }
 
