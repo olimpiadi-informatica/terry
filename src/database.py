@@ -144,7 +144,7 @@ class Database:
             JOIN inputs ON submissions.input = inputs.id
             JOIN outputs ON submissions.output = outputs.id
             JOIN sources ON submissions.source = sources.id
-            WHERE token=:token AND task=:task
+            WHERE submissions.token=:token AND submissions.task=:task
             ORDER BY inputs.attempt ASC
         """, {"token": token, "task": task})
         return Database.dictify(c, all=True)

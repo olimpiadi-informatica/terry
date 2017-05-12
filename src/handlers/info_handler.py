@@ -4,6 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+
 import json
 
 from .base_handler import BaseHandler
@@ -102,9 +103,14 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date", "contest_end"])
 
+    def get_submissions(self, route_args, request):
+        token = route_args["token"]
+        task = route_args["task"]
 
-
-
+        submissions = []
+        for sub in Database.get_submissions(token, task):
+            submissions.append(BaseHandler.format_dates(InfoHandler._parse_submission(sub)))
+        return submissions
 
     @staticmethod
     def _parse_submission(submission):
