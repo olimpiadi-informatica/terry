@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "bootstrap": "4.0.0-alpha.6",
+    "filesize": "^3.5.9",
     "font-awesome": "^4.7.0",
     "moment": "^2.18.1",
     "react": "^15.5.4",

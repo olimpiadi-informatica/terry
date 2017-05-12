@@ -80,20 +80,21 @@ class TaskView extends Component {
     if(userTask.current_input) {
       return (
         <div>
-          <a className="btn btn-primary top-button" role="button" onClick={() => this.donwloadInput()}>
+          <button role="button" className="btn btn-primary top-button" onClick={() => this.donwloadInput()}>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
-          </a>
-          <a className="btn btn-success top-button" role="button" onClick={() => this.createSubmission()}>
-          <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
-          </a>
+          </button>
+          {' '}
+          <button role="button" className="btn btn-success top-button" onClick={() => this.createSubmission()}>
+            <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
+          </button>
         </div>
       )
     } else {
       return (
         <div>
-          <a className="btn btn-success top-button" role="button" onClick={() => this.generateInput()}>
+          <button role="button" className="btn btn-success top-button" onClick={() => this.generateInput()}>
             <span aria-hidden="true" className="fa fa-plus"></span> Generate input
-          </a>
+          </button>
         </div>
       );
     }
@@ -118,7 +119,7 @@ class TaskView extends Component {
 
   renderTaskStatement() {
     if (this.taskStatement === undefined)
-      return <div>Loading...</div>;
+      return (<div>Loading...</div>);
     else
       return <ReactMarkdown source={this.taskStatement}/>
   }
