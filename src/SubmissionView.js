@@ -56,11 +56,11 @@ class SubmissionView extends Component {
   }
 
   renderOutputStatus(output) {
-    if(!output.isCreated()) return <p>Creating...</p>;
-    if(!output.isUploaded()) return <p>Uploading...</p>;
-    if(!output.isValidated()) return <p>Validating...</p>;
+    if(!output.isCreated()) return (<div><br/><h5>Creating...</h5></div>);
+    if(!output.isUploaded()) return (<div><br/><h5>Uploading...</h5></div>);
+    if(!output.isValidated()) return (<div><br/><h5>Validating...</h5></div>);
 
-    return <ResultView model={this.model} result={output.metadata.validation_result}></ResultView>;
+    return (<div><br/><ResultView model={this.model} result={output.metadata.validation_result}></ResultView></div>)
   }
 
   renderOutputSelector() {
@@ -72,11 +72,13 @@ class SubmissionView extends Component {
     } else {
       const output = this.submission.getOutput();
       return (
-        <div key="present">
+        <div key="present" className="bs-callout bs-callout-info">
+          <h4 className="bs-callout-info-title">Output file info</h4>
           <FileView file={output.file}></FileView>
-          <input type="button" value="Change output" onClick={() => { this.resetOutput(); return false; }}></input>
+          <input key="present" type="button" className="btn btn-secondary" value="Change Output" onClick={() => { this.resetOutput(); return false; }}></input>
           { this.renderOutputStatus(output) }
         </div>
+
       )
     }
   }
