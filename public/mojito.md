@@ -1,154 +1,100 @@
-Paragraphs are separated by a blank line.
+#### Descrizione del problema
 
-2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
-look like:
+ <img src="/mojito.jpg" alt="Mojito" style="float:left;height:250px;margin-right:10px">
 
-  * this one
-  * that one
-  * the other one
+Mojito, il jackrussell di Monica, è ormai diventato la mascotte dei Probabili Olimpici,
+i ragazzi che sono candidati a rappresentare l’Italia alle Olimpiadi Internazionali di
+Informatica 2014 a Taipei, Taiwan. Negli allenamenti a Volterra, Mojito gioca a palla
+con i ragazzi nel prato: lui porta la pallina al ragazzo più vicino che la calcia via; a quel
+punto Mojito rincorre la palla, l’acchiappa e la porta di nuovo al ragazzo che ha più
+vicino... e così via!
 
-Note that --- not considering the asterisk --- the actual text
-content starts at 4-columns in.
+Possiamo rappresentare questo gioco con una griglia: supponendo
+di avere tre ragazzi che giocano con Mojito, rappresentiamo la loro posizione nella
+griglia, rispettivamente, con R1, R2 e R3. Tutti i ragazzi sono piuttosto metodici, e
+ogni volta che tirano la palla questa finisce sempre nella stessa posizione (a seconda
+di chi tira!): sulla griglia indichiamo con P1 il punto in cui finisce la palla tirata da R1,
+P2 il punto in cui finisce la palla tirata da R2, ecc...
 
-> Block quotes are
-> written like so.
->
-> They can span multiple paragraphs,
-> if you like.
+La posizione iniziale di Mojito,
+con la palla, è rappresentata nella griglia da una M. Mojito misura la distanza come
+il minimo numero di spostamenti orizzontali e/o verticali per andare da una casella a
+un’altra.
 
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
-in chapters 12--14"). Three dots ... will be converted to an ellipsis.
-Unicode is supported. ☺
+![alt text](/griglia.png "Una griglia bella")
 
+Per esempio, consideriamo la griglia qui sopra, di dimensione 8x3. All’inizio Mojito si trova, insieme
+con la palla, nella casella (5,2); il ragazzo più vicino è R3, nella posizione (4,1), che dista due caselle da
+lui; il gioco inizia:
+* Mojito porta la palla a R3, che la tira nella casella (6,1);
+* a questo punto Mojito, presa la palla, la porta a R2, nella casella (7,1), che è il più vicino a lui; da
+qui la palla viene tirata nella casella (3,3);
+* Mojito recupera la palla e la porta a R1, nella casella (1,3); R1 tira la palla nella casella (6,3);
+* da qui in poi saranno solo R1 e R2 a giocare, visto che quando tira R1 poi Mojito porta la palla a
+R2 e viceversa.
+1Notiamo che, nel caso appena descritto, tutti e tre i ragazzi hanno giocato (anche se R3 ha toccato
+palla solo una volta). Se Mojito ha due o più ragazzi alla stessa distanza, sceglie quello che ha la coordinata
+X (orizzontale) minore e, se ve ne sono due o più con lo stesso valore, tra questi sceglie quello che ha la
+coordinata Y (verticale) minore. Mojito è molto concentrato sulla palla, e non riesce a ricordarsi se tutti i
+ragazzi l’hanno tirata. Il vostro compito è quello di scrivere un programma che calcoli il numero di ragazzi
+che lanciano la palla almeno una volta!
 
+#### File di input
 
-An h2 header
-------------
+Il file input.txt è composto da 3+N righe. La prima riga contiene due interi positivi X e Y: le
+dimensioni della griglia. La seconda riga contiene una coppia di interi positivi: le coordinate della posizione
+iniziale di Mojito con la palla. La terza riga contiene N, il numero di ragazzi che giocano con Mojito.
+Ognuna delle successive N righe contiene due coppie di interi: le coordinate dell’i-esimo ragazzo (prima
+coppia di interi) e le coordinate di dove l’i-esimo ragazzo tirerà la palla.
 
-Here's a numbered list:
+#### File di output
 
- 1. first item
- 2. second item
- 3. third item
+Il file output.txt è composto da una sola riga contenente un solo intero non negativo: il numero di
+ragazzi che giocano con Mojito, ovvero il numero di ragazzi che tirano la palla almeno una volta, a partire
+dalla posizione iniziale di Mojito.
 
-Note again how the actual text starts at 4 columns in (4 characters
-from the left side). Here's a code sample:
+#### Assunzioni
 
-    # Let me re-iterate ...
-    for i in 1 .. 10 { do-something(i) }
+* 1 ≤ X,Y,N ≤ 100
+* Le coordinate della griglia vanno da 1 a X e da 1 a Y (inclusi).
+* Tutte le posizioni nel file di input sono distinte: non ci possono essere due ragazzi nella stessa casella,
+non ci sono due ragazzi che tirano nella stessa casella, nessun ragazzo tira nella casella dove c’è un
+altro ragazzo.
+* Mojito, inizialmente, è in una casella non occupata da nessun ragazzo e dove nessun ragazzo tira la
+palla.
+* Mojito, piccolo com’è, riesce agevolmente a passare tra le gambe dei ragazzi; non viene quindi
+ostacolato nel suo movimento da ragazzi presenti in una cella tra lui e la palla.
 
-As you probably guessed, indented 4 spaces. By the way, instead of
-indenting the block, you can use delimited blocks, if you like:
+#### Esempio di input/output
 
-~~~
-define foobar() {
-    print "Welcome to flavor country!";
-}
-~~~
-
-(which makes copying & pasting easier). You can optionally mark the
-delimited block for Pandoc to syntax highlight it:
-
-~~~python
-import time
-# Quick, count to ten!
-for i in range(10):
-    # (but not *too* quick)
-    time.sleep(0.5)
-    print i
-~~~
-
-
-
-### An h3 header ###
-
-Now a nested list:
-
- 1. First, get these ingredients:
-
-      * carrots
-      * celery
-      * lentils
-
- 2. Boil some water.
-
- 3. Dump everything in the pot and follow
-    this algorithm:
-
-        find wooden spoon
-        uncover pot
-        stir
-        cover pot
-        balance wooden spoon precariously on pot handle
-        wait 10 minutes
-        goto first step (or shut off burner when done)
-
-    Do not bump wooden spoon or it will fall.
-
-Notice again how text always lines up on 4-space indents (including
-that last line which continues item 3 above).
-
-Here's a link to [a website](http://foo.bar), to a [local
-doc](local-doc.html), and to a [section heading in the current
-doc](#an-h2-header). Here's a footnote [^1].
-
-[^1]: Footnote text goes here.
-
-Tables can look like this:
-
-size  material      color
-----  ------------  ------------
-9     leather       brown
-10    hemp canvas   natural
-11    glass         transparent
-
-Table: Shoes, their sizes, and what they're made of
-
-(The above is the caption for the table.) Pandoc also supports
-multi-line tables:
-
---------  -----------------------
-keyword   text
---------  -----------------------
-red       Sunsets, apples, and
-          other red or reddish
-          things.
-
-green     Leaves, grass, frogs
-          and other things it's
-          not easy being.
---------  -----------------------
-
-A horizontal rule follows.
-
-***
-
-Here's a definition list:
-
-apples
-  : Good for making applesauce.
-oranges
-  : Citrus!
-tomatoes
-  : There's no "e" in tomatoe.
-
-Again, text is indented 4 spaces. (Put a blank line between each
-term/definition pair to spread things out more.)
-
-Here's a "line block":
-
-| Line one
-|   Line too
-| Line tree
-
-and images can be specified like so:
-
-![example image](example-image.jpg "An exemplary image")
-
-Inline math equations go in like so: $\omega = d\phi / dt$. Display
-math should get its own line and be put in in double-dollarsigns:
-
-$$I = \int \rho R^{2} dV$$
-
-And note that you can backslash-escape any punctuation characters
-which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.
+<table class="table table-bordered sample-case">
+  <thead class="thead-default">
+    <tr>
+      <th>input.txt</th>
+      <th>output.txt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+5  3
+3  3
+2
+4  3  5  3
+5  1  1  1
+</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>
+8  3
+5  2
+3
+1  3  6  3
+7  1  3  3
+4  1  6  1
+</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>

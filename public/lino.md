@@ -1,154 +1,65 @@
-Paragraphs are separated by a blank line.
+#### Descrizione del problema
 
-2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
-look like:
+Il giornalaio Lino è un appassionato di matematica e, prima di consegnare il resto ai propri clienti, si diverte a calcolare mentalmente quante differenti possibilità esistono per consegnare tale resto. Ad esempio, considerando l'Euro come valuta, per consegnare 6 centesimi di resto esistono le seguenti 5 possibilità:
+*    6 monete da un centesimo,
+*    4 monete da un centesimo e 1 da due centesimi,
+*    2 monete da un centesimo e 2 da due centesimi,
+*    1 moneta da un centesimo e 1 da cinque centesimi,
+*    3 monete da due centesimi.
 
-  * this one
-  * that one
-  * the other one
+Lino si sta però accorgendo che a causa della lentezza nella consegna del resto sta perdendo molti clienti. Pertanto, aiuta Lino a calcolare il numero di possibli combinazioni.
+Dati di input
 
-Note that --- not considering the asterisk --- the actual text
-content starts at 4-columns in.
+#### File di input
 
-> Block quotes are
-> written like so.
->
-> They can span multiple paragraphs,
-> if you like.
+Il file input.txt contiene nella prima riga un intero positivo N che rappresenta il numero di monete diverse disponibili. La seconda riga contiene un intero positivo R che rappresenta il resto da consegnare al cliente. Ciascuna delle successive N righe contiene un intero positivo che indica il valore di ogni singolo tipo di moneta.
 
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
-in chapters 12--14"). Three dots ... will be converted to an ellipsis.
-Unicode is supported. ☺
+#### File di output
+Il file output.txt è composto da una riga contenente un solo intero, che rappresenta il numero di tutte le possibili combinazioni di monete per la consegna del resto R (notare che possono essere usate più copie dello stesso tipo di moneta, per esempio 6 monete da cinque centesimi).
 
+#### Assunzioni
+*   1 < N < 100
+*   1 < R < 1000
+*   I valori dei vari tipi di N monete sono tutti diversi.
 
+#### Esempio di input/output
 
-An h2 header
-------------
+<table class="table table-bordered sample-case">
+  <thead class="thead-default">
+    <tr>
+      <th>input.txt</th>
+      <th>output.txt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+      8
+      6
+      1
+      2
+      5
+      10
+      20
+      50
+      100
+      200</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>
+      6
+      6
+      5
+      10
+      20
+      50
+      100
+      200</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
 
-Here's a numbered list:
-
- 1. first item
- 2. second item
- 3. third item
-
-Note again how the actual text starts at 4 columns in (4 characters
-from the left side). Here's a code sample:
-
-    # Let me re-iterate ...
-    for i in 1 .. 10 { do-something(i) }
-
-As you probably guessed, indented 4 spaces. By the way, instead of
-indenting the block, you can use delimited blocks, if you like:
-
-~~~
-define foobar() {
-    print "Welcome to flavor country!";
-}
-~~~
-
-(which makes copying & pasting easier). You can optionally mark the
-delimited block for Pandoc to syntax highlight it:
-
-~~~python
-import time
-# Quick, count to ten!
-for i in range(10):
-    # (but not *too* quick)
-    time.sleep(0.5)
-    print i
-~~~
-
-
-
-### An h3 header ###
-
-Now a nested list:
-
- 1. First, get these ingredients:
-
-      * carrots
-      * celery
-      * lentils
-
- 2. Boil some water.
-
- 3. Dump everything in the pot and follow
-    this algorithm:
-
-        find wooden spoon
-        uncover pot
-        stir
-        cover pot
-        balance wooden spoon precariously on pot handle
-        wait 10 minutes
-        goto first step (or shut off burner when done)
-
-    Do not bump wooden spoon or it will fall.
-
-Notice again how text always lines up on 4-space indents (including
-that last line which continues item 3 above).
-
-Here's a link to [a website](http://foo.bar), to a [local
-doc](local-doc.html), and to a [section heading in the current
-doc](#an-h2-header). Here's a footnote [^1].
-
-[^1]: Footnote text goes here.
-
-Tables can look like this:
-
-size  material      color
-----  ------------  ------------
-9     leather       brown
-10    hemp canvas   natural
-11    glass         transparent
-
-Table: Shoes, their sizes, and what they're made of
-
-(The above is the caption for the table.) Pandoc also supports
-multi-line tables:
-
---------  -----------------------
-keyword   text
---------  -----------------------
-red       Sunsets, apples, and
-          other red or reddish
-          things.
-
-green     Leaves, grass, frogs
-          and other things it's
-          not easy being.
---------  -----------------------
-
-A horizontal rule follows.
-
-***
-
-Here's a definition list:
-
-apples
-  : Good for making applesauce.
-oranges
-  : Citrus!
-tomatoes
-  : There's no "e" in tomatoe.
-
-Again, text is indented 4 spaces. (Put a blank line between each
-term/definition pair to spread things out more.)
-
-Here's a "line block":
-
-| Line one
-|   Line too
-| Line tree
-
-and images can be specified like so:
-
-![example image](example-image.jpg "An exemplary image")
-
-Inline math equations go in like so: $\omega = d\phi / dt$. Display
-math should get its own line and be put in in double-dollarsigns:
-
-$$I = \int \rho R^{2} dV$$
-
-And note that you can backslash-escape any punctuation characters
-which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.
+#### Note
+Un programma che restituisce sempre lo stesso valore, indipendentemente dai dati in input.txt, non totalizza alcun punteggio rilevante.
