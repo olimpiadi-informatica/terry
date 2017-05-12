@@ -28,6 +28,7 @@ class Submission {
 
     setOutput(file) {
       this.output = new Output(file, this);
+      this.output.process();
       this.model.view.forceUpdate();
     }
 

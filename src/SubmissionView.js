@@ -49,6 +49,16 @@ class SubmissionView extends Component {
     }
   }
 
+  renderOutputStatus(output) {
+    if(!output.isCreated()) return <p>Creating...</p>;
+    if(!output.isUploaded()) return <p>Uploading...</p>;
+    if(!output.isValidated()) return <p>Validating...</p>;
+
+    return (
+      <p>TODO: validation result :)</p>
+    )
+  }
+
   renderOutputSelector() {
     if(!this.submission.hasOutput()) {
       return <input key="absent" type="file" name="output" onChange={() => this.onChangeOutput()}></input>;
@@ -58,6 +68,7 @@ class SubmissionView extends Component {
         <div key="present">
           <p>File: {output.file.name}</p>
           <input type="button" value="Change output" onClick={() => { this.resetOutput(); return false; }}></input>
+          { this.renderOutputStatus(output) }
         </div>
       )
     }
