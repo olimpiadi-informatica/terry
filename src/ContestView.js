@@ -11,25 +11,17 @@ class ContestView extends Component {
     super(props);
 
     this.model = props.model;
-    this.currentTaskName = this.model.contest.tasks[0].name;
-  }
-
-  setCurrentTask(name) {
-    this.currentTaskName = name;
-    this.forceUpdate();
   }
 
   taskNavItem(item, i) {
-
     return (
-      <li key={ i } className="nav-item">
-        <a href={ "#" + item.name } className={ (this.currentTaskName == item.name) ? "nav-link active" : "nav-link" } onClick={this.setCurrentTask.bind(this, item.name)}>{ item.name }</a>
-      </li>
-    );
+          <li key={i} className="nav-item">
+            <Link to={ "/" + item.name } activeClassName="nav-link active">{ item.name }</Link>
+          </li>
+        );
   }
 
-  getSideBar()
-  {
+  getSideBar() {
     return (
       <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
@@ -43,8 +35,7 @@ class ContestView extends Component {
     );
   }
 
-  getNavBar()
-  {
+  getNavBar() {
     return (
       <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
         <a className="navbar-brand" href="#">Terry</a>
