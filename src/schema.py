@@ -20,7 +20,8 @@ class Schema:
                 name TEXT NOT NULL,
                 surname TEXT NOT NULL,
                 extratime INTEGER NOT NULL DEFAULT 0,
-                first_login TIMESTAMP
+                first_login TIMESTAMP,
+                CHECK (extratime >= 0)
             );
 
             CREATE TABLE tasks (

@@ -59,6 +59,12 @@ class Database:
             return [dict(zip(descr, row)) for row in c.fetchall()]
 
     @staticmethod
+    def get_tasks():
+        c = Database.conn.cursor()
+        c.execute("""SELECT * FROM tasks""")
+        return dictify(c)
+
+    @staticmethod
     def get_user(token):
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM users WHERE token=:token""", {"token": token})
@@ -134,4 +140,12 @@ class Database:
             SELECT * FROM ips WHERE token=:token
         """, {"token": token})
         return dictify(c, all=True)
+
+    @staticmethod
+    def add_user(token, name, surname):
+        c = Database.conn.cursor()
+        c.execute("""
+            INSERT INTO users (token, name, surname)
+            VALUES (:token, :name, :surname)
+        """, {"token": token, "name": name, "surname": surname})
 
