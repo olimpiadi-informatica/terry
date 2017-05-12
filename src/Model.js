@@ -63,6 +63,14 @@ class Model {
         });
     }
 
+    getCurrentInput(taskName) {
+      const data = this.user.tasks[taskName].current_input;
+      if(data === undefined) return;
+      return Object.assign({
+        task: taskName
+      }, data);
+    }
+
     generateInput(taskName) {
       // TODO: dummy
       return wait(500).then(() => {
@@ -83,7 +91,7 @@ class Model {
     }
 
     createSubmission(input) {
-      return new Submission(input);
+      return new Submission(input, this);
     }
 }
 

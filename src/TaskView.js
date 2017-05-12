@@ -19,12 +19,16 @@ class TaskView extends Component {
     return this.model.user.tasks[this.taskName];
   }
 
+  getCurrentInput() {
+    return this.model.getCurrentInput(this.taskName);
+  }
+
   generateInput() {
     return this.model.generateInput(this.taskName);
   }
 
   createSubmission() {
-    const input = this.getUserTask().current_input;
+    const input = this.getCurrentInput();
     this.currentSubmission = this.model.createSubmission(input);
     this.forceUpdate();
   }
@@ -48,10 +52,15 @@ class TaskView extends Component {
     }
   }
 
+  onSubmissionClose() {
+    delete this.currentSubmission;
+    this.forceUpdate();
+  }
+
   renderSubmissionDialog() {
     if(this.currentSubmission === undefined) return null;
 
-    return <SubmissionView model={this.model} submission={this.currentSubmission} />;
+    return <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />;
   }
 
   render() {
