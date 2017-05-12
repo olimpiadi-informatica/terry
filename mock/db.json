@@ -20,44 +20,69 @@
   "user": [
     {
       "id": "secret",
-      "token": "secret",
       "name": "John Doe",
       "tasks": {
         "poldo": {
           "previous_attempts": 0,
           "current_input": {
-            "id": "42"
+            "id": "i1"
           }
         },
         "lino": {
-          "previous_attempts": 4
+          "previous_attempts": 4,
+          "current_input": null
         },
         "mojito": {
-          "previous_attempts": 2
+          "previous_attempts": 2,
+          "current_input": null
         }
       }
     }
   ],
   "input": [
     {
-      "id": "42",
-      "user": "secret",
-      "task": "poldo"
+      "id": "i1",
+      "task": "poldo",
+      "user": {
+        "id": "secret",
+      }
     },
     {
-      "user": "user5678",
+      "id": "i2",
       "task": "lino",
-      "id": 44
+      "user": {
+        "id": "secret",
+      }
     }
   ],
-  "comments": [
+  "source": [
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "id": "src1",
+      "input": {
+        "id": "i1"
+      }
     }
   ],
-  "profile": {
-    "name": "typicode"
-  }
+  "output": [
+    {
+      "id": "o1",
+      "input": {
+        "id": "i1"
+      }
+    }
+  ],
+  "submission": [
+    {
+      "id": "sub1",
+      "input": {
+        "id": "i1"
+      },
+      "source": {
+        "id": "src1"
+      },
+      "output": {
+        "id": "o1"
+      }
+    }
+  ]
 }
