@@ -112,11 +112,19 @@ class Database:
     def get_submission(id):
         c = Database.conn.cursor()
         c.execute("""
-            SELECT * FROM submissions
-            JOIN inputs ON submissions.input = inputs.id,
+            SELECT
+                submissions.id AS id, submissions.token AS token, submissions.task AS task,
+                inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
+                inputs.path AS input_path, inputs.size AS input_size,
+                outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
+                outputs.size AS output_size, outputs.result AS output_result,
+                sources.id AS source_id, sources.date AS source_date, sources.path AS source_path,
+                sources.size AS source_size
+            FROM submissions
+            JOIN inputs ON submissions.input = inputs.id
             JOIN outputs ON submissions.output = outputs.id
             JOIN sources ON submissions.source = sources.id
-            WHERE id=:id
+            WHERE submissions.id=:id
         """, {"id": id})
         return Database.dictify(c)
 
@@ -124,8 +132,16 @@ class Database:
     def get_submissions(token, task):
         c = Database.conn.cursor()
         c.execute("""
-            SELECT * FROM submissions
-            JOIN inputs ON submissions.input = inputs.id,
+            SELECT
+                submissions.id AS id, submissions.token AS token, submissions.task AS task,
+                inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
+                inputs.path AS input_path, inputs.size AS input_size,
+                outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
+                outputs.size AS output_size, outputs.result AS output_result,
+                sources.id AS source_id, sources.date AS source_date, sources.path AS source_path,
+                sources.size AS source_size
+            FROM submissions
+            JOIN inputs ON submissions.input = inputs.id
             JOIN outputs ON submissions.output = outputs.id
             JOIN sources ON submissions.source = sources.id
             WHERE token=:token AND task=:task
@@ -242,28 +258,28 @@ class Database:
         """, {"id": id, "input": input, "path": path})
 
     @staticmethod
-    def record_source_upload(id, size):
+    def record_source_upload(id, size, autocommit=True):
         return 1 == Database.do_write(autocommit, """
             UPDATE sources SET size = :size
             WHERE id = :id
         """, {"id": id, "size": size})
 
     @staticmethod
-    def record_output_upload(id, size):
+    def record_output_upload(id, size, autocommit=True):
         return 1 == Database.do_write(autocommit, """
             UPDATE outputs SET size = :size
             WHERE id = :id
         """, {"id": id, "size": size})
 
     @staticmethod
-    def record_output_result(id, result):
+    def record_output_result(id, result, autocommit=True):
         return 1 == Database.do_write(autocommit, """
             UPDATE outputs SET result = :result
             WHERE id = :id
         """, {"id": id, "result": result})
 
     @staticmethod
-    def add_submission(input, output, source):
+    def add_submission(input, output, source, autocommit=True):
         id = Database.gen_id()
         if 1 == Database.do_write(autocommit, """
             INSERT INTO submissions (id, token, task, input, output, source)

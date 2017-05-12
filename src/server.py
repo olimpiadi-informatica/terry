@@ -45,7 +45,8 @@ class Server:
             Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
             Rule("/input/<id>", methods=["GET"], endpoint="info#get_input"),
             Rule("/output/<id>", methods=["GET"], endpoint="info#get_output"),
-            Rule("/source/<id>", methods=["GET"], endpoint="info#source_input")
+            Rule("/source/<id>", methods=["GET"], endpoint="info#get_source"),
+            Rule("/submission/<id>", methods=["GET"], endpoint="info#get_submission")
         ])
 
     @responder

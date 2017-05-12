@@ -6,6 +6,7 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
 import json
+from datetime import datetime
 
 from json import JSONDecodeError
 from werkzeug.exceptions import HTTPException, BadRequest
@@ -69,3 +70,12 @@ class BaseHandler:
             return json.loads(request.data)
         except JSONDecodeError as e:
             self.raise_exc(BadRequest, "MALFORMED_BODY", "The provided json is invalid: %s" % str(e))
+
+    @staticmethod
+    def format_dates(dct, field="date"):
+        for k, v in dct.items():
+            if isinstance(v, dict):
+                dct[k] = BaseHandler.format_dates(v, field)
+            elif k == field and v is not None:
+                dct[k] = datetime.fromtimestamp(v).isoformat()
+        return dct
