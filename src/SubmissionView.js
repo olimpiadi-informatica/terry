@@ -37,6 +37,12 @@ class SubmissionView extends Component {
     this.onClose();
   }
 
+  renderSourceStatus(output) {
+    if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
+
+    return (<div><br/><h5>Okay.</h5></div>)
+  }
+
   renderSourceSelector() {
     if(!this.submission.hasSource()) {
       return (<label className="custom-file">
@@ -50,17 +56,16 @@ class SubmissionView extends Component {
           <h4 className="bs-callout-info-title">Source file info</h4>
           <FileView file={source.file}></FileView>
           <input key="present" type="button" className="btn btn-secondary" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
+          { this.renderSourceStatus(source) }
         </div>
       )
     }
   }
 
   renderOutputStatus(output) {
-    if(!output.isCreated()) return (<div><br/><h5>Creating...</h5></div>);
-    if(!output.isUploaded()) return (<div><br/><h5>Uploading...</h5></div>);
-    if(!output.isValidated()) return (<div><br/><h5>Validating...</h5></div>);
+    if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><ResultView model={this.model} result={output.metadata.validation_result}></ResultView></div>)
+    return (<div><br/><ResultView model={this.model} result={output.data.validation_result}></ResultView></div>)
   }
 
   renderOutputSelector() {

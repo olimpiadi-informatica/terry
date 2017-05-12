@@ -1,4 +1,5 @@
 import wait from './utils';
+import axios from 'axios';
 
 class Output {
     constructor(file, submission) {
@@ -8,82 +9,24 @@ class Output {
       this.model = submission.model;
     }
 
-    process() {
-      return Promise.resolve()
-        .then(() => this.create())
-        .then(() => this.upload())
-        .then(() => this.validate())
-    }
-
-    create() {
-      // TODO: dummy
-      return wait(500).then(() => {
-        this.metadata = {
-          id: "o1",
-        };
-        this.model.view.forceUpdate();
-      });
-    }
-
-    isCreated() {
-      return this.metadata !== undefined;
-    }
-
     upload() {
-      // TODO: dummy
-      return wait(500).then(() => {
-        this.uploadResult = {};
+      const data = new FormData();
+
+      data.append("input", this.submission.input.id);
+      data.append("file", this.file)
+
+      return axios.post("http://localhost:1234/upload_output", data).then((response) => {
+        this.data = response.data;
         this.model.view.forceUpdate();
       });
     }
 
     isUploaded() {
-      return this.uploadResult !== undefined;
-    }
-
-    validate() {
-      // TODO: dummy
-      return wait(500).then(() => {
-        this.metadata = {
-          id: "o1",
-          validation_result: {
-            valid_for_submit: true,
-            warnings: [
-              {
-                code: "partial_parse",
-                severity: "warning",
-                message: "Attention: the submitted file could not be fully processed.",
-              },
-            ],
-            cases: [
-              {
-                id: "1",
-                status: "okay",
-                message: "Case loaded.",
-              },
-              {
-                id: "5",
-                status: "okay",
-                message: "Case loaded.",
-              },
-              {
-                id: "4",
-                status: "okay",
-                message: "Case loaded.",
-              },
-            ]
-          },
-        };
-        this.model.view.forceUpdate();
-      });
-    }
-
-    isValidated() {
-      return this.isCreated() && this.metadata.validation_result !== undefined;
+      return this.data !== undefined;
     }
 
     isValidForSubmit() {
-      return this.isValidated() && this.metadata.validation_result.valid_for_submit
+      return this.isUploaded() && this.data.validation_result.valid_for_submit
     }
 
 }

@@ -14,7 +14,7 @@ class Model {
       delete this.contest;
       delete this.tasksByName;
 
-      return axios.get('http://localhost:3001/contest')
+      return axios.get('http://localhost:1234/contest')
         .then((response) => {
           this.contest = response.data;
           this.tasksByName = {};
@@ -31,7 +31,7 @@ class Model {
     }
 
     loadUser(token) {
-      return axios.get('http://localhost:3001/user/' + token);
+      return axios.get('http://localhost:1234/user/' + token);
     }
 
     isLoggedIn() {
