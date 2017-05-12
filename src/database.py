@@ -77,6 +77,12 @@ class Database:
         return Database.dictify(c, all=True)
 
     @staticmethod
+    def get_task(task):
+        c = Database.conn.cursor()
+        c.execute("""SELECT * FROM tasks WHERE task = :task""", {"task": task})
+        return Database.dictify(c)
+
+    @staticmethod
     def get_user(token):
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM users WHERE token=:token""", {"token": token})
