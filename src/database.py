@@ -111,7 +111,13 @@ class Database:
     @staticmethod
     def get_submission(id):
         c = Database.conn.cursor()
-        c.execute("""SELECT * FROM submissions WHERE id=:id""", {"id": id})
+        c.execute("""
+            SELECT * FROM submissions
+            JOIN inputs ON submissions.input = inputs.id,
+            JOIN outputs ON submissions.output = outputs.id
+            JOIN sources ON submissions.source = sources.id
+            WHERE id=:id
+        """, {"id": id})
         return Database.dictify(c)
 
     @staticmethod
