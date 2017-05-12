@@ -42,17 +42,14 @@ class ContestView extends Component {
         <div className="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Settings</a>
+              <a className="nav-link" href="#"><span aria-hidden="true" className="fa fa-home"></span> Home</a>
             </li>
           </ul>
 
           <ul className="nav navbar-nav navbar-right">
             <li className="nav-item">
               <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
-                <FontAwesome name='rocket' /> Log Out</a>
+                <span aria-hidden="true" className="fa fa-sign-out"></span> Log Out</a>
             </li>
           </ul>
 

@@ -49,7 +49,9 @@ class SubmissionView extends Component {
         <div key="present" className="bs-callout bs-callout-info">
           <h4 className="bs-callout-info-title">Source file info</h4>
           <FileView file={source.file}></FileView>
-          <input key="present" type="button" className="btn btn-secondary" value="Change source" onClick={() => { this.resetSource(); return false; }}></input>
+          <button key="present" type="button" className="btn btn-secondary" role="button" onClick={() => {this.resetSource(); return false;}} >
+            <span aria-hidden="true" className="fa fa-trash"></span> Change source
+          </button>
         </div>
       )
     }
@@ -75,7 +77,11 @@ class SubmissionView extends Component {
         <div key="present" className="bs-callout bs-callout-info">
           <h4 className="bs-callout-info-title">Output file info</h4>
           <FileView file={output.file}></FileView>
-          <input key="present" type="button" className="btn btn-secondary" value="Change Output" onClick={() => { this.resetOutput(); return false; }}></input>
+
+          <button key="present" type="button" className="btn btn-secondary" role="button" onClick={() => {this.resetOutput(); return false;}} >
+            <span aria-hidden="true" className="fa fa-trash"></span> Change output
+          </button>
+
           { this.renderOutputStatus(output) }
         </div>
 
@@ -92,17 +98,25 @@ class SubmissionView extends Component {
           <div className="form-group">{ this.renderOutputSelector() }</div>
           <div className="form-group">
 
-            <input type="submit" className="btn btn-success top-button" role="button" value="Submit" disabled={!this.submission.canSubmit()}></input>
-            <input type="reset" className="btn btn-danger top-button" role="button" onClick={() => {this.close(); return false;}} value="Cancel"></input>
+
+            <button className="btn btn-success top-button" role="button" onClick={this.close} disabled={!this.submission.canSubmit()} >
+              <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
+            </button>
+            <button type="reset" className="btn btn-danger top-button" role="button" onClick={() => {this.close(); return false;}} >
+              <span aria-hidden="true" className="fa fa-times"></span> Cancel
+            </button>
+
           </div>
         </form>
       );
     } else {
-      return <div>
+      return (<div>
         <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
         <br/>
-        <button  className="btn btn-primary top-button" role="button" onClick={() => this.close()}>Close</button>
-      </div>
+        <button className="btn btn-success top-button" role="button" onClick={() => this.close()}>
+          <span aria-hidden="true" className="fa fa-check"></span> Okay
+        </button>
+      </div>);
     }
   }
 
