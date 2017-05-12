@@ -39,7 +39,7 @@ class Logger:
         c = Logger.conn.cursor()
         c.execute("""
             CREATE TABLE IF NOT EXISTS logs (
-                date TIMESTAMP DEFAULT (strftime('%s','now')) NOT NULL,
+                date INTEGER DEFAULT (strftime('%s','now')) NOT NULL,
                 category TEXT NOT NULL,
                 level INTEGER NOT NULL,
                 message TEXT NOT NULL)
