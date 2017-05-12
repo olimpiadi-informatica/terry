@@ -9,6 +9,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-fontawesome": "^1.6.1",
+    "react-markdown": "^2.5.0",
     "react-router-dom": "^4.1.1",
     "universal-cookie": "^2.0.5"
   },

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import SubmissionView from './SubmissionView';
 import SubmissionListView from './SubmissionListView';
+import ReactMarkdown from 'react-markdown';
+import axios from 'axios';
 
 class TaskView extends Component {
   constructor(props) {
@@ -10,7 +12,17 @@ class TaskView extends Component {
     this.model = props.model;
     this.taskName = props.taskName;
 
-    console.log("TaskView constructor")
+    console.log("TaskView constructor");
+
+    this.loadTaskStatement();
+  }
+
+  loadTaskStatement() {
+    return axios.get('/' + this.taskName + '.md')
+      .then((response) => {
+        this.taskStatement = response.data;
+        this.forceUpdate();
+      });
   }
 
   getTask() {
@@ -64,8 +76,16 @@ class TaskView extends Component {
     return <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />;
   }
 
+  renderTaskStatement() {
+    if (this.taskStatement === undefined)
+      return <div>Loading...</div>;
+    else
+      return <ReactMarkdown source={this.taskStatement}/>
+  }
+
   render() {
     const userTask = this.getUserTask();
+
     return (
       <div>
         <h1>{this.getTask().title}</h1>
@@ -73,6 +93,10 @@ class TaskView extends Component {
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
         <SubmissionListView model={this.model} taskName={this.taskName}></SubmissionListView>
+
+        <hr/>
+
+        { this.renderTaskStatement() }
       </div>
     );
   }
