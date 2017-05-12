@@ -178,10 +178,10 @@ class Database:
 
     @staticmethod
     def do_write(autocommit, query, params):
+        c = Database.conn.cursor()
         if autocommit:
             Database.begin()
             try:
-                c.Database.conn.cursor()
                 c.execute(query, params)
                 Database.commit()
                 return c.rowcount
@@ -189,7 +189,6 @@ class Database:
                 Database.rollback()
                 raise
         else:
-            c.Database.conn.cursor()
             c.execute(query, params)
             return c.rowcount
 
