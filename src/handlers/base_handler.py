@@ -12,6 +12,8 @@ from datetime import datetime
 from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
 
+from ..database import Database
+
 
 class BaseHandler:
 
