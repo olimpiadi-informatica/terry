@@ -106,7 +106,7 @@ class SubmissionView extends Component {
             <div className="form-group">{ this.renderOutputSelector() }</div>
         </Modal.Body>
         <Modal.Footer>
-          <Link to={"/" + this.submission.input.task} role="button" bsStyle="danger">
+          <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
             <span aria-hidden="true" className="fa fa-times"></span> Cancel
           </Link>
           <Button bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
