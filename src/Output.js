@@ -15,10 +15,20 @@ class Output {
       data.append("input", this.submission.input.id);
       data.append("file", this.file)
 
-      return axios.post("http://localhost:1234/upload_output", data).then((response) => {
-        this.data = response.data;
-        this.model.view.forceUpdate();
-      });
+      let id;
+
+      return Promise.resolve()
+        .then(() => {
+          return axios.post("http://localhost:1234/upload_output", data).then((response) => {
+            id = response.data.id;
+          });
+        })
+        .then(() => {
+          return axios.get("http://localhost:1234/output/" + id).then((response) => {
+            this.data = response.data;
+            this.model.view.forceUpdate();
+          });
+        });
     }
 
     isUploaded() {

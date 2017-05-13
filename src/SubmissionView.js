@@ -75,7 +75,7 @@ class SubmissionView extends Component {
   renderOutputStatus(output) {
     if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><ResultView model={this.model} result={output.data.validation_result}></ResultView></div>)
+    return (<div><br/><ResultView model={this.model} result={output.data.result}></ResultView></div>)
   }
 
   renderOutputSelector() {
@@ -107,22 +107,20 @@ class SubmissionView extends Component {
   renderDialog() {
     if(!this.submission.isSubmitted()) {
       return (
-        <div>
+        <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit(); }}>
           <Modal.Body>
-            <form className="submissionForm" ref="form" onSubmit={(e) => {e.preventDefault(); this.submit();}}>
               <div className="form-group">{ this.renderSourceSelector() }</div>
               <div className="form-group">{ this.renderOutputSelector() }</div>
-            </form>
           </Modal.Body>
           <Modal.Footer>
             <Button role="button" bsStyle="danger" onClick={ () => this.close() }>
               <span aria-hidden="true" className="fa fa-times"></span> Cancel
             </Button>
-            <Button bsStyle="success" onClick={ () => this.close() } disabled={!this.submission.canSubmit()}>
+            <Button bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
               <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
             </Button>
           </Modal.Footer>
-        </div>
+        </form>
       );
     } else {
       return (
