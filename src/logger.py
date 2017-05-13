@@ -7,7 +7,7 @@
 
 from .config import Config
 
-from . import gevent_sqlite3 as sqlite3
+import sqlite3
 
 import datetime
 import sys
@@ -37,16 +37,20 @@ class Logger:
         if Logger.connected is True:
             raise RuntimeError("Database already loaded")
         Logger.connected = True
-        Logger.conn = sqlite3.connect(Config.logfile, detect_types=sqlite3.PARSE_DECLTYPES)
+        Logger.conn = sqlite3.connect(Config.logfile, check_same_thread=False, detect_types=sqlite3.PARSE_DECLTYPES)
         c = Logger.conn.cursor()
-        c.execute("""
+        # c.executescript("""
+        #     PRAGMA LOCKING_MODE = EXCLUSIVE;
+        #     PRAGMA SYNCHRONOUS = NORMAL;
+        #     PRAGMA JOURNAL_MODE = TRUNCATE;
+        # """)
+        c.executescript("""
             CREATE TABLE IF NOT EXISTS logs (
                 date INTEGER DEFAULT (strftime('%s','now')) NOT NULL,
                 category TEXT NOT NULL,
                 level INTEGER NOT NULL,
-                message TEXT NOT NULL)
-        """)
-        c.execute("""
+                message TEXT NOT NULL);
+
             CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level)
         """)
         Logger.conn.commit()

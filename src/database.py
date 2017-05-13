@@ -9,7 +9,7 @@ from .schema import Schema
 from .config import Config
 from .logger import Logger
 
-from . import gevent_sqlite3 as sqlite3
+import sqlite3
 from gevent.lock import BoundedSemaphore
 import uuid
 
@@ -28,7 +28,7 @@ class Database:
         if Database.connected is True:
             raise RuntimeError("Database already loaded")
         Database.connected = True
-        Database.conn = sqlite3.connect(Config.db, detect_types=sqlite3.PARSE_DECLTYPES)
+        Database.conn = sqlite3.connect(Config.db, check_same_thread=False, detect_types=sqlite3.PARSE_DECLTYPES)
         c = Database.conn.cursor()
         c.executescript(Schema.INIT)
         version = Database.get_meta("schema_version", -1, int)
