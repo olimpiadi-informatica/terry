@@ -34,6 +34,12 @@ class SubmissionList extends Observable {
       return this.data !== undefined;
     }
 
+    isEmpty() {
+      if(!this.isLoaded()) throw new Error();
+
+      return this.data.items.length === 0;
+    }
+
 }
 
 export default SubmissionList;

@@ -9,6 +9,8 @@ class UserTaskState extends Observable {
 
       this.model = model;
       this.task = task;
+
+      this.submissionList = new SubmissionList(this);
     }
 
     getUser() {
@@ -71,7 +73,7 @@ class UserTaskState extends Observable {
     }
 
     getSubmissionList() {
-      return new SubmissionList(this);
+      return this.submissionList;
     }
 
 }

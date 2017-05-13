@@ -42,18 +42,25 @@ class TaskView extends Component {
 
   }
 
+  getSubmissionList() {
+    return this.model.getTaskState(this.task.name).getSubmissionList();
+  }
+
   componentWillMount() {
     this.task.loadStatement();
+    this.getSubmissionList().load();
   }
 
   componentDidMount() {
     this.model.pushObserver(this);
+    this.getSubmissionList().pushObserver(this);
     this.getTaskState().pushObserver(this);
     this.task.pushObserver(this);
   }
 
   componentWillUnmount() {
     this.model.popObserver(this);
+    this.getSubmissionList().popObserver(this);
     this.getTaskState().popObserver(this);
     this.task.popObserver(this);
   }
@@ -107,6 +114,13 @@ class TaskView extends Component {
     );
   }
 
+  renderSubmissionList() {
+    const list = this.getSubmissionList();
+    if(list.isLoaded() && !list.isEmpty()) {
+      return <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>;
+    }
+  }
+
   render() {
     return (
       <div>
@@ -114,7 +128,7 @@ class TaskView extends Component {
         { this.renderCommands() }
 
         <Route path="/:taskName/submit/:inputId" render={({match}) => this.renderSubmissionDialog(match.params.inputId)}></Route>
-        <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>
+        { this.renderSubmissionList() }
 
         <hr/>
 
