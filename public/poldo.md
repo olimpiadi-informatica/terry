@@ -47,8 +47,8 @@ panini che Poldo può mangiare.
 <table class="table table-bordered sample-case">
   <thead class="thead-default">
     <tr>
-      <th>input.txt</th>
-      <th>output.txt</th>
+      <th>File di input</th>
+      <th>File di output</th>
     </tr>
   </thead>
   <tbody>
