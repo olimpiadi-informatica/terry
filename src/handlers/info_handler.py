@@ -182,6 +182,6 @@ class InfoHandler(BaseHandler):
         }
 
         if "input" in output:
-            result["input"]: output["input"]
+            result["input"] = output["input"]
 
         return BaseHandler.format_dates(result)
