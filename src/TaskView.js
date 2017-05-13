@@ -112,7 +112,6 @@ class TaskView extends Component {
       <div>
         <h1>{this.task.data.title}</h1>
         { this.renderCommands() }
-        { this.renderSubmissionDialog() }
 
         <Route path="/:taskName/submit/:inputId" render={({match}) => this.renderSubmissionDialog(match.params.inputId)}></Route>
         <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>
