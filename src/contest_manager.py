@@ -8,6 +8,7 @@
 import gevent
 import gevent.queue
 import os
+import traceback
 from .config import Config
 from .database import Database
 from .logger import Logger
@@ -34,48 +35,54 @@ class ContestManager:
         task = ContestManager.tasks[task_name]
         queue = ContestManager.input_queue[task_name]
         while True:
-            id = Database.gen_id()
-            path = StorageManager.new_input_file(id, task_name, "invalid")
-            seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
-            stdout = os.open(
-                StorageManager.get_absolute_path(path),
-                os.O_WRONLY | os.O_CREAT, 0o644
-            )
-            # TODO: maybe log stderr, use real generator
-            retcode = gevent.subprocess.call(
-#                ["/bin/true", str(seed), "0"], stdout=stdout
-                ["/bin/sleep", "1"], stdout=stdout
-            )
-            os.close(stdout)
-            if retcode != 0:
-                Logger.error(
-                    "TASK",
-                    "Error %d generating input %s (%d) for task %s" % \
-                    (retcode, id, seed, task_name)
-                )
-                continue
-            if "validator" in task:
-                stdin = os.open(
+            try:
+                id = Database.gen_id()
+                path = StorageManager.new_input_file(id, task_name, "invalid")
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
+                stdout = os.open(
                     StorageManager.get_absolute_path(path),
-                    os.O_RDONLY
+                    os.O_WRONLY | os.O_CREAT, 0o644
                 )
+                # TODO: maybe log stderr, use real generator
                 retcode = gevent.subprocess.call(
-                    [task["validator"], "0"], stdin=stdin
+#                   ["/bin/true", str(seed), "0"], stdout=stdout
+                    ["/bin/sleep", "1"], stdout=stdout
                 )
-                os.close(stdin)
+                os.close(stdout)
                 if retcode != 0:
                     Logger.error(
                         "TASK",
-                        "Error %d validating input %s (%d) for task %s" % \
+                        "Error %d generating input %s (%d) for task %s" % \
                         (retcode, id, seed, task_name)
                     )
                     continue
-            Logger.debug(
-                "TASK",
-                "Generated input %s (%d) for task %s" % \
-                (id, seed, task_name)
-            )
-            queue.put({"id": id, "path": path})
+                if "validator" in task:
+                    stdin = os.open(
+                        StorageManager.get_absolute_path(path),
+                        os.O_RDONLY
+                    )
+                    retcode = gevent.subprocess.call(
+                        [task["validator"], "0"], stdin=stdin
+                    )
+                    os.close(stdin)
+                    if retcode != 0:
+                        Logger.error(
+                            "TASK",
+                            "Error %d validating input %s (%d) for task %s" % \
+                            (retcode, id, seed, task_name)
+                        )
+                        continue
+                Logger.debug(
+                    "TASK",
+                    "Generated input %s (%d) for task %s" % \
+                    (id, seed, task_name)
+                )
+                queue.put({"id": id, "path": path})
+            except:
+                Logger.error(
+                    "TASK", "Exception while creating an input file: "
+                    + traceback.format_exc()
+                )
 
     @staticmethod
     def start():
