@@ -76,8 +76,6 @@ class Server:
 
         try:
             endpoint, args = route.match()
-        except RequestRedirect as e:
-            return e
         except HTTPException:
             # TODO find a way to get the real ip address
             Logger.warning("HTTP_ERROR", "%s %s %s 404" % (request.remote_addr, request.method, request.url))
@@ -92,7 +90,7 @@ class Server:
         """
         Start a greenlet with the main HTTP server loop
         """
-        server = gevent.wsgi.WSGIServer((Config.address, Config.port), self)
+        server = gevent.wsgi.WSGIServer((Config.address, Config.port), self, log=None)
         try:
             server.init_socket()
         except OSError:

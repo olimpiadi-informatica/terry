@@ -18,9 +18,11 @@ class Config:
         "address": "",
         "port": 1234,
         "storedir": "./files/",
+        "statementdir": "./statements/secret/",
         "queue_size": 64,
         "admin_token": "secret",
-        "num_proxies": 0
+        "num_proxies": 0,
+        "contest_path": "./contest/"
     }
 
     @staticmethod

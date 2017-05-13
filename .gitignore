@@ -104,6 +104,7 @@ ENV/
 
 # File store
 files/
+statements/
 
 # Config file
 config/config.yaml

@@ -28,7 +28,9 @@ class Schema:
                 title TEXT NOT NULL,
                 statement_path TEXT NOT NULL,
                 max_score REAL NOT NULL,
-                CHECK (max_score > 0)
+                num INTEGER UNIQUE NOT NULL,
+                CHECK (max_score > 0),
+                CHECK (num >= 0)
             );
 
             CREATE TABLE ips (
@@ -112,15 +114,5 @@ class Schema:
                 WHERE tasks.name = NEW.task
                   AND tasks.max_score < NEW.score;
             END;
-        """,
-        # Dummy data
-        """
-            INSERT INTO "tasks" VALUES('poldo','La dieta di Poldo','/statement/poldo.pdf',42);
-            INSERT INTO "tasks" VALUES('easy1','Easy 1','/statement/easy1.pdf',58);
-            INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0);
-            INSERT INTO "metadata" VALUES('start_time','1494621126');
-            INSERT INTO "metadata" VALUES('contest_duration','864000');
-            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 40, NULL);
-            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'easy1', 0, NULL);
         """
     ]

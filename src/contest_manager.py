@@ -8,7 +8,11 @@
 import gevent
 import gevent.queue
 import os
+import platform
+import shutil
 import traceback
+import yaml
+
 from .config import Config
 from .database import Database
 from .logger import Logger
@@ -22,12 +26,98 @@ class ContestManager:
     tasks = dict()
 
     @staticmethod
+    def system_extension():
+        return "." + platform.system().lower() + "." + platform.machine()
+
+    @staticmethod
+    def import_contest(path):
+        with open(os.path.join(path, "contest.yaml")) as f:
+            contest_config = yaml.load(f)
+        tasks = []
+        os.makedirs(Config.statementdir, exist_ok=True)
+        for task in contest_config["tasks"]:
+            statementdir = os.path.join(Config.statementdir, task)
+            taskdir = os.path.join(path, task)
+            if not os.path.isdir(statementdir):
+                if os.path.exists(statementdir):
+                    shutil.rmtree(statementdir)
+                shutil.copytree(
+                    os.path.join(taskdir, "statement"),
+                    statementdir
+                )
+            with open(os.path.join(path, task, "task.yaml")) as f:
+                task_config = yaml.load(f)
+            checker = os.path.join(
+                    taskdir,
+                    "managers",
+                    "checker" + ContestManager.system_extension()
+                )
+            generator = os.path.join(
+                    taskdir,
+                    "managers",
+                    "generator" + ContestManager.system_extension()
+                )
+            validator = os.path.join(
+                    taskdir,
+                    "managers",
+                    "validator" + ContestManager.system_extension()
+                )
+            task_config["checker"] = checker
+            task_config["generator"] = generator
+            if os.path.exists(validator):
+                task_config["validator"] = validator
+            task_config["statement_path"] = \
+                os.path.join(statementdir, "statement.md")
+            tasks.append(task_config)
+        contest_config["tasks"] = tasks
+        return contest_config
+
+
+    @staticmethod
     def read_from_disk():
-        # TODO: Really read from disk
-        for task in Database.get_tasks():
-            ContestManager.input_queue[task["name"]] = \
+        contest = ContestManager.import_contest(Config.contest_path)
+        if not Database.get_meta("contest_imported", default=False, type=bool):
+            Database.begin()
+            try:
+                Database.set_meta(
+                    "contest_duration", contest["duration"],
+                    autocommit=False
+                )
+                count = 0
+                for task in contest["tasks"]:
+                    Database.add_task(
+                        task["name"], task["description"], task["statement_path"],
+                        task["max_score"], count, autocommit=False
+                    )
+                    count += 1
+                for user in contest["users"]:
+                    Database.add_user(
+                        user["token"], user["name"],
+                        user["surname"], autocommit=False
+                    )
+                for user in Database.get_users():
+                    for task in Database.get_tasks():
+                        Database.add_user_task(
+                            user["token"], task["name"],
+                            autocommit=False
+                        )
+                Database.set_meta(
+                    "contest_imported", True,
+                    autocommit=False
+                )
+                Database.commit()
+            except:
+                Database.rollback()
+                raise
+        else:
+            # TODO: check that the contest is still the same
+            pass
+        ContestManager.tasks = dict(
+            (task["name"], task) for task in contest["tasks"]
+        )
+        for task in ContestManager.tasks:
+            ContestManager.input_queue[task] = \
                     gevent.queue.Queue(Config.queue_size)
-            ContestManager.tasks[task["name"]] = task
 
     @staticmethod
     def worker(task_name):
@@ -45,8 +135,7 @@ class ContestManager:
                 )
                 # TODO: maybe log stderr, use real generator
                 retcode = gevent.subprocess.call(
-#                   ["/bin/true", str(seed), "0"], stdout=stdout
-                    ["/bin/sleep", "1"], stdout=stdout
+                    [task["generator"], str(seed), "0"], stdout=stdout
                 )
                 os.close(stdout)
                 if retcode != 0:
@@ -101,9 +190,11 @@ class ContestManager:
     @staticmethod
     def evaluate_output(task_name, input_path, output_path):
         try:
-            output = gevent.subprocess.check_call(
-                ["/bin/true", input_path, output_path]
-            )
+            output = gevent.subprocess.check_call([
+                ContestManager.tasks[task_name]["checker"],
+                input_path,
+                output_path
+            ])
         except:
             Logger.error(
                 "TASK", "Error while evaluating output %s "
@@ -115,16 +206,4 @@ class ContestManager:
             "TASK", "Evaluated output %s for task %s, with input %s"
             % (output_path, task_name, input_path)
         )
-        return """
-        {
-            "score": 0.42,
-            "validation": {
-                "cases": [{ "status": "parsed" }, { "status": "missing" }],
-                "alerts": [{ "severity": "warning", "message": "42 is the best number, you know that?" }]
-            },
-            "feedback": {
-                "cases": [{ "correct": true }, { "correct": false }],
-                "alerts": []
-            }
-        }
-        """
+        return output

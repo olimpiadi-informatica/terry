@@ -14,6 +14,7 @@ from werkzeug.wrappers import Response
 
 from ..config import Config
 from ..database import Database
+from ..logger import Logger
 
 
 class BaseHandler:
@@ -153,6 +154,16 @@ class BaseHandler:
             except ValueError:
                 BaseHandler.raise_exc(BadRequest, "FORMAT_ERROR",
                                       "The parameter %s cannot be converted to %s" % (key, type.__name__))
+        Logger.debug(
+            "HTTP",
+            "Received request from %s for endpoint %s%s" %
+            (
+                general_attrs['_ip'],
+                method.__name__,
+                ", with parameters" + ", ".join("=".join(kv) for kv in kwargs.items())
+                    if len(kwargs) > 0 else ""
+            )
+        )
         return method(**kwargs)
 
 

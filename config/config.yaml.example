@@ -6,8 +6,9 @@ port: 1234
 logfile: log.sqlite3
 db: db.sqlite3
 
-# Store dir for files
+# Store dir for files and statements
 storedir: ./files/
+statementdir: ./statement/secret/
 
 # Queue size for input generation
 queue_size: 64
@@ -17,3 +18,6 @@ admin_token: secret
 
 # Number of proxies
 num_proxies: 0
+
+# Path of the contest
+contest_path: ./contest/

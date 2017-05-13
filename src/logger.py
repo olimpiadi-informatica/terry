@@ -9,6 +9,7 @@ from .config import Config
 
 import sqlite3
 
+import atexit
 import datetime
 import sys
 from colorama import Fore, Style
@@ -20,6 +21,9 @@ class Logger:
 
     lock = gevent.lock.BoundedSemaphore()
     connected = False
+    num_logs = 0
+    COMMIT_BATCH = 20
+
     DEBUG = 0
     INFO = 1
     WARNING = 2
@@ -37,23 +41,30 @@ class Logger:
         if Logger.connected is True:
             raise RuntimeError("Database already loaded")
         Logger.connected = True
-        Logger.conn = sqlite3.connect(Config.logfile, check_same_thread=False, detect_types=sqlite3.PARSE_DECLTYPES)
-        c = Logger.conn.cursor()
+        Logger.conn = sqlite3.connect(
+            Config.logfile,
+            check_same_thread=False,
+            detect_types=sqlite3.PARSE_DECLTYPES,
+            isolation_level=None
+        )
+        Logger.c = Logger.conn.cursor()
         # c.executescript("""
         #     PRAGMA LOCKING_MODE = EXCLUSIVE;
         #     PRAGMA SYNCHRONOUS = NORMAL;
         #     PRAGMA JOURNAL_MODE = TRUNCATE;
         # """)
-        c.executescript("""
+        Logger.c.executescript("""
             CREATE TABLE IF NOT EXISTS logs (
                 date INTEGER DEFAULT (strftime('%s','now')) NOT NULL,
                 category TEXT NOT NULL,
                 level INTEGER NOT NULL,
                 message TEXT NOT NULL);
 
-            CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level)
+            CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level);
+            BEGIN TRANSACTION;
         """)
-        Logger.conn.commit()
+        atexit.register(lambda c: c.execute("COMMIT"), Logger.c)
+
 
     @staticmethod
     def set_log_level(lvl):
@@ -70,25 +81,25 @@ class Logger:
         :param category: A string with the category of the event
         :param message: What really happened, it is converted to string using str()
         """
-        Logger.lock.acquire(blocking=True)
-        try:
-            if level >= Logger.LOG_LEVEL:
-                tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
-                tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
-                cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
-                print(
-                    Logger.COLOR[level] + tag + Style.RESET_ALL,
-                    "%s %s" % (cat, message),
-                    file=sys.stderr
-                )
-            c = Logger.conn.cursor()
-            c.execute("""
-                INSERT INTO logs (level, category, message)
-                VALUES (:level, :category, :message)
-            """, {"level": level, "category": category, "message": str(message)})
-            Logger.conn.commit()
-        finally:
-            Logger.lock.release()
+        if level >= Logger.LOG_LEVEL:
+            tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
+            tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
+            cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
+            print(
+                Logger.COLOR[level] + tag + Style.RESET_ALL,
+                "%s %s" % (cat, message),
+                file=sys.stderr
+            )
+        c = Logger.c
+        c.execute("""
+            INSERT INTO logs (level, category, message)
+            VALUES (:level, :category, :message)
+        """, {"level": level, "category": category, "message": str(message)})
+        Logger.num_logs += 1
+        if Logger.num_logs > Logger.COMMIT_BATCH:
+            Logger.num_logs = 0
+            c.execute("""COMMIT""")
+            c.execute("""BEGIN TRANSACTION""")
 
     @staticmethod
     def debug(*args, **kwargs):

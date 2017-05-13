@@ -54,7 +54,7 @@ class Database:
     @staticmethod
     def get_tasks():
         c = Database.conn.cursor()
-        c.execute("""SELECT * FROM tasks""")
+        c.execute("""SELECT * FROM tasks ORDER BY num ASC""")
         return Database.dictify(c, all=True)
 
     @staticmethod
@@ -250,6 +250,16 @@ class Database:
             INSERT INTO users (token, name, surname)
             VALUES (:token, :name, :surname)
         """, {"token": token, "name": name, "surname": surname})
+
+    @staticmethod
+    def add_task(name, title, statement_path, max_score, num, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT INTO tasks (name, title, statement_path, max_score, num)
+            VALUES (:name, :title, :statement_path, :max_score, :num)
+        """, {
+            "name": name, "title": title, "max_score": max_score,
+            "statement_path": statement_path, "num": num
+        })
 
     @staticmethod
     def add_user_task(token, task, autocommit=True):
