@@ -282,8 +282,8 @@ class Database:
             FROM inputs
             WHERE id = :input
         """, {
-            "id": id, "output": output["id"], "score": score,
-            "input": input["id"], "source": source["id"]
+            "id": id, "output": output, "score": score,
+            "input": input, "source": source
         }):
             return id
         else:

@@ -77,11 +77,11 @@ class ContestHandler(BaseHandler):
         score = self.compute_score(input["task"], output["result"])
         Database.begin()
         try:
-            id = Database.add_submission(input, output, source, score, autocommit=False)
+            id = Database.add_submission(input["id"], output["id"], source["id"], score, autocommit=False)
             if id is None:
                 self.raise_exc(BadRequest, "FORBIDDEN", "Error inserting the submission")
             self.update_user_score(input["token"], input["task"], score)
-            self.set_user_attempt(input["token"], input["task"], None)
+            Database.set_user_attempt(input["token"], input["task"], None)
             Database.commit()
         except:
             Database.rollback()

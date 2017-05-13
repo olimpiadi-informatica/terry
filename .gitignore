@@ -100,6 +100,7 @@ ENV/
 
 # Database file
 *.sqlite3
+*.sqlite3-journal
 
 # File store
 files/

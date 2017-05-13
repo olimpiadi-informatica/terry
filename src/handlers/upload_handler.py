@@ -12,6 +12,7 @@ from ..storage_manager import StorageManager
 from ..contest_manager import ContestManager
 from werkzeug.exceptions import Forbidden
 
+
 class UploadHandler(BaseHandler):
 
     def upload_output(self, route_args, request):
