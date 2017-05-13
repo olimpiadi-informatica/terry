@@ -81,7 +81,9 @@ class Model extends Observable {
     enterContest() {
       this.userTaskState = {};
       for(const task of this.getContest().getTasks()) {
-        this.userTaskState[task.name] = new UserTaskState(this, task);
+        const state = new UserTaskState(this, task);
+        this.userTaskState[task.name] = state;
+        state.getSubmissionList().load();
       }
     }
 

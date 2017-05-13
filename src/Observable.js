@@ -1,16 +1,16 @@
 class Observable {
     constructor() {
-      this.observers = [];
+      this.observers = new Set();
     }
 
     pushObserver(o) {
-      this.observers.push(o);
+      if(this.observers.has(o)) throw new Error();
+      this.observers.add(o);
     }
 
     popObserver(o) {
-      const oo = this.observers.pop();
-
-      if(o !== oo) throw new Error("observer popped out-of-order");
+      if(!this.observers.has(o)) throw new Error();
+      this.observers.delete(o);
     }
 
     fireUpdate() {
