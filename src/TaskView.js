@@ -73,7 +73,7 @@ class TaskView extends Component {
     if(this.model.hasCurrentInput(this.taskName)) {
       return (
         <div>
-          <button role="button" className="btn btn-primary top-button" onClick={() => this.donwloadInput()}>
+          <button role="button" className="btn btn-primary top-button" onClick={() => this.downloadInput()}>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
           </button>
           {' '}
