@@ -48,7 +48,6 @@ class TaskView extends Component {
 
   componentWillMount() {
     this.task.loadStatement();
-    this.getSubmissionList().load();
   }
 
   componentDidMount() {
