@@ -12,11 +12,13 @@ from . import gevent_sqlite3 as sqlite3
 import datetime
 import sys
 from colorama import Fore, Style
+import gevent.lock
 
 
 class Logger:
     """A logger class that stores stuff on a database"""
 
+    lock = gevent.lock.BoundedSemaphore()
     connected = False
     DEBUG = 0
     INFO = 1
@@ -64,21 +66,25 @@ class Logger:
         :param category: A string with the category of the event
         :param message: What really happened, it is converted to string using str()
         """
-        if level >= Logger.LOG_LEVEL:
-            tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
-            tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
-            cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
-            print(
-                Logger.COLOR[level] + tag + Style.RESET_ALL,
-                "%s %s" % (cat, message),
-                file=sys.stderr
-            )
-        c = Logger.conn.cursor()
-        c.execute("""
-            INSERT INTO logs (level, category, message)
-            VALUES (:level, :category, :message)
-        """, {"level": level, "category": category, "message": str(message)})
-        Logger.conn.commit()
+        Logger.lock.acquire(blocking=True)
+        try:
+            if level >= Logger.LOG_LEVEL:
+                tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
+                tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
+                cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
+                print(
+                    Logger.COLOR[level] + tag + Style.RESET_ALL,
+                    "%s %s" % (cat, message),
+                    file=sys.stderr
+                )
+            c = Logger.conn.cursor()
+            c.execute("""
+                INSERT INTO logs (level, category, message)
+                VALUES (:level, :category, :message)
+            """, {"level": level, "category": category, "message": str(message)})
+            Logger.conn.commit()
+        finally:
+            Logger.lock.release()
 
     @staticmethod
     def debug(*args, **kwargs):
