@@ -153,17 +153,19 @@ class InfoHandler(BaseHandler):
             if "_" in k:
                 a, b = k.split("_")
                 if a not in result: result[a] = {}
-                if b == "result":
-                    result[a][b] = json.loads(v)
-                else:
-                    result[a][b] = v
+                result[a][b] = v
             else:
-                if k == "result":
-                    result[k] = json.loads(v)
-                else:
-                    result[k] = v
+                result[k] = v
 
-        return BaseHandler.format_dates(result)
+        result["feedback"] = json.loads(result["output"]["result"])["feedback"]
+
+        temp = InfoHandler.patch_output(result["output"])
+
+        del result["output"]
+        result = BaseHandler.format_dates(result)
+        result["output"] = temp
+
+        return result
 
     @staticmethod
     def patch_output(output):
@@ -174,10 +176,12 @@ class InfoHandler(BaseHandler):
         """
         result = {
             "id": output["id"],
-            "input": output["input"],
             "date": output["date"],
             "path": output["path"],
-            "result": json.loads(output["result"])["validation"]
+            "validation": json.loads(output["result"])["validation"]
         }
+
+        if "input" in output:
+            result["input"]: output["input"]
 
         return BaseHandler.format_dates(result)
