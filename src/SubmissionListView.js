@@ -13,14 +13,23 @@ class SubmissionListView extends Component {
     this.list.load().then(() => this.forceUpdate());
   }
 
-  render() {
-    if(!this.list.isLoaded()) return <p>Loading...</p>
+  componentDidMount() {
+    this.list.pushObserver(this);
+  }
 
-    const data = this.list.getData();
+  componentWillUnmount() {
+    this.list.popObserver(this);
+  }
+
+  render() {
+    if(this.list.isLoading()) return <p>Loading...</p>;
+    if(!this.list.isLoaded()) return <p>Loading submission list failed, reload page.</p>;
+
+    const data = this.list.data;
 
     return (
       <ul>
-        <li>TODO: items!</li>
+        <li>Example submission 1</li>
       </ul>
     );
   }

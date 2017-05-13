@@ -81,7 +81,7 @@ class SubmissionView extends Component {
   renderOutputStatus(output) {
     if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><ResultView model={this.model} result={output.data.result}></ResultView></div>)
+    return (<div><br/><ResultView model={this.model} result={output.data.feedback}></ResultView></div>)
   }
 
   renderOutputSelector() {

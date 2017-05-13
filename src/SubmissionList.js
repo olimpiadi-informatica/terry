@@ -1,68 +1,41 @@
-import wait from './utils';
+import axios from 'axios';
 import Source from './Source';
 import Output from './Output';
+import Observable from './Observable';
 
-class SubmissionList {
+class SubmissionList extends Observable {
     constructor(taskName, model) {
+      super();
+
       this.taskName = taskName;
       this.model = model;
     }
 
     load() {
-      return wait(1000).then(() => {
-        this.data = [
-          {
-            id: "sub3",
-            input: {
-              id: "i5"
-            },
-            source: {
-              id: "src5",
-            },
-            output : {
-              id: "o5",
-            },
-            result: {
-              warnings: [
-                {
-                  code: "partial_parse",
-                  severity: "warning",
-                  message: "Attention: the submitted file could not be fully processed.",
-                },
-              ],
-              cases: [
-                {
-                  id: "1",
-                  status: "correct",
-                  message: "Output correct.",
-                },
-                {
-                  id: "5",
-                  status: "wrong",
-                  message: "Your output is 5, but the cycle (4 6 8 1) has shorter length (4) !",
-                },
-                {
-                  id: "4",
-                  status: "wrong",
-                  message: "Your output is 3, but there is no cycle of length 3.",
-                },
-              ]
-            },
-          },
-          {
-            id: "sub5",
-          },
-        ]
-      })
+      if(this.isLoading()) throw new Error("load() called while already loading");
+
+      this.fireUpdate();
+      const endpoint = "http://localhost:1234/user/" + this.model.user.token + "/submissions/" + this.taskName;
+      // TODO: handle errors
+      return this.loadPromise = axios.get(endpoint).then((response) => {
+        this.data = response.data;
+        delete this.loadPromise;
+        this.fireUpdate();
+      }, (response) => {
+        delete this.loadPromise;
+        this.fireUpdate();
+        return Promise.reject(response);
+      });
+    }
+
+    isLoading() {
+      return this.loadPromise !== undefined;
     }
 
     isLoaded() {
       return this.data !== undefined;
     }
 
-    getData() {
-      return this.data;
-    }
 }
 
 export default SubmissionList;

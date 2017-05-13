@@ -105,13 +105,17 @@ class Model extends Observable {
       data.append("token", this.user.token);
       data.append("task", taskName);
 
+      this.fireUpdate();
+
       const endpoint = 'http://localhost:1234/generate_input';
       return this.inputGenerationPromise[taskName] = axios.post(endpoint, data).then((response) => {
         return this.refreshUser();
       }).then(() => {
         delete this.inputGenerationPromise[taskName];
-      }).catch((response) => {
+        this.fireUpdate();
+      }, (response) => {
         delete this.inputGenerationPromise[taskName];
+        this.fireUpdate();
         return Promise.reject(response);
       });
     }
