@@ -26,7 +26,8 @@ class Output {
     }
 
     isValidForSubmit() {
-      return this.isUploaded() && this.data.validation_result.valid_for_submit
+      // TODO: return this.isUploaded() && this.data.validation_result.valid_for_submit;
+      return this.isUploaded();
     }
 
 }

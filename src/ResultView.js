@@ -8,17 +8,17 @@ class ResultView extends Component {
     this.result = props.result;
   }
 
-  renderWarning(warning) {
+  renderAlert(a) {
     return (
-      <div className={ "alert alert-"+warning.severity } role="alert">
-        <samp>{warning.code}</samp> {warning.severity}: {warning.message}
+      <div className={ "alert alert-" + a.severity } role="alert">
+        <samp>{a.code}</samp> {a.severity}: {a.message}
       </div>
     )
   }
 
-  renderCase(testCase) {
+  renderCase(c) {
     return (
-      <p>Case <samp>{testCase.id}</samp> <b>{testCase.status}</b> {testCase.message}</p>
+      <p>Case <samp>{c.id}</samp> <b>{c.status}</b> {c.message}</p>
     )
   }
 
@@ -26,7 +26,7 @@ class ResultView extends Component {
     return (
       <div>
         <ul className="list-unstyled">{
-            this.result.warnings.map((w, i) => <li key={i}>{ this.renderWarning(w) }</li>)
+            this.result.alerts.map((a, i) => <li key={i}>{ this.renderAlert(a) }</li>)
         }</ul>
         <ul className="list-group">{
             this.result.cases.map((c, i) => <li key={i} className="list-group-item">{ this.renderCase(c) }</li>)

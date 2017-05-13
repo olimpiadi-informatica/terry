@@ -4,6 +4,8 @@ class Source {
     constructor(file, submission) {
       this.file = file;
       this.submission = submission;
+
+      this.model = submission.model;
     }
 
     upload() {

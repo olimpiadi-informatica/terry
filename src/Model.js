@@ -94,7 +94,7 @@ class Model {
     generateInput(taskName) {
       const data = new FormData();
 
-      data.append("user", this.user.token);
+      data.append("token", this.user.token);
       data.append("task", taskName);
 
       return axios.post('http://localhost:1234/generate_input', data).then((response) => {
