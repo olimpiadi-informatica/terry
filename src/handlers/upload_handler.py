@@ -14,6 +14,9 @@ from ..storage_manager import StorageManager
 class UploadHandler(BaseHandler):
 
     def upload_output(self, route_args, request):
+        """
+        POST /upload_output
+        """
         file_content = UploadHandler._get_file_content(request)
         file_name = UploadHandler._get_file_name(request)
         output_id = Database.gen_id()
@@ -42,6 +45,9 @@ class UploadHandler(BaseHandler):
         return { "id": output_id }
 
     def upload_source(self, route_args, request):
+        """
+        POST /upload_source
+        """
         file_content = UploadHandler._get_file_content(request)
         file_name = UploadHandler._get_file_name(request)
         source_id = Database.gen_id()
@@ -56,8 +62,18 @@ class UploadHandler(BaseHandler):
 
     @staticmethod
     def _get_file_name(request):
+        """
+        Extract the name of the file from the multipart body
+        :param request: The Request object
+        :return: The filename in the request
+        """
         return request.files["file"].filename
 
     @staticmethod
     def _get_file_content(request):
+        """
+        Extract the content of the file from the multipart of the body
+        :param request: The Request object
+        :return: A *bytes* with the content of the file 
+        """
         return request.files["file"].stream.getvalue()
