@@ -64,15 +64,16 @@ class TaskView extends Component {
 
   renderCommands() {
     if(this.getTaskState().hasCurrentInput()) {
+      const currentInput = this.getTaskState().getCurrentInput();
       return (
         <div>
           <button role="button" className="btn btn-primary top-button" onClick={() => this.downloadInput()}>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
           </button>
           {' '}
-          <button role="button" className="btn btn-success top-button" onClick={() => this.getTaskState().startSubmission()}>
+          <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success top-button">
             <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
-          </button>
+          </Link>
         </div>
       )
     } else {
@@ -88,21 +89,22 @@ class TaskView extends Component {
     }
   }
 
-  renderSubmissionDialog() {
-    if (!this.getTaskState().hasSubmission()) return null;
-
-    return (
-      <div className="static-modal">
-        <SubmissionView model={this.model} submission={this.getTaskState().getSubmission()} onClose={ () => this.getTaskState().closeSubmission() }/>
-      </div>
-    );
-  }
-
   renderTaskStatement() {
     if(this.task.isLoadingStatement()) return <p>Loading statement...</p>;
     if(!this.task.isLoadedStatement()) return <p>Failed to load task statement. Try realoading page.</p>;
 
     return <ReactMarkdown source={this.task.getStatement()}/>
+  }
+
+  renderSubmissionDialog(inputId) {
+    if(!this.getTaskState().canSubmit(inputId)) return <p>Cannot submit for this input!</p>;
+
+    const submission = this.getTaskState().createSubmission();
+    return (
+      <div className="static-modal">
+        <SubmissionView model={this.model} submission={submission} />
+      </div>
+    );
   }
 
   render() {
@@ -111,6 +113,8 @@ class TaskView extends Component {
         <h1>{this.task.data.title}</h1>
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
+
+        <Route path="/:taskName/submit/:inputId" render={({match}) => this.renderSubmissionDialog(match.params.inputId)}></Route>
         <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>
 
         <hr/>

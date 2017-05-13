@@ -3,6 +3,7 @@ import ResultView from './ResultView';
 import FileView from './FileView';
 import Modal from 'react-bootstrap/lib/Modal'
 import Button from 'react-bootstrap/lib/Button'
+import { Link } from 'react-router-dom';
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -10,7 +11,6 @@ class SubmissionView extends Component {
 
     this.model = props.model;
     this.submission = props.submission;
-    this.onClose = props.onClose;
   }
 
   componentDidMount() {
@@ -19,30 +19,6 @@ class SubmissionView extends Component {
 
   componentWillUnmount() {
     this.submission.popObserver(this);
-  }
-
-  onChangeSource() {
-    this.submission.setSource(this.refs.form.source.files[0]);
-  }
-
-  resetSource() {
-    this.submission.resetSource();
-  }
-
-  onChangeOutput() {
-    this.submission.setOutput(this.refs.form.output.files[0]);
-  }
-
-  resetOutput() {
-    this.submission.resetOutput();
-  }
-
-  submit() {
-    this.submission.submit();
-  }
-
-  close() {
-    this.onClose();
   }
 
   renderSourceStatus(output) {
@@ -55,7 +31,7 @@ class SubmissionView extends Component {
     if(!this.submission.hasSource()) {
       return (
         <label className="custom-file">
-          <input key="absent" name="source" type="file" id="source-file" className="custom-file-input" onChange={() => this.onChangeSource()} />
+          <input key="absent" ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.submission.setSource(this.refs.source.files[0]) } />
           <span className="custom-file-control" id="source-file-span"></span>
         </label>
       );
@@ -68,7 +44,7 @@ class SubmissionView extends Component {
           </div>
           <div className="card-block">
             <FileView file={source.file}></FileView>
-            <button key="present" type="button" className="btn btn-secondary" role="button" onClick={ () => this.resetSource() }>
+            <button key="present" type="button" className="btn btn-secondary" role="button" onClick={ () => this.submission.resetSource() }>
               <span aria-hidden="true" className="fa fa-trash"></span> Change source
             </button>
             { this.renderSourceStatus(source) }
@@ -81,7 +57,7 @@ class SubmissionView extends Component {
   renderOutputUploadForm() {
     return (
       <label className="custom-file">
-        <input key="absent" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.onChangeOutput()} />
+        <input key="absent" ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.submission.setOutput(this.refs.output.files[0])} />
         <span className="custom-file-control" id="output-file-span"></span>
       </label>
     );
@@ -103,7 +79,7 @@ class SubmissionView extends Component {
         </div>
         <div className="card-block">
           <FileView file={output.file}></FileView>
-          <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.resetOutput() }>
+          <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.submission.resetOutput() }>
             <span aria-hidden="true" className="fa fa-trash"></span> Change output
           </button>
           { this.renderOutputValidation(output) }
@@ -124,15 +100,15 @@ class SubmissionView extends Component {
     if(this.submission.isSubmitting()) return <p>Submitting...</p>
 
     return (
-      <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit(); }}>
+      <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submission.submit(); }}>
         <Modal.Body>
             <div className="form-group">{ this.renderSourceSelector() }</div>
             <div className="form-group">{ this.renderOutputSelector() }</div>
         </Modal.Body>
         <Modal.Footer>
-          <Button role="button" bsStyle="danger" onClick={ () => this.close() }>
+          <Link to={"/" + this.submission.input.task} role="button" bsStyle="danger">
             <span aria-hidden="true" className="fa fa-times"></span> Cancel
-          </Button>
+          </Link>
           <Button bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
             <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
           </Button>

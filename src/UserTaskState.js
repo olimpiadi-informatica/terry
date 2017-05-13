@@ -58,27 +58,16 @@ class UserTaskState extends Observable {
       return this.submission !== undefined;
     }
 
-    startSubmission() {
+    canSubmit(inputId) {
+      return this.hasCurrentInput() && this.getCurrentInput().id === inputId;
+    }
+
+    createSubmission() {
       if(this.hasSubmission()) throw new Error("already has a current submission");
       if(!this.hasCurrentInput()) throw new Error("does not have an input, yet");
 
       const input = this.getCurrentInput();
-      this.submission = new Submission(input, this);
-
-      this.fireUpdate();
-    }
-
-    getSubmission() {
-      if(!this.hasSubmission()) throw new Error("has no submission");
-
-      return this.submission;
-    }
-
-    closeSubmission() {
-      if(!this.hasSubmission()) throw new Error("has no submission");
-
-      delete this.submission;
-      this.fireUpdate();
+      return new Submission(input, this);
     }
 
     getSubmissionList() {
