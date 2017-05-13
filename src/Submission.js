@@ -49,8 +49,15 @@ class Submission {
         && this.hasSource() && this.getSource().isValidForSubmit();
     }
 
+    isSubmitting() {
+      return this.submitPromise !== undefined;
+    }
+
     submit() {
       if(!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
+      if(this.isSubmitting()) throw new Error("called submit() while already submitting");
+
+      this.model.view.forceUpdate();
 
       const data = new FormData();
 
@@ -58,9 +65,13 @@ class Submission {
       data.append("source", this.getSource().data.id);
       data.append("output", this.getOutput().data.id);
 
-      return axios.post("http://localhost:1234/submit", data).then((response) => {
+      return this.submitPromise = axios.post("http://localhost:1234/submit", data).then((response) => {
         this.data = response.data;
         this.model.view.forceUpdate();
+        delete this.submitPromise;
+      }).catch((response) => {
+        delete this.submitPromise;
+        return Promise.reject(response);
       });
     }
 

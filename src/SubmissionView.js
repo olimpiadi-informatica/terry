@@ -106,6 +106,8 @@ class SubmissionView extends Component {
 
   renderDialog() {
     if(!this.submission.isSubmitted()) {
+      if(this.submission.isSubmitting()) return <p>Submitting...</p>
+
       return (
         <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit(); }}>
           <Modal.Body>
