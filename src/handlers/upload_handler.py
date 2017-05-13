@@ -16,45 +16,40 @@ from werkzeug.exceptions import Forbidden
 
 class UploadHandler(BaseHandler):
 
-    def upload_output(self, route_args, request):
+    def upload_output(self, _request, input):
         """
         POST /upload_output
         """
-        file_content = UploadHandler._get_file_content(request)
-        file_name = UploadHandler._get_file_name(request)
+        file_content = UploadHandler._get_file_content(_request)
+        file_name = UploadHandler._get_file_name(_request)
+
         output_id = Database.gen_id()
-        input_id = request.form["input"]
         path = StorageManager.new_output_file(output_id, file_name)
 
         StorageManager.save_file(path, file_content)
         file_size = StorageManager.get_file_size(path)
 
-        input = Database.get_input(input_id)
+        input = Database.get_input(input)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
-        result = ContestManager.evaluate_output(
-            input["task"],
-            input["path"],
-            path
-        )
+        result = ContestManager.evaluate_output(input["task"], input["path"], path)
 
-        Database.add_output(output_id, input_id, path, file_size, result)
+        Database.add_output(output_id, input, path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    def upload_source(self, route_args, request):
+    def upload_source(self, _request, input):
         """
         POST /upload_source
         """
-        file_content = UploadHandler._get_file_content(request)
-        file_name = UploadHandler._get_file_name(request)
+        file_content = UploadHandler._get_file_content(_request)
+        file_name = UploadHandler._get_file_name(_request)
         source_id = Database.gen_id()
-        input_id = request.form["input"]
 
         path = StorageManager.new_source_file(source_id, file_name)
         StorageManager.save_file(path, file_content)
         file_size = StorageManager.get_file_size(path)
 
-        Database.add_source(source_id, input_id, path, file_size)
+        Database.add_source(source_id, input, path, file_size)
         return BaseHandler.format_dates(Database.get_source(source_id))
 
     @staticmethod

@@ -30,23 +30,19 @@ class ContestHandler(BaseHandler):
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
-    def generate_input(self, route_args, request):
-        request_data = self.parse_body(request)
-        if 'token' not in request_data or \
-           'task' not in request_data:
-             self.raise_exc(BadRequest, "BAD_REQUEST", "Data missing from the request")
+    def generate_input(self, token:str, task:str):
         # TODO: register the IP address of the contestant
-        token = request_data['token']
-        task = request_data['task']
         if Database.get_user(token) is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such user")
         if Database.get_task(task) is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such task")
         if Database.get_user_task(token, task)["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
+
         attempt = Database.get_next_attempt(token, task)
         id, path = ContestManager.get_input(task, attempt)
         size = StorageManager.get_file_size(path)
+
         Database.begin()
         try:
             Database.add_input(id, token, task, attempt, path, size, autocommit=False)
@@ -57,19 +53,14 @@ class ContestHandler(BaseHandler):
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    def submit(self, route_args, request):
-        request_data = self.parse_body(request)
-        if 'input' not in request_data or \
-           'output' not in request_data or \
-           'source' not in request_data:
-             self.raise_exc(BadRequest, "BAD_REQUEST", "Data missing from the request")
-        input = Database.get_input(request_data['input'])
+    def submit(self, input:str, output:str, source:str):
+        input = Database.get_input(input)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input file")
-        output = Database.get_output(request_data['output'])
+        output = Database.get_output(output)
         if output is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such output file")
-        source = Database.get_source(request_data['source'])
+        source = Database.get_source(source)
         if source is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
         score = ContestHandler.compute_score(input["task"], output["result"])

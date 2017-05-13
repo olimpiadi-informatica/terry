@@ -17,7 +17,7 @@ from werkzeug.exceptions import Forbidden
 
 class InfoHandler(BaseHandler):
 
-    def get_contest(self, route_args, request):
+    def get_contest(self):
         """
         GET /contest
         """
@@ -35,59 +35,49 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    def get_input(self, route_args, request):
+    def get_input(self, id:str):
         """
         GET /input/<id>
         """
-        input_id = route_args["id"]
-
-        input_file = Database.get_input(id=input_id)
+        input_file = Database.get_input(id=id)
         if not input_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
         return BaseHandler.format_dates(input_file)
 
-    def get_output(self, route_args, request):
+    def get_output(self, id:str):
         """
         GET /output/<id>
         """
-        output_id = route_args["id"]
-
-        output_file = Database.get_output(id=output_id)
+        output_file = Database.get_output(id=id)
         if not output_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required output")
 
         return InfoHandler.patch_output(output_file)
 
-    def get_source(self, route_args, request):
+    def get_source(self, id:str):
         """
         GET /source/<id>
         """
-        source_id = route_args["id"]
-
-        source_file = Database.get_source(id=source_id)
+        source_file = Database.get_source(id=id)
         if not source_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required source")
 
         return BaseHandler.format_dates(source_file)
 
-    def get_submission(self, route_args, request):
+    def get_submission(self, id:str):
         """
         GET /submission/<id>
         """
-        submission_id = route_args["id"]
-
-        submission = Database.get_submission(submission_id)
+        submission = Database.get_submission(id)
         if not submission:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
 
         return InfoHandler.patch_submission(submission)
 
-    def get_user(self, route_args, request):
+    def get_user(self, token:str):
         """
         GET /user/<token>
         """
-        token = route_args["token"]
-
         # TODO: register the ip address of the contestant
 
         user = Database.get_user(token)
@@ -116,13 +106,10 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date", "contest_end"])
 
-    def get_submissions(self, route_args, request):
+    def get_submissions(self, token:str, task:str):
         """
         GET /user/<token>/submissions/<task>
         """
-        token = route_args["token"]
-        task = route_args["task"]
-
         submissions = []
         for sub in Database.get_submissions(token, task):
             submissions.append(InfoHandler.patch_submission(sub))

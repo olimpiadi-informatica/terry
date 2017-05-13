@@ -5,10 +5,10 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
+import inspect
 import json
 from datetime import datetime
 
-from json import JSONDecodeError
 from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
 
@@ -48,7 +48,7 @@ class BaseHandler:
         :return: Return a Response if the request is successful, an HTTPException if an error occurred
         """
         try:
-            data = self.__getattribute__(endpoint)(route_args, request)
+            data = BaseHandler._call(self.__getattribute__(endpoint), route_args, request)
             response = Response()
             if data is not None:
                 response.code = 200
@@ -82,3 +82,55 @@ class BaseHandler:
             elif k in fields and v is not None:
                 dct[k] = datetime.fromtimestamp(v).isoformat()
         return dct
+
+    @staticmethod
+    def _call(method, route_args, request):
+        """
+        This function is MAGIC!
+        It takes a method, reads it's parameters and automagically fetch from the request the values. Type-annotation
+        is also supported for a simple type validation.
+        The values are fetched, in order, from:
+        - route_args
+        - request.form
+        - general_attrs
+        - default values
+        If a parameter is required but not sent a BadRequest (MISSING_PARAMETERS) error is thrown, if a parameter cannot
+        be converted to the annotated type a BadRequest (FORMAT_ERROR) is thrown.
+        :param method: Method to be called
+        :param route_args: Arguments of the route
+        :param request: Request object
+        :return: The return value of method
+        """
+        kwargs = {}
+        sign = inspect.signature(method).parameters
+        general_attrs = {
+            '_request': request,
+            '_route_args': route_args
+        }
+
+        missing_parameters = []
+
+        for attr_name in sign:
+            if attr_name in route_args:
+                kwargs[attr_name] = route_args[attr_name]
+            elif attr_name in request.form:
+                kwargs[attr_name] = request.form[attr_name]
+            elif attr_name in general_attrs:
+                kwargs[attr_name] = general_attrs.form[attr_name]
+            elif sign[attr_name].default is inspect._empty:
+                missing_parameters.append(attr_name)
+
+        if len(missing_parameters) > 0:
+            BaseHandler.raise_exc(BadRequest, "MISSING_PARAMETERS",
+                                  "The missing parameters are: " + ", ".join(missing_parameters))
+
+        for key, value in kwargs.items():
+            type = sign[key].annotation
+            if type is inspect._empty: continue
+
+            try:
+                kwargs[key] = type(value)
+            except ValueError:
+                BaseHandler.raise_exc(BadRequest, "FORMAT_ERROR",
+                                      "The parameter %s cannot be converted to %s" % (key, type.__name__))
+        return method(**kwargs)
