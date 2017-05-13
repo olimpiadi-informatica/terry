@@ -105,7 +105,9 @@ class BaseHandler:
         sign = inspect.signature(method).parameters
         general_attrs = {
             '_request': request,
-            '_route_args': route_args
+            '_route_args': route_args,
+            '_file_content': BaseHandler._get_file_content(request),
+            '_file_name': BaseHandler._get_file_name(request)
         }
 
         missing_parameters = []
@@ -116,7 +118,7 @@ class BaseHandler:
             elif attr_name in request.form:
                 kwargs[attr_name] = request.form[attr_name]
             elif attr_name in general_attrs:
-                kwargs[attr_name] = general_attrs.form[attr_name]
+                kwargs[attr_name] = general_attrs[attr_name]
             elif sign[attr_name].default is inspect._empty:
                 missing_parameters.append(attr_name)
 
@@ -134,3 +136,26 @@ class BaseHandler:
                 BaseHandler.raise_exc(BadRequest, "FORMAT_ERROR",
                                       "The parameter %s cannot be converted to %s" % (key, type.__name__))
         return method(**kwargs)
+
+
+    @staticmethod
+    def _get_file_name(request):
+        """
+        Extract the name of the file from the multipart body
+        :param request: The Request object
+        :return: The filename in the request
+        """
+        if "file" not in request.files:
+            return None
+        return request.files["file"].filename
+
+    @staticmethod
+    def _get_file_content(request):
+        """
+        Extract the content of the file from the multipart of the body
+        :param request: The Request object
+        :return: A *bytes* with the content of the file
+        """
+        if "file" not in request.files:
+            return None
+        return request.files["file"].stream.getvalue()
