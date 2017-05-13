@@ -29,7 +29,7 @@ class ContestHandler(BaseHandler):
 
     def update_user_score(self, token, task, score):
         task_score = Database.get_user_task(token, task)
-        if task_score.score < score:
+        if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
     def generate_input(self, route_args, request):
@@ -65,13 +65,13 @@ class ContestHandler(BaseHandler):
            'output' not in request_data or \
            'source' not in request_data:
              self.raise_exc(BadRequest, "BAD_REQUEST", "Data missing from the request")
-        input = Database.get_output(request_data['input'])
+        input = Database.get_input(request_data['input'])
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input file")
         output = Database.get_output(request_data['output'])
         if output is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such output file")
-        source = Database.get_output(request_data['source'])
+        source = Database.get_source(request_data['source'])
         if source is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
         score = self.compute_score(input["task"], output["result"])
@@ -80,8 +80,8 @@ class ContestHandler(BaseHandler):
             id = Database.add_submission(input, output, source, score, autocommit=False)
             if id is None:
                 self.raise_exc(BadRequest, "FORBIDDEN", "Error inserting the submission")
-            self.update_user_score(input.token, input.task, score)
-            self.set_user_attempt(input.token, input.task, None)
+            self.update_user_score(input["token"], input["task"], score)
+            self.set_user_attempt(input["token"], input["task"], None)
             Database.commit()
         except:
             Database.rollback()

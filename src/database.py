@@ -279,11 +279,11 @@ class Database:
         if 1 == Database.do_write(autocommit, """
             INSERT INTO submissions (id, token, task, input, output, source, score)
             SELECT :id, token, task, :input, :output, :source, :score
-            FROM input
+            FROM inputs
             WHERE id = :input
         """, {
-            "id": id, "output": output, "score": score,
-            "input": input, "source": source
+            "id": id, "output": output["id"], "score": score,
+            "input": input["id"], "source": source["id"]
         }):
             return id
         else:
