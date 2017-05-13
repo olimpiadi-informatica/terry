@@ -10,10 +10,7 @@ class SubmissionView extends Component {
     super(props);
 
     this.model = props.model;
-    this.taskName = props.taskName;
-    this.inputId = props.inputId;
-
-    this.submission = this.getTaskState().createSubmission(this.inputId);
+    this.submission = props.submission;
   }
 
   getTaskState() {

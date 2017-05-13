@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
-import SubmissionView from './SubmissionView';
+import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import client from './TerryClient';
@@ -105,7 +105,7 @@ class TaskView extends Component {
   renderSubmissionDialog(inputId) {
     return (
       <div className="static-modal">
-        <SubmissionView model={this.model} inputId={inputId} taskName={this.task.name}></SubmissionView>
+        <CreateSubmissionView model={this.model} inputId={inputId} taskName={this.task.name}></CreateSubmissionView>
       </div>
     );
   }
