@@ -46,21 +46,21 @@ class ContestHandler(BaseHandler):
         if Database.get_user_task(token, task)["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
         # TODO: really generate the input
-        id = Database.get_id()
-        attempt = Database.get_next_attempt()
+        id = Database.gen_id()
+        attempt = Database.get_next_attempt(token, task)
         path = StorageManager.new_input_file(id, task, attempt)
         with open(StorageManager.get_absolute_path(path), "w"):
             pass
         size = StorageManager.get_file_size(path)
         Database.begin()
         try:
-            Database.add_input(token, task, attempt, path, size, autocommit=False)
+            Database.add_input(id, token, task, attempt, path, size, autocommit=False)
             Database.set_user_attempt(token, task, attempt, autocommit=False)
             Database.commit()
         except:
             Database.rollback()
             raise
-        return {"id": id}
+        return { "id": id }
 
     def submit(self, route_args, request):
         request_data = self.parse_body(request)

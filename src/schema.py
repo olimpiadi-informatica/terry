@@ -119,11 +119,9 @@ class Schema:
             INSERT INTO "tasks" VALUES('poldo','La dieta di Poldo','/statement/poldo.pdf',42);
             INSERT INTO "tasks" VALUES('easy1','Easy 1','/statement/easy1.pdf',58);
             INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0,NULL);
-            INSERT INTO "inputs" VALUES('inputid','tokenid','poldo',1,12345,'/input/inputid/poldo_input_1.txt',42);
-            INSERT INTO "inputs" VALUES('inputid2','tokenid','poldo',2,12345,'/input/inputid/poldo_input_2.txt',324);
             INSERT INTO "metadata" VALUES('start_time','1494621126');
             INSERT INTO "metadata" VALUES('contest_duration','864000');
-            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 40, 2);
+            INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 40, NULL);
             INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'easy1', 0, NULL);
         """
     ]

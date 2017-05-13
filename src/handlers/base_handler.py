@@ -66,10 +66,7 @@ class BaseHandler:
         :param request: The request to be parsed
         :return: A dict with the content of the body
         """
-        try:
-            return json.loads(request.data)
-        except JSONDecodeError as e:
-            self.raise_exc(BadRequest, "MALFORMED_BODY", "The provided json is invalid: %s" % str(e))
+        return request.form
 
     @staticmethod
     def format_dates(dct, fields=["date"]):
