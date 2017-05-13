@@ -42,10 +42,8 @@ class SubmissionView extends Component {
     } else {
       const source = this.submission.getSource();
       return (
-        <div key="present" className="card">
-          <div className="card-header">
-            <h5>Source file info</h5>
-          </div>
+        <div key="present" className="card card-outline-primary">
+          <h5 className="card-header">Source file info</h5>
           <div className="card-block">
             <FileView file={source.file}></FileView>
             <button key="present" type="button" className="btn btn-secondary" role="button" onClick={ () => this.submission.resetSource() }>
@@ -78,9 +76,7 @@ class SubmissionView extends Component {
 
     return (
       <div key="present" className="card card-outline-primary">
-        <div className="card-header">
-          <h5>Output file info</h5>
-        </div>
+        <h5 className="card-header">Output file info</h5>
         <div className="card-block">
           <FileView file={output.file}></FileView>
           <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.submission.resetOutput() }>
@@ -113,7 +109,7 @@ class SubmissionView extends Component {
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
             <span aria-hidden="true" className="fa fa-times"></span> Cancel
           </Link>
-          <Button bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
+          <Button role="button" bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
             <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
           </Button>
         </Modal.Footer>
@@ -144,7 +140,7 @@ class SubmissionView extends Component {
 
   render() {
     return (
-      <Modal.Dialog>
+      <Modal.Dialog bsSize="large">
         <Modal.Header>
           <Modal.Title>Submission for input <strong>{ this.submission.input.id }</strong></Modal.Title>
         </Modal.Header>

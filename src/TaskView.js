@@ -115,7 +115,7 @@ class TaskView extends Component {
   }
 
   renderSubmissionListButton() {
-    return <p>(<Link to={"/" + this.task.name + "/submissions"}><em>view all submissions</em></Link>)</p>;
+    return <p><strong>Last submission</strong>: <em>1 hour ago</em> (<Link to={"/" + this.task.name + "/submissions"}>view all submissions</Link>)</p>;
   }
 
   render() {

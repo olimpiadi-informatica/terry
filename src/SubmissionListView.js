@@ -3,6 +3,7 @@ import ResultView from './ResultView';
 import FileView from './FileView';
 import Modal from 'react-bootstrap/lib/Modal';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 class SubmissionListView extends Component {
   constructor(props) {
@@ -26,18 +27,66 @@ class SubmissionListView extends Component {
     this.list.popObserver(this);
   }
 
+  renderSubmissionList() {
+    const submissionList = [];
+
+    console.log(this.list.data.items);
+
+    for (let submission of this.list.data.items) {
+      submissionList.push(
+        <tr key={ submission.id }>
+          <td>{ moment(submission.output.date.toString()).startOf('hour').fromNow() }</td>
+          <td>
+            <div className="btn-group" role="group" aria-label="Basic example">
+              <button role="button" type="button" className="btn btn-secondary">
+
+                Input file
+              </button>
+              <button role="button" type="button" className="btn btn-secondary">
+                Source file
+              </button>
+              <button role="button" type="button" className="btn btn-secondary">
+                Output file
+              </button>
+            </div>
+          </td>
+          <td>{ submission.score } / 100.0</td>
+          <td>
+            <button role="button" type="button" className="btn btn-secondary">
+              Details
+            </button>
+          </td>
+        </tr>
+      );
+    }
+
+    return submissionList;
+  }
+
   renderBody() {
     if(this.list.isLoading()) return <p>Loading...</p>;
     if(!this.list.isLoaded()) return <p>Loading submission list failed, reload page.</p>;
 
-    const data = this.list.data;
-
-    return <p>submissions...</p>
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Download</th>
+            <th>Score</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          { this.renderSubmissionList() }
+        </tbody>
+      </table>
+    );
   }
 
   render() {
     return (
-      <Modal.Dialog>
+      <Modal.Dialog bsSize="large">
         <Modal.Header>
           <Modal.Title>Submissions for task <strong>{ this.taskName }</strong></Modal.Title>
         </Modal.Header>
