@@ -122,7 +122,7 @@ class SubmissionView extends Component {
       <div>
         <ResultView model={this.model} result={this.submission.data.feedback}></ResultView>
         <div className="container">
-          <button className="btn btn-success top-button" role="button" onClick={ () => this.close() }>
+          <button className="btn btn-success" role="button" onClick={ () => this.close() }>
             <span aria-hidden="true" className="fa fa-check"></span> Okay
           </button>
         </div>
