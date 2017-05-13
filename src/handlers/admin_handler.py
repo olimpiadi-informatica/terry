@@ -85,7 +85,7 @@ class AdminHandler(BaseHandler):
         """
         self._validate_token(admin_token, BaseHandler._get_ip(_request))
 
-        start_time = Database.get_meta('start_time', type=int)
+        start_time = Database.get_meta('start_time', type=float)
         extra_time = Database.get_meta('extra_time', type=int, default=0)
         remaining_time = BaseHandler._get_remaining_time(0)
 

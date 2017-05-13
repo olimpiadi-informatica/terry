@@ -79,8 +79,8 @@ class BaseHandler:
         :param user_extra_time: Extra time specific for the user in seconds
         :return: The number of seconds until the contest is finished
         """
-        start = Database.get_meta('start_time', type=int)
-        contest_duration = Database.get_meta('contest_duration', type=int)
+        start = Database.get_meta('start_time', type=float)
+        contest_duration = Database.get_meta('contest_duration', type=int, default=0)
         contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
         now = int(datetime.now().timestamp())
 
@@ -161,7 +161,7 @@ class BaseHandler:
                 general_attrs['_ip'],
                 method.__name__,
                 ", with parameters" + ", ".join("=".join(kv) for kv in kwargs.items())
-                    if len(kwargs) > 0 else ""
+                    if False else ""
             )
         )
         return method(**kwargs)

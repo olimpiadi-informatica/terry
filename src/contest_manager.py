@@ -185,15 +185,15 @@ class ContestManager:
         input = ContestManager.input_queue[task_name].get()
         path = StorageManager.new_input_file(input["id"], task_name, attempt)
         StorageManager.rename_file(input["path"], path)
-        return (input["id"], path)
+        return input["id"], path
 
     @staticmethod
     def evaluate_output(task_name, input_path, output_path):
         try:
-            output = gevent.subprocess.check_call([
+            output = gevent.subprocess.check_output([
                 ContestManager.tasks[task_name]["checker"],
-                input_path,
-                output_path
+                StorageManager.get_absolute_path(input_path),
+                StorageManager.get_absolute_path(output_path)
             ])
         except:
             Logger.error(

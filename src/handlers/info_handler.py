@@ -21,7 +21,7 @@ class InfoHandler(BaseHandler):
         """
         GET /contest
         """
-        start_timestamp = Database.get_meta("start_time", type=int)
+        start_timestamp = Database.get_meta("start_time", type=float)
         start_datetime = datetime.fromtimestamp(start_timestamp) if start_timestamp is not None else None
         now = datetime.now()
 
@@ -101,7 +101,6 @@ class InfoHandler(BaseHandler):
         Database.register_ip(token, BaseHandler._get_ip(_request))
 
         user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
-        del user["first_login"]
         del user["extra_time"]
         user["tasks"] = {}
 

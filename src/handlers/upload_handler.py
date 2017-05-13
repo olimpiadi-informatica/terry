@@ -55,5 +55,5 @@ class UploadHandler(BaseHandler):
         StorageManager.save_file(path, _file_content)
         file_size = StorageManager.get_file_size(path)
 
-        Database.add_source(source_id, input, path, file_size)
+        Database.add_source(source_id, input["id"], path, file_size)
         return BaseHandler.format_dates(Database.get_source(source_id))
