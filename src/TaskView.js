@@ -4,7 +4,7 @@ import SubmissionView from './SubmissionView';
 import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
-import Modal from 'react-modal';
+import Button from 'react-bootstrap/lib/Button';
 
 class TaskView extends Component {
   constructor(props) {
@@ -12,8 +12,6 @@ class TaskView extends Component {
 
     this.model = props.model;
     this.taskName = props.taskName;
-
-    console.log("TaskView constructor");
 
     this.loadTaskStatement();
 
@@ -106,14 +104,12 @@ class TaskView extends Component {
   }
 
   renderSubmissionDialog() {
-    if(this.currentSubmission === undefined) return null;
+    if (this.currentSubmission === undefined) return null;
+
     return (
-    <Modal
-      isOpen={true}
-      style={this.modalStyle}
-      contentLabel="No Overlay Click Modal">
-      <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />
-      </Modal>
+      <div className="static-modal">
+        <SubmissionView model={this.model} submission={this.currentSubmission} onClose={ () => this.onSubmissionClose() }/>
+      </div>
     );
   }
 

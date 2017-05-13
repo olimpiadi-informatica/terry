@@ -72,7 +72,6 @@ class Model {
           this.view.forceUpdate();
         })
         .catch((response) => {
-          console.log(response);
           this.loginAttempt.error = response;
           this.view.forceUpdate();
         });

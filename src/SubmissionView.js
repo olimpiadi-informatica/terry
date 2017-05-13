@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ResultView from './ResultView';
 import FileView from './FileView';
+import Modal from 'react-bootstrap/lib/Modal'
+import Button from 'react-bootstrap/lib/Button'
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -60,7 +62,7 @@ class SubmissionView extends Component {
           </div>
           <div className="card-block">
             <FileView file={source.file}></FileView>
-            <button key="present" type="button" className="btn btn-secondary" role="button" onClick={() => {this.resetSource(); return false;}} >
+            <button key="present" type="button" className="btn btn-secondary" role="button" onClick={ () => this.resetSource() }>
               <span aria-hidden="true" className="fa fa-trash"></span> Change source
             </button>
             { this.renderSourceStatus(source) }
@@ -92,7 +94,7 @@ class SubmissionView extends Component {
           </div>
           <div className="card-block">
             <FileView file={output.file}></FileView>
-            <button key="present" type="button" className="btn btn-secondary" role="button" onClick={() => {this.resetOutput(); return false;}} >
+            <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.resetOutput() }>
               <span aria-hidden="true" className="fa fa-trash"></span> Change output
             </button>
             { this.renderOutputStatus(output) }
@@ -105,39 +107,46 @@ class SubmissionView extends Component {
   renderDialog() {
     if(!this.submission.isSubmitted()) {
       return (
-        <form className="submissionForm" ref="form" onSubmit={(e) => {e.preventDefault(); this.submit();}}>
-          <div className="form-group">{ this.renderSourceSelector() }</div>
-          <div className="form-group">{ this.renderOutputSelector() }</div>
-
-          <div className="form-group">
-            <button className="btn btn-success top-button" role="button" onClick={this.close} disabled={!this.submission.canSubmit()} >
-              <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
-            </button>
-            {' '}
-            <button type="reset" className="btn btn-danger top-button" role="button" onClick={() => {this.close(); return false;}} >
+        <div>
+          <Modal.Body>
+            <form className="submissionForm" ref="form" onSubmit={(e) => {e.preventDefault(); this.submit();}}>
+              <div className="form-group">{ this.renderSourceSelector() }</div>
+              <div className="form-group">{ this.renderOutputSelector() }</div>
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button role="button" bsStyle="danger" onClick={ () => this.close() }>
               <span aria-hidden="true" className="fa fa-times"></span> Cancel
-            </button>
-          </div>
-        </form>
+            </Button>
+            <Button bsStyle="success" onClick={ () => this.close() } disabled={!this.submission.canSubmit()}>
+              <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
+            </Button>
+          </Modal.Footer>
+        </div>
       );
     } else {
-      return (<div>
-        <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
-        <div className="container">
-          <button className="btn btn-success top-button" role="button" onClick={() => this.close()}>
-            <span aria-hidden="true" className="fa fa-check"></span> Okay
-          </button>
+      return (
+        <div>
+          <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
+          <div className="container">
+            <button className="btn btn-success top-button" role="button" onClick={ () => this.close() }>
+              <span aria-hidden="true" className="fa fa-check"></span> Okay
+            </button>
+          </div>
         </div>
-      </div>);
+      );
     }
   }
 
   render() {
     return (
-      <div className="submissionView">
-        <h2>Submission for input <samp>{this.submission.input.id}</samp></h2>
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>Submission for input <strong>{ this.submission.input.id }</strong></Modal.Title>
+        </Modal.Header>
+
         { this.renderDialog() }
-      </div>
+      </Modal.Dialog>
     );
   }
 }
