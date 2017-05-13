@@ -35,16 +35,20 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    def get_input(self, id:str):
+    def get_input(self, id:str, _request):
         """
         GET /input/<id>
         """
         input_file = Database.get_input(id=id)
         if not input_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
+
+        token = input["token"]
+        Database.register_ip(token, BaseHandler._get_ip(_request))
+
         return BaseHandler.format_dates(input_file)
 
-    def get_output(self, id:str):
+    def get_output(self, id:str, _request):
         """
         GET /output/<id>
         """
@@ -52,9 +56,13 @@ class InfoHandler(BaseHandler):
         if not output_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required output")
 
+        input = Database.get_input(output_file["input"])
+        token = input["token"]
+        Database.register_ip(token, BaseHandler._get_ip(_request))
+
         return InfoHandler.patch_output(output_file)
 
-    def get_source(self, id:str):
+    def get_source(self, id:str, _request):
         """
         GET /source/<id>
         """
@@ -62,9 +70,13 @@ class InfoHandler(BaseHandler):
         if not source_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required source")
 
+        input = Database.get_input(source_file["input"])
+        token = input["token"]
+        Database.register_ip(token, BaseHandler._get_ip(_request))
+
         return BaseHandler.format_dates(source_file)
 
-    def get_submission(self, id:str):
+    def get_submission(self, id:str, _request):
         """
         GET /submission/<id>
         """
@@ -72,17 +84,21 @@ class InfoHandler(BaseHandler):
         if not submission:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
 
+        token = submission["token"]
+        Database.register_ip(token, BaseHandler._get_ip(_request))
+
         return InfoHandler.patch_submission(submission)
 
-    def get_user(self, token:str):
+    def get_user(self, token:str, _request):
         """
         GET /user/<token>
         """
-        # TODO: register the ip address of the contestant
-
         user = Database.get_user(token)
         if user is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
+
+        token = user["token"]
+        Database.register_ip(token, BaseHandler._get_ip(_request))
 
         user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
         del user["first_login"]
@@ -106,10 +122,12 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date", "contest_end"])
 
-    def get_submissions(self, token:str, task:str):
+    def get_submissions(self, token:str, task:str, _request):
         """
         GET /user/<token>/submissions/<task>
         """
+        Database.register_ip(token, BaseHandler._get_ip(_request))
+
         submissions = []
         for sub in Database.get_submissions(token, task):
             submissions.append(InfoHandler.patch_submission(sub))

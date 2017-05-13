@@ -73,20 +73,26 @@ class Database:
     def get_users():
         c = Database.conn.cursor()
         c.execute("""
-            SELECT *
+            SELECT users.token AS users_token, users.name AS users_name, users.surname AS users_surname,
+                users.extra_time AS users_extra_time, ips.ip AS ips_ip, ips.first_date AS ips_first_date
             FROM users
             LEFT JOIN ips ON users.token = ips.token
         """)
         users = Database.dictify(c, all=True)
+
         users_dict = {}
         for user in users:
-            token = user["token"]
-            if user["token"] not in users_dict:
-                users_dict[token] = user
-                users_dict[token]["ip"] = []
-            if user[token]["ip"] is not None:
-                users_dict[token]["ip"].append(user[token]["ip"])
-        return list(user_dict.values())
+            token = user["users_token"]
+            if token not in users_dict:
+                users_dict[token] = { 'ip': [] }
+            ip = {}
+            for k, v in user.items():
+                if k.startswith("users_"): users_dict[token][k[6:]] = v
+                if k.startswith("ips_"):   ip[k[4:]] = v
+
+            if ip["ip"] is not None:
+                users_dict[token]["ip"].append(ip)
+        return list(users_dict.values())
 
     @staticmethod
     def get_input(id=None, token=None, task=None, attempt=None):

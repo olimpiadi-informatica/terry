@@ -20,7 +20,6 @@ class Schema:
                 name TEXT NOT NULL,
                 surname TEXT NOT NULL,
                 extra_time INTEGER NOT NULL DEFAULT 0,
-                first_login INTEGER,
                 CHECK (extra_time >= 0)
             );
 
@@ -118,7 +117,7 @@ class Schema:
         """
             INSERT INTO "tasks" VALUES('poldo','La dieta di Poldo','/statement/poldo.pdf',42);
             INSERT INTO "tasks" VALUES('easy1','Easy 1','/statement/easy1.pdf',58);
-            INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0,NULL);
+            INSERT INTO "users" VALUES('tokenid','Dottor','Culocane',0);
             INSERT INTO "metadata" VALUES('start_time','1494621126');
             INSERT INTO "metadata" VALUES('contest_duration','864000');
             INSERT INTO "user_tasks" ("token", "task", "score", "current_attempt") VALUES('tokenid', 'poldo', 40, NULL);
