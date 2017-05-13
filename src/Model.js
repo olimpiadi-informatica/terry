@@ -7,6 +7,7 @@ class Model {
     constructor(props) {
       this.view = props.view;
       this.cookies = new Cookies();
+      this.inputGenerationPromise = {};
     }
 
     loadContest() {
@@ -90,15 +91,31 @@ class Model {
       return data;
     }
 
+    isGeneratingInput(taskName) {
+      return this.inputGenerationPromise[taskName] !== undefined;
+    }
+
     generateInput(taskName) {
+      if(this.isGeneratingInput(taskName)) throw new Error("already generating input");
+
       const data = new FormData();
 
       data.append("token", this.user.token);
       data.append("task", taskName);
 
-      return axios.post('http://localhost:1234/generate_input', data).then((response) => {
+      const endpoint = 'http://localhost:1234/generate_input';
+      return this.inputGenerationPromise[taskName] = axios.post(endpoint, data).then((response) => {
         return this.refreshUser();
+      }).then(() => {
+        delete this.inputGenerationPromise[taskName];
+      }).catch((response) => {
+        delete this.inputGenerationPromise[taskName];
+        return Promise.reject(response);
       });
+    }
+
+    hasCurrentInput(taskName) {
+      return this.user.tasks[taskName].current_input !== null;
     }
 
     createSubmission(input) {

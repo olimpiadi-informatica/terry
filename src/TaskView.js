@@ -54,16 +54,13 @@ class TaskView extends Component {
     return this.model.tasksByName[this.taskName];
   }
 
-  getUserTask() {
-    return this.model.user.tasks[this.taskName];
-  }
-
   getCurrentInput() {
     return this.model.getCurrentInput(this.taskName);
   }
 
   generateInput() {
-    return this.model.generateInput(this.taskName);
+    this.model.generateInput(this.taskName);
+    this.forceUpdate();
   }
 
   createSubmission() {
@@ -73,9 +70,7 @@ class TaskView extends Component {
   }
 
   renderCommands() {
-    const userTask = this.getUserTask();
-
-    if(userTask.current_input) {
+    if(this.model.hasCurrentInput(this.taskName)) {
       return (
         <div>
           <button role="button" className="btn btn-primary top-button" onClick={() => this.donwloadInput()}>
@@ -88,6 +83,8 @@ class TaskView extends Component {
         </div>
       )
     } else {
+      if(this.model.isGeneratingInput(this.taskName)) return <div>Generating...</div>
+
       return (
         <div>
           <button role="button" className="btn btn-success top-button" onClick={() => this.generateInput()}>
@@ -121,8 +118,6 @@ class TaskView extends Component {
   }
 
   render() {
-    const userTask = this.getUserTask();
-
     return (
       <div>
         <h1>{this.getTask().title}</h1>
