@@ -4,16 +4,20 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
 from .server import Server
 from .config import Config
 from .logger import Logger
 from .database import Database
+from .contest_manager import ContestManager
 
 def main():
     Config.set_config_file("config/config.yaml")
     Logger.connect_to_database()
     Database.connect_to_database()
+    ContestManager.read_from_disk()
+    ContestManager.start()
     server = Server()
     server.run()
 

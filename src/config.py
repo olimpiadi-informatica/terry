@@ -17,7 +17,8 @@ class Config:
         "db": "db.sqlite3",
         "address": "",
         "port": 1234,
-        "storedir": "./files/"
+        "storedir": "./files/",
+        "queue_size": 64
     }
 
     @staticmethod

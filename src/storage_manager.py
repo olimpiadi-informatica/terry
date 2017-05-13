@@ -77,13 +77,25 @@ class StorageManager:
         file.close()
 
     @staticmethod
+    def rename_file(src_path, dst_path):
+        """
+        Moves a file in the filesystem, creates the directories needed
+        :param src_path: Relative path of the file
+        :param dst_path: Relative path where to put the file
+        """
+        src_path = StorageManager.get_absolute_path(src_path)
+        dst_path = StorageManager.get_absolute_path(dst_path)
+        StorageManager._create_dir(dst_path)
+        os.rename(src_path, dst_path)
+
+    @staticmethod
     def get_absolute_path(relative_path):
         """
         Get the absolute path of a stored file
         :param relative_path: Relative path of the file 
         :return: The absolute path of the file 
         """
-        return os.path.join(Config.storedir, relative_path)
+        return os.path.abspath(os.path.join(Config.storedir, relative_path))
 
     @staticmethod
     def _create_dir(filename):
@@ -92,7 +104,7 @@ class StorageManager:
         :param filename: Absolute path of the file or its directory
         """
         dirname = os.path.dirname(filename)
-        os.makedirs(dirname)
+        os.makedirs(dirname, exist_ok=True)
 
     @staticmethod
     def _sanitize(filename):

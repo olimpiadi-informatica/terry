@@ -13,6 +13,7 @@ from .base_handler import BaseHandler
 from ..database import Database
 from ..config import Config
 from ..storage_manager import StorageManager
+from ..contest_manager import ContestManager
 
 from gevent import monkey
 monkey.patch_all()
@@ -45,12 +46,8 @@ class ContestHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "No such task")
         if Database.get_user_task(token, task)["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
-        # TODO: really generate the input
-        id = Database.gen_id()
         attempt = Database.get_next_attempt(token, task)
-        path = StorageManager.new_input_file(id, task, attempt)
-        with open(StorageManager.get_absolute_path(path), "w"):
-            pass
+        id, path = ContestManager.get_input(task, attempt)
         size = StorageManager.get_file_size(path)
         Database.begin()
         try:

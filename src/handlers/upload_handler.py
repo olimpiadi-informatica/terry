@@ -9,7 +9,8 @@ from .base_handler import BaseHandler
 
 from ..database import Database
 from ..storage_manager import StorageManager
-
+from ..contest_manager import ContestManager
+from werkzeug.exceptions import Forbidden
 
 class UploadHandler(BaseHandler):
 
@@ -26,20 +27,14 @@ class UploadHandler(BaseHandler):
         StorageManager.save_file(path, file_content)
         file_size = StorageManager.get_file_size(path)
 
-        # TODO implement this s**t
-        result = """
-        {
-            "score": 0.42,
-            "validation": {
-                "cases": [{ "status": "parsed" }, { "status": "missing" }],
-                "alerts": [{ "severity": "warning", "message": "42 is the best number, you know that?" }]
-            },
-            "feedback": {
-                "cases": [{ "correct": true }, { "correct": false }],
-                "alerts": []
-            }
-        }
-        """
+        input = Database.get_input(input_id)
+        if input is None:
+            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
+        result = ContestManager.evaluate_output(
+            input["task"],
+            input["path"],
+            path
+        )
 
         Database.add_output(output_id, input_id, path, file_size, result)
         return { "id": output_id }
