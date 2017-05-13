@@ -77,6 +77,9 @@ class InfoHandler(BaseHandler):
         submission_id = route_args["id"]
 
         submission = Database.get_submission(submission_id)
+        if not submission:
+            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
+
         return InfoHandler.patch_submission(submission)
 
     def get_user(self, route_args, request):
@@ -91,7 +94,6 @@ class InfoHandler(BaseHandler):
         if user is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
 
-        # TODO fix this
         user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
         del user["first_login"]
         del user["extra_time"]
