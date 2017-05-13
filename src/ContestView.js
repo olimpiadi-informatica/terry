@@ -21,7 +21,7 @@ class ContestView extends Component {
     return (
       <li key={i} className="nav-item">
         <NavLink to={ "/" + item.name } className="nav-link tasklist-item" activeClassName="active">
-          <span className="badge badge-pill badge-danger">0/100</span>
+          <span className="task-score-badge badge badge-pill badge-danger">0/100</span>
           { item.name }
         </NavLink>
       </li>

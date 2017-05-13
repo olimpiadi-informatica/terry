@@ -100,10 +100,12 @@ class SubmissionView extends Component {
     if(this.submission.isSubmitting()) return <p>Submitting...</p>
 
     return (
-      <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submission.submit(); }}>
+      <div className="temporary-modal-div">
         <Modal.Body>
+          <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submission.submit(); }}>
             <div className="form-group">{ this.renderSourceSelector() }</div>
             <div className="form-group">{ this.renderOutputSelector() }</div>
+          </form>
         </Modal.Body>
         <Modal.Footer>
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
@@ -113,7 +115,7 @@ class SubmissionView extends Component {
             <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
           </Button>
         </Modal.Footer>
-      </form>
+      </div>
     );
   }
 
@@ -140,7 +142,7 @@ class SubmissionView extends Component {
 
   render() {
     return (
-      <Modal.Dialog bsSize="large">
+      <Modal.Dialog bsSize="large" className="oii-modal">
         <Modal.Header>
           <Modal.Title>Submission for input <strong>{ this.submission.input.id }</strong></Modal.Title>
         </Modal.Header>

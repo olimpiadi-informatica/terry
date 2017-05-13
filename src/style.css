@@ -28,6 +28,28 @@ main {
   overflow-x: hidden;
 }
 
+.task-score-badge {
+  float: right;
+  margin-top: .2rem;
+}
+
+.oii-modal .temporary-modal-div {
+  height: 80%;
+}
+
+.oii-modal .modal-dialog {
+  height: 100%;
+}
+
+.oii-modal .modal-content {
+  height: 90%;
+}
+
+.oii-modal .modal-body {
+  overflow-y: auto;
+  height: 100%;
+}
+
 .submissionView {
   margin: 16px;
 }
