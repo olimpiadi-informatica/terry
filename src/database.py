@@ -24,25 +24,6 @@ class Database:
         return str(uuid.uuid4())
 
     @staticmethod
-    def get_meta(key, default=None, type=str):
-        c = Database.conn.cursor()
-        try:
-            c.execute("""
-                SELECT value FROM metadata WHERE key = :key
-            """, {"key": key})
-        except sqlite3.OperationalError:
-            return default
-        row = c.fetchone()
-        return type(row[0]) if row is not None else default
-
-    @staticmethod
-    def set_meta(key, value):
-        c = Database.conn.cursor()
-        c.execute("""
-            INSERT OR REPLACE INTO metadata(key, value) VALUES (:key, :value)
-        """, {"key": key, "value": str(value)})
-
-    @staticmethod
     def connect_to_database():
         if Database.connected is True:
             raise RuntimeError("Database already loaded")
@@ -87,6 +68,25 @@ class Database:
         c = Database.conn.cursor()
         c.execute("""SELECT * FROM users WHERE token=:token""", {"token": token})
         return Database.dictify(c)
+
+    @staticmethod
+    def get_users():
+        c = Database.conn.cursor()
+        c.execute("""
+            SELECT *
+            FROM users
+            LEFT JOIN ips ON users.token = ips.token
+        """)
+        users = Database.dictify(c, all=True)
+        users_dict = {}
+        for user in users:
+            token = user["token"]
+            if user["token"] not in users_dict:
+                users_dict[token] = user
+                users_dict[token]["ip"] = []
+            if user[token]["ip"] is not None:
+                users_dict[token]["ip"].append(user[token]["ip"])
+        return list(user_dict.values())
 
     @staticmethod
     def get_input(id=None, token=None, task=None, attempt=None):
@@ -221,6 +221,24 @@ class Database:
             return c.rowcount
 
     @staticmethod
+    def get_meta(key, default=None, type=str):
+        c = Database.conn.cursor()
+        try:
+            c.execute("""
+                SELECT value FROM metadata WHERE key = :key
+            """, {"key": key})
+        except sqlite3.OperationalError:
+            return default
+        row = c.fetchone()
+        return type(row[0]) if row is not None else default
+
+    @staticmethod
+    def set_meta(key, value, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            INSERT OR REPLACE INTO metadata(key, value) VALUES (:key, :value)
+        """, {"key": key, "value": str(value)})
+
+    @staticmethod
     def add_user(token, name, surname, autocommit=True):
         return 1 == Database.do_write(autocommit, """
             INSERT INTO users (token, name, surname)
@@ -298,3 +316,10 @@ class Database:
             UPDATE user_tasks SET current_attempt = :attempt
             WHERE token = :token AND task = :task
         """, {"token": token, "task": task, "attempt": attempt})
+
+    @staticmethod
+    def set_extra_time(token, extra_time, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE users SET extra_time = :extra_time
+            WHERE token = :token
+        """, {"token": token, "extra_time": extra_time})

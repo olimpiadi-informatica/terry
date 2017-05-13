@@ -11,3 +11,4 @@ storedir: ./files/
 
 # Queue size for input generation
 queue_size: 64
+admin_token: secret

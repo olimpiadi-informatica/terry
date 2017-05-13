@@ -116,20 +116,6 @@ class InfoHandler(BaseHandler):
         return { "items": submissions }
 
     @staticmethod
-    def _get_remaining_time(user_extra_time):
-        """
-        Compute the remaining time for a user
-        :param user_extra_time: Extra time specific for the user in seconds
-        :return: The number of seconds until the contest is finished
-        """
-        start = Database.get_meta('start_time', type=int)
-        contest_duration = Database.get_meta('contest_duration', type=int)
-        contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
-        now = int(datetime.now().timestamp())
-
-        return start + contest_duration - now + contest_extra_time + user_extra_time
-
-    @staticmethod
     def patch_submission(submission):
         """
         Given a submission from a SQL query with some JOIN create a dict by splitting the keys using _
