@@ -78,69 +78,87 @@ class SubmissionView extends Component {
     }
   }
 
-  renderOutputStatus(output) {
+  renderOutputUploadForm() {
+    return (
+      <label className="custom-file">
+        <input key="absent" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.onChangeOutput()} />
+        <span className="custom-file-control" id="output-file-span"></span>
+      </label>
+    );
+  }
+
+  renderOutputValidation(output) {
     if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><ResultView model={this.model} result={output.data.feedback}></ResultView></div>)
+    return (<div><br/><ResultView model={this.model} result={output.data.validation}></ResultView></div>)
+  }
+
+  renderOutputInfo() {
+    const output = this.submission.getOutput();
+
+    return (
+      <div key="present" className="card card-outline-primary">
+        <div className="card-header">
+          <h5>Output file info</h5>
+        </div>
+        <div className="card-block">
+          <FileView file={output.file}></FileView>
+          <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.resetOutput() }>
+            <span aria-hidden="true" className="fa fa-trash"></span> Change output
+          </button>
+          { this.renderOutputValidation(output) }
+        </div>
+      </div>
+    );
   }
 
   renderOutputSelector() {
     if(!this.submission.hasOutput()) {
-      return (
-        <label className="custom-file">
-          <input key="absent" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.onChangeOutput()} />
-          <span className="custom-file-control" id="output-file-span"></span>
-        </label>);
+      return this.renderOutputUploadForm();
     } else {
-      const output = this.submission.getOutput();
-      return (
-        <div key="present" className="card card-outline-primary">
-          <div className="card-header">
-            <h5>Output file info</h5>
-          </div>
-          <div className="card-block">
-            <FileView file={output.file}></FileView>
-            <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.resetOutput() }>
-              <span aria-hidden="true" className="fa fa-trash"></span> Change output
-            </button>
-            { this.renderOutputStatus(output) }
-          </div>
-        </div>
-      );
+      return this.renderOutputInfo();
     }
   }
 
-  renderDialog() {
-    if(!this.submission.isSubmitted()) {
-      if(this.submission.isSubmitting()) return <p>Submitting...</p>
+  renderSubmissionForm() {
+    if(this.submission.isSubmitting()) return <p>Submitting...</p>
 
-      return (
-        <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit(); }}>
-          <Modal.Body>
-              <div className="form-group">{ this.renderSourceSelector() }</div>
-              <div className="form-group">{ this.renderOutputSelector() }</div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button role="button" bsStyle="danger" onClick={ () => this.close() }>
-              <span aria-hidden="true" className="fa fa-times"></span> Cancel
-            </Button>
-            <Button bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
-              <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
-            </Button>
-          </Modal.Footer>
-        </form>
-      );
-    } else {
-      return (
-        <div>
-          <ResultView model={this.model} result={this.submission.data.result}></ResultView>
-          <div className="container">
-            <button className="btn btn-success top-button" role="button" onClick={ () => this.close() }>
-              <span aria-hidden="true" className="fa fa-check"></span> Okay
-            </button>
-          </div>
+    return (
+      <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit(); }}>
+        <Modal.Body>
+            <div className="form-group">{ this.renderSourceSelector() }</div>
+            <div className="form-group">{ this.renderOutputSelector() }</div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button role="button" bsStyle="danger" onClick={ () => this.close() }>
+            <span aria-hidden="true" className="fa fa-times"></span> Cancel
+          </Button>
+          <Button bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
+            <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
+          </Button>
+        </Modal.Footer>
+      </form>
+    );
+  }
+
+  renderSubmissionFeedback() {
+    return (
+      <div>
+        <ResultView model={this.model} result={this.submission.data.feedback}></ResultView>
+        <div className="container">
+          <button className="btn btn-success top-button" role="button" onClick={ () => this.close() }>
+            <span aria-hidden="true" className="fa fa-check"></span> Okay
+          </button>
         </div>
-      );
+      </div>
+    );
+  }
+
+  renderDialog() {
+    if(this.submission.isSubmitted()) {
+      return this.renderSubmissionFeedback();
+    } else {
+      return this.renderSubmissionForm();
     }
   }
 
