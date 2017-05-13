@@ -52,7 +52,14 @@ class Server:
             Rule("/generate_input", methods=["POST"], endpoint="contest#generate_input"),
             Rule("/submit", methods=["POST"], endpoint="contest#submit"),
             Rule("/upload_source", methods=["POST"], endpoint="upload#upload_source"),
-            Rule("/upload_output", methods=["POST"], endpoint="upload#upload_output")
+            Rule("/upload_output", methods=["POST"], endpoint="upload#upload_output"),
+
+            Rule("/admin/extract", methods=["POST"], endpoint="admin#extract"),
+            Rule("/admin/log", methods=["POST"], endpoint="admin#log"),
+            Rule("/admin/start", methods=["POST"], endpoint="admin#start"),
+            Rule("/admin/set_extra_time", methods=["POST"], endpoint="admin#set_extra_time"),
+            Rule("/admin/status", methods=["POST"], endpoint="admin#status"),
+            Rule("/admin/user_list", methods=["POST"], endpoint="admin#user_list")
         ])
 
     @responder
