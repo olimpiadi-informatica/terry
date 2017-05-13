@@ -5,15 +5,14 @@ import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import client from './TerryClient';
 import Button from 'react-bootstrap/lib/Button';
+import Task from './Task';
 
 class TaskView extends Component {
   constructor(props) {
     super(props);
 
     this.model = props.model;
-    this.taskName = props.taskName;
-
-    this.loadTaskStatement();
+    this.task = new Task(props.taskName);
 
     this.modalStyle = {
         overlay : {
@@ -42,32 +41,30 @@ class TaskView extends Component {
 
   }
 
+  componentWillMount() {
+    this.task.loadStatement();
+  }
+
   componentDidMount() {
     this.model.pushObserver(this);
+    this.task.pushObserver(this);
   }
 
   componentWillUnmount() {
     this.model.popObserver(this);
-  }
-
-  loadTaskStatement() {
-    return client.get('/' + this.taskName + '.md')
-      .then((response) => {
-        this.taskStatement = response.data;
-        this.forceUpdate();
-      });
+    this.task.popObserver(this);
   }
 
   getTask() {
-    return this.model.tasksByName[this.taskName];
+    return this.model.tasksByName[this.task.name];
   }
 
   getCurrentInput() {
-    return this.model.getCurrentInput(this.taskName);
+    return this.model.getCurrentInput(this.task.name);
   }
 
   generateInput() {
-    this.model.generateInput(this.taskName);
+    this.model.generateInput(this.task.name);
   }
 
   createSubmission() {
@@ -77,7 +74,7 @@ class TaskView extends Component {
   }
 
   renderCommands() {
-    if(this.model.hasCurrentInput(this.taskName)) {
+    if(this.model.hasCurrentInput(this.task.name)) {
       return (
         <div>
           <button role="button" className="btn btn-primary top-button" onClick={() => this.downloadInput()}>
@@ -90,7 +87,7 @@ class TaskView extends Component {
         </div>
       )
     } else {
-      if(this.model.isGeneratingInput(this.taskName)) return <div>Generating...</div>
+      if(this.model.isGeneratingInput(this.task.name)) return <div>Generating...</div>
 
       return (
         <div>
@@ -118,10 +115,10 @@ class TaskView extends Component {
   }
 
   renderTaskStatement() {
-    if (this.taskStatement === undefined)
-      return (<div>Loading...</div>);
-    else
-      return <ReactMarkdown source={this.taskStatement}/>
+    if(this.task.isLoadingStatement()) return <p>Loading statement...</p>;
+    if(!this.task.isLoadedStatement()) return <p>Failed to load task statement. Try realoading page.</p>;
+
+    return <ReactMarkdown source={this.task.getStatement()}/>
   }
 
   render() {
@@ -130,7 +127,7 @@ class TaskView extends Component {
         <h1>{this.getTask().title}</h1>
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
-        <SubmissionListView model={this.model} taskName={this.taskName}></SubmissionListView>
+        <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>
 
         <hr/>
 
