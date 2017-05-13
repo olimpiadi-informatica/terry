@@ -2,10 +2,12 @@ import axios from 'axios';
 import Submission from './Submission';
 import SubmissionList from './SubmissionList';
 import Cookies from 'universal-cookie';
+import Observable from './Observable';
 
-class Model {
-    constructor(props) {
-      this.view = props.view;
+class Model extends Observable {
+    constructor() {
+      super();
+
       this.cookies = new Cookies();
       this.inputGenerationPromise = {};
     }
@@ -22,7 +24,7 @@ class Model {
             this.tasksByName[task.name] = task;
           }
 
-          this.view.forceUpdate();
+          this.fireUpdate();
         });
     }
 
@@ -56,7 +58,7 @@ class Model {
       return this.loadUser(userToken)
         .then((response) => {
           this.user = response.data;
-          this.view.forceUpdate();
+          this.fireUpdate();
         });
     }
 
@@ -64,17 +66,17 @@ class Model {
       delete this.user;
       this.loginAttempt = {};
 
-      this.view.forceUpdate();
+      this.fireUpdate();
 
       return this.loadUser(token)
         .then((response) => {
           this.user = response.data;
           this.cookies.set('userToken', token);
-          this.view.forceUpdate();
+          this.fireUpdate();
         })
         .catch((response) => {
           this.loginAttempt.error = response;
-          this.view.forceUpdate();
+          this.fireUpdate();
         });
     }
 
@@ -82,7 +84,7 @@ class Model {
       if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
       this.cookies.remove('userToken');
       delete this.user;
-      this.view.forceUpdate();
+      this.fireUpdate();
     }
 
     getCurrentInput(taskName) {

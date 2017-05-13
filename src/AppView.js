@@ -8,10 +8,18 @@ class AppView extends Component {
   constructor(props) {
     super(props);
 
-    this.model = new Model({"view": this});
+    this.model = new Model();
 
     this.model.loadContest();
     this.model.maybeLoadUser();
+  }
+
+  componentDidMount() {
+    this.model.pushObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.model.popObserver(this);
   }
 
   render() {

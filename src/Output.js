@@ -1,8 +1,11 @@
 import wait from './utils';
 import axios from 'axios';
+import Observable from './Observable';
 
-class Output {
+class Output extends Observable {
     constructor(file, submission) {
+      super();
+
       this.file = file;
       this.submission = submission;
 
@@ -26,7 +29,7 @@ class Output {
         .then(() => {
           return axios.get("http://localhost:1234/output/" + id).then((response) => {
             this.data = response.data;
-            this.model.view.forceUpdate();
+            this.fireUpdate();
           });
         });
     }

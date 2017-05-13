@@ -27,7 +27,6 @@ class SubmissionView extends Component {
 
   resetSource() {
     this.submission.resetSource();
-    this.forceUpdate();
   }
 
   onChangeOutput() {
@@ -36,7 +35,6 @@ class SubmissionView extends Component {
 
   resetOutput() {
     this.submission.resetOutput();
-    this.forceUpdate();
   }
 
   submit() {

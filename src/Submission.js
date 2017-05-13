@@ -15,6 +15,8 @@ class Submission extends Observable {
       this.source = new Source(file, this);
       this.source.upload();
 
+      this.source.pushObserver(this);
+
       this.fireUpdate();
     }
 
@@ -27,12 +29,16 @@ class Submission extends Observable {
     }
 
     resetSource() {
+      this.source.popObserver(this);
       delete this.source;
+      this.fireUpdate();
     }
 
     setOutput(file) {
       this.output = new Output(file, this);
       this.output.upload();
+
+      this.output.pushObserver(this);
 
       this.fireUpdate();
     }
@@ -46,6 +52,7 @@ class Submission extends Observable {
     }
 
     resetOutput() {
+      this.output.popObserver(this);
       delete this.output;
       this.fireUpdate();
     }

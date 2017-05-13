@@ -42,6 +42,14 @@ class TaskView extends Component {
 
   }
 
+  componentDidMount() {
+    this.model.pushObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.model.popObserver(this);
+  }
+
   loadTaskStatement() {
     return axios.get('/' + this.taskName + '.md')
       .then((response) => {
@@ -60,7 +68,6 @@ class TaskView extends Component {
 
   generateInput() {
     this.model.generateInput(this.taskName);
-    this.forceUpdate();
   }
 
   createSubmission() {

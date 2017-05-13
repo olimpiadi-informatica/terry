@@ -18,6 +18,11 @@ class Observable {
         o.forceUpdate();
       }
     }
+
+    // Delegate for chaining observers
+    forceUpdate() {
+      this.fireUpdate();
+    }
 }
 
 export default Observable;
