@@ -73,11 +73,11 @@ class TaskView extends Component {
       const currentInput = this.getTaskState().getCurrentInput();
       return (
         <div>
-          <button role="button" className="btn btn-primary top-button" onClick={() => this.downloadInput()}>
+          <button role="button" className="btn btn-primary" onClick={() => this.downloadInput()}>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
           </button>
           {' '}
-          <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success top-button">
+          <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
             <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
           </Link>
         </div>
@@ -87,8 +87,8 @@ class TaskView extends Component {
 
       return (
         <div>
-          <button role="button" className="btn btn-success top-button" onClick={() => this.getTaskState().generateInput()}>
-            <span aria-hidden="true" className="fa fa-plus"></span> Generate input
+          <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+            <span aria-hidden="true" className="fa fa-plus"></span> Request input
           </button>
         </div>
       );
