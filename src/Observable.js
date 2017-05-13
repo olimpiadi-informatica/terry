@@ -8,7 +8,7 @@ class Observable {
     }
 
     popObserver(o) {
-      const oo = this.observer.pop();
+      const oo = this.observers.pop();
 
       if(o !== oo) throw new Error("observer popped out-of-order");
     }
