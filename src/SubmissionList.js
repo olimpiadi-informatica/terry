@@ -1,4 +1,4 @@
-import axios from 'axios';
+import client from './TerryClient';
 import Source from './Source';
 import Output from './Output';
 import Observable from './Observable';
@@ -15,9 +15,9 @@ class SubmissionList extends Observable {
       if(this.isLoading()) throw new Error("load() called while already loading");
 
       this.fireUpdate();
-      const endpoint = "http://localhost:1234/user/" + this.model.user.token + "/submissions/" + this.taskName;
+      const endpoint = process.env.REACT_APP_API_ENDPOINT + "/user/" + this.model.user.token + "/submissions/" + this.taskName;
       // TODO: handle errors
-      return this.loadPromise = axios.get(endpoint).then((response) => {
+      return this.loadPromise = client.get(endpoint).then((response) => {
         this.data = response.data;
         delete this.loadPromise;
         this.fireUpdate();

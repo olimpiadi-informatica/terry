@@ -1,5 +1,5 @@
 import wait from './utils';
-import axios from 'axios';
+import client from './TerryClient';
 import Observable from './Observable';
 
 class Output extends Observable {
@@ -22,12 +22,12 @@ class Output extends Observable {
 
       return Promise.resolve()
         .then(() => {
-          return axios.post("http://localhost:1234/upload_output", data).then((response) => {
+          return client.post("/upload_output", data).then((response) => {
             id = response.data.id;
           });
         })
         .then(() => {
-          return axios.get("http://localhost:1234/output/" + id).then((response) => {
+          return client.get("/output/" + id).then((response) => {
             this.data = response.data;
             this.fireUpdate();
           });

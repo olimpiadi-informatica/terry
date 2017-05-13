@@ -1,4 +1,4 @@
-import axios from 'axios';
+import client from './TerryClient';
 import Submission from './Submission';
 import SubmissionList from './SubmissionList';
 import Cookies from 'universal-cookie';
@@ -16,7 +16,7 @@ class Model extends Observable {
       delete this.contest;
       delete this.tasksByName;
 
-      return axios.get('http://localhost:1234/contest')
+      return client.get('/contest')
         .then((response) => {
           this.contest = response.data;
           this.tasksByName = {};
@@ -33,7 +33,7 @@ class Model extends Observable {
     }
 
     loadUser(token) {
-      return axios.get('http://localhost:1234/user/' + token);
+      return client.get('/user/' + token);
     }
 
     isLoggedIn() {
@@ -107,8 +107,8 @@ class Model extends Observable {
 
       this.fireUpdate();
 
-      const endpoint = 'http://localhost:1234/generate_input';
-      return this.inputGenerationPromise[taskName] = axios.post(endpoint, data).then((response) => {
+      const endpoint = process.env.REACT_APP_API_ENDPOINT + '/generate_input';
+      return this.inputGenerationPromise[taskName] = client.post(endpoint, data).then((response) => {
         return this.refreshUser();
       }).then(() => {
         delete this.inputGenerationPromise[taskName];

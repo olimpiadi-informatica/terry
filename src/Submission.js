@@ -1,4 +1,4 @@
-import axios from 'axios';
+import client from './TerryClient';
 import Source from './Source';
 import Output from './Output';
 import Observable from './Observable';
@@ -79,7 +79,7 @@ class Submission extends Observable {
 
       this.fireUpdate();
 
-      return this.submitPromise = axios.post("http://localhost:1234/submit", data).then((response) => {
+      return this.submitPromise = client.post("/submit", data).then((response) => {
         this.data = response.data;
         delete this.submitPromise;
         this.fireUpdate();

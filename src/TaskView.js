@@ -3,7 +3,7 @@ import { Link, Route } from 'react-router-dom';
 import SubmissionView from './SubmissionView';
 import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
-import axios from 'axios';
+import client from './TerryClient';
 import Button from 'react-bootstrap/lib/Button';
 
 class TaskView extends Component {
@@ -51,7 +51,7 @@ class TaskView extends Component {
   }
 
   loadTaskStatement() {
-    return axios.get('/' + this.taskName + '.md')
+    return client.get('/' + this.taskName + '.md')
       .then((response) => {
         this.taskStatement = response.data;
         this.forceUpdate();
