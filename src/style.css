@@ -2,7 +2,6 @@
   height: calc(100vh - 56px) ;
   padding: 0px;
   padding-top: 16px;
-
 }
 
 .nav-link {
@@ -30,8 +29,7 @@ main {
 }
 
 .top-button {
-  margin: 8px;
-  color: #FFF !important;
+  color: #FFF;
 }
 
 
@@ -52,40 +50,20 @@ main {
 -------------------------------------------------- */
 
 /* Base styles (regardless of theme) */
-.bs-callout {
-  margin: 20px 0;
-  padding: 15px 30px 15px 15px;
-  border-left: 5px solid #eee;
-}
-.bs-callout h4 {
-  margin-top: 0;
-}
-.bs-callout p:last-child {
-  margin-bottom: 0;
-}
-.bs-callout code,
-.bs-callout .highlight {
-  background-color: #fff;
-}
-
-/* Themes for different contexts */
-.bs-callout-danger {
-  background-color: #fcf2f2;
-  border-color: #dFb5b4;
-}
-.bs-callout-warning {
-  background-color: #fefbed;
-  border-color: #f1e7bc;
-}
-.bs-callout-info {
+/*
   background-color: #f0f7fd;
-  border-color: #0275d8;
+  border-left-color: #0275d8;
+*/
+
+.card-header {
+  background-color: #0275d8;
+  color: #FFF;
 }
 
-.bs-callout-info-title {
-  color: #0275d8;
+.card-header h5 {
+  margin-bottom: 0px;
 }
 
-.fileView {
+.file-view {
   margin: 8px;
 }

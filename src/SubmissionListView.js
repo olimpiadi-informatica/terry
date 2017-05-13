@@ -17,7 +17,7 @@ class SubmissionListView extends Component {
     if(!this.list.isLoaded()) return <p>Loading...</p>
 
     const data = this.list.getData();
-    console.log(data);
+
     return (
       <ul>
         <li>TODO: items!</li>

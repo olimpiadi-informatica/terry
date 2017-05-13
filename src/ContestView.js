@@ -39,7 +39,7 @@ class ContestView extends Component {
     return (
       <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
         <a className="navbar-brand" href="#">Terry</a>
-        <div className="collapse navbar-collapse" id="navbarsExampleDefault">
+        <div className="collapse navbar-collapse">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="#"><span aria-hidden="true" className="fa fa-home"></span> Home</a>

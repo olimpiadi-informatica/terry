@@ -4,7 +4,7 @@ import SubmissionView from './SubmissionView';
 import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
-import Modal from 'react-modal';
+import Button from 'react-bootstrap/lib/Button';
 
 class TaskView extends Component {
   constructor(props) {
@@ -12,8 +12,6 @@ class TaskView extends Component {
 
     this.model = props.model;
     this.taskName = props.taskName;
-
-    console.log("TaskView constructor");
 
     this.loadTaskStatement();
 
@@ -80,20 +78,21 @@ class TaskView extends Component {
     if(userTask.current_input) {
       return (
         <div>
-          <a className="btn btn-primary top-button" role="button" onClick={() => this.donwloadInput()}>
+          <button role="button" className="btn btn-primary top-button" onClick={() => this.donwloadInput()}>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
-          </a>
-          <a className="btn btn-success top-button" role="button" onClick={() => this.createSubmission()}>
-          <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
-          </a>
+          </button>
+          {' '}
+          <button role="button" className="btn btn-success top-button" onClick={() => this.createSubmission()}>
+            <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
+          </button>
         </div>
       )
     } else {
       return (
         <div>
-          <a className="btn btn-success top-button" role="button" onClick={() => this.generateInput()}>
+          <button role="button" className="btn btn-success top-button" onClick={() => this.generateInput()}>
             <span aria-hidden="true" className="fa fa-plus"></span> Generate input
-          </a>
+          </button>
         </div>
       );
     }
@@ -105,20 +104,18 @@ class TaskView extends Component {
   }
 
   renderSubmissionDialog() {
-    if(this.currentSubmission === undefined) return null;
+    if (this.currentSubmission === undefined) return null;
+
     return (
-    <Modal
-      isOpen={true}
-      style={this.modalStyle}
-      contentLabel="No Overlay Click Modal">
-      <SubmissionView model={this.model} submission={this.currentSubmission} onClose={() => this.onSubmissionClose()} />
-      </Modal>
+      <div className="static-modal">
+        <SubmissionView model={this.model} submission={this.currentSubmission} onClose={ () => this.onSubmissionClose() }/>
+      </div>
     );
   }
 
   renderTaskStatement() {
     if (this.taskStatement === undefined)
-      return <div>Loading...</div>;
+      return (<div>Loading...</div>);
     else
       return <ReactMarkdown source={this.taskStatement}/>
   }
