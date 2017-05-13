@@ -1,8 +1,8 @@
 import client from './TerryClient';
-import Submission from './Submission';
-import SubmissionList from './SubmissionList';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
+import UserTaskState from './UserTaskState';
+import Contest from './Contest';
 
 class Model extends Observable {
     constructor() {
@@ -10,26 +10,17 @@ class Model extends Observable {
 
       this.cookies = new Cookies();
       this.inputGenerationPromise = {};
+
+      this.contest = new Contest();
     }
 
-    loadContest() {
-      delete this.contest;
-      delete this.tasksByName;
-
-      return client.get('/contest')
-        .then((response) => {
-          this.contest = response.data;
-          this.tasksByName = {};
-          for(let task of this.contest.tasks) {
-            this.tasksByName[task.name] = task;
-          }
-
-          this.fireUpdate();
-        });
+    getContest() {
+      return this.contest;
     }
 
-    isContestLoaded() {
-      return this.contest !== undefined;
+    onAppStart() {
+      this.getContest().load();
+      this.maybeLoadUser();
     }
 
     loadUser(token) {
@@ -55,11 +46,10 @@ class Model extends Observable {
       if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
       const userToken = this.cookies.get('userToken');
 
-      return this.loadUser(userToken)
-        .then((response) => {
-          this.user = response.data;
-          this.fireUpdate();
-        });
+      return this.loadUser(userToken).then((response) => {
+        this.user = response.data;
+        this.fireUpdate();
+      });
     }
 
     attemptLogin(token) {
@@ -87,50 +77,23 @@ class Model extends Observable {
       this.fireUpdate();
     }
 
-    getCurrentInput(taskName) {
-      const data = this.user.tasks[taskName].current_input;
-      if(data === undefined) return;
-      return data;
+    // function to be called when both user and contest are loaded
+    enterContest() {
+      this.userTaskState = {};
+      for(const task of this.getContest().getTasks()) {
+        this.userTaskState[task.name] = new UserTaskState(this, task);
+      }
     }
 
-    isGeneratingInput(taskName) {
-      return this.inputGenerationPromise[taskName] !== undefined;
+    hasEnteredContest() {
+      return this.userTaskState !== undefined;
     }
 
-    generateInput(taskName) {
-      if(this.isGeneratingInput(taskName)) throw new Error("already generating input");
-
-      const data = new FormData();
-
-      data.append("token", this.user.token);
-      data.append("task", taskName);
-
-      this.fireUpdate();
-
-      const endpoint = process.env.REACT_APP_API_ENDPOINT + '/generate_input';
-      return this.inputGenerationPromise[taskName] = client.post(endpoint, data).then((response) => {
-        return this.refreshUser();
-      }).then(() => {
-        delete this.inputGenerationPromise[taskName];
-        this.fireUpdate();
-      }, (response) => {
-        delete this.inputGenerationPromise[taskName];
-        this.fireUpdate();
-        return Promise.reject(response);
-      });
+    getTaskState(taskName) {
+      if(!this.hasEnteredContest()) throw new Error();
+      return this.userTaskState[taskName];
     }
 
-    hasCurrentInput(taskName) {
-      return this.user.tasks[taskName].current_input !== null;
-    }
-
-    createSubmission(input) {
-      return new Submission(input, this);
-    }
-
-    getSubmissionList(taskName) {
-      return new SubmissionList(taskName, this);
-    }
 }
 
 export default Model;

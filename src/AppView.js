@@ -9,9 +9,10 @@ class AppView extends Component {
     super(props);
 
     this.model = new Model();
+  }
 
-    this.model.loadContest();
-    this.model.maybeLoadUser();
+  componentWillMount() {
+    this.model.onAppStart();
   }
 
   componentDidMount() {
@@ -23,7 +24,7 @@ class AppView extends Component {
   }
 
   render() {
-    if (!this.model.isContestLoaded()) return <div>Loading contest...</div>;
+    if (!this.model.getContest().isLoaded()) return <div>Loading contest...</div>;
     if (!this.model.isLoggedIn()) return <LoginView model={this.model}/>;
     if (!this.model.isUserLoaded()) return <div>Loading user...</div>;
 

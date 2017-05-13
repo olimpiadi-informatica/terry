@@ -2,10 +2,12 @@ import axios from 'axios';
 import Observable from './Observable';
 
 class Task extends Observable {
-    constructor(name) {
+    constructor(contest, name, data) {
       super();
 
+      this.contest = contest;
       this.name = name;
+      this.data = data;
     }
 
     isLoadingStatement() {

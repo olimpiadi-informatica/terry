@@ -9,8 +9,11 @@ class SubmissionListView extends Component {
     this.model = props.model;
     this.taskName = props.taskName;
 
-    this.list = this.model.getSubmissionList(this.taskName);
-    this.list.load().then(() => this.forceUpdate());
+    this.list = this.model.getTaskState(this.taskName).getSubmissionList();
+  }
+
+  componentWillMount() {
+    this.list.load();
   }
 
   componentDidMount() {

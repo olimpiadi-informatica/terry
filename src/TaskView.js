@@ -12,7 +12,8 @@ class TaskView extends Component {
     super(props);
 
     this.model = props.model;
-    this.task = new Task(props.taskName);
+    this.contest = props.model.getContest();
+    this.task = this.contest.getTask(props.taskName);
 
     this.modalStyle = {
         overlay : {
@@ -47,51 +48,39 @@ class TaskView extends Component {
 
   componentDidMount() {
     this.model.pushObserver(this);
+    this.getTaskState().pushObserver(this);
     this.task.pushObserver(this);
   }
 
   componentWillUnmount() {
     this.model.popObserver(this);
+    this.getTaskState().popObserver(this);
     this.task.popObserver(this);
   }
 
-  getTask() {
-    return this.model.tasksByName[this.task.name];
-  }
-
-  getCurrentInput() {
-    return this.model.getCurrentInput(this.task.name);
-  }
-
-  generateInput() {
-    this.model.generateInput(this.task.name);
-  }
-
-  createSubmission() {
-    const input = this.getCurrentInput();
-    this.currentSubmission = this.model.createSubmission(input);
-    this.forceUpdate();
+  getTaskState() {
+    return this.model.getTaskState(this.task.name);
   }
 
   renderCommands() {
-    if(this.model.hasCurrentInput(this.task.name)) {
+    if(this.getTaskState().hasCurrentInput()) {
       return (
         <div>
           <button role="button" className="btn btn-primary top-button" onClick={() => this.downloadInput()}>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
           </button>
           {' '}
-          <button role="button" className="btn btn-success top-button" onClick={() => this.createSubmission()}>
+          <button role="button" className="btn btn-success top-button" onClick={() => this.getTaskState().startSubmission()}>
             <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
           </button>
         </div>
       )
     } else {
-      if(this.model.isGeneratingInput(this.task.name)) return <div>Generating...</div>
+      if(this.getTaskState().isGeneratingInput()) return <div>Generating...</div>
 
       return (
         <div>
-          <button role="button" className="btn btn-success top-button" onClick={() => this.generateInput()}>
+          <button role="button" className="btn btn-success top-button" onClick={() => this.getTaskState().generateInput()}>
             <span aria-hidden="true" className="fa fa-plus"></span> Generate input
           </button>
         </div>
@@ -99,17 +88,12 @@ class TaskView extends Component {
     }
   }
 
-  onSubmissionClose() {
-    delete this.currentSubmission;
-    this.forceUpdate();
-  }
-
   renderSubmissionDialog() {
-    if (this.currentSubmission === undefined) return null;
+    if (!this.getTaskState().hasSubmission()) return null;
 
     return (
       <div className="static-modal">
-        <SubmissionView model={this.model} submission={this.currentSubmission} onClose={ () => this.onSubmissionClose() }/>
+        <SubmissionView model={this.model} submission={this.getTaskState().getSubmission()} onClose={ () => this.getTaskState().closeSubmission() }/>
       </div>
     );
   }
@@ -124,7 +108,7 @@ class TaskView extends Component {
   render() {
     return (
       <div>
-        <h1>{this.getTask().title}</h1>
+        <h1>{this.task.data.title}</h1>
         { this.renderCommands() }
         { this.renderSubmissionDialog() }
         <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>

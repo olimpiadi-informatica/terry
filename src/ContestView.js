@@ -13,6 +13,10 @@ class ContestView extends Component {
     this.model = props.model;
   }
 
+  componentWillMount() {
+    this.model.enterContest();
+  }
+
   taskNavItem(item, i) {
     return (
       <li key={i} className="nav-item">
@@ -29,7 +33,7 @@ class ContestView extends Component {
             <h3>Task</h3>
           </li>
           <li className="divider-vertical"></li>
-          { this.model.contest.tasks.map(this.taskNavItem.bind(this)) }
+          { this.model.getContest().data.tasks.map(this.taskNavItem.bind(this)) }
         </ul>
       </nav>
     );

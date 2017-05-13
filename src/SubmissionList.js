@@ -4,20 +4,18 @@ import Output from './Output';
 import Observable from './Observable';
 
 class SubmissionList extends Observable {
-    constructor(taskName, model) {
+    constructor(taskState) {
       super();
 
-      this.taskName = taskName;
-      this.model = model;
+      this.taskState = taskState;
     }
 
     load() {
       if(this.isLoading()) throw new Error("load() called while already loading");
 
       this.fireUpdate();
-      const endpoint = process.env.REACT_APP_API_ENDPOINT + "/user/" + this.model.user.token + "/submissions/" + this.taskName;
       // TODO: handle errors
-      return this.loadPromise = client.get(endpoint).then((response) => {
+      return this.loadPromise = client.get("/user/" + this.taskState.getUser().token + "/submissions/" + this.taskState.task.name).then((response) => {
         this.data = response.data;
         delete this.loadPromise;
         this.fireUpdate();
