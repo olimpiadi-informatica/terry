@@ -110,11 +110,12 @@ class TaskView extends Component {
     );
   }
 
-  renderSubmissionList(submission) {
-    const list = this.getSubmissionList();
-    if(list.isLoaded() && !list.isEmpty()) {
-      return <SubmissionListView model={this.model} taskName={this.task.name} submission={submission}></SubmissionListView>;
-    }
+  renderSubmissionListDialog() {
+    return <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>;
+  }
+
+  renderSubmissionListButton() {
+    return <p>(<Link to={"/" + this.task.name + "/submissions"}><em>view all submissions</em></Link>)</p>;
   }
 
   render() {
@@ -124,7 +125,9 @@ class TaskView extends Component {
         { this.renderCommands() }
 
         <Route path="/:taskName/submit/:inputId" render={({match}) => this.renderSubmissionDialog(match.params.inputId)}></Route>
-        { this.renderSubmissionList() }
+        <Route path="/:taskName/submissions" render={({match}) => this.renderSubmissionListDialog()}></Route>
+
+        { this.renderSubmissionListButton() }
 
         <hr/>
 
