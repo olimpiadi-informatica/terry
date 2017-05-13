@@ -81,7 +81,7 @@ class Submission extends Observable {
 
       this.fireUpdate();
 
-      return this.submitPromise = client.post("/submit", data).then((response) => {
+      return this.submitPromise = client.api.post("/submit", data).then((response) => {
         this.data = response.data;
         return this.model.refreshUser();
       }).then(() => {

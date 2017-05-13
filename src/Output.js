@@ -22,12 +22,12 @@ class Output extends Observable {
 
       return Promise.resolve()
         .then(() => {
-          return client.post("/upload_output", data).then((response) => {
+          return client.api.post("/upload_output", data).then((response) => {
             id = response.data.id;
           });
         })
         .then(() => {
-          return client.get("/output/" + id).then((response) => {
+          return client.api.get("/output/" + id).then((response) => {
             this.data = response.data;
             this.fireUpdate();
           });

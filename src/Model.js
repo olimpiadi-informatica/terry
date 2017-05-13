@@ -24,7 +24,7 @@ class Model extends Observable {
     }
 
     loadUser(token) {
-      return client.get('/user/' + token);
+      return client.api.get('/user/' + token);
     }
 
     isLoggedIn() {

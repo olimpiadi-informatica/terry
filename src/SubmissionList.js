@@ -15,7 +15,7 @@ class SubmissionList extends Observable {
 
       this.fireUpdate();
       // TODO: handle errors
-      return this.loadPromise = client.get("/user/" + this.taskState.getUser().token + "/submissions/" + this.taskState.task.name).then((response) => {
+      return this.loadPromise = client.api.get("/user/" + this.taskState.getUser().token + "/submissions/" + this.taskState.task.name).then((response) => {
         this.data = response.data;
         delete this.loadPromise;
         this.fireUpdate();

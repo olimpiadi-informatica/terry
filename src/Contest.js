@@ -16,7 +16,7 @@ class Contest extends Observable {
     }
 
     load() {
-      return this.loadPromise = client.get('/contest').then((response) => {
+      return this.loadPromise = client.api.get('/contest').then((response) => {
         this.data = response.data;
         delete this.loadPromise;
         this.fireUpdate();

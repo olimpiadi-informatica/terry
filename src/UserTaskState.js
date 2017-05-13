@@ -44,7 +44,7 @@ class UserTaskState extends Observable {
 
       this.fireUpdate();
 
-      return this.inputGenerationPromise = client.post('/generate_input', data).then((response) => {
+      return this.inputGenerationPromise = client.api.post('/generate_input', data).then((response) => {
         return this.model.refreshUser();
       }).then(() => {
         delete this.inputGenerationPromise;

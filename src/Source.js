@@ -18,7 +18,7 @@ class Source extends Observable {
       data.append("file", this.file)
 
       // TODO: isUpdating()...
-      return client.post("/upload_source", data).then((response) => {
+      return client.api.post("/upload_source", data).then((response) => {
         this.data = response.data;
         this.fireUpdate();
       });

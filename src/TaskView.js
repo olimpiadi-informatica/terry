@@ -73,9 +73,9 @@ class TaskView extends Component {
       const currentInput = this.getTaskState().getCurrentInput();
       return (
         <div>
-          <button role="button" className="btn btn-primary" onClick={() => this.downloadInput()}>
+          <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
             <span aria-hidden="true" className="fa fa-download"></span> Download input
-          </button>
+          </a>
           {' '}
           <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
             <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
