@@ -274,9 +274,8 @@ class Database:
               "size": size, "result": result})
 
     @staticmethod
-    def add_submission(input, output, source, score, autocommit=True):
-        id = Database.gen_id()
-        if 1 == Database.do_write(autocommit, """
+    def add_submission(id, input, output, source, score, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
             INSERT INTO submissions (id, token, task, input, output, source, score)
             SELECT :id, token, task, :input, :output, :source, :score
             FROM inputs
@@ -284,10 +283,7 @@ class Database:
         """, {
             "id": id, "output": output, "score": score,
             "input": input, "source": source
-        }):
-            return id
-        else:
-            return None
+        })
 
     @staticmethod
     def set_user_score(token, task, score, autocommit=True):

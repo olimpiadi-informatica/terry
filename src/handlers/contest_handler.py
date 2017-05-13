@@ -6,22 +6,17 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 import json
-import os
-import os.path
 
 from .base_handler import BaseHandler
 from ..database import Database
-from ..config import Config
 from ..storage_manager import StorageManager
 from ..contest_manager import ContestManager
 
-from gevent import monkey
-monkey.patch_all()
-
-from datetime import datetime
 from werkzeug.exceptions import Forbidden, BadRequest
 
+
 class ContestHandler(BaseHandler):
+
     def compute_score(self, task, result):
         max_score = Database.get_task(task)["max_score"]
         percent = json.loads(result)["score"]
@@ -77,13 +72,15 @@ class ContestHandler(BaseHandler):
         score = self.compute_score(input["task"], output["result"])
         Database.begin()
         try:
-            id = Database.add_submission(input["id"], output["id"], source["id"], score, autocommit=False)
-            if id is None:
+            submission_id = Database.gen_id()
+            print("id: ", submission_id)
+            if not Database.add_submission(submission_id, input["id"], output["id"], source["id"],
+                                           score, autocommit=False):
                 self.raise_exc(BadRequest, "FORBIDDEN", "Error inserting the submission")
             self.update_user_score(input["token"], input["task"], score)
-            Database.set_user_attempt(input["token"], input["task"], None)
+            Database.set_user_attempt(input["token"], input["task"], None, autocommit=False)
             Database.commit()
         except:
             Database.rollback()
             raise
-        return {"id": id}
+        return { "id": submission_id }

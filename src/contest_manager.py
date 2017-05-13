@@ -15,6 +15,7 @@ from .storage_manager import StorageManager
 
 from hashlib import sha256
 
+
 class ContestManager:
     input_queue = dict()
     tasks = dict()
