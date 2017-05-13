@@ -18,7 +18,7 @@ class ResultView extends Component {
 
   renderCase(c) {
     return (
-      <p>Case <samp>{c.id}</samp> <b>{c.status}</b> {c.message}</p>
+      <span>Case <samp>{c.id}</samp> <b>{c.status}</b> {c.message}</span>
     )
   }
 

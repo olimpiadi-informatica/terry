@@ -33,6 +33,10 @@ main {
   margin-top: .2rem;
 }
 
+.oii-modal.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .oii-modal .temporary-modal-div {
   height: 80%;
 }
