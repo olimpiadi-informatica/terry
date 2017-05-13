@@ -56,17 +56,7 @@ class InfoHandler(BaseHandler):
         if not output_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required output")
 
-        # patch the date to the correct format
-        result = {
-            "id": output_file["id"],
-            "input": output_file["input"],
-            "date": output_file["date"],
-            "path": output_file["path"]
-        }
-        if output_file["result"]:
-            result["result"] = json.loads(output_file["result"])["validation"]
-
-        return BaseHandler.format_dates(result)
+        return InfoHandler.patch_output(output_file)
 
     def get_source(self, route_args, request):
         """
@@ -87,7 +77,7 @@ class InfoHandler(BaseHandler):
         submission_id = route_args["id"]
 
         submission = Database.get_submission(submission_id)
-        return BaseHandler.format_dates(InfoHandler._parse_submission(submission))
+        return InfoHandler.patch_submission(submission)
 
     def get_user(self, route_args, request):
         """
@@ -133,27 +123,8 @@ class InfoHandler(BaseHandler):
 
         submissions = []
         for sub in Database.get_submissions(token, task):
-            submissions.append(BaseHandler.format_dates(InfoHandler._parse_submission(sub)))
-        return submissions
-
-    @staticmethod
-    def _parse_submission(submission):
-        """
-        Given a submission from a SQL query with some JOIN create a dict by splitting the keys using _
-        :param submission: A dict with the submission
-        :return: A dict with some properties nested
-        """
-        result = {}
-
-        for k,v in submission.items():
-            if "_" in k:
-                a, b = k.split("_")
-                if a not in result: result[a] = {}
-                result[a][b] = v
-            else:
-                result[k] = v
-
-        return result
+            submissions.append(InfoHandler.patch_submission(sub))
+        return { "items": submissions }
 
     @staticmethod
     def _get_remaining_time(user_extra_time):
@@ -168,3 +139,45 @@ class InfoHandler(BaseHandler):
         now = int(datetime.now().timestamp())
 
         return start + contest_duration - now + contest_extra_time + user_extra_time
+
+    @staticmethod
+    def patch_submission(submission):
+        """
+        Given a submission from a SQL query with some JOIN create a dict by splitting the keys using _
+        :param submission: A dict with the submission
+        :return: A dict with some properties nested
+        """
+        result = {}
+
+        for k, v in submission.items():
+            if "_" in k:
+                a, b = k.split("_")
+                if a not in result: result[a] = {}
+                if b == "result":
+                    result[a][b] = json.loads(v)
+                else:
+                    result[a][b] = v
+            else:
+                if k == "result":
+                    result[k] = json.loads(v)
+                else:
+                    result[k] = v
+
+        return BaseHandler.format_dates(result)
+
+    @staticmethod
+    def patch_output(output):
+        """
+        Given an output remove the private fields
+        :param output: A dict from the outputs database table
+        :return: The formatted and sanitized dict
+        """
+        result = {
+            "id": output["id"],
+            "input": output["input"],
+            "date": output["date"],
+            "path": output["path"],
+            "result": json.loads(output["result"])["validation"]
+        }
+
+        return BaseHandler.format_dates(result)

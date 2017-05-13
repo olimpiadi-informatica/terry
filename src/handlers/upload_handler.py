@@ -5,6 +5,7 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
+from .info_handler import InfoHandler
 from .base_handler import BaseHandler
 
 from ..database import Database
@@ -38,7 +39,7 @@ class UploadHandler(BaseHandler):
         )
 
         Database.add_output(output_id, input_id, path, file_size, result)
-        return { "id": output_id }
+        return InfoHandler.patch_output(Database.get_output(output_id))
 
     def upload_source(self, route_args, request):
         """
@@ -54,7 +55,7 @@ class UploadHandler(BaseHandler):
         file_size = StorageManager.get_file_size(path)
 
         Database.add_source(source_id, input_id, path, file_size)
-        return { "id": source_id }
+        return BaseHandler.format_dates(Database.get_source(source_id))
 
     @staticmethod
     def _get_file_name(request):

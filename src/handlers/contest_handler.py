@@ -7,6 +7,7 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 import json
 
+from .info_handler import InfoHandler
 from .base_handler import BaseHandler
 from ..database import Database
 from ..storage_manager import StorageManager
@@ -17,12 +18,14 @@ from werkzeug.exceptions import Forbidden, BadRequest
 
 class ContestHandler(BaseHandler):
 
-    def compute_score(self, task, result):
+    @staticmethod
+    def compute_score(task, result):
         max_score = Database.get_task(task)["max_score"]
         percent = json.loads(result)["score"]
         return max_score * percent
 
-    def update_user_score(self, token, task, score):
+    @staticmethod
+    def update_user_score(token, task, score):
         task_score = Database.get_user_task(token, task)
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
@@ -52,7 +55,7 @@ class ContestHandler(BaseHandler):
         except:
             Database.rollback()
             raise
-        return { "id": id }
+        return BaseHandler.format_dates(Database.get_input(id=id))
 
     def submit(self, route_args, request):
         request_data = self.parse_body(request)
@@ -69,18 +72,17 @@ class ContestHandler(BaseHandler):
         source = Database.get_source(request_data['source'])
         if source is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
-        score = self.compute_score(input["task"], output["result"])
+        score = ContestHandler.compute_score(input["task"], output["result"])
         Database.begin()
         try:
             submission_id = Database.gen_id()
-            print("id: ", submission_id)
             if not Database.add_submission(submission_id, input["id"], output["id"], source["id"],
                                            score, autocommit=False):
                 self.raise_exc(BadRequest, "FORBIDDEN", "Error inserting the submission")
-            self.update_user_score(input["token"], input["task"], score)
+            ContestHandler.update_user_score(input["token"], input["task"], score)
             Database.set_user_attempt(input["token"], input["task"], None, autocommit=False)
             Database.commit()
         except:
             Database.rollback()
             raise
-        return { "id": submission_id }
+        return InfoHandler.patch_submission(Database.get_submission(submission_id))
