@@ -1,0 +1,23 @@
+class Observable {
+    constructor() {
+      this.observers = [];
+    }
+
+    pushObserver(o) {
+      this.observers.push(o);
+    }
+
+    popObserver(o) {
+      const oo = this.observer.pop();
+
+      if(o !== oo) throw new Error("observer popped out-of-order");
+    }
+
+    fireUpdate() {
+      for(let o of this.observers) {
+        o.forceUpdate();
+      }
+    }
+}
+
+export default Observable;

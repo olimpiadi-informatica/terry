@@ -1,9 +1,12 @@
 import axios from 'axios';
 import Source from './Source';
 import Output from './Output';
+import Observable from './Observable';
 
-class Submission {
+class Submission extends Observable {
     constructor(input, model) {
+      super()
+
       this.input = input;
       this.model = model;
     }
@@ -11,7 +14,8 @@ class Submission {
     setSource(file) {
       this.source = new Source(file, this);
       this.source.upload();
-      this.model.view.forceUpdate();
+
+      this.fireUpdate();
     }
 
     getSource() {
@@ -29,7 +33,8 @@ class Submission {
     setOutput(file) {
       this.output = new Output(file, this);
       this.output.upload();
-      this.model.view.forceUpdate();
+
+      this.fireUpdate();
     }
 
     getOutput() {
@@ -42,6 +47,7 @@ class Submission {
 
     resetOutput() {
       delete this.output;
+      this.fireUpdate();
     }
 
     canSubmit() {
@@ -56,8 +62,7 @@ class Submission {
     submit() {
       if(!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
       if(this.isSubmitting()) throw new Error("called submit() while already submitting");
-
-      this.model.view.forceUpdate();
+      if(this.isSubmitted()) throw new Error("called submit() when already submitted");
 
       const data = new FormData();
 
@@ -65,12 +70,15 @@ class Submission {
       data.append("source", this.getSource().data.id);
       data.append("output", this.getOutput().data.id);
 
+      this.fireUpdate();
+
       return this.submitPromise = axios.post("http://localhost:1234/submit", data).then((response) => {
         this.data = response.data;
-        this.model.view.forceUpdate();
         delete this.submitPromise;
-      }).catch((response) => {
+        this.fireUpdate();
+      }, (response) => {
         delete this.submitPromise;
+        this.fireUpdate();
         return Promise.reject(response);
       });
     }

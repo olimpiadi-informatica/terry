@@ -13,6 +13,14 @@ class SubmissionView extends Component {
     this.onClose = props.onClose;
   }
 
+  componentDidMount() {
+    this.submission.pushObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.submission.popObserver(this);
+  }
+
   onChangeSource() {
     this.submission.setSource(this.refs.form.source.files[0]);
   }
@@ -127,7 +135,7 @@ class SubmissionView extends Component {
     } else {
       return (
         <div>
-          <ResultView model={this.model} result={this.submission.submission.result}></ResultView>
+          <ResultView model={this.model} result={this.submission.data.result}></ResultView>
           <div className="container">
             <button className="btn btn-success top-button" role="button" onClick={ () => this.close() }>
               <span aria-hidden="true" className="fa fa-check"></span> Okay
