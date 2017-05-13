@@ -11,4 +11,9 @@ storedir: ./files/
 
 # Queue size for input generation
 queue_size: 64
+
+# Password for the admin
 admin_token: secret
+
+# Number of proxies
+num_proxies: 0

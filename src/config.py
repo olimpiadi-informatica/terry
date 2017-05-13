@@ -19,7 +19,8 @@ class Config:
         "port": 1234,
         "storedir": "./files/",
         "queue_size": 64,
-        "admin_token": "secret"
+        "admin_token": "secret",
+        "num_proxies": 0
     }
 
     @staticmethod

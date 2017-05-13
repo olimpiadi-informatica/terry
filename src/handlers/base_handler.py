@@ -12,6 +12,7 @@ from datetime import datetime
 from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
 
+from ..config import Config
 from ..database import Database
 
 
@@ -123,7 +124,8 @@ class BaseHandler:
             '_request': request,
             '_route_args': route_args,
             '_file_content': BaseHandler._get_file_content(request),
-            '_file_name': BaseHandler._get_file_name(request)
+            '_file_name': BaseHandler._get_file_name(request),
+            '_ip': BaseHandler._get_ip(request)
         }
 
         missing_parameters = []
@@ -175,3 +177,15 @@ class BaseHandler:
         if "file" not in request.files:
             return None
         return request.files["file"].stream.getvalue()
+
+    @staticmethod
+    def _get_ip(request):
+        """
+        Return the real IP of the client
+        :param request: The Request object
+        :return: A string with the IP of the client
+        """
+        num_proxies = Config.num_proxies
+        if num_proxies == 0 or len(request.access_route) < num_proxies:
+            return request.remote_addr
+        return request.access_route[-num_proxies]
