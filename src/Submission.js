@@ -4,11 +4,13 @@ import Output from './Output';
 import Observable from './Observable';
 
 class Submission extends Observable {
-    constructor(input, model) {
-      super()
+    constructor(input, taskState) {
+      super();
 
       this.input = input;
-      this.model = model;
+      this.taskState = taskState;
+
+      this.model = taskState.model;
     }
 
     setSource(file) {
@@ -81,12 +83,14 @@ class Submission extends Observable {
 
       return this.submitPromise = client.post("/submit", data).then((response) => {
         this.data = response.data;
+        return this.model.refreshUser();
+      }).then(() => {
         delete this.submitPromise;
         this.fireUpdate();
-      }, (response) => {
+      }, (error) => {
         delete this.submitPromise;
         this.fireUpdate();
-        return Promise.reject(response);
+        return Promise.reject(error);
       });
     }
 

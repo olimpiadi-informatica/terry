@@ -103,20 +103,17 @@ class TaskView extends Component {
   }
 
   renderSubmissionDialog(inputId) {
-    if(!this.getTaskState().canSubmit(inputId)) return <p>Cannot submit for this input!</p>;
-
-    const submission = this.getTaskState().createSubmission();
     return (
       <div className="static-modal">
-        <SubmissionView model={this.model} submission={submission} />
+        <SubmissionView model={this.model} inputId={inputId} taskName={this.task.name}></SubmissionView>
       </div>
     );
   }
 
-  renderSubmissionList() {
+  renderSubmissionList(submission) {
     const list = this.getSubmissionList();
     if(list.isLoaded() && !list.isEmpty()) {
-      return <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>;
+      return <SubmissionListView model={this.model} taskName={this.task.name} submission={submission}></SubmissionListView>;
     }
   }
 

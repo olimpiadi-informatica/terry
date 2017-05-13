@@ -10,7 +10,14 @@ class SubmissionView extends Component {
     super(props);
 
     this.model = props.model;
-    this.submission = props.submission;
+    this.taskName = props.taskName;
+    this.inputId = props.inputId;
+
+    this.submission = this.getTaskState().createSubmission(this.inputId);
+  }
+
+  getTaskState() {
+    return this.model.getTaskState(this.taskName);
   }
 
   componentDidMount() {
@@ -122,9 +129,9 @@ class SubmissionView extends Component {
       <div>
         <ResultView model={this.model} result={this.submission.data.feedback}></ResultView>
         <div className="container">
-          <button className="btn btn-success top-button" role="button" onClick={ () => this.close() }>
+          <Link to={"/" + this.submission.input.task} role="button" className="btn btn-success">
             <span aria-hidden="true" className="fa fa-check"></span> Okay
-          </button>
+          </Link>
         </div>
       </div>
     );
