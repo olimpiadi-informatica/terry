@@ -70,6 +70,12 @@ class BaseHandler:
 
     @staticmethod
     def format_dates(dct, fields=["date"]):
+        """
+        Given a dict, format all the *fields* fields from int to iso format. The original dict is modified
+        :param dct: dict to format
+        :param fields: list of the names of the fields to format
+        :return: The modified dict
+        """
         for k, v in dct.items():
             if isinstance(v, dict):
                 dct[k] = BaseHandler.format_dates(v, fields)

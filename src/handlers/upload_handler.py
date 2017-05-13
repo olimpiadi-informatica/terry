@@ -17,11 +17,29 @@ class UploadHandler(BaseHandler):
         file_content = UploadHandler._get_file_content(request)
         file_name = UploadHandler._get_file_name(request)
         output_id = Database.gen_id()
-
+        input_id = request.form["input"]
         path = StorageManager.new_output_file(output_id, file_name)
 
         StorageManager.save_file(path, file_content)
         file_size = StorageManager.get_file_size(path)
+
+        # TODO implement this s**t
+        result = """
+        {
+            "score": 0.42,
+            "validation": {
+                "cases": [{ "status": "parsed" }, { "status": "missing" }],
+                "alerts": [{ "severity": "warning", "message": "42 is the best number, you know that?" }]
+            },
+            "feedback": {
+                "cases": [{ "correct": true }, { "correct": false }],
+                "alerts": []
+            }
+        }
+        """
+
+        Database.add_output(output_id, input_id, path, file_size, result)
+        return { "id": output_id }
 
     def upload_source(self, route_args, request):
         file_content = UploadHandler._get_file_content(request)
