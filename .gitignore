@@ -103,3 +103,6 @@ ENV/
 
 # File store
 files/
+
+# Config file
+config/config.yaml

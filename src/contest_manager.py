@@ -109,7 +109,7 @@ class ContestManager:
         )
         return """
         {
-            "score": 0.5,
+            "score": 0.42,
             "validation": {
                 "cases": [{ "status": "parsed" }, { "status": "missing" }],
                 "alerts": [{ "severity": "warning", "message": "42 is the best number, you know that?" }]
