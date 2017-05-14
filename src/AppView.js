@@ -17,10 +17,12 @@ class AppView extends Component {
 
   componentDidMount() {
     this.model.pushObserver(this);
+    this.model.getContest().pushObserver(this);
   }
 
   componentWillUnmount() {
     this.model.popObserver(this);
+    this.model.getContest().popObserver(this);
   }
 
   render() {
