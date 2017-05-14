@@ -10,6 +10,10 @@ h5.modal-subtitle {
   margin-top: .5rem;
 }
 
+.file-view dd {
+  margin-bottom: 0px;
+}
+
 .sidebar {
   height: calc(100vh - 56px) ;
   padding: 0px;
