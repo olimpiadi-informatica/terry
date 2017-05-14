@@ -60,7 +60,11 @@ class SubmissionView extends Component {
   renderSourceStatus(output) {
     if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><h5>Okay.</h5></div>)
+    return (
+      <div className="alert alert-success">
+        The source file looks good.
+      </div>
+    );
   }
 
   renderSourceSelector() {
@@ -102,7 +106,9 @@ class SubmissionView extends Component {
   renderOutputValidation(output) {
     if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
-    return (<div><br/><ResultView model={this.model} result={output.data.validation}></ResultView></div>)
+    return (
+      <ResultView model={this.model} result={output.data.validation}></ResultView>
+    );
   }
 
   renderOutputInfo() {
