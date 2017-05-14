@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import ResultView from './ResultView';
 import FileView from './FileView';
-import Modal from 'react-bootstrap/lib/Modal';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+
+import Modal from 'react-modal';
 
 class SubmissionListView extends Component {
   constructor(props) {
@@ -13,6 +14,30 @@ class SubmissionListView extends Component {
     this.taskName = props.taskName;
 
     this.list = this.model.getTaskState(this.taskName).getSubmissionList();
+    this.customStyle = {
+      overlay : {
+        position          : 'fixed',
+        top               : 0,
+        left              : 0,
+        right             : 0,
+        bottom            : 0,
+        backgroundColor   : 'rgba(42, 42, 42, 0.75)'
+      },
+      content : {
+        position                   : 'absolute',
+        top                        : '10%',
+        left                       : '15%',
+        right                      : '15%',
+        bottom                     : '10%',
+        border                     : '1px solid #ccc',
+        background                 : '#fff',
+        overflow                   : 'auto',
+        WebkitOverflowScrolling    : 'touch',
+        borderRadius               : '4px',
+        outline                    : 'none',
+        padding                    : '0px'
+      }
+    };
   }
 
   componentWillMount() {
@@ -86,19 +111,21 @@ class SubmissionListView extends Component {
 
   render() {
     return (
-      <Modal.Dialog bsSize="large">
-        <Modal.Header>
-          <Modal.Title>Submissions for task <strong>{ this.taskName }</strong></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <Modal isOpen={true} contentLabel="Modal" style={this.customStyle}>
+        <div className="modal-header">
+          <h5 className="modal-title">
+            Submissions for task <strong>{ this.taskName }</strong>
+          </h5>
+        </div>
+        <div className="modal-body no-padding">
           { this.renderBody() }
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="modal-footer">
           <Link to={"/" + this.taskName} role="button" className="btn btn-primary">
             <span aria-hidden="true" className="fa fa-times"></span> Close
           </Link>
-        </Modal.Footer>
-      </Modal.Dialog>
+        </div>
+      </Modal>
     );
   }
 }

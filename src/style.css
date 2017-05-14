@@ -1,7 +1,19 @@
+table.sample-case {
+  white-space: pre;
+}
+
+a.tasklist-item {
+  text-transform: uppercase;
+}
+
 .sidebar {
   height: calc(100vh - 56px) ;
   padding: 0px;
   padding-top: 16px;
+}
+
+.no-padding {
+  padding: 0px;
 }
 
 .nav-link {
@@ -33,26 +45,23 @@ main {
   margin-top: .2rem;
 }
 
-.oii-modal.modal {
-  background-color: rgba(0, 0, 0, 0.5);
+.task-list-item {
+  overflow-x: hidden;
 }
 
-.oii-modal .temporary-modal-div {
-  height: 80%;
+/*
+
+.oii-modal.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: block;
 }
 
 .oii-modal .modal-dialog {
-  height: 100%;
+  background-color: white;
+  border-radius: .3rem;
 }
 
-.oii-modal .modal-content {
-  height: 90%;
-}
-
-.oii-modal .modal-body {
-  overflow-y: auto;
-  height: 100%;
-}
+*/
 
 .submissionView {
   margin: 16px;

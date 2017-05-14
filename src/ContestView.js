@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink, Route } from 'react-router-dom';
 import TaskView from './TaskView';
-import 'bootstrap/dist/css/bootstrap.css';
-import './style.css';
 
 var FontAwesome = require('react-fontawesome');
 
@@ -21,8 +19,8 @@ class ContestView extends Component {
     return (
       <li key={i} className="nav-item">
         <NavLink to={ "/" + item.name } className="nav-link tasklist-item" activeClassName="active">
-          <span className="task-score-badge badge badge-pill badge-danger">0/100</span>
-          { item.name }
+          <div className="task-score-badge col-4 col-lg-3 badge badge-pill badge-danger">0/100</div>
+          <div className="task-list-item col-8 col-lg-9">{ item.name }</div>
         </NavLink>
       </li>
     );
@@ -35,7 +33,9 @@ class ContestView extends Component {
           <li className="nav-item title">
             <h3>Task</h3>
           </li>
+
           <li className="divider-vertical"></li>
+
           { this.model.getContest().data.tasks.map(this.taskNavItem.bind(this)) }
         </ul>
       </nav>
@@ -49,7 +49,9 @@ class ContestView extends Component {
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="#"><span aria-hidden="true" className="fa fa-home"></span> Home</a>
+              <a className="nav-link" href="#">
+                <span aria-hidden="true" className="fa fa-home"></span> Home
+              </a>
             </li>
           </ul>
 
@@ -59,7 +61,6 @@ class ContestView extends Component {
                 <span aria-hidden="true" className="fa fa-sign-out"></span> Log Out</a>
             </li>
           </ul>
-
         </div>
       </nav>
     );
@@ -69,9 +70,11 @@ class ContestView extends Component {
     return (
       <div >
         { this.getNavBar() }
+
         <div className="container-fluid">
           <div className="row">
             { this.getSideBar() }
+
             <main className="col-sm-9 col-md-10">
               <Route path={'/:taskName'} render={ ({match}) =>
                   <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>

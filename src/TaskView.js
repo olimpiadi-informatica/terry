@@ -14,32 +14,6 @@ class TaskView extends Component {
     this.model = props.model;
     this.contest = props.model.getContest();
     this.task = this.contest.getTask(props.taskName);
-
-    this.modalStyle = {
-        overlay : {
-          position          : 'fixed',
-          top               : 0,
-          left              : 0,
-          right             : 0,
-          bottom            : 0,
-          backgroundColor   : 'rgba(42, 42, 42, 0.75)'
-        },
-        content : {
-          position                   : 'absolute',
-          top                        : '10%',
-          left                       : '15%',
-          right                      : '15%',
-          bottom                     : '10%',
-          border                     : '1px solid #ccc',
-          background                 : '#fff',
-          overflow                   : 'auto',
-          WebkitOverflowScrolling    : 'touch',
-          borderRadius               : '4px',
-          outline                    : 'none',
-          padding                    : '20px',
-        }
-      };
-
   }
 
   getSubmissionList() {
