@@ -21,11 +21,6 @@ from werkzeug.exceptions import InternalServerError, Forbidden
 
 
 class AdminHandler(BaseHandler):
-    @staticmethod
-    def restart_program():
-        """Restarts the current program, with file objects and descriptors cleanup"""
-        python = sys.executable
-        os.execl(python, python, *sys.argv)
 
     def _validate_token(self, token, ip):
         """
@@ -56,10 +51,12 @@ class AdminHandler(BaseHandler):
         try:
             with zipfile.ZipFile(z) as f:
                 f.extractall(pwd=password)
-            Logger.info("CONTEST", "Contest extracted, restarting...")
+            Logger.info("CONTEST", "Contest extracted")
         finally:
             os.chdir(wd)
-        AdminHandler.restart_program()
+        ContestManager.read_from_disk()
+        ContestManager.start()
+        return {}
 
     def log(self, start_date:str, end_date:str, level:str, admin_token:str, _request, category:str=None):
         """
