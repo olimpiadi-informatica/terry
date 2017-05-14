@@ -4,13 +4,13 @@ import moment from "moment";
 class DateView extends Component {
   constructor(props) {
     super(props);
-
-    this.date = props.date;
   }
 
   render() {
     return (
-      <abbr title={ moment(this.date).toString() }>{ moment(this.date).fromNow() }</abbr>
+      <abbr title={ moment(this.props.date).toString() }>
+        { moment(this.props.date).fromNow() }
+      </abbr>
     );
   }
 }
