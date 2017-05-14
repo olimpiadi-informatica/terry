@@ -24,6 +24,7 @@ from hashlib import sha256
 class ContestManager:
     input_queue = dict()
     tasks = dict()
+    has_contest = False
 
     @staticmethod
     def system_extension():
@@ -63,8 +64,11 @@ class ContestManager:
                     "validator" + ContestManager.system_extension()
                 )
             task_config["checker"] = checker
+            os.chmod(checker, 0o755)
             task_config["generator"] = generator
+            os.chmod(generator, 0o755)
             if os.path.exists(validator):
+                os.chmod(validator, 0o755)
                 task_config["validator"] = validator
             task_config["statement_path"] = \
                 os.path.join(statementdir, "statement.md")
@@ -75,7 +79,14 @@ class ContestManager:
 
     @staticmethod
     def read_from_disk():
-        contest = ContestManager.import_contest(Config.contest_path)
+        try:
+            contest = ContestManager.import_contest(Config.contest_path)
+        except FileNotFoundError:
+            Logger.warning(
+                "CONTEST",
+                "Contest not found, you probably need to unzip it."
+            )
+            return
         if not Database.get_meta("contest_imported", default=False, type=bool):
             Database.begin()
             try:
@@ -115,6 +126,7 @@ class ContestManager:
         ContestManager.tasks = dict(
             (task["name"], task) for task in contest["tasks"]
         )
+        ContestManager.has_contest = True
         for task in ContestManager.tasks:
             ContestManager.input_queue[task] = \
                     gevent.queue.Queue(Config.queue_size)
@@ -134,10 +146,12 @@ class ContestManager:
                     os.O_WRONLY | os.O_CREAT, 0o644
                 )
                 # TODO: maybe log stderr, use real generator
-                retcode = gevent.subprocess.call(
-                    [task["generator"], str(seed), "0"], stdout=stdout
-                )
-                os.close(stdout)
+                try:
+                    retcode = gevent.subprocess.call(
+                        [task["generator"], str(seed), "0"], stdout=stdout
+                    )
+                finally:
+                    os.close(stdout)
                 if retcode != 0:
                     Logger.error(
                         "TASK",
@@ -150,10 +164,12 @@ class ContestManager:
                         StorageManager.get_absolute_path(path),
                         os.O_RDONLY
                     )
-                    retcode = gevent.subprocess.call(
-                        [task["validator"], "0"], stdin=stdin
-                    )
-                    os.close(stdin)
+                    try:
+                        retcode = gevent.subprocess.call(
+                            [task["validator"], "0"], stdin=stdin
+                        )
+                    finally:
+                        os.close(stdin)
                     if retcode != 0:
                         Logger.error(
                             "TASK",

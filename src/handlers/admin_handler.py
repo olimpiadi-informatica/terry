@@ -6,16 +6,26 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
 import datetime
+import os
+import sys
+import subprocess
+import zipfile
 
 from .base_handler import BaseHandler
 from ..config import Config
 from ..logger import Logger
 from ..database import Database
+from ..contest_manager import ContestManager
 
 from werkzeug.exceptions import InternalServerError, Forbidden
 
 
 class AdminHandler(BaseHandler):
+    @staticmethod
+    def restart_program():
+        """Restarts the current program, with file objects and descriptors cleanup"""
+        python = sys.executable
+        os.execl(python, python, *sys.argv)
 
     def _validate_token(self, token, ip):
         """
@@ -37,7 +47,19 @@ class AdminHandler(BaseHandler):
         POST /admin/extract
         """
         self._validate_token(admin_token, BaseHandler._get_ip(_request))
-        BaseHandler.raise_exc(InternalServerError, "SERVER_ERROR", "Feature not implemented yet")
+        if ContestManager.has_contest:
+            self.raise_exc(Forbidden, "CONTEST", "Contest already loaded")
+        os.makedirs(Config.contest_path, exist_ok=True)
+        wd = os.getcwd()
+        z = os.path.abspath(os.path.join(Config.contest_zips, filename))
+        os.chdir(Config.contest_path)
+        try:
+            with zipfile.ZipFile(z) as f:
+                f.extractall(pwd=password)
+            Logger.info("CONTEST", "Contest extracted, restarting...")
+        finally:
+            os.chdir(wd)
+        AdminHandler.restart_program()
 
     def log(self, start_date:str, end_date:str, level:str, admin_token:str, _request, category:str=None):
         """
@@ -92,7 +114,8 @@ class AdminHandler(BaseHandler):
         return BaseHandler.format_dates({
             "start_time": start_time,
             "extra_time": extra_time,
-            "remaining_time": remaining_time
+            "remaining_time": remaining_time,
+            "loaded": ContestManager.has_contest
         }, fields=["start_time"])
 
     def user_list(self, admin_token:str, _request):

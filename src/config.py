@@ -22,7 +22,8 @@ class Config:
         "queue_size": 64,
         "admin_token": "secret",
         "num_proxies": 0,
-        "contest_path": "./contest/"
+        "contest_path": "./contest/",
+        "contest_zips": "./zips/"
     }
 
     @staticmethod
