@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink, Route } from 'react-router-dom';
+import { Link, NavLink, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 
 var FontAwesome = require('react-fontawesome');
@@ -49,9 +49,9 @@ export default class ContestView extends Component {
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="#">
+              <Link to="/" className="nav-link">
                 <span aria-hidden="true" className="fa fa-home"></span> Home
-              </a>
+              </Link>
             </li>
           </ul>
 
