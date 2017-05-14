@@ -73,12 +73,14 @@ class SubmissionView extends Component {
       const source = this.submission.getSource();
       return (
         <div key="present" className="card card-outline-primary">
-          <h5 className="card-header">Source file info</h5>
-          <div className="card-block">
-            <FileView file={source.file}></FileView>
-            <button key="present" type="button" className="btn btn-secondary" role="button" onClick={ () => this.submission.resetSource() }>
+          <div className="card-header">
+            <h5 className="modal-subtitle pull-left">Source file info</h5>
+            <button key="present" className="btn btn-primary pull-right" role="button" onClick={ () => this.submission.resetSource() }>
               <span aria-hidden="true" className="fa fa-trash"></span> Change source
             </button>
+          </div>
+          <div className="card-block">
+            <FileView file={source.file}></FileView>
             { this.renderSourceStatus(source) }
           </div>
         </div>
@@ -106,12 +108,14 @@ class SubmissionView extends Component {
 
     return (
       <div key="present" className="card card-outline-primary">
-        <h5 className="card-header">Output file info</h5>
-        <div className="card-block">
-          <FileView file={output.file}></FileView>
-          <button key="present" className="btn btn-secondary" role="button" onClick={ () => this.submission.resetOutput() }>
+        <div className="card-header">
+          <h5 className="modal-subtitle pull-left">Output file info</h5>
+          <button key="present" className="btn btn-primary pull-right" role="button" onClick={ () => this.submission.resetOutput() }>
             <span aria-hidden="true" className="fa fa-trash"></span> Change output
           </button>
+        </div>
+        <div className="card-block">
+          <FileView file={output.file}></FileView>
           { this.renderOutputValidation(output) }
         </div>
       </div>

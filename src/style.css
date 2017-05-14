@@ -6,6 +6,10 @@ a.tasklist-item {
   text-transform: uppercase;
 }
 
+h5.modal-subtitle {
+  margin-top: .5rem;
+}
+
 .sidebar {
   height: calc(100vh - 56px) ;
   padding: 0px;
