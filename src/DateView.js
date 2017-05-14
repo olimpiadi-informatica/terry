@@ -10,7 +10,7 @@ class DateView extends Component {
 
   render() {
     return (
-      <abbr title={ this.date }>{ moment(this.date).fromNow() }</abbr>
+      <abbr title={ moment(this.date).toString() }>{ moment(this.date).fromNow() }</abbr>
     );
   }
 }

@@ -5,7 +5,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import ResultView from './ResultView';
 import FileView from './FileView';
-import Button from 'react-bootstrap/lib/Button'
 import { Link } from 'react-router-dom';
 
 import Modal from 'react-modal';
@@ -24,14 +23,17 @@ class SubmissionView extends Component {
         left              : 0,
         right             : 0,
         bottom            : 0,
-        backgroundColor   : 'rgba(42, 42, 42, 0.75)'
+        backgroundColor   : 'rgba(42, 42, 42, 0.75)',
+        overflowY         : 'auto',
       },
       content : {
-        position                   : 'absolute',
-        top                        : '10%',
-        left                       : '15%',
-        right                      : '15%',
-        bottom                     : '10%',
+        position                   : 'relative',
+        top                        : 'inherit',
+        left                       : 'inherit',
+        right                      : 'inherit',
+        bottom                     : 'inherit',
+        margin                     : '3rem auto',
+        maxWidth                   : '70%',
         border                     : '1px solid #ccc',
         background                 : '#fff',
         overflow                   : 'auto',
@@ -136,7 +138,7 @@ class SubmissionView extends Component {
     return (
       <div>
         <div className="modal-body">
-          <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submission.submit(); }}>
+          <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault() }}>
             <div className="form-group">{ this.renderSourceSelector() }</div>
             <div className="form-group">{ this.renderOutputSelector() }</div>
           </form>
@@ -145,9 +147,11 @@ class SubmissionView extends Component {
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
             <span aria-hidden="true" className="fa fa-times"></span> Cancel
           </Link>
-          <Button role="button" bsStyle="success" type="submit" disabled={!this.submission.canSubmit()}>
+          <button role="button" className="btn btn-success"
+                  disabled={ !this.submission.canSubmit() }
+                  onClick={() => { this.submission.submit() }}>
             <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -157,7 +161,7 @@ class SubmissionView extends Component {
     return (
       <div>
         <ResultView model={this.model} result={this.submission.data.feedback}></ResultView>
-        <div className="container">
+        <div className="modal-footer">
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-success">
             <span aria-hidden="true" className="fa fa-check"></span> Okay
           </Link>

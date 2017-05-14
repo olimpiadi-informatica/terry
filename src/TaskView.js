@@ -4,7 +4,6 @@ import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import client from './TerryClient';
-import Button from 'react-bootstrap/lib/Button';
 import Task from './Task';
 
 class TaskView extends Component {
@@ -57,21 +56,25 @@ class TaskView extends Component {
         </div>
       )
     } else {
-      if(this.getTaskState().isGeneratingInput()) return <div>Generating...</div>
-
-      return (
-        <div>
-          <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-            <span aria-hidden="true" className="fa fa-plus"></span> Request input
+      if (this.getTaskState().isGeneratingInput()) {
+        return (
+          <button disabled={true} role="button" className="btn btn-success">
+            <span aria-hidden="true" className="fa fa-plus"></span> Requesting...
           </button>
-        </div>
-      );
+        );
+      } else {
+        return (
+          <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+          <span aria-hidden="true" className="fa fa-plus"></span> Request input
+          </button>
+        );
+      }
     }
   }
 
   renderTaskStatement() {
     if(this.task.isLoadingStatement()) return <p>Loading statement...</p>;
-    if(!this.task.isLoadedStatement()) return <p>Failed to load task statement. Try realoading page.</p>;
+    if(!this.task.isLoadedStatement()) return <p>Failed to load task statement. Try reloading the page.</p>;
 
     return <ReactMarkdown source={this.task.getStatement()}/>
   }

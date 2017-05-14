@@ -31,7 +31,7 @@ class ContestView extends Component {
       <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
-            <h3>Task</h3>
+            <h3>Task list</h3>
           </li>
 
           <li className="divider-vertical"></li>
