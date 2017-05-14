@@ -101,10 +101,12 @@ ENV/
 # Database file
 *.sqlite3
 *.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
 
 # File store
 files/
-statements/
+statement/
 
 # Config file
 config/config.yaml
