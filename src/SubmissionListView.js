@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import DateView from './DateView';
 import client from './TerryClient';
 import ModalView from './ModalView';
+import ReactTooltip from 'react-tooltip';
 
 export default class SubmissionListView extends Component {
   constructor(props) {
@@ -63,35 +64,45 @@ export default class SubmissionListView extends Component {
             </Link>
           </td>
           <td>
+            <ReactTooltip id={"input-" + submission.id} place="top" type="dark" effect="solid">
+              { submission.input.basename }
+            </ReactTooltip>
+            <ReactTooltip id={"source-" + submission.id} place="top" type="dark" effect="solid">
+              { submission.source.basename }
+            </ReactTooltip>
+            <ReactTooltip id={"output-" + submission.id} place="top" type="dark" effect="solid">
+              { submission.output.basename }
+            </ReactTooltip>
+
             <div className="btn-group" role="group" aria-label="Download submission data">
               <a role="button" className="btn btn-secondary"
-                               title={submission.input.basename}
+                               aria-label={submission.input.basename}
                                href={client.filesBaseURI + submission.input.path}
-                               download>
+                               download
+                               data-tip
+                               data-for={"input-" + submission.id}>
                 <span aria-hidden="true" className="fa fa-download"></span>
                 {' '}
                 <span className="hidden-md-down">Input file</span>
               </a>
 
-              <div className="tooltip tooltip-top" role="tooltip">
-                <div className="tooltip-arrow"></div>
-                <div className="tooltip-inner">
-                  asd
-                </div>
-              </div>
-
               <a role="button" className="btn btn-secondary"
-                               title={submission.source.basename}
+                               aria-label={submission.source.basename}
                                href={client.filesBaseURI + submission.source.path}
-                               download>
+                               download
+                               data-tip
+                               data-for={"source-" + submission.id}>
                 <span aria-hidden="true" className="fa fa-download"></span>
                 {' '}
                 <span className="hidden-md-down">Source file</span>
               </a>
+
               <a role="button" className="btn btn-secondary"
-                               title={submission.output.basename}
+                               aria-label={submission.output.basename}
                                href={client.filesBaseURI + submission.output.path}
-                               download>
+                               download
+                               data-tip
+                               data-for={"output-" + submission.id}>
                 <span aria-hidden="true" className="fa fa-download"></span>
                 {' '}
                 <span className="hidden-md-down">Output file</span>
