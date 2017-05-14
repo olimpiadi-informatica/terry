@@ -109,7 +109,11 @@ class InfoHandler(BaseHandler):
             task_name = task["task"]
 
             if task["current_attempt"] is not None:
-                current_input = Database.get_input(token=token, task=task_name, attempt=task["current_attempt"])
+                current_input = Database.get_input(
+                    token=token,
+                    task=task_name,
+                    attempt=task["current_attempt"]
+                )
             else:
                 current_input = None
 
@@ -119,7 +123,7 @@ class InfoHandler(BaseHandler):
                 "current_input": current_input
             }
 
-        return BaseHandler.format_dates(user, fields=["date", "contest_end"])
+        return BaseHandler.format_dates(user, fields=["date"])
 
     def get_submissions(self, token:str, task:str, _request):
         """

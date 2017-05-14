@@ -28,20 +28,25 @@ class Database:
         if Database.connected is True:
             raise RuntimeError("Database already loaded")
         Database.connected = True
-        Database.conn = sqlite3.connect(Config.db, check_same_thread=False, detect_types=sqlite3.PARSE_DECLTYPES)
-        c = Database.conn.cursor()
-        c.executescript(Schema.INIT)
+        Database.conn = sqlite3.connect(
+            Config.db,
+            check_same_thread=False,
+            detect_types=sqlite3.PARSE_DECLTYPES
+        )
+        Database.c = Database.conn.cursor()
+        Database.c.executescript(Schema.INIT)
         version = Database.get_meta("schema_version", -1, int)
         if version == -1:
             Logger.info("DB_OPERATION", "Creating database")
         for upd in range(version+1, len(Schema.UPDATERS)):
             Logger.info("DB_OPERATION", "Applying updater %d" % upd)
-            c.executescript(Schema.UPDATERS[upd])
+            Database.c.executescript(Schema.UPDATERS[upd])
             Database.set_meta("schema_version", upd)
             Database.conn.commit()
 
     @staticmethod
-    def dictify(c, all=False):
+    def dictify(all=False):
+        c = Database.c
         if all is False:
             res = c.fetchone()
             if res is None:
@@ -53,32 +58,35 @@ class Database:
 
     @staticmethod
     def get_tasks():
-        c = Database.conn.cursor()
-        c.execute("""SELECT * FROM tasks ORDER BY num ASC""")
-        return Database.dictify(c, all=True)
+        Database.c.execute("""SELECT * FROM tasks ORDER BY num ASC""")
+        return Database.dictify(all=True)
 
     @staticmethod
     def get_task(task):
-        c = Database.conn.cursor()
-        c.execute("""SELECT * FROM tasks WHERE name = :task""", {"task": task})
-        return Database.dictify(c)
+        Database.c.execute("""
+            SELECT * FROM tasks WHERE name = :task
+        """, {"task": task})
+        return Database.dictify()
 
     @staticmethod
     def get_user(token):
-        c = Database.conn.cursor()
-        c.execute("""SELECT * FROM users WHERE token=:token""", {"token": token})
-        return Database.dictify(c)
+        Database.c.execute("""
+            SELECT * FROM users WHERE token=:token
+        """, {"token": token})
+        return Database.dictify()
 
     @staticmethod
     def get_users():
-        c = Database.conn.cursor()
-        c.execute("""
-            SELECT users.token AS users_token, users.name AS users_name, users.surname AS users_surname,
-                users.extra_time AS users_extra_time, ips.ip AS ips_ip, ips.first_date AS ips_first_date
+        Database.c.execute("""
+            SELECT
+                users.token AS users_token, users.name AS users_name,
+                users.surname AS users_surname,
+                ips.first_date AS ips_first_date,
+                users.extra_time AS users_extra_time, ips.ip AS ips_ip
             FROM users
             LEFT JOIN ips ON users.token = ips.token
         """)
-        users = Database.dictify(c, all=True)
+        users = Database.dictify(all=True)
 
         users_dict = {}
         for user in users:
@@ -98,7 +106,7 @@ class Database:
     def get_input(id=None, token=None, task=None, attempt=None):
         if (id is None) and (token is None or task is None or attempt is None):
             raise ValueError("Invalid parameters to get_input")
-        c = Database.conn.cursor()
+        c = Database.c
         if id is not None:
             c.execute("""SELECT * FROM inputs WHERE id=:id""", {"id": id})
         else:
@@ -106,24 +114,25 @@ class Database:
                 SELECT * FROM inputs
                 WHERE token=:token AND task=:task AND attempt=:attempt
             """, {"token": token, "task": task, "attempt": attempt})
-        return Database.dictify(c)
+        return Database.dictify()
 
     @staticmethod
     def get_source(id):
-        c = Database.conn.cursor()
-        c.execute("""SELECT * FROM sources WHERE id=:id""", {"id": id})
-        return Database.dictify(c)
+        Database.c.execute("""
+            SELECT * FROM sources WHERE id=:id
+        """, {"id": id})
+        return Database.dictify()
 
     @staticmethod
     def get_output(id):
-        c = Database.conn.cursor()
-        c.execute("""SELECT * FROM outputs WHERE id=:id""", {"id": id})
-        return Database.dictify(c)
+        Database.c.execute("""
+            SELECT * FROM outputs WHERE id=:id
+        """, {"id": id})
+        return Database.dictify()
 
     @staticmethod
     def get_submission(id):
-        c = Database.conn.cursor()
-        c.execute("""
+        Database.c.execute("""
             SELECT
                 submissions.id AS id, submissions.token AS token, submissions.task AS task,
                 submissions.score AS score,
@@ -139,12 +148,11 @@ class Database:
             JOIN sources ON submissions.source = sources.id
             WHERE submissions.id=:id
         """, {"id": id})
-        return Database.dictify(c)
+        return Database.dictify()
 
     @staticmethod
     def get_submissions(token, task):
-        c = Database.conn.cursor()
-        c.execute("""
+        Database.c.execute("""
             SELECT
                 submissions.id AS id, submissions.token AS token, submissions.task AS task,
                 submissions.score AS score,
@@ -161,70 +169,76 @@ class Database:
             WHERE submissions.token=:token AND submissions.task=:task
             ORDER BY inputs.attempt ASC
         """, {"token": token, "task": task})
-        return Database.dictify(c, all=True)
+        return Database.dictify(all=True)
 
     @staticmethod
     def get_user_task(token, task=None):
-        c = Database.conn.cursor()
+        c = Database.c
         if task is not None:
             c.execute("""
                 SELECT * FROM user_tasks
                 WHERE token=:token AND task=:task
             """, {"token": token, "task": task})
-            return Database.dictify(c)
+            return Database.dictify()
         else:
             c.execute("""
                 SELECT * FROM user_tasks
                 WHERE token=:token
             """, {"token": token})
-            return Database.dictify(c, all=True)
+            return Database.dictify(all=True)
 
     @staticmethod
     def get_ips(token):
-        c = Database.conn.cursor()
-        c.execute("""
+        Database.c.execute("""
             SELECT * FROM ips WHERE token=:token
         """, {"token": token})
-        return Database.dictify(c, all=True)
+        return Database.dictify(all=True)
 
     @staticmethod
     def get_next_attempt(token, task):
-        c = Database.conn.cursor()
-        c.execute("""
+        Database.c.execute("""
             SELECT COUNT(*) FROM inputs
             WHERE token=:token AND task=:task
         """, {"token": token, "task": task})
-        return c.fetchone()[0]+1
+        return Database.c.fetchone()[0]+1
 
     @staticmethod
     def begin():
         Database.connection_sem.acquire()
+        try:
+            Database.c.execute("""BEGIN TRANSACTION;""")
+        except:
+            Database.connection_sem.release()
+            raise
 
     @staticmethod
     def commit():
-        Database.conn.commit()
-        Database.connection_sem.release()
+        try:
+            Database.c.execute("""COMMIT;""")
+        finally:
+            Database.connection_sem.release()
 
     @staticmethod
     def rollback():
-        Database.conn.rollback()
-        Database.connection_sem.release()
+        try:
+            Database.c.execute("""ROLLBACK;""")
+        finally:
+            Database.connection_sem.release()
 
     @staticmethod
     def do_write(autocommit, query, params):
-        c = Database.conn.cursor()
         if autocommit:
             Database.begin()
             try:
-                c.execute(query, params)
+                Database.c.execute(query, params)
                 Database.commit()
-                return c.rowcount
+                return Database.c.rowcount
             except:
                 Database.rollback()
                 raise
         else:
-            c.execute(query, params)
-            return c.rowcount
+            Database.c.execute(query, params)
+            return Database.c.rowcount
 
     @staticmethod
     def get_meta(key, default=None, type=str):

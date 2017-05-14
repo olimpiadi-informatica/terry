@@ -22,7 +22,6 @@ class Logger:
     lock = gevent.lock.BoundedSemaphore()
     connected = False
     num_logs = 0
-    COMMIT_BATCH = 20
 
     DEBUG = 0
     INFO = 1
@@ -44,16 +43,12 @@ class Logger:
         Logger.conn = sqlite3.connect(
             Config.logfile,
             check_same_thread=False,
-            detect_types=sqlite3.PARSE_DECLTYPES,
-            isolation_level=None
+            detect_types=sqlite3.PARSE_DECLTYPES
         )
         Logger.c = Logger.conn.cursor()
-        # c.executescript("""
-        #     PRAGMA LOCKING_MODE = EXCLUSIVE;
-        #     PRAGMA SYNCHRONOUS = NORMAL;
-        #     PRAGMA JOURNAL_MODE = TRUNCATE;
-        # """)
         Logger.c.executescript("""
+            PRAGMA JOURNAL_MODE = WAL;
+            PRAGMA SYNCHRONOUS = NORMAL;
             CREATE TABLE IF NOT EXISTS logs (
                 date INTEGER DEFAULT (strftime('%s','now')) NOT NULL,
                 category TEXT NOT NULL,
@@ -61,9 +56,7 @@ class Logger:
                 message TEXT NOT NULL);
 
             CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level);
-            BEGIN TRANSACTION;
         """)
-        atexit.register(lambda c: c.execute("COMMIT"), Logger.c)
 
 
     @staticmethod
@@ -95,11 +88,7 @@ class Logger:
             INSERT INTO logs (level, category, message)
             VALUES (:level, :category, :message)
         """, {"level": level, "category": category, "message": str(message)})
-        Logger.num_logs += 1
-        if Logger.num_logs > Logger.COMMIT_BATCH:
-            Logger.num_logs = 0
-            c.execute("""COMMIT""")
-            c.execute("""BEGIN TRANSACTION""")
+        Logger.conn.commit()
 
     @staticmethod
     def debug(*args, **kwargs):

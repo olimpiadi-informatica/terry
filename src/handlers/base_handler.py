@@ -80,6 +80,8 @@ class BaseHandler:
         :return: The number of seconds until the contest is finished
         """
         start = Database.get_meta('start_time', type=float)
+        if start is None:
+            return None
         contest_duration = Database.get_meta('contest_duration', type=int, default=0)
         contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
         now = int(datetime.now().timestamp())
@@ -160,8 +162,10 @@ class BaseHandler:
             (
                 general_attrs['_ip'],
                 method.__name__,
-                ", with parameters" + ", ".join("=".join(kv) for kv in kwargs.items())
-                    if False else ""
+                ", with parameters " + ", ".join(
+                        "=".join((kv[0], str(kv[1]))) for kv in kwargs.items()
+                            if not kv[0].startswith("_")
+                ) if len(kwargs) > 0 else ""
             )
         )
         return method(**kwargs)

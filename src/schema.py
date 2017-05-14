@@ -6,7 +6,11 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
 class Schema:
-    INIT = """PRAGMA foreign_keys = ON;"""
+    INIT = """
+        PRAGMA FOREIGN_KEYS = ON;
+        PRAGMA JOURNAL_MODE = WAL;
+        PRAGMA SYNCHRONOUS = NORMAL;
+    """
     UPDATERS = [
         # Creates the database
         """
