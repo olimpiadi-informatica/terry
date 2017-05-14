@@ -111,11 +111,14 @@ class SubmissionListView extends Component {
 
   render() {
     return (
-      <Modal isOpen={true} contentLabel="Modal" style={this.customStyle}>
+      <Modal isOpen={true} contentLabel="Task submissions" style={this.customStyle}>
         <div className="modal-header">
           <h5 className="modal-title">
             Submissions for task <strong>{ this.taskName }</strong>
           </h5>
+          <Link to={"/" + this.taskName} role="button" className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </Link>
         </div>
         <div className="modal-body no-padding">
           { this.renderBody() }

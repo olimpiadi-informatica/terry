@@ -172,11 +172,14 @@ class SubmissionView extends Component {
 
   render() {
     return (
-      <Modal isOpen={true} contentLabel="Ciao" style={this.modalStyle}>
+      <Modal isOpen={true} contentLabel="Submission creation" style={this.modalStyle}>
         <div className="modal-header">
           <h5 className="modal-title">
             Submission for input <strong>{ this.submission.input.id }</strong>
           </h5>
+          <Link to={"/" + this.submission.input.task} role="button" className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </Link>
         </div>
 
         { this.renderDialog() }
