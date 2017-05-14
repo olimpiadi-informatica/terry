@@ -60,7 +60,7 @@ class SubmissionListView extends Component {
     for (let submission of this.list.data.items) {
       submissionList.push(
         <tr key={ submission.id }>
-          <td>{ moment(submission.output.date.toString()).startOf('hour').fromNow() }</td>
+          <td>{ moment(submission.output.date).fromNow() }</td>
           <td>
             <div className="btn-group" role="group" aria-label="Basic example">
               <button role="button" type="button" className="btn btn-secondary">
