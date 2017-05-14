@@ -1,13 +1,9 @@
-// import $ from 'jquery/dist/jquery.min.js';
-// import 'bootstrap/dist/js/bootstrap.min.js';
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import ResultView from './ResultView';
 import FileView from './FileView';
 import { Link } from 'react-router-dom';
-
-import Modal from 'react-modal';
+import ModalView from './ModalView';
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -15,34 +11,6 @@ class SubmissionView extends Component {
 
     this.model = props.model;
     this.submission = props.submission;
-
-    this.modalStyle = {
-      overlay : {
-        position          : 'fixed',
-        top               : 0,
-        left              : 0,
-        right             : 0,
-        bottom            : 0,
-        backgroundColor   : 'rgba(42, 42, 42, 0.75)',
-        overflowY         : 'auto',
-      },
-      content : {
-        position                   : 'relative',
-        top                        : 'inherit',
-        left                       : 'inherit',
-        right                      : 'inherit',
-        bottom                     : 'inherit',
-        margin                     : '3rem auto',
-        maxWidth                   : '70%',
-        border                     : '1px solid #ccc',
-        background                 : '#fff',
-        overflow                   : 'auto',
-        WebkitOverflowScrolling    : 'touch',
-        borderRadius               : '4px',
-        outline                    : 'none',
-        padding                    : '0px',
-      }
-    };
   }
 
   getTaskState() {
@@ -186,7 +154,7 @@ class SubmissionView extends Component {
 
   render() {
     return (
-      <Modal isOpen={true} contentLabel="Submission creation" style={this.modalStyle}>
+      <ModalView contentLabel="Submission creation">
         <div className="modal-header">
           <h5 className="modal-title">
             Submission for input <strong>{ this.submission.input.id }</strong>
@@ -197,7 +165,7 @@ class SubmissionView extends Component {
         </div>
 
         { this.renderDialog() }
-      </Modal>
+      </ModalView>
     );
   }
 }
