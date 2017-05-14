@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import filesize from 'filesize';
 import DateView from './DateView';
 
-class FileView extends Component {
+export default class FileView extends Component {
   constructor(props) {
     super(props);
 
@@ -24,5 +24,3 @@ class FileView extends Component {
     );
   }
 }
-
-export default FileView;

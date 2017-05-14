@@ -1,7 +1,7 @@
 import React, { ReactDOM, Component } from 'react';
 import Modal from 'react-modal';
 
-class ModalView extends Component {
+export default class ModalView extends Component {
   constructor(props) {
     super(props);
 
@@ -42,5 +42,3 @@ class ModalView extends Component {
     );
   }
 }
-
-export default ModalView;

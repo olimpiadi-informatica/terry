@@ -2,6 +2,10 @@ table.sample-case {
   white-space: pre;
 }
 
+table.submissions-table td {
+  vertical-align: middle;
+}
+
 a.tasklist-item {
   text-transform: uppercase;
 }

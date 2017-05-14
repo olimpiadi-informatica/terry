@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class ResultView extends Component {
+export default class ResultView extends Component {
   constructor(props) {
     super(props);
 
@@ -35,5 +35,3 @@ class ResultView extends Component {
     );
   }
 }
-
-export default ResultView;

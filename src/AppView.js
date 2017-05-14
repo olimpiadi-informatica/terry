@@ -4,7 +4,7 @@ import ContestView from './ContestView';
 import LoginView from './LoginView';
 import Model from './Model';
 
-class AppView extends Component {
+export default class AppView extends Component {
   constructor(props) {
     super(props);
 
@@ -36,7 +36,4 @@ class AppView extends Component {
       </div>
     );
   }
-
 }
-
-export default AppView;

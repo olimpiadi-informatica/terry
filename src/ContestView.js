@@ -4,7 +4,7 @@ import TaskView from './TaskView';
 
 var FontAwesome = require('react-fontawesome');
 
-class ContestView extends Component {
+export default class ContestView extends Component {
   constructor(props) {
     super(props);
 
@@ -86,5 +86,3 @@ class ContestView extends Component {
     );
   }
 }
-
-export default ContestView;

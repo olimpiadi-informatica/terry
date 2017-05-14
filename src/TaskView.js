@@ -5,6 +5,7 @@ import SubmissionListView from './SubmissionListView';
 import ReactMarkdown from 'react-markdown';
 import client from './TerryClient';
 import Task from './Task';
+import DateView from './DateView';
 
 class TaskView extends Component {
   constructor(props) {
@@ -92,7 +93,14 @@ class TaskView extends Component {
   }
 
   renderSubmissionListButton() {
-    return <p><strong>Last submission</strong>: <em>1 hour ago</em> (<Link to={"/" + this.task.name + "/submissions"}>view all submissions</Link>)</p>;
+    console.log(this.task)
+    return (
+      <div>
+        <strong>Last submission</strong>: <DateView date={new Date()}/>
+        {' '}
+        (<Link to={"/" + this.task.name + "/submissions"}>view all submissions</Link>)
+      </div>
+    );
   }
 
   render() {
@@ -103,6 +111,7 @@ class TaskView extends Component {
 
         <Route path="/:taskName/submit/:inputId" render={({match}) => this.renderSubmissionDialog(match.params.inputId)}></Route>
         <Route path="/:taskName/submissions" render={({match}) => this.renderSubmissionListDialog()}></Route>
+        <Route path="/:taskName/submission/:submissionId" render={({match}) => this.renderSubmissionReportDialog(match.params.submissionId)}></Route>
 
         { this.renderSubmissionListButton() }
 

@@ -1,28 +1,26 @@
-class Observable {
-    constructor() {
-      this.observers = new Set();
-    }
+export default class Observable {
+  constructor() {
+    this.observers = new Set();
+  }
 
-    pushObserver(o) {
-      if(this.observers.has(o)) throw new Error();
-      this.observers.add(o);
-    }
+  pushObserver(o) {
+    if(this.observers.has(o)) throw new Error();
+    this.observers.add(o);
+  }
 
-    popObserver(o) {
-      if(!this.observers.has(o)) throw new Error();
-      this.observers.delete(o);
-    }
+  popObserver(o) {
+    if(!this.observers.has(o)) throw new Error();
+    this.observers.delete(o);
+  }
 
-    fireUpdate() {
-      for(let o of this.observers) {
-        o.forceUpdate();
-      }
+  fireUpdate() {
+    for(let o of this.observers) {
+      o.forceUpdate();
     }
+  }
 
-    // Delegate for chaining observers
-    forceUpdate() {
-      this.fireUpdate();
-    }
+  // Delegate for chaining observers
+  forceUpdate() {
+    this.fireUpdate();
+  }
 }
-
-export default Observable;

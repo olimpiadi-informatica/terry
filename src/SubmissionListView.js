@@ -6,7 +6,7 @@ import DateView from './DateView';
 import client from './TerryClient';
 import ModalView from './ModalView';
 
-class SubmissionListView extends Component {
+export default class SubmissionListView extends Component {
   constructor(props) {
     super(props);
 
@@ -57,6 +57,10 @@ class SubmissionListView extends Component {
         <tr key={ submission.id }>
           <td>
             <DateView date={ submission.output.date }/>
+            <br/>
+            <Link to={ "/" + submission.task + "/submission/" + submission.id }>
+              view details
+            </Link>
           </td>
           <td>
             <div className="btn-group" role="group" aria-label="Download submission data">
@@ -64,29 +68,38 @@ class SubmissionListView extends Component {
                                title={submission.input.basename}
                                href={client.filesBaseURI + submission.input.path}
                                download>
-                <span aria-hidden="true" className="fa fa-download"></span> Input file
+                <span aria-hidden="true" className="fa fa-download"></span>
+                {' '}
+                <span className="hidden-md-down">Input file</span>
               </a>
+
+              <div className="tooltip tooltip-top" role="tooltip">
+                <div className="tooltip-arrow"></div>
+                <div className="tooltip-inner">
+                  asd
+                </div>
+              </div>
+
               <a role="button" className="btn btn-secondary"
                                title={submission.source.basename}
                                href={client.filesBaseURI + submission.source.path}
                                download>
-                <span aria-hidden="true" className="fa fa-download"></span> Source file
+                <span aria-hidden="true" className="fa fa-download"></span>
+                {' '}
+                <span className="hidden-md-down">Source file</span>
               </a>
               <a role="button" className="btn btn-secondary"
                                title={submission.output.basename}
                                href={client.filesBaseURI + submission.output.path}
                                download>
-                <span aria-hidden="true" className="fa fa-download"></span> Output file
+                <span aria-hidden="true" className="fa fa-download"></span>
+                {' '}
+                <span className="hidden-md-down">Output file</span>
               </a>
             </div>
           </td>
           <td className={"alert-" + this.getScoreSeverity(submission.score)}>
             <span style={ {fontSize: "x-large"} }>{ submission.score }</span> / 100
-          </td>
-          <td>
-            <button role="button" type="button" className="btn btn-secondary">
-              Details
-            </button>
           </td>
         </tr>
       );
@@ -100,13 +113,12 @@ class SubmissionListView extends Component {
     if(!this.list.isLoaded()) return <p>Loading submission list failed, reload page.</p>;
 
     return (
-      <table className="table" style={ {marginBottom: 0} }>
+      <table className="table submissions-table" style={ {marginBottom: 0} }>
         <thead>
           <tr>
             <th>Date</th>
             <th>Download</th>
             <th>Score</th>
-            <th>Details</th>
           </tr>
         </thead>
         <tbody>
@@ -139,5 +151,3 @@ class SubmissionListView extends Component {
     );
   }
 }
-
-export default SubmissionListView;

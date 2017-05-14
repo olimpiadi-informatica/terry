@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import SubmissionView from './SubmissionView';
 
-class CreateSubmissionView extends Component {
+export default class CreateSubmissionView extends Component {
   constructor(props) {
     super(props);
 
@@ -24,5 +24,3 @@ class CreateSubmissionView extends Component {
     return <SubmissionView model={this.model} submission={this.submission}></SubmissionView>;
   }
 }
-
-export default CreateSubmissionView;

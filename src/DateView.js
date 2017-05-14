@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from "moment";
 
-class DateView extends Component {
+export default class DateView extends Component {
   constructor(props) {
     super(props);
   }
@@ -14,5 +14,3 @@ class DateView extends Component {
     );
   }
 }
-
-export default DateView;

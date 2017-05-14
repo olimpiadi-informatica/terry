@@ -5,7 +5,7 @@ import FileView from './FileView';
 import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
 
-class SubmissionView extends Component {
+export default class SubmissionView extends Component {
   constructor(props) {
     super(props);
 
@@ -169,5 +169,3 @@ class SubmissionView extends Component {
     );
   }
 }
-
-export default SubmissionView;

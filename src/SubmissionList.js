@@ -3,7 +3,7 @@ import Source from './Source';
 import Output from './Output';
 import Observable from './Observable';
 
-class SubmissionList extends Observable {
+export default class SubmissionList extends Observable {
     constructor(taskState) {
       super();
 
@@ -37,9 +37,6 @@ class SubmissionList extends Observable {
     isEmpty() {
       if(!this.isLoaded()) throw new Error();
 
-      return this.data.items.length === 0;
+      return this.data.items && this.data.items.length === 0;
     }
-
 }
-
-export default SubmissionList;
