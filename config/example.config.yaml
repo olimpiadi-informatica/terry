@@ -8,7 +8,7 @@ db: db.sqlite3
 
 # Store dir for files and statements
 storedir: ./files/
-statementdir: ./statement/secret/
+statementdir: ./files/statements/secret/
 
 # Queue size for input generation
 queue_size: 64
