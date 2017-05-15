@@ -135,7 +135,7 @@ class Database:
         Database.c.execute("""
             SELECT
                 submissions.id AS id, submissions.token AS token, submissions.task AS task,
-                submissions.score AS score,
+                submissions.score AS score, submissions.date AS date,
                 inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
                 inputs.path AS input_path, inputs.size AS input_size,
                 outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
@@ -155,7 +155,7 @@ class Database:
         Database.c.execute("""
             SELECT
                 submissions.id AS id, submissions.token AS token, submissions.task AS task,
-                submissions.score AS score,
+                submissions.score AS score, submissions.date AS date,
                 inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
                 inputs.path AS input_path, inputs.size AS input_size,
                 outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,

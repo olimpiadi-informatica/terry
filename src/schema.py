@@ -93,6 +93,7 @@ class Schema:
                 output TEXT NOT NULL,
                 source TEXT NOT NULL,
                 score REAL NOT NULL,
+                date INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
                 FOREIGN KEY (input, token, task) REFERENCES inputs(id, token, task),
                 FOREIGN KEY (output, input) REFERENCES outputs(id, input),
                 FOREIGN KEY (source, input) REFERENCES sources(id, input),
