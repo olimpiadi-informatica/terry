@@ -37,11 +37,11 @@ class AdminHandler(BaseHandler):
             if Database.register_admin_ip(ip):
                 Logger.warning("LOGIN_ADMIN", "An admin has connected from a new ip: %s" % ip)
 
-    def extract(self, admin_token:str, filename:str, password:str, _request):
+    def extract(self, admin_token:str, filename:str, password:str, _ip):
         """
         POST /admin/extract
         """
-        self._validate_token(admin_token, BaseHandler._get_ip(_request))
+        self._validate_token(admin_token, _ip)
         if ContestManager.has_contest:
             self.raise_exc(Forbidden, "CONTEST", "Contest already loaded")
         os.makedirs(Config.contest_path, exist_ok=True)
@@ -58,11 +58,11 @@ class AdminHandler(BaseHandler):
         ContestManager.start()
         return {}
 
-    def log(self, start_date:str, end_date:str, level:str, admin_token:str, _request, category:str=None):
+    def log(self, start_date:str, end_date:str, level:str, admin_token:str, _ip, category:str=None):
         """
         POST /admin/log
         """
-        self._validate_token(admin_token, BaseHandler._get_ip(_request))
+        self._validate_token(admin_token, _ip)
 
         start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
         end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
@@ -70,11 +70,11 @@ class AdminHandler(BaseHandler):
             "items": Logger.get_logs(level, category, start_date, end_date)
         })
 
-    def start(self, admin_token:str, _request):
+    def start(self, admin_token:str, _ip):
         """
         POST /admin/start
         """
-        self._validate_token(admin_token, BaseHandler._get_ip(_request))
+        self._validate_token(admin_token, _ip)
 
         if Database.get_meta("start_time", type=int) is not None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
@@ -86,11 +86,11 @@ class AdminHandler(BaseHandler):
             fields=["start_time"]
         )
 
-    def set_extra_time(self, admin_token:str, extra_time:int, _request, token:str=None):
+    def set_extra_time(self, admin_token:str, extra_time:int, _ip, token:str=None):
         """
         POST /admin/set_extra_time
         """
-        self._validate_token(admin_token, BaseHandler._get_ip(_request))
+        self._validate_token(admin_token, _ip)
 
         if token is None:
             Database.set_meta("extra_time", extra_time)
@@ -98,11 +98,11 @@ class AdminHandler(BaseHandler):
             Database.set_extra_time(token, extra_time)
         return {}
 
-    def status(self, admin_token:str, _request):
+    def status(self, admin_token:str, _ip):
         """
         POST /admin/status
         """
-        self._validate_token(admin_token, BaseHandler._get_ip(_request))
+        self._validate_token(admin_token, _ip)
 
         start_time = Database.get_meta('start_time', type=float)
         extra_time = Database.get_meta('extra_time', type=int, default=0)
@@ -115,9 +115,9 @@ class AdminHandler(BaseHandler):
             "loaded": ContestManager.has_contest
         }, fields=["start_time"])
 
-    def user_list(self, admin_token:str, _request):
+    def user_list(self, admin_token:str, _ip):
         """
         POST /admin/user_list
         """
-        self._validate_token(admin_token, BaseHandler._get_ip(_request))
+        self._validate_token(admin_token, _ip)
         return BaseHandler.format_dates({"items": Database.get_users()}, fields=["first_login"])

@@ -16,7 +16,7 @@ from werkzeug.exceptions import Forbidden
 
 class UploadHandler(BaseHandler):
 
-    def upload_output(self, input, _request, _file_content, _file_name):
+    def upload_output(self, input, _ip, _file_content, _file_name):
         """
         POST /upload_output
         """
@@ -31,14 +31,14 @@ class UploadHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
 
         token = input["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         result = ContestManager.evaluate_output(input["task"], input["path"], path)
 
         Database.add_output(output_id, input["id"], path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    def upload_source(self, input, _request, _file_content, _file_name):
+    def upload_source(self, input, _ip, _file_content, _file_name):
         """
         POST /upload_source
         """
@@ -49,7 +49,7 @@ class UploadHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
 
         token = input["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         path = StorageManager.new_source_file(source_id, _file_name)
         StorageManager.save_file(path, _file_content)

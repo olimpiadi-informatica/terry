@@ -35,7 +35,7 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    def get_input(self, id:str, _request):
+    def get_input(self, id:str, _ip):
         """
         GET /input/<id>
         """
@@ -44,11 +44,11 @@ class InfoHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
 
         token = input["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         return BaseHandler.format_dates(input_file)
 
-    def get_output(self, id:str, _request):
+    def get_output(self, id:str, _ip):
         """
         GET /output/<id>
         """
@@ -58,11 +58,11 @@ class InfoHandler(BaseHandler):
 
         input = Database.get_input(output_file["input"])
         token = input["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         return InfoHandler.patch_output(output_file)
 
-    def get_source(self, id:str, _request):
+    def get_source(self, id:str, _ip):
         """
         GET /source/<id>
         """
@@ -72,11 +72,11 @@ class InfoHandler(BaseHandler):
 
         input = Database.get_input(source_file["input"])
         token = input["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         return BaseHandler.format_dates(source_file)
 
-    def get_submission(self, id:str, _request):
+    def get_submission(self, id:str, _ip):
         """
         GET /submission/<id>
         """
@@ -85,11 +85,11 @@ class InfoHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
 
         token = submission["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         return InfoHandler.patch_submission(submission)
 
-    def get_user(self, token:str, _request):
+    def get_user(self, token:str, _ip):
         """
         GET /user/<token>
         """
@@ -98,7 +98,7 @@ class InfoHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
 
         token = user["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
         del user["extra_time"]
@@ -125,11 +125,11 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date"])
 
-    def get_submissions(self, token:str, task:str, _request):
+    def get_submissions(self, token:str, task:str, _ip):
         """
         GET /user/<token>/submissions/<task>
         """
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         submissions = []
         for sub in Database.get_submissions(token, task):

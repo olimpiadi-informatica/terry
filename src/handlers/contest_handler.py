@@ -30,7 +30,7 @@ class ContestHandler(BaseHandler):
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
-    def generate_input(self, token:str, task:str, _request):
+    def generate_input(self, token:str, task:str, _ip):
         if Database.get_user(token) is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such user")
         if Database.get_task(task) is None:
@@ -38,7 +38,7 @@ class ContestHandler(BaseHandler):
         if Database.get_user_task(token, task)["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
 
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         attempt = Database.get_next_attempt(token, task)
         id, path = ContestManager.get_input(task, attempt)
@@ -54,7 +54,7 @@ class ContestHandler(BaseHandler):
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    def submit(self, input:str, output:str, source:str, _request):
+    def submit(self, input:str, output:str, source:str, _ip):
         input = Database.get_input(input)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input file")
@@ -66,7 +66,7 @@ class ContestHandler(BaseHandler):
             self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
 
         token = input["token"]
-        Database.register_ip(token, BaseHandler._get_ip(_request))
+        Database.register_ip(token, _ip)
 
         score = ContestHandler.compute_score(input["task"], output["result"])
         Database.begin()
