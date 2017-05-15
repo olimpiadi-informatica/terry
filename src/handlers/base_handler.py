@@ -79,7 +79,7 @@ class BaseHandler:
         :param user_extra_time: Extra time specific for the user in seconds
         :return: The number of seconds until the contest is finished
         """
-        start = Database.get_meta('start_time', type=float)
+        start = Database.get_meta('start_time', type=int)
         if start is None:
             return None
         contest_duration = Database.get_meta('contest_duration', type=int, default=0)

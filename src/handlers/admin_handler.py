@@ -79,7 +79,7 @@ class AdminHandler(BaseHandler):
         if Database.get_meta("start_time", type=int) is not None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
 
-        start_time = datetime.datetime.now().timestamp()
+        start_time = int(datetime.datetime.now().timestamp())
         Database.set_meta("start_time", start_time)
         return BaseHandler.format_dates(
             {"start_time": start_time},
@@ -104,7 +104,7 @@ class AdminHandler(BaseHandler):
         """
         self._validate_token(admin_token, _ip)
 
-        start_time = Database.get_meta('start_time', type=float)
+        start_time = Database.get_meta('start_time', type=int)
         extra_time = Database.get_meta('extra_time', type=int, default=0)
         remaining_time = BaseHandler._get_remaining_time(0)
 

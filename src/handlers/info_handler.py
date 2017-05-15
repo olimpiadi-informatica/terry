@@ -21,7 +21,7 @@ class InfoHandler(BaseHandler):
         """
         GET /contest
         """
-        start_timestamp = Database.get_meta("start_time", type=float)
+        start_timestamp = Database.get_meta("start_time", type=int)
         start_datetime = datetime.fromtimestamp(start_timestamp) if start_timestamp is not None else None
         now = datetime.now()
 
