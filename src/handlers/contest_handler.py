@@ -31,6 +31,9 @@ class ContestHandler(BaseHandler):
             Database.set_user_score(token, task, score, autocommit=False)
 
     def generate_input(self, token:str, task:str, _ip):
+        """
+        POST /generate_input
+        """
         if Database.get_user(token) is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such user")
         if Database.get_task(task) is None:
@@ -55,6 +58,9 @@ class ContestHandler(BaseHandler):
         return BaseHandler.format_dates(Database.get_input(id=id))
 
     def submit(self, input:str, output:str, source:str, _ip):
+        """
+        POST /submit
+        """
         input = Database.get_input(input)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input file")

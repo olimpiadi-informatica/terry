@@ -7,8 +7,6 @@
 
 import datetime
 import os
-import sys
-import subprocess
 import zipfile
 
 from .base_handler import BaseHandler

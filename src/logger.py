@@ -58,13 +58,17 @@ class Logger:
             CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level);
         """)
 
-
     @staticmethod
     def set_log_level(lvl):
+        """
+        Set the minimum level of the messages to be printed on console. Note that every messege is alway stored in the
+        db.
+        :param lvl: Minimum level, can be an int or a str with the log level name
+        """
         if isinstance(lvl, int):
             Logger.LOG_LEVEL = lvl
         else:
-            Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index("bar")
+            Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index(lvl)
 
     @staticmethod
     def log(level, category, message):
