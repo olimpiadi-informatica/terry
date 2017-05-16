@@ -39,7 +39,7 @@ class Config:
             with open(config_file, 'r') as f:
                 cfg = yaml.load(f)
         except FileNotFoundError:
-            cfg = dict()
+            raise
         for key, value in cfg.items():
             setattr(Config, key, value)
         for key, value in Config.default_values.items():

@@ -12,8 +12,15 @@ from .logger import Logger
 from .database import Database
 from .contest_manager import ContestManager
 
+import argparse
+
 def main():
-    Config.set_config_file("config/config.yaml")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", help="Path to the config file", default="config/config.yaml")
+    args = parser.parse_args()
+
+    Config.set_config_file(args.config)
+
     Logger.connect_to_database()
     Database.connect_to_database()
     ContestManager.read_from_disk()
