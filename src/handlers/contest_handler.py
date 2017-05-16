@@ -7,6 +7,7 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 import json
 
+from ..logger import Logger
 from .info_handler import InfoHandler
 from .base_handler import BaseHandler
 from ..database import Database
@@ -57,19 +58,25 @@ class ContestHandler(BaseHandler):
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    def submit(self, input:str, output:str, source:str, _ip):
+    def submit(self, output:str, source:str, _ip):
         """
         POST /submit
         """
-        input = Database.get_input(input)
-        if input is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such input file")
+
         output = Database.get_output(output)
         if output is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such output file")
         source = Database.get_source(source)
         if source is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
+
+        input = Database.get_input(output["input"])
+        if input is None:
+            Logger.warning("DB_CONSISTENCY_ERROR", "Input %s not found in the db" % output["input"])
+            self.raise_exc(BadRequest, "WRONG_INPUT", "The provided input in invalid")
+        if output["input"] != source["input"]:
+            Logger.warning("POSSIBLE_CHEAT", "Trying to submit wrong pair source-output")
+            self.raise_exc(Forbidden, "WRONG_OUTPUT_SOURCE", "The provided pair of source-output is invalid")
 
         token = input["token"]
         Database.register_ip(token, _ip)

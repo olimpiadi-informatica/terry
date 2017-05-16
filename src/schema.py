@@ -112,12 +112,41 @@ class Schema:
                 CHECK (score >= 0)
             );
 
-            CREATE TRIGGER check_score BEFORE UPDATE OF score ON user_tasks
+            CREATE TRIGGER check_score BEFORE INSERT ON user_tasks
             BEGIN
                 SELECT RAISE(FAIL, "Invalid score")
                 FROM tasks
                 WHERE tasks.name = NEW.task
                   AND tasks.max_score < NEW.score;
+            END;
+
+            CREATE TRIGGER check_output_dates BEFORE INSERT ON outputs
+            BEGIN
+                SELECT RAISE(FAIL, "The output date is lower than the input one")
+                FROM inputs
+                WHERE inputs.id = NEW.input
+                  AND inputs.date > NEW.date;
+            END;
+
+            CREATE TRIGGER check_source_dates BEFORE INSERT ON sources
+            BEGIN
+                SELECT RAISE(FAIL, "The source date is lower than the input one")
+                FROM inputs
+                WHERE inputs.id = NEW.input
+                  AND inputs.date > NEW.date;
+            END;
+
+            CREATE TRIGGER check_submission_dates BEFORE INSERT ON submissions
+            BEGIN
+                SELECT RAISE(FAIL, "The submission date is lower than the output one")
+                FROM outputs
+                WHERE outputs.id = NEW.output
+                  AND outputs.date > NEW.date;
+
+                SELECT RAISE(FAIL, "The submission date is lower than the source one")
+                FROM sources
+                WHERE sources.id = NEW.source
+                  AND sources.date > NEW.date;
             END;
         """
     ]
