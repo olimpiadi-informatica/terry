@@ -4,7 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
-
+import sys
 import yaml
 
 
@@ -18,7 +18,7 @@ class Config:
         "address": "",
         "port": 1234,
         "storedir": "./files/",
-        "statementdir": "./statements/secret/",
+        "statementdir": "./files/statements/secret/",
         "queue_size": 64,
         "admin_token": "secret",
         "num_proxies": 0,
@@ -39,6 +39,11 @@ class Config:
             with open(config_file, 'r') as f:
                 cfg = yaml.load(f)
         except FileNotFoundError:
+            print("Config file %s not found" % config_file, file=sys.stderr)
+            if config_file == 'config/config.yaml':
+                print("You need to (at least) copy and paste config/example.config.yaml to config/config.yaml",
+                      file=sys.stderr)
+                sys.exit(1)
             raise
         for key, value in cfg.items():
             setattr(Config, key, value)
