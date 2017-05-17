@@ -45,6 +45,10 @@ class Config:
                       file=sys.stderr)
                 sys.exit(1)
             raise
+        # if the config file is empty
+        if cfg is None:
+            cfg = {}
+
         for key, value in cfg.items():
             setattr(Config, key, value)
         for key, value in Config.default_values.items():
