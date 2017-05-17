@@ -241,16 +241,18 @@ class Database:
             return Database.c.rowcount
 
     @staticmethod
-    def get_meta(key, default=None, type=str):
+    def get_meta(key, default=None, type=None):
         c = Database.conn.cursor()
         try:
             c.execute("""
                 SELECT value FROM metadata WHERE key = :key
             """, {"key": key})
         except sqlite3.OperationalError:
-            return default
+            return default if type is None else type(default)
         row = c.fetchone()
-        return type(row[0]) if row is not None else default
+        if row:
+            return type(row[0]) if type is not None else row[0]
+        return type(default) if type is not None else default
 
     @staticmethod
     def set_meta(key, value, autocommit=True):
