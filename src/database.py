@@ -31,6 +31,7 @@ class Database:
         Database.conn = sqlite3.connect(
             Config.db,
             check_same_thread=False,
+            isolation_level=None,
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         Database.c = Database.conn.cursor()

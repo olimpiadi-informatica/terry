@@ -43,6 +43,7 @@ class Logger:
         Logger.conn = sqlite3.connect(
             Config.logfile,
             check_same_thread=False,
+            isolation_level=None,
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         Logger.c = Logger.conn.cursor()
