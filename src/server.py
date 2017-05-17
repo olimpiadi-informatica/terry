@@ -16,6 +16,7 @@ from werkzeug.routing import Map, Rule, RequestRedirect
 from werkzeug.wrappers import Request
 from werkzeug.wsgi import responder
 
+from src.handlers.base_handler import BaseHandler
 from .config import Config
 from .logger import Logger
 
@@ -77,8 +78,7 @@ class Server:
         try:
             endpoint, args = route.match()
         except HTTPException:
-            # TODO find a way to get the real ip address
-            Logger.warning("HTTP_ERROR", "%s %s %s 404" % (request.remote_addr, request.method, request.url))
+            Logger.warning("HTTP_ERROR", "%s %s %s 404" % (BaseHandler.get_ip(request), request.method, request.url))
             return NotFound()
 
         controller, action = endpoint.split("#")
