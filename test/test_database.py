@@ -25,6 +25,7 @@ class TestDatabase(unittest.TestCase):
         self.assertGreaterEqual(len(id), MIN_ID_LENGTH)
 
     def test_connect_to_database(self):
+        Database.connected = False
         Database.connect_to_database()
 
     def test_invalid_database_path(self):

@@ -31,7 +31,7 @@ class Utils:
         if connect_logger:
             Logger.connected = False
             Logger.connect_to_database()
-            Logger.set_log_level(9001)
+            Logger.set_log_level("WARNING")
         if connect_database:
             Database.connected = False
             Database.connect_to_database()
