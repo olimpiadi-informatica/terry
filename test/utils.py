@@ -5,11 +5,12 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import tempfile
+import contextlib
+import sys
 
 from src.config import Config
 from src.database import Database
 from src.logger import Logger
-
 
 class Utils:
     @staticmethod
@@ -35,3 +36,20 @@ class Utils:
         if connect_database:
             Database.connected = False
             Database.connect_to_database()
+
+    @staticmethod
+    @contextlib.contextmanager
+    def nostderr():
+        """
+        Suppress stderr output in the with context
+        http://stackoverflow.com/a/1810086
+        """
+        savestderr = sys.stderr
+        class Devnull(object):
+            def write(self, _): pass
+            def flush(self): pass
+        sys.stderr = Devnull()
+        try:
+            yield
+        finally:
+            sys.stderr = savestderr

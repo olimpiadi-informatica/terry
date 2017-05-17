@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+import os
+import tempfile
+import unittest
+
+from src.config import Config
+from src.storage_manager import StorageManager
+
+
+class TestStorageManager(unittest.TestCase):
+
+    def test_new_source_file(self):
+        source_id = 'source_id'
+        filename = 'filename.foo'
+        path = StorageManager.new_source_file(source_id, filename)
+        self.assertTrue(path.find('source') >= 0)
+        self.assertTrue(path.find(source_id) >= 0)
+        self.assertTrue(path.find(filename) >= 0)
+
+    def test_new_output_file(self):
+        output_id = 'output_id'
+        filename = 'filename.foo'
+        path = StorageManager.new_output_file(output_id, filename)
+        self.assertTrue(path.find('output') >= 0)
+        self.assertTrue(path.find(output_id) >= 0)
+        self.assertTrue(path.find(filename) >= 0)
+
+    def test_new_input_file(self):
+        input_id = 'input_id'
+        task = 'simple_task'
+        attempt = 42
+        path = StorageManager.new_input_file(input_id, task, attempt)
+        self.assertTrue(path.find('input') >= 0)
+        self.assertTrue(path.find(input_id) >= 0)
+        self.assertTrue(path.find(task) >= 0)
+        self.assertTrue(path.find(str(attempt)) >= 0)
+
+    def test_get_file_size(self):
+        filename = tempfile.NamedTemporaryFile().name
+
+        with open(filename, 'w') as file:
+            file.write('This string is 28 chars long')
+
+        self.assertEqual(28, StorageManager.get_file_size(filename))
+
+    def test_save_file(self):
+        backup = Config.storedir
+        Config.storedir = '/tmp/foo/bar' # this directory will be created
+
+        relative_path = 'baz/file.txt'
+        content = 'This is the content of the file'
+
+        try:
+            os.remove(Config.storedir)
+        except:
+            pass
+
+        StorageManager.save_file(relative_path, content.encode())
+        with open(StorageManager.get_absolute_path(relative_path), 'r') as file:
+            file_content = file.readlines()
+            self.assertEqual(1, len(file_content))
+            self.assertEqual(content, file_content[0])
+
+        Config.storedir = backup
+
+    def test_rename_file(self):
+        backup = Config.storedir
+        Config.storedir = tempfile.gettempdir()
+
+        relative_path = 'baz/file.txt'
+        new_path = 'baz/txt.elif'
+        StorageManager.save_file(relative_path, 'foobar'.encode())
+        StorageManager.rename_file(relative_path, new_path)
+
+        with open(StorageManager.get_absolute_path(new_path), 'r') as file:
+            lines = file.readlines()
+            self.assertEqual('foobar', lines[0])
+
+        Config.storedir = backup
+
+    def test_get_absolute_path(self):
+        backup = Config.storedir
+        Config.storedir = tempfile.gettempdir()
+
+        relative_path = 'path/to/file'
+        abs_path = StorageManager.get_absolute_path(relative_path)
+
+        self.assertTrue(abs_path.find(Config.storedir) >= 0)
+        self.assertTrue(abs_path.find(relative_path) >= 0)
+
+        Config.storedir = backup

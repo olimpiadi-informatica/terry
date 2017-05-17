@@ -11,6 +11,7 @@ import unittest
 import yaml
 
 from src.config import Config
+from test.utils import Utils
 
 
 class TestConfig(unittest.TestCase):
@@ -26,7 +27,8 @@ class TestConfig(unittest.TestCase):
 
     def test_file_not_found(self):
         with self.assertRaises(FileNotFoundError):
-            Config.set_config_file('/this/file/doesnt/exist')
+            with Utils.nostderr():
+                Config.set_config_file('/this/file/doesnt/exist')
 
     def test_cannot_load_again(self):
         self._write_config("test: foo")
