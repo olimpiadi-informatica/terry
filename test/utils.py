@@ -12,6 +12,7 @@ from src.config import Config
 from src.database import Database
 from src.logger import Logger
 
+
 class Utils:
     @staticmethod
     def prepare_test(load_config=True, connect_database=True, connect_logger=True):

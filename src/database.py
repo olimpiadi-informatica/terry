@@ -232,8 +232,9 @@ class Database:
             Database.begin()
             try:
                 Database.c.execute(query, params)
+                rowcount = Database.c.rowcount
                 Database.commit()
-                return Database.c.rowcount
+                return rowcount
             except:
                 Database.rollback()
                 raise
@@ -249,11 +250,11 @@ class Database:
                 SELECT value FROM metadata WHERE key = :key
             """, {"key": key})
         except sqlite3.OperationalError:
-            return default if type is None else type(default)
+            return default
         row = c.fetchone()
         if row:
             return type(row[0]) if type is not None else row[0]
-        return type(default) if type is not None else default
+        return default
 
     @staticmethod
     def set_meta(key, value, autocommit=True):

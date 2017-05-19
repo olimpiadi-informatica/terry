@@ -95,7 +95,7 @@ class TestDatabase(unittest.TestCase):
         Database.connect_to_database()
 
         meta = Database.get_meta('not_existing_key', '42', type=int)
-        self.assertIsInstance(meta, int)
+        self.assertIsInstance(meta, str)
 
     def test_get_meta_without_default(self):
         Database.connected = False
@@ -103,6 +103,12 @@ class TestDatabase(unittest.TestCase):
 
         meta = Database.get_meta('not_existing_key')
         self.assertIsNone(meta)
+
+    def test_get_meta_type_without_default(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        self.assertIsNone(Database.get_meta('not_existing_key', type=int))
 
     def test_set_meta(self):
         Database.connected = False

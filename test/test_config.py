@@ -18,6 +18,7 @@ class TestConfig(unittest.TestCase):
     def setUp(self):
         self.configFile = tempfile.NamedTemporaryFile()
         self.configFilePath = self.configFile.name
+        Config.loaded = False
 
     def test_class_method_generation(self):
         self._write_config("test: 42")

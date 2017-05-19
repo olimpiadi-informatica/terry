@@ -51,7 +51,7 @@ class TestLogger(unittest.TestCase):
 
     def test_get_logs_by_level(self):
         Utils.prepare_test(connect_logger=True)
-        self._load_logs()
+        TestLogger.load_logs()
 
         start_date = datetime.datetime.now().timestamp() - 10
         end_date = datetime.datetime.now().timestamp() + 10
@@ -63,7 +63,7 @@ class TestLogger(unittest.TestCase):
 
     def test_get_logs_by_category(self):
         Utils.prepare_test(connect_logger=True)
-        self._load_logs()
+        TestLogger.load_logs()
 
         start_date = datetime.datetime.now().timestamp() - 10
         end_date = datetime.datetime.now().timestamp() + 10
@@ -73,7 +73,7 @@ class TestLogger(unittest.TestCase):
 
     def test_get_logs_by_date(self):
         Utils.prepare_test(connect_logger=True)
-        self._load_logs()
+        TestLogger.load_logs()
 
         start_date = TestLogger.VERY_FAR_IN_TIME - 10
         end_date = TestLogger.VERY_FAR_IN_TIME + 10
@@ -81,7 +81,8 @@ class TestLogger(unittest.TestCase):
         logs = Logger.get_logs(Logger.DEBUG, None, start_date, end_date)
         self.assertEqual(1, len(logs))
 
-    def _load_logs(self):
+    @staticmethod
+    def load_logs():
         logs = [
             (Logger.DEBUG, 'CATEGORY', 'Log message'),
             (Logger.DEBUG, 'CATEGORY', 'An other log message'),
