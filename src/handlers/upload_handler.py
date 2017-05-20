@@ -4,6 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
 from .info_handler import InfoHandler
 from .base_handler import BaseHandler
