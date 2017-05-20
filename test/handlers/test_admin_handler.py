@@ -66,8 +66,8 @@ class TestAdminHandler(unittest.TestCase):
         ContestManager.has_contest = False
         self.admin_handler.extract('admin token', '/foo/bar.zip', 'passwd', '1.2.3.4')
 
-        read_mock.assert_called_once()
-        start_mock.assert_called_once()
+        read_mock.assert_called_once_with()
+        start_mock.assert_called_once_with()
 
     def test_already_extracted(self):
         ContestManager.has_contest = True
