@@ -9,8 +9,15 @@ import unittest
 import sys
 # these rows are magic, they change the path from where the modules are loaded
 # the test suite should use "import src.stuff"
-from os import path
+from os import path, mkdir
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
+# I'm tired to have the /tmp directory full of useless files. This patches the tempfile lib is a very brutal way
+# trying to use a subdirectory of tmp (verytmp)
+if path.isdir("/tmp"):
+    import tempfile
+    tempfile._candidate_tempdir_list = lambda : ['/tmp/verytmp']
+    if not path.isdir("/tmp/verytmp"): mkdir("/tmp/verytmp")
 
 program = unittest.TestProgram(argv=['discover'], module=None)
 program.runTests()
