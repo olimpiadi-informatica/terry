@@ -137,7 +137,7 @@ class TestAdminHandler(unittest.TestCase):
         out = self.admin_handler.start('admin token', '1.2.3.4')
 
         start_time = datetime.datetime.strptime(out["start_time"], "%Y-%m-%dT%H:%M:%S").timestamp()
-        self.assertTrue(start_time >= datetime.datetime.now().timestamp() - 1)
+        self.assertTrue(start_time >= datetime.datetime.now().timestamp() - 10)
 
         self.assertEqual(start_time, Database.get_meta('start_time', type=int))
 
