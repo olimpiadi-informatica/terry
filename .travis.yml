@@ -30,6 +30,10 @@ before_install:
 
 install:
   - pip install -r requirements.txt
-  - ./setup.py install
+  - pip install coveralls
+  - coverage run --source=src ./setup.py install
+
+after_success:
+  - coveralls
 
 script: ./run_tests.py
