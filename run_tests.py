@@ -13,11 +13,16 @@ from os import path, mkdir
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 # I'm tired to have the /tmp directory full of useless files. This patches the tempfile lib is a very brutal way
-# trying to use a subdirectory of tmp (verytmp)
-if path.isdir("/tmp"):
-    import tempfile
-    tempfile._candidate_tempdir_list = lambda : ['/tmp/verytmp']
-    if not path.isdir("/tmp/verytmp"): mkdir("/tmp/verytmp")
+# trying to use a subdirectory of /tmp (verytmp)
+import tempfile
+tmpDirs = tempfile._candidate_tempdir_list()
+for dir in tmpDirs:
+    if path.isdir(dir):
+        newPath = path.join(dir, 'verytmp')
+        if not path.isdir(newPath):
+            mkdir(newPath)
+        tempfile._candidate_tempdir_list = lambda : [newPath]
+        break
 
 program = unittest.TestProgram(argv=['discover'], module=None)
 program.runTests()
