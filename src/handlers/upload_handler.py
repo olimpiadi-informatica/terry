@@ -20,15 +20,15 @@ class UploadHandler(BaseHandler):
         """
         POST /upload_output
         """
+        input = Database.get_input(input)
+        if input is None:
+            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
+
         output_id = Database.gen_id()
         path = StorageManager.new_output_file(output_id, _file_name)
 
         StorageManager.save_file(path, _file_content)
         file_size = StorageManager.get_file_size(path)
-
-        input = Database.get_input(input)
-        if input is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
 
         token = input["token"]
         Database.register_ip(token, _ip)
@@ -42,12 +42,11 @@ class UploadHandler(BaseHandler):
         """
         POST /upload_source
         """
-        source_id = Database.gen_id()
-
         input = Database.get_input(input)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
 
+        source_id = Database.gen_id()
         token = input["token"]
         Database.register_ip(token, _ip)
 

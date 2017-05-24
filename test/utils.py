@@ -25,7 +25,8 @@ class Utils:
 
         with open(config_file_name, 'w') as file:
             file.write("logfile: %s\n"
-                       "db: %s\n" % (log_file_name, db_file_name))
+                       "db: %s\n"
+                       "storedir: %s\n" % (log_file_name, db_file_name, tempfile.gettempdir()))
 
         if load_config:
             Config.loaded = False

@@ -186,6 +186,7 @@ class TestInfoHandler(unittest.TestCase):
             "id": "outputid",
             "date": 1234,
             "path": "/path",
+            "size": 42,
             "result": '{"validation":42}'
         }
 
@@ -194,3 +195,4 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(), res["date"])
         self.assertEqual("/path", res["path"])
         self.assertEqual(42, res["validation"])
+        self.assertEqual(42, res["size"])

@@ -162,7 +162,6 @@ class InfoHandler(BaseHandler):
                 result[k] = v
 
         result["feedback"] = json.loads(result["output"]["result"])["feedback"]
-
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]
@@ -182,6 +181,7 @@ class InfoHandler(BaseHandler):
             "id": output["id"],
             "date": output["date"],
             "path": output["path"],
+            "size": output["size"],
             "validation": json.loads(output["result"])["validation"]
         }
 
