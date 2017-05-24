@@ -58,6 +58,14 @@ class TestAdminHandler(unittest.TestCase):
         self.assertTrue(row[3].find('new ip') >= 0)
         self.assertTrue(row[3].find('1.2.3.4') >= 0)
 
+    def test_validate_token_default(self):
+        Config.admin_token = Config.default_values["admin_token"]
+        self.admin_handler._validate_token(Config.admin_token, '1.2.3.4')
+
+        Logger.c.execute("SELECT * FROM logs WHERE category = 'ADMIN'")
+        row = Logger.c.fetchone()
+        self.assertEqual("Using default admin token!", row[3])
+
     @patch('zipfile.ZipFile.__init__', return_value=None)
     @patch('zipfile.ZipFile.extractall', return_value=None)
     @patch('src.contest_manager.ContestManager.read_from_disk')

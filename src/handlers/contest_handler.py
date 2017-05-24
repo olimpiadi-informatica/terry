@@ -87,7 +87,7 @@ class ContestHandler(BaseHandler):
             submission_id = Database.gen_id()
             if not Database.add_submission(submission_id, input["id"], output["id"], source["id"],
                                            score, autocommit=False):
-                self.raise_exc(BadRequest, "FORBIDDEN", "Error inserting the submission")
+                self.raise_exc(BadRequest, "INTERNAL_ERROR", "Error inserting the submission")
             ContestHandler.update_user_score(input["token"], input["task"], score)
             Database.set_user_attempt(input["token"], input["task"], None, autocommit=False)
             Database.commit()

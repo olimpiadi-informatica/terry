@@ -24,6 +24,13 @@ class TestLogger(unittest.TestCase):
         Logger.connected = False
         Logger.connect_to_database()
 
+    def test_double_connect_to_database(self):
+        Logger.connected = False
+        Logger.connect_to_database()
+        with self.assertRaises(RuntimeError) as ex:
+            Logger.connect_to_database()
+        self.assertEqual("Database already loaded", ex.exception.args[0])
+
     def test_invalid_db_path(self):
         Config.logfile = '/path/that/not/exists'
         Logger.connected = False
@@ -38,6 +45,14 @@ class TestLogger(unittest.TestCase):
 
         Logger.LOG_LEVEL = backup
 
+    def test_set_log_level_numeric(self):
+        backup = Logger.LOG_LEVEL
+
+        Logger.set_log_level(Logger.ERROR)
+        self.assertEqual(Logger.LOG_LEVEL, Logger.ERROR)
+
+        Logger.LOG_LEVEL = backup
+
     def test_log(self):
         Utils.prepare_test(connect_logger=True)
 
@@ -48,6 +63,14 @@ class TestLogger(unittest.TestCase):
         self.assertEqual('FOO_CAT', row[1])
         self.assertEqual(Logger.DEBUG, int(row[2]))
         self.assertEqual('Log message', row[3])
+
+    def test_log_stderr(self):
+        Utils.prepare_test(connect_logger=True)
+
+        with Utils.nostderr() as err:
+            Logger.error('FOO_CAT', 'Log message')
+        self.assertIn("FOO_CAT", err.buffer)
+        self.assertIn("Log message", err.buffer)
 
     def test_get_logs_by_level(self):
         Utils.prepare_test(connect_logger=True)

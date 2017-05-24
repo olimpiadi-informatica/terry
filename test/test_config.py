@@ -4,7 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-
+import os
 import tempfile
 import unittest
 
@@ -45,6 +45,18 @@ class TestConfig(unittest.TestCase):
         self._write_config("[42")
         with self.assertRaises(yaml.parser.ParserError):
             Config.set_config_file(self.configFilePath)
+
+    def test_default_file_missing(self):
+        wd = os.getcwd()
+        os.chdir(tempfile.gettempdir())
+        try:
+            with Utils.nostderr() as stderr:
+                with self.assertRaises(SystemExit) as ex:
+                    Config.set_config_file("config/config.yaml")
+            self.assertEqual(1, ex.exception.code)
+            self.assertTrue(stderr.buffer.find("You need to (at least) copy and paste") >= 0)
+        finally:
+            os.chdir(wd)
 
     def _write_config(self, config):
         with open(self.configFilePath, 'w') as file:

@@ -8,7 +8,7 @@
 import unittest
 
 from unittest.mock import patch
-from werkzeug.exceptions import Forbidden
+from werkzeug.exceptions import Forbidden, BadRequest
 
 from src.database import Database
 from src.handlers.contest_handler import ContestHandler
@@ -75,6 +75,16 @@ class TestContestHandler(unittest.TestCase):
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
+    @patch("src.database.Database.commit", side_effect=Exception("ops..."))
+    def test_generate_input_transaction_broken(self, commit_mock, get_file_size_mock, get_input_mock):
+        self._insert_data()
+        with self.assertRaises(Exception) as ex:
+            self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.assertIn("ops...", ex.exception.args[0])
+        self.assertIsNone(Database.get_input("inputid"))
+
+    @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
+    @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_generate_input(self, get_file_size_mock, get_input_mock):
         self._insert_data()
         response = self.handler.generate_input('token', 'poldo', '1.1.1.1')
@@ -134,6 +144,44 @@ class TestContestHandler(unittest.TestCase):
 
         self.assertTrue(ex.exception.response.data.decode().find("The provided pair of source-output is invalid") >= 0)
         Logger.LOG_LEVEL = backup
+
+    @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
+    @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
+    def test_submit_db_broken(self, g_i_mock, g_f_s_mock):
+        self._insert_data()
+        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
+                           "VALUES ('outputid', 'inputid', '/output', 42,"
+                           "'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}')")
+        Database.c.execute("INSERT INTO sources (id, input, path, size) "
+                           "VALUES ('sourceid', 'inputid', '/source', 42)")
+        with patch("src.database.Database.get_input", return_value=None):
+            with Utils.nostderr() as stderr:
+                with self.assertRaises(BadRequest) as ex:
+                    self.handler.submit('outputid', 'sourceid', '1.1.1.1')
+        self.assertIn("DB_CONSISTENCY_ERROR", stderr.buffer)
+        self.assertIn("Input inputid not found in the db", stderr.buffer)
+        self.assertIn("WRONG_INPUT", ex.exception.response.data.decode())
+        self.assertIn("The provided input in invalid", ex.exception.response.data.decode())
+
+    @patch("src.database.Database.gen_id", return_value="subid")
+    @patch("src.database.Database.add_submission", return_value=None)
+    @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
+    @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
+    def test_submit_broken_transaction(self, gen_i_mock, a_s_mock, g_f_s_mock, g_i_mock):
+        self._insert_data()
+        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+
+        Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
+                           "VALUES ('outputid', 'inputid', '/output', 42,"
+                           "'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}')")
+        Database.c.execute("INSERT INTO sources (id, input, path, size) "
+                           "VALUES ('sourceid', 'inputid', '/source', 42)")
+
+        with self.assertRaises(BadRequest) as ex:
+            self.handler.submit('outputid', 'sourceid', '1.1.1.1')
+        self.assertIn("Error inserting the submission", ex.exception.response.data.decode())
+        self.assertIsNone(Database.get_submission("subid"))
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)

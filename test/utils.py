@@ -48,10 +48,11 @@ class Utils:
         """
         savestderr = sys.stderr
         class Devnull(object):
-            def write(self, _): pass
+            def __init__(self): self.buffer = ""
+            def write(self, data): self.buffer += data
             def flush(self): pass
         sys.stderr = Devnull()
         try:
-            yield
+            yield sys.stderr
         finally:
             sys.stderr = savestderr

@@ -46,6 +46,8 @@ class TestBaseHandler(unittest.TestCase):
             return {"incremented": param+1}
         def required(self, param):
             self.raise_exc(Forbidden, 'NOBUONO', 'nononono')
+        def myip(self, _ip):
+            return _ip
 
     @patch('src.handlers.base_handler.BaseHandler._call', return_value={'foo': 'bar'})
     def test_handle(self, call_mock):
@@ -70,6 +72,13 @@ class TestBaseHandler(unittest.TestCase):
         response = handler.handle("dummy_endpoint", 42, 123)
         self.assertIsInstance(response, Forbidden)
 
+    def test_parse_body(self):
+        request = Request({})
+        request.form = {"foo": "bar"}
+
+        body = self.handler.parse_body(request)
+        self.assertEqual("bar", body["foo"])
+
     def test_remaining_time(self):
         Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - 100))
         Database.set_meta("contest_duration", 150)
@@ -77,6 +86,9 @@ class TestBaseHandler(unittest.TestCase):
 
         self.assertAlmostEqual(BaseHandler._get_remaining_time(20), 90, delta=1)
         self.assertAlmostEqual(BaseHandler._get_remaining_time(0), 70, delta=1)
+
+    def test_remaining_time_not_started(self):
+        self.assertIsNone(BaseHandler._get_remaining_time(0))
 
     def test_format_dates(self):
         dct = {
@@ -178,7 +190,7 @@ class TestBaseHandler(unittest.TestCase):
     @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
-    def test_call_required_args(self, name_mock, content_mock, ip_mock):
+    def test_call_with_error(self, name_mock, content_mock, ip_mock):
         handler = TestBaseHandler.DummyHandler()
         env = Environ({"wsgi.input": None})
         request = Request(env)
@@ -189,6 +201,17 @@ class TestBaseHandler(unittest.TestCase):
         response = ex.exception.response
         self.assertTrue(response.data.decode().find("NOBUONO") >= 0)
         self.assertTrue(response.data.decode().find("nononono") >= 0)
+
+    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value="1.2.3.4")
+    @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
+    def test_call_general_attrs(self, name_mock, content_mock, ip_mock):
+        handler = TestBaseHandler.DummyHandler()
+        env = Environ({"wsgi.input": None})
+        request = Request(env)
+
+        res = handler._call(handler.myip, {}, request)
+        self.assertEqual("1.2.3.4", res)
 
     def test_get_file_name(self):
         request = Request(Environ())

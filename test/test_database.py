@@ -8,6 +8,8 @@ import os
 import tempfile
 import unittest
 
+from unittest.mock import patch
+
 from src.config import Config
 from src.database import Database
 from src.schema import Schema
@@ -27,6 +29,13 @@ class TestDatabase(unittest.TestCase):
     def test_connect_to_database(self):
         Database.connected = False
         Database.connect_to_database()
+
+    def test_double_connect_to_database(self):
+        Database.connected = False
+        Database.connect_to_database()
+        with self.assertRaises(RuntimeError) as ex:
+            Database.connect_to_database()
+        self.assertEqual("Database already loaded", ex.exception.args[0])
 
     def test_invalid_database_path(self):
         Config.db = '/path/that/not/exists'
@@ -169,3 +178,25 @@ class TestDatabase(unittest.TestCase):
 
         self.assertIsInstance(lst, list)
         self.assertEqual(2, len(lst))
+
+    def test_input_invalid_params(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        with self.assertRaises(ValueError) as ex:
+            Database.get_input()
+
+        self.assertEqual("Invalid parameters to get_input", ex.exception.args[0])
+
+    def test_do_write_rollback(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        with patch("src.database.Database.commit", side_effect=ValueError("Ops...")):
+            with self.assertRaises(ValueError) as ex:
+                Database.do_write(True, "INSERT INTO metadata (key, value) VALUES (:key, :value)", {
+                    "key": "ciao",
+                    "value": "mondo"
+                })
+
+        self.assertIsNone(Database.get_meta("ciao"))

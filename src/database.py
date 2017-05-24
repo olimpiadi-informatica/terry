@@ -188,12 +188,13 @@ class Database:
             """, {"token": token})
             return Database.dictify(all=True)
 
-    @staticmethod
-    def get_ips(token):
-        Database.c.execute("""
-            SELECT * FROM ips WHERE token=:token
-        """, {"token": token})
-        return Database.dictify(all=True)
+    # This method is not used yet
+    # @staticmethod
+    # def get_ips(token):
+    #     Database.c.execute("""
+    #         SELECT * FROM ips WHERE token=:token
+    #     """, {"token": token})
+    #     return Database.dictify(all=True)
 
     @staticmethod
     def get_next_attempt(token, task):
