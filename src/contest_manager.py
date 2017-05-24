@@ -49,10 +49,9 @@ class ContestManager:
             # copy the statement directory into the statement folder
             statementdir = os.path.join(Config.statementdir, task)
             taskdir = os.path.join(path, task)
-            if not os.path.isdir(statementdir):
-                if os.path.exists(statementdir):
-                    shutil.rmtree(statementdir)
-                shutil.copytree(os.path.join(taskdir, "statement"), statementdir)
+            if os.path.isdir(statementdir):
+                shutil.rmtree(statementdir)
+            shutil.copytree(os.path.join(taskdir, "statement"), statementdir)
 
             # load the task config
             with open(os.path.join(path, task, "task.yaml")) as f:

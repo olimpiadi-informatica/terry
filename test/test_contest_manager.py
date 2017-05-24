@@ -38,6 +38,7 @@ class TestContestManager(unittest.TestCase):
         path = tempfile.mkdtemp()
         self._prepare_contest_dir(path)
         Config.statementdir = tempfile.mkdtemp()
+        os.makedirs(os.path.join(Config.statementdir, "poldo"))
 
         contest = ContestManager.import_contest(path)
         self.assertTrue(os.path.isfile(os.path.join(Config.statementdir, "poldo", "statement.md")))
@@ -105,6 +106,17 @@ class TestContestManager(unittest.TestCase):
         self.assertIn("poldo", ContestManager.tasks)
         self.assertIn("poldo", ContestManager.input_queue)
 
+    @patch("src.database.Database.add_task", side_effect=Exception("ops..."))
+    def test_read_from_disk_transaction_failed(self, add_task_mock):
+        path = tempfile.mkdtemp()
+        self._prepare_contest_dir(path)
+        Config.statementdir = tempfile.mkdtemp()
+        Config.contest_path = path
+        with self.assertRaises(Exception) as ex:
+            ContestManager.read_from_disk()
+        self.assertEqual("ops...", ex.exception.args[0])
+        self.assertIsNone(Database.get_meta("contest_duration"))
+
     @patch("gevent.subprocess.call")
     @patch("src.database.Database.gen_id", return_value="inputid")
     def test_worker(self, gen_id_mock, call_mock):
@@ -170,7 +182,7 @@ class TestContestManager(unittest.TestCase):
         self.assertEqual("yee", output)
 
     @patch("gevent.subprocess.check_output", side_effect=NotImplementedError("ops ;)"))
-    def test_evaluate_output(self, check_mock):
+    def test_evaluate_output_failed(self, check_mock):
         ContestManager.tasks["poldo"] = { "checker": "/gen" }
 
         with self.assertRaises(NotImplementedError) as ex:
