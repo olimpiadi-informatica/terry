@@ -155,7 +155,8 @@ class TestContestManager(unittest.TestCase):
         ContestManager.tasks = { "task1": "1!!", "task2": "2!!!" }
         with patch("gevent.spawn") as mock:
             ContestManager.start()
-            mock.assert_has_calls([call(ContestManager.worker, "task1"), call(ContestManager.worker, "task2")])
+            mock.assert_has_calls([call(ContestManager.worker, "task1"), call(ContestManager.worker, "task2")],
+                                  any_order=True)
 
     def test_get_input(self):
         input_path = tempfile.NamedTemporaryFile().name
