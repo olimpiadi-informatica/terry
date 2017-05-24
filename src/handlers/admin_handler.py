@@ -15,7 +15,7 @@ from ..logger import Logger
 from ..database import Database
 from ..contest_manager import ContestManager
 
-from werkzeug.exceptions import InternalServerError, Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden, BadRequest
 
 
 class AdminHandler(BaseHandler):
