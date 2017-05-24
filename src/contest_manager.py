@@ -7,6 +7,7 @@
 
 import gevent
 import gevent.queue
+import gevent.subprocess
 import os
 import platform
 import shutil
@@ -63,7 +64,7 @@ class ContestManager:
             task_config["checker"] = checker
             task_config["generator"] = generator
 
-            # assert the checker and the generator are executable
+            # ensure the checker and the generator are executable
             os.chmod(checker, 0o755)
             os.chmod(generator, 0o755)
 
@@ -146,7 +147,6 @@ class ContestManager:
                     os.O_WRONLY | os.O_CREAT, 0o644
                 )
 
-                # TODO: maybe log stderr, use real generator
                 try:
                     # generate the input and store the stdout into a file
                     retcode = gevent.subprocess.call(
