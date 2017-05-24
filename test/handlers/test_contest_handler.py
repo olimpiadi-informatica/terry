@@ -76,7 +76,8 @@ class TestContestHandler(unittest.TestCase):
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     @patch("src.database.Database.commit", side_effect=Exception("ops..."))
-    def test_generate_input_transaction_broken(self, commit_mock, get_file_size_mock, get_input_mock):
+    @patch("src.database.Database.register_ip", return_value=None)
+    def test_generate_input_transaction_broken(self, register_mock, commit_mock, get_file_size_mock, get_input_mock):
         self._insert_data()
         with self.assertRaises(Exception) as ex:
             self.handler.generate_input('token', 'poldo', '1.1.1.1')
