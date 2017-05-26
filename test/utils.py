@@ -39,6 +39,10 @@ class Utils:
             Database.connected = False
             Database.connect_to_database()
 
+        config_file.close()
+        log_file.close()
+        db_file.close()
+
     @staticmethod
     @contextlib.contextmanager
     def nostderr():

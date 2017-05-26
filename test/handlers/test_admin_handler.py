@@ -190,5 +190,20 @@ class TestAdminHandler(unittest.TestCase):
         self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
 
     def test_user_list(self):
-        # TODO implement this test
-        self.admin_handler.user_list('admin token', None)
+        Database.add_user("token", "Name", "Surname")
+        Database.add_user("token2", "", "")
+        Database.register_ip("token", "1.2.3.4")
+        Database.register_ip("token", "1.2.3.5")
+
+        res = self.admin_handler.user_list('admin token', None)
+        self.assertEqual(2, len(res["items"]))
+        user1 = next(i for i in res["items"] if i["token"] == "token")
+        user2 = next(i for i in res["items"] if i["token"] == "token2")
+
+        self.assertEqual("token", user1["token"])
+        self.assertEqual("Name", user1["name"])
+        self.assertEqual("Surname", user1["surname"])
+        self.assertEqual(2, len(user1["ip"]))
+
+        self.assertEqual("token2", user2["token"])
+        self.assertEqual(0, len(user2["ip"]))

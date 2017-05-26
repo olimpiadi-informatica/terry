@@ -58,7 +58,7 @@ class TestServer(unittest.TestCase):
             with Utils.nostderr() as stderr:
                 self.server.run()
         init.assert_called_once_with()
-        spawn.assert_called()
+        self.assertTrue(spawn.called)
         join.assert_called_once_with()
         self.assertIn("SERVER_STATUS", stderr.buffer)
         self.assertIn("Server started", stderr.buffer)
