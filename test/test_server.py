@@ -7,10 +7,8 @@
 import json
 import unittest
 
-from collections import namedtuple
 from unittest.mock import patch
 
-import gevent
 from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
