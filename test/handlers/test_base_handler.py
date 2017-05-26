@@ -112,7 +112,7 @@ class TestBaseHandler(unittest.TestCase):
         self.assertEqual(12345678, formatted["nondate"])
         self.assertEqual(datetime.datetime.fromtimestamp(1010101010).isoformat(), formatted["we"]["need"]["to"]["go"]["deeper"])
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value='1.2.3.4')
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value='1.2.3.4')
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call(self, name_mock, content_mock, ip_mock):
@@ -129,7 +129,7 @@ class TestBaseHandler(unittest.TestCase):
         self.assertIn("1.2.3.4", row[3])
         self.assertIn("dummy_endpoint", row[3])
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_default(self, name_mock, content_mock, ip_mock):
@@ -140,7 +140,7 @@ class TestBaseHandler(unittest.TestCase):
         res = handler._call(handler.dummy_endpoint, {}, request)
         self.assertEqual(124, res["incremented"])
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_cast_parameter(self, name_mock, content_mock, ip_mock):
@@ -152,7 +152,7 @@ class TestBaseHandler(unittest.TestCase):
         res = handler._call(handler.dummy_endpoint, {}, request)
         self.assertEqual(43, res["incremented"])
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_fail_cast_parameter(self, name_mock, content_mock, ip_mock):
@@ -164,7 +164,7 @@ class TestBaseHandler(unittest.TestCase):
         with self.assertRaises(BadRequest):
             handler._call(handler.dummy_endpoint, {}, request)
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_route_args(self, name_mock, content_mock, ip_mock):
@@ -175,7 +175,7 @@ class TestBaseHandler(unittest.TestCase):
         res = handler._call(handler.dummy_endpoint, {'param': '42'}, request)
         self.assertEqual(43, res["incremented"])
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_required_args(self, name_mock, content_mock, ip_mock):
@@ -190,7 +190,7 @@ class TestBaseHandler(unittest.TestCase):
         self.assertIn("MISSING_PARAMETER", response.data.decode())
         self.assertIn("param", response.data.decode())
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_with_error(self, name_mock, content_mock, ip_mock):
@@ -205,7 +205,7 @@ class TestBaseHandler(unittest.TestCase):
         self.assertIn("NOBUONO", response.data.decode())
         self.assertIn("nononono", response.data.decode())
 
-    @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value="1.2.3.4")
+    @patch("src.handlers.base_handler.BaseHandler.get_ip", return_value="1.2.3.4")
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_name", return_value=42)
     def test_call_general_attrs(self, name_mock, content_mock, ip_mock):
@@ -245,7 +245,7 @@ class TestBaseHandler(unittest.TestCase):
         Config.num_proxies = 0
         request = Request(Environ(REMOTE_ADDR='1.2.3.4'))
 
-        ip = BaseHandler._get_ip(request)
+        ip = BaseHandler.get_ip(request)
         self.assertEqual("1.2.3.4", ip)
 
     def test_get_ip_3_proxies(self):
@@ -253,5 +253,5 @@ class TestBaseHandler(unittest.TestCase):
         headers = { "X-Forwarded-For": "1.2.3.4, 5.6.7.8, 8.8.8.8" }
         request = Request(EnvironBuilder(headers=headers).get_environ())
 
-        ip = BaseHandler._get_ip(request)
+        ip = BaseHandler.get_ip(request)
         self.assertEqual("1.2.3.4", ip)

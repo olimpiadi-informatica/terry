@@ -128,7 +128,7 @@ class BaseHandler:
             '_route_args': route_args,
             '_file_content': BaseHandler._get_file_content(request),
             '_file_name': BaseHandler._get_file_name(request),
-            '_ip': BaseHandler._get_ip(request)
+            '_ip': BaseHandler.get_ip(request)
         }
 
         missing_parameters = []
@@ -194,7 +194,7 @@ class BaseHandler:
         return request.files["file"].stream.getvalue()
 
     @staticmethod
-    def _get_ip(request):
+    def get_ip(request):
         """
         Return the real IP of the client
         :param request: The Request object
