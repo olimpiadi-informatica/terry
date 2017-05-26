@@ -50,9 +50,9 @@ class TestStorageManager(unittest.TestCase):
 
     def test_save_file(self):
         backup = Config.storedir
-        Config.storedir = '/tmp/foo/bar' # this directory will be created
+        Config.storedir = os.path.join(tempfile.gettempdir(), "wow", "a", "new", "path")
 
-        relative_path = 'baz/file.txt'
+        relative_path = os.path.join("baz", "file.txt")
         content = 'This is the content of the file'
 
         try:
