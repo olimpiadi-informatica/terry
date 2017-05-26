@@ -18,7 +18,7 @@ class TestStorageManager(unittest.TestCase):
         source_id = 'source_id'
         filename = 'filename.foo'
         path = StorageManager.new_source_file(source_id, filename)
-        self.assertTrue(path.find('source') >= 0)
+        self.assertIn("source", path)
         self.assertTrue(path.find(source_id) >= 0)
         self.assertTrue(path.find(filename) >= 0)
 
@@ -26,7 +26,7 @@ class TestStorageManager(unittest.TestCase):
         output_id = 'output_id'
         filename = 'filename.foo'
         path = StorageManager.new_output_file(output_id, filename)
-        self.assertTrue(path.find('output') >= 0)
+        self.assertIn("output", path)
         self.assertTrue(path.find(output_id) >= 0)
         self.assertTrue(path.find(filename) >= 0)
 
@@ -35,7 +35,7 @@ class TestStorageManager(unittest.TestCase):
         task = 'simple_task'
         attempt = 42
         path = StorageManager.new_input_file(input_id, task, attempt)
-        self.assertTrue(path.find('input') >= 0)
+        self.assertIn("input", path)
         self.assertTrue(path.find(input_id) >= 0)
         self.assertTrue(path.find(task) >= 0)
         self.assertTrue(path.find(str(attempt)) >= 0)

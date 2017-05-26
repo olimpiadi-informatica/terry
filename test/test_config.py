@@ -54,7 +54,7 @@ class TestConfig(unittest.TestCase):
                 with self.assertRaises(SystemExit) as ex:
                     Config.set_config_file("config/config.yaml")
             self.assertEqual(1, ex.exception.code)
-            self.assertTrue(stderr.buffer.find("You need to (at least) copy and paste") >= 0)
+            self.assertIn("You need to (at least) copy and paste", stderr.buffer)
         finally:
             os.chdir(wd)
 

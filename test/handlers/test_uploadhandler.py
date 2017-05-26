@@ -34,7 +34,7 @@ class TestInfoHandler(unittest.TestCase):
 
         res = self.handler.upload_output("inputid", "1.1.1.1", "foobar".encode(), "output.txt")
         self.assertEqual("outputid", res["id"])
-        self.assertTrue(res["path"].find("output.txt") >= 0)
+        self.assertIn("output.txt", res["path"])
         self.assertEqual(42, res["validation"])
         self.assertEqual("inputid", res["input"])
         self.assertEqual(6, res["size"])
@@ -46,7 +46,7 @@ class TestInfoHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.upload_output("invalid input", "1.1.1.1", "foo", "bar")
 
-        self.assertTrue(ex.exception.response.data.decode().find("No such input") >= 0)
+        self.assertIn("No such input", ex.exception.response.data.decode())
 
     @patch("src.database.Database.gen_id", return_value="sourceid")
     def test_upload_source(self, gen_mock):
@@ -54,7 +54,7 @@ class TestInfoHandler(unittest.TestCase):
 
         res = self.handler.upload_source("inputid", "1.1.1.1", "foobar".encode(), "source.txt")
         self.assertEqual("sourceid", res["id"])
-        self.assertTrue(res["path"].find("source.txt") >= 0)
+        self.assertIn("source.txt", res["path"])
         self.assertEqual("inputid", res["input"])
         self.assertEqual(6, res["size"])
         path = os.path.join(Config.storedir, res["path"])
@@ -65,7 +65,7 @@ class TestInfoHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.upload_source("invalid input", "1.1.1.1", "foo", "bar")
 
-        self.assertTrue(ex.exception.response.data.decode().find("No such input") >= 0)
+        self.assertIn("No such input", ex.exception.response.data.decode())
 
     def _insert_data(self):
         Database.add_user("token", "", "")

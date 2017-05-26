@@ -46,20 +46,20 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler._validate_token('wrong token', '1.2.3.4')
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
         row = Logger.c.fetchone()
-        self.assertTrue(row[3].find('login failed') >= 0)
-        self.assertTrue(row[3].find('1.2.3.4') >= 0)
+        self.assertIn("login failed", row[3])
+        self.assertIn("1.2.3.4", row[3])
 
     def test_validate_token_log_ip(self):
         self.admin_handler._validate_token('admin token', '1.2.3.4')
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
         row = Logger.c.fetchone()
-        self.assertTrue(row[3].find('new ip') >= 0)
-        self.assertTrue(row[3].find('1.2.3.4') >= 0)
+        self.assertIn("new ip", row[3])
+        self.assertIn("1.2.3.4", row[3])
 
     def test_validate_token_default(self):
         Config.admin_token = Config.default_values["admin_token"]
@@ -85,13 +85,13 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.extract('admin token', '/foo/bar.zip', 'passwd', '1.2.3.4')
 
-        self.assertTrue(ex.exception.response.data.decode().find("Contest already loaded") >= 0)
+        self.assertIn("Contest already loaded", ex.exception.response.data.decode())
 
     def test_extract_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.extract('invalid token', '/foo/bar.zip', 'passwd', '1.2.3.4')
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
     def test_extract_file_not_found(self):
         ContestManager.has_contest = False
@@ -106,7 +106,7 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.log(None, None, None, 'invalid token', None, None)
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
     def test_log_get_dates(self):
         TestLogger.load_logs()
@@ -134,7 +134,7 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.start('invalid token', None)
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
     def test_start_already_started(self):
         Database.set_meta('start_time', 12345)
@@ -142,7 +142,7 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.start('admin token', '1.2.3.4')
 
-        self.assertTrue(ex.exception.response.data.decode().find("Contest has already been started") >= 0)
+        self.assertIn("Contest has already been started", ex.exception.response.data.decode())
 
     def test_start_ok(self):
         out = self.admin_handler.start('admin token', '1.2.3.4')
@@ -156,7 +156,7 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.set_extra_time('invalid token', None, None)
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
     def test_set_extra_time_global(self):
         self.admin_handler.set_extra_time('admin token', 42, '1.2.3.4')
@@ -175,7 +175,7 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.status('invalid token', None)
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
     def test_status(self):
         Database.set_meta('start_time', 1234)
@@ -190,7 +190,7 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.user_list('invalid token', None)
 
-        self.assertTrue(ex.exception.response.data.decode().find("Invalid admin token") >= 0)
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
     def test_user_list(self):
         Database.add_user("token", "Name", "Surname")

@@ -126,8 +126,8 @@ class TestBaseHandler(unittest.TestCase):
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'HTTP'")
         row = Logger.c.fetchone()
-        self.assertTrue(row[3].find("1.2.3.4") >= 0)
-        self.assertTrue(row[3].find("dummy_endpoint") >= 0)
+        self.assertIn("1.2.3.4", row[3])
+        self.assertIn("dummy_endpoint", row[3])
 
     @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
@@ -187,8 +187,8 @@ class TestBaseHandler(unittest.TestCase):
             handler._call(handler.required, {}, request)
 
         response = ex.exception.response
-        self.assertTrue(response.data.decode().find("MISSING_PARAMETER") >= 0)
-        self.assertTrue(response.data.decode().find("param") >= 0)
+        self.assertIn("MISSING_PARAMETER", response.data.decode())
+        self.assertIn("param", response.data.decode())
 
     @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value=42)
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)
@@ -202,8 +202,8 @@ class TestBaseHandler(unittest.TestCase):
             handler._call(handler.required, {'param': 42}, request)
 
         response = ex.exception.response
-        self.assertTrue(response.data.decode().find("NOBUONO") >= 0)
-        self.assertTrue(response.data.decode().find("nononono") >= 0)
+        self.assertIn("NOBUONO", response.data.decode())
+        self.assertIn("nononono", response.data.decode())
 
     @patch("src.handlers.base_handler.BaseHandler._get_ip", return_value="1.2.3.4")
     @patch("src.handlers.base_handler.BaseHandler._get_file_content", return_value=42)

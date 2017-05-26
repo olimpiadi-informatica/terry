@@ -55,7 +55,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.generate_input('invalid token', 'poldo', '1.1.1.1')
 
-        self.assertTrue(ex.exception.response.data.decode().find("No such user") >= 0)
+        self.assertIn("No such user", ex.exception.response.data.decode())
 
     def test_generate_input_invalid_task(self):
         self._insert_data()
@@ -63,7 +63,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.generate_input('token', 'invalid task', '1.1.1.1')
 
-        self.assertTrue(ex.exception.response.data.decode().find("No such task") >= 0)
+        self.assertIn("No such task", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
@@ -74,7 +74,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.generate_input('token', 'poldo', '1.1.1.1')
 
-        self.assertTrue(ex.exception.response.data.decode().find("You already have a ready input") >= 0)
+        self.assertIn("You already have a ready input", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
@@ -112,7 +112,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.submit('invalid output', 'invalid source', '1.1.1.1')
 
-        self.assertTrue(ex.exception.response.data.decode().find("No such output file") >= 0)
+        self.assertIn("No such output file", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
@@ -125,7 +125,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.submit('outputid', 'invalid source', '1.1.1.1')
 
-        self.assertTrue(ex.exception.response.data.decode().find("No such source file") >= 0)
+        self.assertIn("No such source file", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
@@ -146,7 +146,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.submit('outputid', 'sourceid', '1.1.1.1')
 
-        self.assertTrue(ex.exception.response.data.decode().find("The provided pair of source-output is invalid") >= 0)
+        self.assertIn("The provided pair of source-output is invalid", ex.exception.response.data.decode())
         Logger.LOG_LEVEL = backup
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))

@@ -53,7 +53,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_input("invalid input", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("You cannot get the required input") >= 0)
+        self.assertIn("You cannot get the required input", response)
 
     def test_get_output(self):
         Database.add_user("token", "", "")
@@ -70,7 +70,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_output("invalid output", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("You cannot get the required output") >= 0)
+        self.assertIn("You cannot get the required output", response)
 
     def test_get_source(self):
         Database.add_user("token", "", "")
@@ -86,7 +86,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_source("invalid source", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("You cannot get the required source") >= 0)
+        self.assertIn("You cannot get the required source", response)
 
     def test_get_submission(self):
         Database.add_user("token", "", "")
@@ -108,14 +108,14 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_submission("invalid submission", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("You cannot get the required submission") >= 0)
+        self.assertIn("You cannot get the required submission", response)
 
     def test_get_user_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.handler.get_user("invalid token", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("Invalid login") >= 0)
+        self.assertIn("Invalid login", response)
 
     def test_get_user(self):
         Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - 100))
@@ -160,7 +160,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_submissions("invalid token", "poldo", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("Invalid login") >= 0)
+        self.assertIn("Invalid login", response)
 
     def test_get_submissions_invalid_task(self):
         Database.add_user("token", "", "")
@@ -168,7 +168,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_submissions("token", "invalid task", "1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertTrue(response.find("Invalid task") >= 0)
+        self.assertIn("Invalid task", response)
 
     @patch("src.handlers.info_handler.InfoHandler.patch_output", return_value={"id":"outputid"})
     def test_patch_submission(self, mock):
