@@ -23,9 +23,6 @@ class TestServer(unittest.TestCase):
         Utils.prepare_test()
         self.server = Server()
 
-    def tearDown(self):
-        Utils.tear_down()
-
     @patch("src.server.Server.wsgi_app", side_effect=Exception())
     def test_call_with_error(self, mock):
         with Utils.nostderr() as stderr:

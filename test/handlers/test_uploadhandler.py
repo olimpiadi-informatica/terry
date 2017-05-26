@@ -5,7 +5,6 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
-import tempfile
 import unittest
 
 from unittest.mock import patch
@@ -23,9 +22,6 @@ class TestInfoHandler(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
         self.handler = UploadHandler()
-
-    def tearDown(self):
-        Utils.tear_down()
 
     @patch("src.contest_manager.ContestManager.evaluate_output", return_value='{"validation":42}')
     @patch("src.database.Database.gen_id", return_value="outputid")

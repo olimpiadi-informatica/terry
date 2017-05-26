@@ -5,7 +5,6 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import json
-import tempfile
 import unittest
 
 from unittest.mock import patch
@@ -30,9 +29,6 @@ class TestBaseHandler(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
         self.handler = BaseHandler()
-
-    def tearDown(self):
-        Utils.tear_down()
 
     def test_raise_exc(self):
         with self.assertRaises(Forbidden) as ex:

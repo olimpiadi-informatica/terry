@@ -6,7 +6,6 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
 import platform
-import tempfile
 import unittest
 
 from unittest.mock import patch, call
@@ -25,9 +24,6 @@ class TestContestManager(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
 
-    def tearDown(self):
-        Utils.tear_down()
-
     def test_system_extension(self):
         sys_ext = ContestManager.system_extension()
         system = platform.system().lower()
@@ -38,9 +34,9 @@ class TestContestManager(unittest.TestCase):
         self.assertTrue(sys_ext.find(machine) >= 0)
 
     def test_import_contest(self):
-        path = tempfile.mkdtemp()
+        path = Utils.new_tmp_dir()
         self._prepare_contest_dir(path)
-        Config.statementdir = tempfile.mkdtemp()
+        Config.statementdir = Utils.new_tmp_dir()
         os.makedirs(os.path.join(Config.statementdir, "poldo"))
 
         contest = ContestManager.import_contest(path)
@@ -77,9 +73,9 @@ class TestContestManager(unittest.TestCase):
         self.assertIn("Contest not found", stderr.buffer)
 
     def test_read_from_disk(self):
-        path = tempfile.mkdtemp()
+        path = Utils.new_tmp_dir()
         self._prepare_contest_dir(path)
-        Config.statementdir = tempfile.mkdtemp()
+        Config.statementdir = Utils.new_tmp_dir()
         Config.contest_path = path
         ContestManager.read_from_disk()
 
@@ -111,9 +107,9 @@ class TestContestManager(unittest.TestCase):
 
     @patch("src.database.Database.add_task", side_effect=Exception("ops..."))
     def test_read_from_disk_transaction_failed(self, add_task_mock):
-        path = tempfile.mkdtemp()
+        path = Utils.new_tmp_dir()
         self._prepare_contest_dir(path)
-        Config.statementdir = tempfile.mkdtemp()
+        Config.statementdir = Utils.new_tmp_dir()
         Config.contest_path = path
         with self.assertRaises(Exception) as ex:
             ContestManager.read_from_disk()
@@ -162,9 +158,7 @@ class TestContestManager(unittest.TestCase):
                                   any_order=True)
 
     def test_get_input(self):
-        input_path = tempfile.NamedTemporaryFile().name
-        with open(input_path, "w") as file:
-            file.write("foo")
+        input_path = Utils.new_tmp_file()
         ContestManager.input_queue["poldo"] = gevent.queue.Queue(1)
         ContestManager.input_queue["poldo"].put({"id":"inputid", "path": input_path})
 

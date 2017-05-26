@@ -5,7 +5,6 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
-import tempfile
 import unittest
 import datetime
 import shutil
@@ -33,9 +32,6 @@ class TestAdminHandler(unittest.TestCase):
 
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001 # disable the logs
-
-    def tearDown(self):
-        Utils.tear_down()
 
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
@@ -220,7 +216,7 @@ class TestAdminHandler(unittest.TestCase):
 
     def _preapre_zip(self):
         ContestManager.has_contest = False
-        Config.contest_zips = os.path.join(tempfile.gettempdir(), "contest_zips")
+        Config.contest_zips = Utils.new_tmp_dir("contest_zips")
         os.makedirs(Config.contest_zips, exist_ok=True)
         here = os.path.dirname(__file__)
         shutil.copyfile(os.path.join(here, "..", "assets", "contest.zip"),

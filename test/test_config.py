@@ -5,7 +5,6 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
-import tempfile
 import unittest
 
 import yaml
@@ -16,8 +15,7 @@ from test.utils import Utils
 
 class TestConfig(unittest.TestCase):
     def setUp(self):
-        self.configFile = tempfile.NamedTemporaryFile()
-        self.configFilePath = self.configFile.name
+        self.configFilePath = Utils.new_tmp_file()
         Config.loaded = False
 
     def test_class_method_generation(self):
@@ -48,7 +46,7 @@ class TestConfig(unittest.TestCase):
 
     def test_default_file_missing(self):
         wd = os.getcwd()
-        os.chdir(tempfile.gettempdir())
+        os.chdir(Utils.get_tmp_dir())
         try:
             with Utils.nostderr() as stderr:
                 with self.assertRaises(SystemExit) as ex:
@@ -63,6 +61,5 @@ class TestConfig(unittest.TestCase):
             file.write(config)
 
     def tearDown(self):
-        self.configFile.close()
         # clean the config class
         Config.loaded = False

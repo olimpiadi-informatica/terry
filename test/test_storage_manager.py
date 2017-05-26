@@ -5,11 +5,11 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
-import tempfile
 import unittest
 
 from src.config import Config
 from src.storage_manager import StorageManager
+from test.utils import Utils
 
 
 class TestStorageManager(unittest.TestCase):
@@ -41,7 +41,7 @@ class TestStorageManager(unittest.TestCase):
         self.assertTrue(path.find(str(attempt)) >= 0)
 
     def test_get_file_size(self):
-        filename = tempfile.NamedTemporaryFile().name
+        filename = Utils.new_tmp_file()
 
         with open(filename, 'w') as file:
             file.write('This string is 28 chars long')
@@ -50,7 +50,7 @@ class TestStorageManager(unittest.TestCase):
 
     def test_save_file(self):
         backup = Config.storedir
-        Config.storedir = os.path.join(tempfile.gettempdir(), "wow", "a", "new", "path")
+        Config.storedir = Utils.new_tmp_dir("new_path")
 
         relative_path = os.path.join("baz", "file.txt")
         content = 'This is the content of the file'
@@ -70,7 +70,7 @@ class TestStorageManager(unittest.TestCase):
 
     def test_rename_file(self):
         backup = Config.storedir
-        Config.storedir = tempfile.gettempdir()
+        Config.storedir = Utils.new_tmp_dir()
 
         relative_path = 'baz/file.txt'
         new_path = 'baz/txt.elif'
@@ -85,7 +85,7 @@ class TestStorageManager(unittest.TestCase):
 
     def test_get_absolute_path(self):
         backup = Config.storedir
-        Config.storedir = tempfile.gettempdir()
+        Config.storedir = Utils.new_tmp_dir()
 
         relative_path = 'path/to/file'
         abs_path = StorageManager.get_absolute_path(relative_path)

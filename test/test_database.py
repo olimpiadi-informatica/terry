@@ -5,7 +5,6 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
-import tempfile
 import unittest
 
 from unittest.mock import patch
@@ -19,9 +18,6 @@ from test.utils import Utils
 class TestDatabase(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test(connect_database=False)
-
-    def tearDown(self):
-        Utils.tear_down()
 
     def test_gen_id(self):
         MIN_ID_LENGTH = 10
@@ -47,7 +43,7 @@ class TestDatabase(unittest.TestCase):
             Database.connect_to_database()
 
     def test_missing_db(self):
-        db_path = tempfile.NamedTemporaryFile(delete=False).name
+        db_path = Utils.new_tmp_file()
         os.remove(db_path)
         Config.db = db_path
         Database.connected = False

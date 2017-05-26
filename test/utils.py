@@ -4,9 +4,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+import os
+import string
 import tempfile
 import contextlib
 import sys
+
+import datetime
+
+import random
 
 from src.config import Config
 from src.database import Database
@@ -14,19 +20,18 @@ from src.logger import Logger
 
 
 class Utils:
+    prefix = None
+
     @staticmethod
     def prepare_test(load_config=True, connect_database=True, connect_logger=True):
-        Utils.config_file = tempfile.NamedTemporaryFile()
-        config_file_name = Utils.config_file.name
-        Utils.log_file = tempfile.NamedTemporaryFile()
-        log_file_name = Utils.log_file.name
-        Utils.db_file = tempfile.NamedTemporaryFile()
-        db_file_name = Utils.db_file.name
+        config_file_name = Utils.new_tmp_file()
+        log_file_name = Utils.new_tmp_file()
+        db_file_name = Utils.new_tmp_file()
 
         with open(config_file_name, 'w') as file:
             file.write("logfile: %s\n"
                        "db: %s\n"
-                       "storedir: %s\n" % (log_file_name, db_file_name, tempfile.gettempdir()))
+                       "storedir: %s\n" % (log_file_name, db_file_name, Utils.new_tmp_dir()))
 
         if load_config:
             Config.loaded = False
@@ -38,12 +43,6 @@ class Utils:
         if connect_database:
             Database.connected = False
             Database.connect_to_database()
-
-    @staticmethod
-    def tear_down():
-        Utils.config_file.close()
-        Utils.log_file.close()
-        Utils.db_file.close()
 
     @staticmethod
     @contextlib.contextmanager
@@ -62,3 +61,30 @@ class Utils:
             yield sys.stderr
         finally:
             sys.stderr = savestderr
+
+    @staticmethod
+    def get_tmp_dir():
+        if Utils.prefix is None:
+            Utils.prefix = os.path.join(tempfile.gettempdir(), "territoriali-backend-tests",
+                                        datetime.datetime.now().strftime("temp-%Y-%m-%d_%H-%M-%S"))
+            os.makedirs(Utils.prefix, exist_ok=True)
+        return Utils.prefix
+
+    @staticmethod
+    def new_tmp_dir(prefix="", create=True):
+        dir_name = Utils.random_string()
+        path = os.path.join(Utils.get_tmp_dir(), prefix, dir_name)
+        if create: os.makedirs(path, exist_ok=True)
+        return path
+
+    @staticmethod
+    def new_tmp_file(prefix="", create=True):
+        file_name = Utils.random_string()
+        path = os.path.join(Utils.get_tmp_dir(), prefix, file_name)
+        if create: open(path, "w").close()
+        return path
+
+    @staticmethod
+    def random_string(length=8, chars=string.ascii_uppercase+string.ascii_lowercase+string.digits):
+        return ''.join(random.choice(chars) for _ in range(length))
+
