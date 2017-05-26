@@ -20,6 +20,9 @@ class TestDatabase(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test(connect_database=False)
 
+    def tearDown(self):
+        Utils.tear_down()
+
     def test_gen_id(self):
         MIN_ID_LENGTH = 10
         id = Database.gen_id()

@@ -23,6 +23,9 @@ class TestContestHandler(unittest.TestCase):
         self.handler = ContestHandler()
         self.inputid = "inputid"
 
+    def tearDown(self):
+        Utils.tear_down()
+
     def test_compute_score(self):
         self._insert_data()
         self.assertEqual(21, ContestHandler.compute_score('poldo', '{"score":0.5}'))

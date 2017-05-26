@@ -25,6 +25,9 @@ class TestContestManager(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
 
+    def tearDown(self):
+        Utils.tear_down()
+
     def test_system_extension(self):
         sys_ext = ContestManager.system_extension()
         system = platform.system().lower()

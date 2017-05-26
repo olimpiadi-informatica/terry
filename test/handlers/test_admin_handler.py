@@ -33,6 +33,9 @@ class TestAdminHandler(unittest.TestCase):
         Logger.LOG_LEVEL = 9001 # disable the logs
 
     def tearDown(self):
+        Utils.tear_down()
+
+    def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
         Config.admin_token = self.token_backup
 

@@ -20,6 +20,9 @@ class TestLogger(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test(connect_logger=False)
 
+    def tearDown(self):
+        Utils.tear_down()
+
     def test_connect_to_database(self):
         Logger.connected = False
         Logger.connect_to_database()
@@ -64,6 +67,8 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(Logger.DEBUG, int(row[2]))
         self.assertEqual('Log message', row[3])
 
+        Utils.tear_down()
+
     def test_log_stderr(self):
         Utils.prepare_test(connect_logger=True)
 
@@ -71,6 +76,8 @@ class TestLogger(unittest.TestCase):
             Logger.error('FOO_CAT', 'Log message')
         self.assertIn("FOO_CAT", err.buffer)
         self.assertIn("Log message", err.buffer)
+
+        Utils.tear_down()
 
     def test_get_logs_by_level(self):
         Utils.prepare_test(connect_logger=True)
@@ -84,6 +91,8 @@ class TestLogger(unittest.TestCase):
         logs = Logger.get_logs(Logger.WARNING, None, start_date, end_date)
         self.assertEqual(2, len(logs))
 
+        Utils.tear_down()
+
     def test_get_logs_by_category(self):
         Utils.prepare_test(connect_logger=True)
         TestLogger.load_logs()
@@ -94,6 +103,8 @@ class TestLogger(unittest.TestCase):
         logs = Logger.get_logs(Logger.DEBUG, 'CATEGORY', start_date, end_date)
         self.assertEqual(2, len(logs))
 
+        Utils.tear_down()
+
     def test_get_logs_by_date(self):
         Utils.prepare_test(connect_logger=True)
         TestLogger.load_logs()
@@ -103,6 +114,8 @@ class TestLogger(unittest.TestCase):
 
         logs = Logger.get_logs(Logger.DEBUG, None, start_date, end_date)
         self.assertEqual(1, len(logs))
+
+        Utils.tear_down()
 
     @staticmethod
     def load_logs():

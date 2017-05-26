@@ -31,6 +31,9 @@ class TestBaseHandler(unittest.TestCase):
         Utils.prepare_test()
         self.handler = BaseHandler()
 
+    def tearDown(self):
+        Utils.tear_down()
+
     def test_raise_exc(self):
         with self.assertRaises(Forbidden) as ex:
             self.handler.raise_exc(Forbidden, "EX_CODE", "Ex message")

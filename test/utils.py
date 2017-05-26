@@ -16,12 +16,12 @@ from src.logger import Logger
 class Utils:
     @staticmethod
     def prepare_test(load_config=True, connect_database=True, connect_logger=True):
-        config_file = tempfile.NamedTemporaryFile()
-        config_file_name = config_file.name
-        log_file = tempfile.NamedTemporaryFile()
-        log_file_name = log_file.name
-        db_file = tempfile.NamedTemporaryFile()
-        db_file_name = db_file.name
+        Utils.config_file = tempfile.NamedTemporaryFile()
+        config_file_name = Utils.config_file.name
+        Utils.log_file = tempfile.NamedTemporaryFile()
+        log_file_name = Utils.log_file.name
+        Utils.db_file = tempfile.NamedTemporaryFile()
+        db_file_name = Utils.db_file.name
 
         with open(config_file_name, 'w') as file:
             file.write("logfile: %s\n"
@@ -39,9 +39,11 @@ class Utils:
             Database.connected = False
             Database.connect_to_database()
 
-        config_file.close()
-        log_file.close()
-        db_file.close()
+    @staticmethod
+    def tear_down():
+        Utils.config_file.close()
+        Utils.log_file.close()
+        Utils.db_file.close()
 
     @staticmethod
     @contextlib.contextmanager

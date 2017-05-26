@@ -21,6 +21,9 @@ class TestInfoHandler(unittest.TestCase):
         Utils.prepare_test()
         self.handler = InfoHandler()
 
+    def tearDown(self):
+        Utils.tear_down()
+
     def test_get_contest_not_started(self):
         res = self.handler.get_contest()
 

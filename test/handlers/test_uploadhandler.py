@@ -24,6 +24,9 @@ class TestInfoHandler(unittest.TestCase):
         Utils.prepare_test()
         self.handler = UploadHandler()
 
+    def tearDown(self):
+        Utils.tear_down()
+
     @patch("src.contest_manager.ContestManager.evaluate_output", return_value='{"validation":42}')
     @patch("src.database.Database.gen_id", return_value="outputid")
     def test_upload_output(self, gen_mock, eval_mock):
