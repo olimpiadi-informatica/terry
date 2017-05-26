@@ -48,7 +48,7 @@ class AdminHandler(BaseHandler):
         os.chdir(Config.contest_path)
         try:
             with zipfile.ZipFile(z) as f:
-                f.extractall(pwd=password)
+                f.extractall(pwd=password.encode())
             Logger.info("CONTEST", "Contest extracted")
         finally:
             os.chdir(wd)

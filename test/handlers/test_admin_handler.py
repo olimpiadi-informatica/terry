@@ -4,10 +4,12 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-
+import os
+import tempfile
 import unittest
-
 import datetime
+import shutil
+
 from werkzeug.exceptions import Forbidden, BadRequest
 from unittest.mock import patch
 
@@ -69,13 +71,13 @@ class TestAdminHandler(unittest.TestCase):
         row = Logger.c.fetchone()
         self.assertEqual("Using default admin token!", row[3])
 
-    @patch('zipfile.ZipFile.__init__', return_value=None)
-    @patch('zipfile.ZipFile.extractall', return_value=None)
     @patch('src.contest_manager.ContestManager.read_from_disk')
     @patch('src.contest_manager.ContestManager.start')
-    def test_extract(self, start_mock, read_mock, extract_mock, zip_mock):
+    def test_extract(self, start_mock, read_mock):
+        self._preapre_zip()
+
         ContestManager.has_contest = False
-        self.admin_handler.extract('admin token', '/foo/bar.zip', 'passwd', '1.2.3.4')
+        self.admin_handler.extract('admin token', 'contest.zip', 'password', '1.2.3.4')
 
         read_mock.assert_called_once_with()
         start_mock.assert_called_once_with()
@@ -98,9 +100,14 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             self.admin_handler.extract('admin token', '/foo/bar.zip', 'passwd', '1.2.3.4')
 
-    def test_extract_wrong_password(self):
-        # TODO implement this test
-        pass
+    @patch('src.contest_manager.ContestManager.read_from_disk')
+    @patch('src.contest_manager.ContestManager.start')
+    def test_extract_wrong_password(self, start_mock, read_mock):
+        self._preapre_zip()
+
+        with self.assertRaises(RuntimeError) as ex:
+            self.admin_handler.extract('admin token', 'contest.zip', "passwd", '1.2.3.4')
+        self.assertIn("Bad password", ex.exception.args[0])
 
     def test_log_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
@@ -210,3 +217,11 @@ class TestAdminHandler(unittest.TestCase):
 
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
+
+    def _preapre_zip(self):
+        ContestManager.has_contest = False
+        Config.contest_zips = os.path.join(tempfile.gettempdir(), "contest_zips")
+        os.makedirs(Config.contest_zips, exist_ok=True)
+        here = os.path.dirname(__file__)
+        shutil.copyfile(os.path.join(here, "..", "assets", "contest.zip"),
+                        os.path.join(Config.contest_zips, "contest.zip"))
