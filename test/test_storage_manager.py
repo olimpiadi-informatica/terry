@@ -94,3 +94,31 @@ class TestStorageManager(unittest.TestCase):
         self.assertTrue(abs_path.find(relative_path) >= 0)
 
         Config.storedir = backup
+
+    def test_sanitize(self):
+        filename = " fi!@le n²amжe'.txt  "
+        sanitized = StorageManager._sanitize(filename)
+        self.assertEqual("file_n²amжe.txt", sanitized)
+
+    def test_sanitize_file_too_long(self):
+        filename = "file_" + ("a" * 5 * StorageManager.MAX_LENGTH) + ".txt"
+        sanitized = StorageManager._sanitize(filename)
+        self.assertEqual("file_" + ("a" * (StorageManager.MAX_LENGTH-9)) + ".txt", sanitized)
+        self.assertEqual(StorageManager.MAX_LENGTH, len(sanitized))
+
+    def test_sanitize_extension_too_long(self):
+        filename = "file." + ("x" * 5 * StorageManager.MAX_LENGTH)
+        sanitized = StorageManager._sanitize(filename)
+        self.assertEqual("file." + ("x" * (StorageManager.MAX_LENGTH - 5)), sanitized)
+        self.assertEqual(StorageManager.MAX_LENGTH, len(sanitized))
+
+    def test_sanitize_no_extension(self):
+        filename = "x" * StorageManager.MAX_LENGTH * 5
+        sanitized = StorageManager._sanitize(filename)
+        self.assertEqual("x" * StorageManager.MAX_LENGTH, sanitized)
+        self.assertEqual(StorageManager.MAX_LENGTH, len(sanitized))
+
+    def test_sanitize_no_name(self):
+        filename = ".hidden"
+        sanitized = StorageManager._sanitize(filename)
+        self.assertEqual(".hidden", sanitized)
