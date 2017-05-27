@@ -70,7 +70,7 @@ class TestAdminHandler(unittest.TestCase):
     @patch('src.contest_manager.ContestManager.read_from_disk')
     @patch('src.contest_manager.ContestManager.start')
     def test_extract(self, start_mock, read_mock):
-        self._preapre_zip()
+        self._prepare_zip()
 
         ContestManager.has_contest = False
         self.admin_handler.extract('admin token', 'contest.zip', 'password', '1.2.3.4')
@@ -99,7 +99,7 @@ class TestAdminHandler(unittest.TestCase):
     @patch('src.contest_manager.ContestManager.read_from_disk')
     @patch('src.contest_manager.ContestManager.start')
     def test_extract_wrong_password(self, start_mock, read_mock):
-        self._preapre_zip()
+        self._prepare_zip()
 
         with self.assertRaises(RuntimeError) as ex:
             self.admin_handler.extract('admin token', 'contest.zip', "passwd", '1.2.3.4')
@@ -214,7 +214,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
 
-    def _preapre_zip(self):
+    def _prepare_zip(self):
         ContestManager.has_contest = False
         Config.contest_zips = Utils.new_tmp_dir("contest_zips")
         os.makedirs(Config.contest_zips, exist_ok=True)

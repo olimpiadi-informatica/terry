@@ -65,6 +65,16 @@ class TestContestManager(unittest.TestCase):
         self.assertEqual("Test", user["name"])
         self.assertEqual("User", user["surname"])
 
+    def test_import_contest_removes_file(self):
+        path = Utils.new_tmp_dir()
+        self._prepare_contest_dir(path)
+        Config.statementdir = Utils.new_tmp_dir()
+        self._write_file(Config.statementdir, "poldo", "foobar")
+
+        self.assertTrue(os.path.isfile(os.path.join(Config.statementdir, "poldo")))
+        ContestManager.import_contest(path)
+        self.assertTrue(os.path.isdir(os.path.join(Config.statementdir, "poldo")))
+
     def test_read_from_disk_missing_dir(self):
         with Utils.nostderr() as stderr:
             Config.contest_path = "/not/existing/path"

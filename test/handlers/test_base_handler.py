@@ -247,7 +247,9 @@ class TestBaseHandler(unittest.TestCase):
     def test_get_ip_3_proxies(self):
         Config.num_proxies = 3
         headers = { "X-Forwarded-For": "1.2.3.4, 5.6.7.8, 8.8.8.8" }
-        request = Request(EnvironBuilder(headers=headers).get_environ())
+        env = EnvironBuilder(headers=headers).get_environ()
+        env["REMOTE_ADDR"] = "6.6.6.6"
+        request = Request(env)
 
         ip = BaseHandler.get_ip(request)
         self.assertEqual("1.2.3.4", ip)

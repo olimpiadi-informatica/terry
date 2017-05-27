@@ -51,6 +51,8 @@ class ContestManager:
             taskdir = os.path.join(path, task)
             if os.path.isdir(statementdir):
                 shutil.rmtree(statementdir)
+            if os.path.isfile(statementdir):
+                os.remove(statementdir)
             shutil.copytree(os.path.join(taskdir, "statement"), statementdir)
 
             # load the task config
@@ -196,7 +198,7 @@ class ContestManager:
     @staticmethod
     def start():
         """
-        Spawn the workers and keep the queues of input always ready and full  
+        Spawn the workers and keep the queues of input always ready and full
         """
         for name in ContestManager.tasks:
             gevent.spawn(ContestManager.worker, name)
