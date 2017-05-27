@@ -43,7 +43,7 @@ class InfoHandler(BaseHandler):
         if not input_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
 
-        token = input["token"]
+        token = input_file["token"]
         Database.register_ip(token, _ip)
 
         return BaseHandler.format_dates(input_file)
@@ -129,10 +129,18 @@ class InfoHandler(BaseHandler):
         """
         GET /user/<token>/submissions/<task>
         """
+        user = Database.get_user(token)
+        if user is None:
+            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
+
+        task = Database.get_task(task)
+        if task is None:
+            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid task")
+
         Database.register_ip(token, _ip)
 
         submissions = []
-        for sub in Database.get_submissions(token, task):
+        for sub in Database.get_submissions(token, task["name"]):
             submissions.append(InfoHandler.patch_submission(sub))
         return { "items": submissions }
 
@@ -154,7 +162,6 @@ class InfoHandler(BaseHandler):
                 result[k] = v
 
         result["feedback"] = json.loads(result["output"]["result"])["feedback"]
-
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]
@@ -174,6 +181,7 @@ class InfoHandler(BaseHandler):
             "id": output["id"],
             "date": output["date"],
             "path": output["path"],
+            "size": output["size"],
             "validation": json.loads(output["result"])["validation"]
         }
 

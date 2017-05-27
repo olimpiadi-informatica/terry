@@ -8,6 +8,7 @@
 
 import gevent
 import gevent.queue
+import gevent.subprocess
 import os
 import platform
 import shutil
@@ -49,10 +50,11 @@ class ContestManager:
             # copy the statement directory into the statement folder
             statementdir = os.path.join(Config.statementdir, task)
             taskdir = os.path.join(path, task)
-            if not os.path.isdir(statementdir):
-                if os.path.exists(statementdir):
-                    shutil.rmtree(statementdir)
-                shutil.copytree(os.path.join(taskdir, "statement"), statementdir)
+            if os.path.isdir(statementdir):
+                shutil.rmtree(statementdir)
+            if os.path.isfile(statementdir):
+                os.remove(statementdir)
+            shutil.copytree(os.path.join(taskdir, "statement"), statementdir)
 
             # load the task config
             with open(os.path.join(path, task, "task.yaml")) as f:
@@ -64,7 +66,7 @@ class ContestManager:
             task_config["checker"] = checker
             task_config["generator"] = generator
 
-            # assert the checker and the generator are executable
+            # ensure the checker and the generator are executable
             os.chmod(checker, 0o755)
             os.chmod(generator, 0o755)
 
@@ -147,7 +149,6 @@ class ContestManager:
                     os.O_WRONLY | os.O_CREAT, 0o644
                 )
 
-                # TODO: maybe log stderr, use real generator
                 try:
                     # generate the input and store the stdout into a file
                     retcode = gevent.subprocess.call(
@@ -198,7 +199,7 @@ class ContestManager:
     @staticmethod
     def start():
         """
-        Spawn the workers and keep the queues of input always ready and full  
+        Spawn the workers and keep the queues of input always ready and full
         """
         for name in ContestManager.tasks:
             gevent.spawn(ContestManager.worker, name)

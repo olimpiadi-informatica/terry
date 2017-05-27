@@ -16,7 +16,7 @@ from ..logger import Logger
 from ..database import Database
 from ..contest_manager import ContestManager
 
-from werkzeug.exceptions import InternalServerError, Forbidden
+from werkzeug.exceptions import Forbidden, BadRequest
 
 
 class AdminHandler(BaseHandler):
@@ -49,7 +49,7 @@ class AdminHandler(BaseHandler):
         os.chdir(Config.contest_path)
         try:
             with zipfile.ZipFile(z) as f:
-                f.extractall(pwd=password)
+                f.extractall(pwd=password.encode())
             Logger.info("CONTEST", "Contest extracted")
         finally:
             os.chdir(wd)
@@ -62,9 +62,12 @@ class AdminHandler(BaseHandler):
         POST /admin/log
         """
         self._validate_token(admin_token, _ip)
+        if level not in Logger.HUMAN_MESSAGES:
+            self.raise_exc(BadRequest, 'INVALID_PARAMETER', 'The level provided is invalid')
+        level = Logger.HUMAN_MESSAGES.index(level)
 
-        start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
-        end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
         return BaseHandler.format_dates({
             "items": Logger.get_logs(level, category, start_date, end_date)
         })
@@ -75,7 +78,7 @@ class AdminHandler(BaseHandler):
         """
         self._validate_token(admin_token, _ip)
 
-        if Database.get_meta("start_time", type=int) is not None:
+        if Database.get_meta("start_time", default=None, type=int) is not None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
 
         start_time = int(datetime.datetime.now().timestamp())

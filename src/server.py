@@ -84,8 +84,7 @@ class Server:
 
         controller, action = endpoint.split("#")
 
-        res = self.handlers[controller].handle(action, args, request)
-        return res
+        return self.handlers[controller].handle(action, args, request)
 
     def run(self):
         """
@@ -98,5 +97,6 @@ class Server:
             Logger.error("PORT_ALREADY_IN_USE", "Address: '%s' Port: %d" % (Config.address, Config.port))
             sys.exit(1)
         greenlet = gevent.spawn(server.serve_forever)
-        Logger.info("SERVER_STATUS", "Server started")
+        Logger.info("SERVER_STATUS", "Server started at http://%s%s/"
+                    % (str(Config.address), "" if Config.port == 80 else ":" + str(Config.port)))
         greenlet.join()

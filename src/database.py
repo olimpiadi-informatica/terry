@@ -33,6 +33,7 @@ class Database:
         Database.conn = sqlite3.connect(
             Config.db,
             check_same_thread=False,
+            isolation_level=None,
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         Database.c = Database.conn.cursor()
@@ -189,12 +190,13 @@ class Database:
             """, {"token": token})
             return Database.dictify(all=True)
 
-    @staticmethod
-    def get_ips(token):
-        Database.c.execute("""
-            SELECT * FROM ips WHERE token=:token
-        """, {"token": token})
-        return Database.dictify(all=True)
+    # This method is not used yet
+    # @staticmethod
+    # def get_ips(token):
+    #     Database.c.execute("""
+    #         SELECT * FROM ips WHERE token=:token
+    #     """, {"token": token})
+    #     return Database.dictify(all=True)
 
     @staticmethod
     def get_next_attempt(token, task):
@@ -233,8 +235,9 @@ class Database:
             Database.begin()
             try:
                 Database.c.execute(query, params)
+                rowcount = Database.c.rowcount
                 Database.commit()
-                return Database.c.rowcount
+                return rowcount
             except:
                 Database.rollback()
                 raise
@@ -243,7 +246,7 @@ class Database:
             return Database.c.rowcount
 
     @staticmethod
-    def get_meta(key, default=None, type=str):
+    def get_meta(key, default=None, type=None):
         c = Database.conn.cursor()
         try:
             c.execute("""
@@ -252,7 +255,9 @@ class Database:
         except sqlite3.OperationalError:
             return default
         row = c.fetchone()
-        return type(row[0]) if row is not None else default
+        if row:
+            return type(row[0]) if type is not None else row[0]
+        return default
 
     @staticmethod
     def set_meta(key, value, autocommit=True):

@@ -26,8 +26,8 @@ class StorageManager:
         :return: A path relative to the Config.storedir where save that file
         """
         filename = StorageManager._sanitize(filename)
-        path_prefix = [source_id[:2], source_id[2:4]]
-        return os.path.join("source", *path_prefix, source_id, filename)
+        path_prefix = [source_id[:2], source_id[2:4], source_id, filename]
+        return os.path.join("source", *path_prefix)
 
     @staticmethod
     def new_output_file(output_id, filename):
@@ -38,8 +38,8 @@ class StorageManager:
         :return: A path relative to the Config.storedir where save that file
         """
         filename = StorageManager._sanitize(filename)
-        path_prefix = [output_id[:2], output_id[2:4]]
-        return os.path.join("output", *path_prefix, output_id, filename)
+        path_prefix = [output_id[:2], output_id[2:4], output_id, filename]
+        return os.path.join("output", *path_prefix)
 
     @staticmethod
     def new_input_file(input_id, task_name, attempt):
@@ -52,8 +52,8 @@ class StorageManager:
         :return: A path relative to the Config.storedir where that file is
         """
         filename = task_name + "_input_" + str(attempt) + ".txt"
-        path_prefix = [input_id[:2], input_id[2:4]]
-        filename = os.path.join("input", *path_prefix, input_id, filename)
+        path_prefix = [input_id[:2], input_id[2:4], input_id, filename]
+        filename = os.path.join("input", *path_prefix)
         StorageManager._create_dir(StorageManager.get_absolute_path(filename))
         return filename
 
