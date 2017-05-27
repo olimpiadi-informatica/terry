@@ -39,15 +39,17 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
+        Utils.start_contest()
 
-        res = self.handler.get_input("inputid", "1.1.1.1")
+        res = self.handler.get_input(input_id="inputid", _ip="1.1.1.1")
         self.assertEqual("inputid", res["id"])
         self.assertEqual("token", res["token"])
         self.assertEqual("poldo", res["task"])
 
     def test_get_input_invalid_id(self):
+        Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_input("invalid input", "1.1.1.1")
+            self.handler.get_input(input_id="invalid input", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("You cannot get the required input", response)
@@ -57,35 +59,40 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
         Database.add_output("outputid", "inputid", "/path", 42, '{"validation":42}')
+        Utils.start_contest()
 
-        res = self.handler.get_output("outputid", "1.1.1.1")
+        res = self.handler.get_output(output_id="outputid", _ip="1.1.1.1")
         self.assertEqual("outputid", res["id"])
         self.assertEqual(42, res["validation"])
 
     def test_get_output_invalid_id(self):
+        Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_output("invalid output", "1.1.1.1")
+            self.handler.get_output(output_id="invalid output", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("You cannot get the required output", response)
 
     def test_get_source(self):
+        Utils.start_contest()
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
         Database.add_source("sourceid", "inputid", "/path", 42)
 
-        res = self.handler.get_source("sourceid", "1.1.1.1")
+        res = self.handler.get_source(source_id="sourceid", _ip="1.1.1.1")
         self.assertEqual("sourceid", res["id"])
 
     def test_get_source_invalid_id(self):
+        Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_source("invalid source", "1.1.1.1")
+            self.handler.get_source(source_id="invalid source", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("You cannot get the required source", response)
 
     def test_get_submission(self):
+        Utils.start_contest()
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
@@ -93,7 +100,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_source("sourceid", "inputid", "/path", 42)
         Database.add_submission("subid", "inputid", "outputid", "sourceid", 42)
 
-        res = self.handler.get_submission("subid", "1.1.1.1")
+        res = self.handler.get_submission(submission_id="subid", _ip="1.1.1.1")
         self.assertEqual("subid", res["id"])
         self.assertEqual("inputid", res["input"]["id"])
         self.assertEqual("outputid", res["output"]["id"])
@@ -101,22 +108,23 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual(42, res["feedback"])
 
     def test_get_submission_invalid_id(self):
+        Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_submission("invalid submission", "1.1.1.1")
+            self.handler.get_submission(submission_id="invalid submission", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("You cannot get the required submission", response)
 
     def test_get_user_invalid_token(self):
+        Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_user("invalid token", "1.1.1.1")
+            self.handler.get_user(token="invalid token", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("Invalid login", response)
 
     def test_get_user(self):
-        Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - 100))
-        Database.set_meta("contest_duration", 200)
+        Utils.start_contest(since=100, duration=200)
         Database.set_meta("extra_time", 50)
         Database.add_user("token", "", "")
         Database.set_extra_time("token", 30)
@@ -125,22 +133,22 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
         Database.set_user_attempt("token", "poldo", 1)
 
-        res = self.handler.get_user("token", "1.1.1.1")
+        res = self.handler.get_user(token="token", _ip="1.1.1.1")
         self.assertEqual(180, res["remaining_time"])
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
         self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
 
     def test_get_user_no_current_attempt(self):
-        Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - 100))
-        Database.set_meta("contest_duration", 200)
+        Utils.start_contest(since=100, duration=200)
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_user_task("token", "poldo")
 
-        res = self.handler.get_user("token", "1.1.1.1")
+        res = self.handler.get_user(token="token", _ip="1.1.1.1")
         self.assertEqual(None, res["tasks"]["poldo"]["current_input"])
 
     def test_get_submissions(self):
+        Utils.start_contest()
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
@@ -148,27 +156,30 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_source("sourceid", "inputid", "/path", 42)
         Database.add_submission("subid", "inputid", "outputid", "sourceid", 42)
 
-        res = self.handler.get_submissions("token", "poldo", "1.1.1.1")
+        res = self.handler.get_submissions(token="token", task="poldo", _ip="1.1.1.1")
         self.assertEqual(1, len(res["items"]))
         self.assertEqual("subid", res["items"][0]["id"])
 
     def test_get_submissions_invalid_token(self):
+        Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_submissions("invalid token", "poldo", "1.1.1.1")
+            self.handler.get_submissions(token="invalid token", task="poldo", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("Invalid login", response)
 
     def test_get_submissions_invalid_task(self):
+        Utils.start_contest()
         Database.add_user("token", "", "")
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_submissions("token", "invalid task", "1.1.1.1")
+            self.handler.get_submissions(token="token", task="invalid task", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("Invalid task", response)
 
     @patch("src.handlers.info_handler.InfoHandler.patch_output", return_value={"id":"outputid"})
     def test_patch_submission(self, mock):
+        Utils.start_contest()
         submission = {
             "id": "subid",
             "nested_item": 42,
@@ -182,6 +193,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual("outputid", res["output"]["id"])
 
     def test_patch_output(self):
+        Utils.start_contest()
         output = {
             "id": "outputid",
             "date": 1234,

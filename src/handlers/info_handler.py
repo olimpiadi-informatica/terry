@@ -35,11 +35,12 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    def get_input(self, id:str, _ip):
+    @BaseHandler.during_contest
+    def get_input(self, *, input_id:str, _ip):
         """
         GET /input/<id>
         """
-        input_file = Database.get_input(id=id)
+        input_file = Database.get_input(id=input_id)
         if not input_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
 
@@ -48,11 +49,12 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(input_file)
 
-    def get_output(self, id:str, _ip):
+    @BaseHandler.during_contest
+    def get_output(self, *, output_id:str, _ip):
         """
         GET /output/<id>
         """
-        output_file = Database.get_output(id=id)
+        output_file = Database.get_output(id=output_id)
         if not output_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required output")
 
@@ -62,11 +64,12 @@ class InfoHandler(BaseHandler):
 
         return InfoHandler.patch_output(output_file)
 
-    def get_source(self, id:str, _ip):
+    @BaseHandler.during_contest
+    def get_source(self, *, source_id:str, _ip):
         """
         GET /source/<id>
         """
-        source_file = Database.get_source(id=id)
+        source_file = Database.get_source(id=source_id)
         if not source_file:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required source")
 
@@ -76,11 +79,12 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(source_file)
 
-    def get_submission(self, id:str, _ip):
+    @BaseHandler.during_contest
+    def get_submission(self, *, submission_id:str, _ip):
         """
         GET /submission/<id>
         """
-        submission = Database.get_submission(id)
+        submission = Database.get_submission(submission_id)
         if not submission:
             self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
 
@@ -89,7 +93,8 @@ class InfoHandler(BaseHandler):
 
         return InfoHandler.patch_submission(submission)
 
-    def get_user(self, token:str, _ip):
+    @BaseHandler.during_contest
+    def get_user(self, *, token:str, _ip):
         """
         GET /user/<token>
         """
@@ -125,7 +130,8 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date"])
 
-    def get_submissions(self, token:str, task:str, _ip):
+    @BaseHandler.during_contest
+    def get_submissions(self, *, token:str, task:str, _ip):
         """
         GET /user/<token>/submissions/<task>
         """

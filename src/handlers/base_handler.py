@@ -8,9 +8,11 @@
 
 import inspect
 import json
+import traceback
 from datetime import datetime
+from functools import wraps
 
-from werkzeug.exceptions import HTTPException, BadRequest
+from werkzeug.exceptions import HTTPException, BadRequest, Forbidden
 from werkzeug.wrappers import Response
 
 from ..config import Config
@@ -86,6 +88,8 @@ class BaseHandler:
         contest_duration = Database.get_meta('contest_duration', type=int, default=0)
         contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
         now = int(datetime.now().timestamp())
+        if user_extra_time is None:
+            user_extra_time = 0
 
         return start + contest_duration - now + contest_extra_time + user_extra_time
 
@@ -205,3 +209,50 @@ class BaseHandler:
         if num_proxies == 0 or len(request.access_route) < num_proxies:
             return request.remote_addr
         return request.access_route[-num_proxies]
+
+    @staticmethod
+    def during_contest(handler):
+        @wraps(handler)
+        def handle(*args, **kwargs):
+            token = BaseHandler.guess_token(**kwargs)
+            BaseHandler.ensure_contest_running(token)
+            return handler(*args, **kwargs)
+
+        return handle
+
+    @staticmethod
+    def guess_token(**kwargs):
+        if "token" in kwargs:
+            return kwargs["token"]
+        elif "input_id" in kwargs:
+            input = Database.get_input(kwargs["input_id"])
+            if input: return input["token"]
+        elif "output_id" in kwargs:
+            output = Database.get_output(kwargs["output_id"])
+            if output:
+                input = Database.get_input(output["input"])
+                if input: return input["token"]
+        elif "source_id" in kwargs:
+            source = Database.get_source(kwargs["source_id"])
+            if source:
+                input = Database.get_input(source["input"])
+                if input: return input["token"]
+        elif "submission_id" in kwargs:
+            submission = Database.get_submission(kwargs["submission_id"])
+            if submission: return submission["token"]
+        else:
+            print("I cannot guess the token from these kwargs", kwargs)
+            traceback.print_tb()
+        return None
+
+    @staticmethod
+    def ensure_contest_running(token=None):
+        extra_time = None
+        if token:
+            user = Database.get_user(token)
+            if user:
+                extra_time = user["extra_time"]
+        if Database.get_meta("start_time") is None:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has not started yet")
+        if BaseHandler._get_remaining_time(extra_time) < 0:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
