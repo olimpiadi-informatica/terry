@@ -89,14 +89,6 @@ class Validators:
         return Validators.validate_id("task", "task", Database.get_task)(handler)
 
     @staticmethod
-    def validate_presence(name, type):
-        def closure(handler):
-            BaseHandler.initialize_request_params(handler)
-            BaseHandler.add_request_param(handler, name, type)
-            return handler
-        return closure
-
-    @staticmethod
     def _guess_token(**kwargs):
         if "token" in kwargs:
             return kwargs["token"]
@@ -145,12 +137,3 @@ class Validators:
         else:
             if Database.register_admin_ip(ip):
                 Logger.warning("LOGIN_ADMIN", "An admin has connected from a new ip: %s" % ip)
-
-    @staticmethod
-    def _validate_id(param, name, getter, kwargs):
-        if param not in kwargs:
-            BaseHandler.raise_exc(BadRequest, "MISSING_PARAMETER", "You need to provide " + param)
-        thing = getter(kwargs[param])
-        if thing is None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such " + name)
-        kwargs[name] = thing

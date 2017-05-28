@@ -220,8 +220,6 @@ class BaseHandler:
         sign = inspect.signature(handle).parameters
 
         for name in sign:
-            if name == "self":
-                continue
             type = sign[name].annotation if sign[name].annotation is not inspect._empty else None
             req = sign[name].default == inspect._empty
 
