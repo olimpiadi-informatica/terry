@@ -30,6 +30,8 @@ class Validators:
     def admin_only(handler):
         @wraps(handler)
         def handle(*args, **kwargs):
+            if "admin_token" not in kwargs:
+                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "You need to provide admin_token")
             admin_token = kwargs["admin_token"]
             ip = kwargs["_ip"]
             Validators._validate_admin_token(admin_token, ip)
@@ -89,6 +91,8 @@ class Validators:
         @wraps(handler)
         def handle(*args, **kwargs):
             token = Validators._guess_token(**kwargs)
+            if "_ip" not in kwargs:
+                BaseHandler.raise_exc(BadRequest, "INVALID_CONNECTION", "Your ip cannot be detected")
             ip = kwargs["_ip"]
             if token is not None and Database.get_user(token) is not None:
                 Database.register_ip(token,  ip)
