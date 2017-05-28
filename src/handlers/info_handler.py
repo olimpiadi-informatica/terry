@@ -17,7 +17,7 @@ from datetime import datetime
 
 class InfoHandler(BaseHandler):
 
-    def get_contest(self, **kwargs):
+    def get_contest(self):
         """
         GET /contest
         """
@@ -35,54 +35,49 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_input_id
-    def get_input(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    def get_input(self, input):
         """
         GET /input/<input_id>
         """
-        input_file = kwargs["input"]
-        return BaseHandler.format_dates(input_file)
+        return BaseHandler.format_dates(input)
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_output_id
-    def get_output(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_output_id
+    def get_output(self, output):
         """
         GET /output/<output_id>
         """
-        output_file = kwargs["output"]
-        return InfoHandler.patch_output(output_file)
+        return InfoHandler.patch_output(output)
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_source_id
-    def get_source(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_source_id
+    def get_source(self, source):
         """
         GET /source/<source_id>
         """
-        source_file = kwargs["source"]
-        return BaseHandler.format_dates(source_file)
+        return BaseHandler.format_dates(source)
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_submission_id
-    def get_submission(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_submission_id
+    def get_submission(self, submission):
         """
         GET /submission/<submission_id>
         """
-        submission = kwargs["submission"]
         return InfoHandler.patch_submission(submission)
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_token
-    def get_user(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    def get_user(self, user):
         """
         GET /user/<token>
         """
-        user = kwargs["user"]
         token = user["token"]
 
         user["remaining_time"] = InfoHandler.get_remaining_time(user["extra_time"])
@@ -110,18 +105,16 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date"])
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_token
-    @Validators.valid_task
-    def get_submissions(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    @Validators.validate_task
+    def get_submissions(self, user, task):
         """
         GET /user/<token>/submissions/<task>
         """
-        task = kwargs["task"]
-
         submissions = []
-        for sub in Database.get_submissions(kwargs["token"], task["name"]):
+        for sub in Database.get_submissions(user["token"], task["name"]):
             submissions.append(InfoHandler.patch_submission(sub))
         return { "items": submissions }
 

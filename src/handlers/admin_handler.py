@@ -22,8 +22,8 @@ from werkzeug.exceptions import Forbidden, BadRequest
 
 class AdminHandler(BaseHandler):
 
-    @Validators.admin_only
-    def extract(self, *, filename:str, password:str, **kwargs):
+    @Validators.validate_admin_only
+    def extract(self, filename:str, password:str):
         """
         POST /admin/extract
         """
@@ -43,8 +43,8 @@ class AdminHandler(BaseHandler):
         ContestManager.start()
         return {}
 
-    @Validators.admin_only
-    def log(self, *, start_date:str, end_date:str, level:str, category:str=None, **kwargs):
+    @Validators.validate_admin_only
+    def log(self, start_date:str, end_date:str, level:str, category:str=None):
         """
         POST /admin/log
         """
@@ -58,8 +58,8 @@ class AdminHandler(BaseHandler):
             "items": Logger.get_logs(level, category, start_date, end_date)
         })
 
-    @Validators.admin_only
-    def start(self, **kwargs):
+    @Validators.validate_admin_only
+    def start(self):
         """
         POST /admin/start
         """
@@ -73,8 +73,8 @@ class AdminHandler(BaseHandler):
             fields=["start_time"]
         )
 
-    @Validators.admin_only
-    def set_extra_time(self, *, extra_time:int, token:str=None, **kwargs):
+    @Validators.validate_admin_only
+    def set_extra_time(self, extra_time:int, token:str=None):
         """
         POST /admin/set_extra_time
         """
@@ -86,8 +86,8 @@ class AdminHandler(BaseHandler):
             Database.set_extra_time(token, extra_time)
         return {}
 
-    @Validators.admin_only
-    def status(self, **kwargs):
+    @Validators.validate_admin_only
+    def status(self):
         """
         POST /admin/status
         """
@@ -102,8 +102,8 @@ class AdminHandler(BaseHandler):
             "loaded": ContestManager.has_contest
         }, fields=["start_time"])
 
-    @Validators.admin_only
-    def user_list(self, **kwargs):
+    @Validators.validate_admin_only
+    def user_list(self):
         """
         POST /admin/user_list
         """

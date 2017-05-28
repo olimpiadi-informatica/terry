@@ -12,20 +12,17 @@ from .base_handler import BaseHandler
 from ..database import Database
 from ..storage_manager import StorageManager
 from ..contest_manager import ContestManager
-from werkzeug.exceptions import Forbidden
 
 
 class UploadHandler(BaseHandler):
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_input_id
-    def upload_output(self, *, _file_content, _file_name, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    def upload_output(self, input, _file_content, _file_name):
         """
         POST /upload_output
         """
-        input = kwargs["input"]
-
         output_id = Database.gen_id()
         path = StorageManager.new_output_file(output_id, _file_name)
 
@@ -37,15 +34,13 @@ class UploadHandler(BaseHandler):
         Database.add_output(output_id, input["id"], path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_input_id
-    def upload_source(self, *, _file_content, _file_name, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    def upload_source(self, input, _file_content, _file_name):
         """
         POST /upload_source
         """
-        input = kwargs["input"]
-
         source_id = Database.gen_id()
         path = StorageManager.new_source_file(source_id, _file_name)
 

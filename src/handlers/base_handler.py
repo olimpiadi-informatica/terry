@@ -124,8 +124,9 @@ class BaseHandler:
         :param request: Request object
         :return: The return value of method
         """
-        sign = inspect.signature(method).parameters
-        kwargs = {
+        kwargs = {}
+        params = method.request_params if hasattr(method, "request_params") else BaseHandler.get_request_params(method)
+        general_attrs = {
             '_request': request,
             '_route_args': route_args,
             '_file_content': BaseHandler._get_file_content(request),
@@ -135,25 +136,23 @@ class BaseHandler:
 
         missing_parameters = []
 
-        for key,value in request.form.items():
-            if key[0] != "_": kwargs[key] = value
-        for key,value in route_args.items():
-            if key[0] != "_": kwargs[key] = value
-
-        for attr_name in sign:
-            if attr_name not in kwargs and attr_name != "kwargs":
-                if sign[attr_name].default is inspect._empty:
-                    missing_parameters.append(attr_name)
+        for name, data in params.items():
+            if name in route_args:
+                kwargs[name] = route_args[name]
+            elif name in request.form:
+                kwargs[name] = request.form[name]
+            elif name in general_attrs:
+                kwargs[name] = general_attrs[name]
+            elif data["required"]:
+                missing_parameters.append(name)
 
         if len(missing_parameters) > 0:
             BaseHandler.raise_exc(BadRequest, "MISSING_PARAMETERS",
                                   "The missing parameters are: " + ", ".join(missing_parameters))
 
         for key, value in kwargs.items():
-            if key not in sign: continue
-            type = sign[key].annotation
-            if type is inspect._empty: continue
-
+            type = params[key]["type"]
+            if type is None: continue
             try:
                 kwargs[key] = type(value)
             except ValueError:
@@ -163,7 +162,7 @@ class BaseHandler:
             "HTTP",
             "Received request from %s for endpoint %s%s" %
             (
-                kwargs['_ip'],
+                general_attrs['_ip'],
                 method.__name__,
                 ", with parameters " + ", ".join(
                         "=".join((kv[0], str(kv[1]))) for kv in kwargs.items()
@@ -207,3 +206,35 @@ class BaseHandler:
         if num_proxies == 0 or len(request.access_route) < num_proxies:
             return request.remote_addr
         return request.access_route[-num_proxies]
+
+    # TODO move this code somewhere else
+    @staticmethod
+    def initialize_request_params(handle):
+        if not hasattr(handle, "request_params"):
+            handle.request_params = BaseHandler.get_request_params(handle)
+        return handle
+
+    @staticmethod
+    def get_request_params(handle):
+        params = {}
+        sign = inspect.signature(handle).parameters
+
+        for name in sign:
+            if name == "self":
+                continue
+            type = sign[name].annotation if sign[name].annotation is not inspect._empty else None
+            req = sign[name].default == inspect._empty
+
+            params[name] = {
+                "type": type,
+                "required": req
+            }
+        return params
+
+    @staticmethod
+    def add_request_param(handle, param, type, required=True):
+        handle.request_params[param] = {
+            "type": type,
+            "required": required
+        }
+        return handle

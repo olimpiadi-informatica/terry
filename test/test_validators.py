@@ -25,41 +25,41 @@ class TestValidators(unittest.TestCase):
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001 # disable the logs
 
-    @Validators.during_contest
-    def only_during_contest(self, **kwargs):
-        return kwargs
+    @Validators.validate_during_contest
+    def only_during_contest(self, token=None):
+        pass
 
-    @Validators.admin_only
-    def admin_only(self, **kwargs):
-        return kwargs
+    @Validators.validate_admin_only
+    def admin_only(self):
+        pass
 
-    @Validators.valid_input_id
-    def valid_input_id(self, **kwargs):
-        return kwargs
+    @Validators.validate_input_id
+    def valid_input_id(self, input):
+        return input
 
-    @Validators.valid_output_id
-    def valid_output_id(self, **kwargs):
-        return kwargs
+    @Validators.validate_output_id
+    def valid_output_id(self, output):
+        return output
 
-    @Validators.valid_source_id
-    def valid_source_id(self, **kwargs):
-        return kwargs
+    @Validators.validate_source_id
+    def valid_source_id(self, source):
+        return source
 
-    @Validators.valid_submission_id
-    def valid_submission_id(self, **kwargs):
-        return kwargs
+    @Validators.validate_submission_id
+    def valid_submission_id(self, submission):
+        return submission
 
-    @Validators.valid_token
-    def valid_token(self, **kwargs):
-        return kwargs
+    @Validators.validate_token
+    def valid_token(self, user):
+        return user
 
-    @Validators.valid_task
-    def valid_task(self, **kwargs):
-        return kwargs
+    @Validators.validate_task
+    def valid_task(self, task):
+        return task
 
-    @Validators.register_ip
-    def register_ip(self, **kwargs):
-        return kwargs
+    @Validators.register_user_ip
+    def register_ip(self, token=None, input_id=None, output_id=None, source_id=None, submission_id=None):
+        pass
 
     def test_during_contest_not_started(self):
         with self.assertRaises(Forbidden):
@@ -76,18 +76,10 @@ class TestValidators(unittest.TestCase):
         Database.set_extra_time("token", 100)
         self.only_during_contest(token="token")
 
-    def test_admin_only_without_token(self):
-        with self.assertRaises(Forbidden):
-            self.admin_only()
-
     def test_admin_only(self):
         Utils.prepare_test()
         Logger.set_log_level(9001)
         self.admin_only(admin_token=Config.admin_token, _ip="1.1.1.1")
-
-    def test_valid_input_id_missing_parameter(self):
-        with self.assertRaises(BadRequest):
-            self.valid_input_id()
 
     def test_valid_input_id_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -95,12 +87,8 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_input_id(self):
         self._insert_data()
-        kwargs = self.valid_input_id(input_id="inputid")
-        self.assertIn("input", kwargs)
-
-    def test_valid_output_id_missing_parameter(self):
-        with self.assertRaises(BadRequest):
-            self.valid_output_id()
+        input = self.valid_input_id(input_id="inputid")
+        self.assertEqual("inputid", input["id"])
 
     def test_valid_output_id_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -108,12 +96,8 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_output_id(self):
         self._insert_data()
-        kwargs = self.valid_output_id(output_id="outputid")
-        self.assertIn("output", kwargs)
-
-    def test_valid_source_id_missing_parameter(self):
-        with self.assertRaises(BadRequest):
-            self.valid_source_id()
+        output = self.valid_output_id(output_id="outputid")
+        self.assertEqual("outputid", output["id"])
 
     def test_valid_source_id_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -121,12 +105,8 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_source_id(self):
         self._insert_data()
-        kwargs = self.valid_source_id(source_id="sourceid")
-        self.assertIn("source", kwargs)
-
-    def test_valid_submission_id_missing_parameter(self):
-        with self.assertRaises(BadRequest):
-            self.valid_submission_id()
+        source = self.valid_source_id(source_id="sourceid")
+        self.assertEqual("sourceid", source["id"])
 
     def test_valid_submission_id_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -135,12 +115,8 @@ class TestValidators(unittest.TestCase):
     def test_valid_submission_id(self):
         self._insert_data()
         Database.add_submission("submissionid", "inputid", "outputid", "sourceid", 42)
-        kwargs = self.valid_submission_id(submission_id="submissionid")
-        self.assertIn("submission", kwargs)
-
-    def test_valid_token_missing_parameter(self):
-        with self.assertRaises(BadRequest):
-            self.valid_token()
+        submission = self.valid_submission_id(submission_id="submissionid")
+        self.assertEqual("submissionid", submission["id"])
 
     def test_valid_token_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -148,12 +124,8 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_token(self):
         self._insert_data()
-        kwargs = self.valid_token(token="token")
-        self.assertIn("user", kwargs)
-
-    def test_valid_task_missing_parameter(self):
-        with self.assertRaises(BadRequest):
-            self.valid_task()
+        user = self.valid_token(token="token")
+        self.assertEqual("token", user["token"])
 
     def test_valid_task_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -161,12 +133,8 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_task(self):
         self._insert_data()
-        kwargs = self.valid_task(task="poldo")
-        self.assertIn("task", kwargs)
-
-    def test_register_ip_undetectable(self):
-        with self.assertRaises(BadRequest):
-            self.register_ip()
+        task = self.valid_task(task="poldo")
+        self.assertEqual("poldo", task["name"])
 
     def test_register_ip_token(self):
         self._insert_data()

@@ -4,9 +4,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-import traceback
-from functools import wraps
-
 from werkzeug.exceptions import BadRequest, Forbidden
 
 from src.config import Config
@@ -16,88 +13,88 @@ from .handlers.base_handler import BaseHandler
 
 
 class Validators:
+
     @staticmethod
-    def during_contest(handler):
-        @wraps(handler)
+    def validate_during_contest(handler):
         def handle(*args, **kwargs):
             token = Validators._guess_token(**kwargs)
             Validators._ensure_contest_running(token)
             return handler(*args, **kwargs)
-
-        return handle
+        return BaseHandler.initialize_request_params(handle)
 
     @staticmethod
-    def admin_only(handler):
-        @wraps(handler)
+    def validate_admin_only(handler):
         def handle(*args, **kwargs):
-            if "admin_token" not in kwargs:
-                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "You need to provide admin_token")
             admin_token = kwargs["admin_token"]
             ip = kwargs["_ip"]
             Validators._validate_admin_token(admin_token, ip)
+            del kwargs["admin_token"]
+            del kwargs["_ip"]
             return handler(*args, **kwargs)
+        BaseHandler.initialize_request_params(handle)
+        BaseHandler.add_request_param(handle, "admin_token", str)
+        BaseHandler.add_request_param(handle, "_ip", str)
         return handle
 
     @staticmethod
-    def valid_input_id(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            Validators._validate_id("input_id", "input", Database.get_input, kwargs)
-            return handler(*args, **kwargs)
-        return handle
-
-    @staticmethod
-    def valid_output_id(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            Validators._validate_id("output_id", "output", Database.get_output, kwargs)
-            return handler(*args, **kwargs)
-        return handle
-
-    @staticmethod
-    def valid_source_id(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            Validators._validate_id("source_id", "source", Database.get_source, kwargs)
-            return handler(*args, **kwargs)
-        return handle
-
-    @staticmethod
-    def valid_submission_id(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            Validators._validate_id("submission_id", "submission", Database.get_submission, kwargs)
-            return handler(*args, **kwargs)
-        return handle
-
-    @staticmethod
-    def valid_token(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            Validators._validate_id("token", "user", Database.get_user, kwargs)
-            return handler(*args, **kwargs)
-        return handle
-
-    @staticmethod
-    def valid_task(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            Validators._validate_id("task", "task", Database.get_task, kwargs)
-            return handler(*args, **kwargs)
-        return handle
-
-    @staticmethod
-    def register_ip(handler):
-        @wraps(handler)
+    def register_user_ip(handler):
         def handle(*args, **kwargs):
             token = Validators._guess_token(**kwargs)
-            if "_ip" not in kwargs:
-                BaseHandler.raise_exc(BadRequest, "INVALID_CONNECTION", "Your ip cannot be detected")
             ip = kwargs["_ip"]
             if token is not None and Database.get_user(token) is not None:
-                Database.register_ip(token,  ip)
+                Database.register_ip(token, ip)
+            del kwargs["_ip"]
             return handler(*args, **kwargs)
+        BaseHandler.initialize_request_params(handle)
+        BaseHandler.add_request_param(handle, "_ip", str)
         return handle
+
+    @staticmethod
+    def validate_id(param, name, getter):
+        def closure(handler):
+            def handle(*args, **kwargs):
+                thing = getter(kwargs[param])
+                if thing is None:
+                    BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such " + name)
+                del kwargs[param]
+                kwargs[name] = thing
+                return handler(*args, **kwargs)
+            BaseHandler.initialize_request_params(handle)
+            BaseHandler.add_request_param(handle, param, str)
+            return handle
+        return closure
+
+    @staticmethod
+    def validate_input_id(handler):
+        return Validators.validate_id("input_id", "input", Database.get_input)(handler)
+
+    @staticmethod
+    def validate_output_id(handler):
+        return Validators.validate_id("output_id", "output", Database.get_output)(handler)
+
+    @staticmethod
+    def validate_source_id(handler):
+        return Validators.validate_id("source_id", "source", Database.get_source)(handler)
+
+    @staticmethod
+    def validate_submission_id(handler):
+        return Validators.validate_id("submission_id", "submission", Database.get_submission)(handler)
+
+    @staticmethod
+    def validate_token(handler):
+        return Validators.validate_id("token", "user", Database.get_user)(handler)
+
+    @staticmethod
+    def validate_task(handler):
+        return Validators.validate_id("task", "task", Database.get_task)(handler)
+
+    @staticmethod
+    def validate_presence(name, type):
+        def closure(handler):
+            BaseHandler.initialize_request_params(handler)
+            BaseHandler.add_request_param(handler, name, type)
+            return handler
+        return closure
 
     @staticmethod
     def _guess_token(**kwargs):

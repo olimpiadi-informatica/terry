@@ -33,15 +33,15 @@ class ContestHandler(BaseHandler):
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_token
-    @Validators.valid_task
-    def generate_input(self, *, token, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    @Validators.validate_task
+    def generate_input(self, task, user):
         """
         POST /generate_input
         """
-        task = kwargs["task"]
+        token = user["token"]
         if Database.get_user_task(token, task["name"])["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
 
@@ -59,16 +59,14 @@ class ContestHandler(BaseHandler):
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    @Validators.during_contest
-    @Validators.register_ip
-    @Validators.valid_output_id
-    @Validators.valid_source_id
-    def submit(self, **kwargs):
+    @Validators.validate_during_contest
+    @Validators.register_user_ip
+    @Validators.validate_output_id
+    @Validators.validate_source_id
+    def submit(self, output, source):
         """
         POST /submit
         """
-        output = kwargs["output"]
-        source = kwargs["source"]
         input = Database.get_input(output["input"])
         if input is None:
             Logger.warning("DB_CONSISTENCY_ERROR", "Input %s not found in the db" % output["input"])

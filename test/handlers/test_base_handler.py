@@ -41,11 +41,13 @@ class TestBaseHandler(unittest.TestCase):
         self.assertEqual("Ex message", data["message"])
 
     class DummyHandler(BaseHandler):
-        def dummy_endpoint(self, *, param:int=123, **kwargs):
+        def dummy_endpoint(self, param:int=123):
             return {"incremented": param+1}
-        def required(self, *, param, **kwargs):
+
+        def required(self, param):
             self.raise_exc(Forbidden, 'NOBUONO', 'nononono')
-        def myip(self, *, _ip, **kwargs):
+
+        def myip(self, _ip):
             return _ip
 
     @patch('src.handlers.base_handler.BaseHandler._call', return_value={'foo': 'bar'})
