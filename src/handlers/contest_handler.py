@@ -32,7 +32,8 @@ class ContestHandler(BaseHandler):
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
-    def generate_input(self, token:str, task:str, _ip):
+    @BaseHandler.during_contest
+    def generate_input(self, *, token:str, task:str, _ip):
         """
         POST /generate_input
         """
@@ -59,15 +60,16 @@ class ContestHandler(BaseHandler):
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    def submit(self, output:str, source:str, _ip):
+    @BaseHandler.during_contest
+    def submit(self, *, output_id:str, source_id:str, _ip):
         """
         POST /submit
         """
 
-        output = Database.get_output(output)
+        output = Database.get_output(output_id)
         if output is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such output file")
-        source = Database.get_source(source)
+        source = Database.get_source(source_id)
         if source is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
 

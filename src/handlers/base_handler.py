@@ -242,7 +242,7 @@ class BaseHandler:
             if submission: return submission["token"]
         else:
             print("I cannot guess the token from these kwargs", kwargs)
-            traceback.print_tb()
+            traceback.print_stack()
         return None
 
     @staticmethod
