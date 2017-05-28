@@ -134,11 +134,17 @@ class TestAdminHandler(unittest.TestCase):
 
         self.assertEqual(start_time, Database.get_meta('start_time', type=int))
 
-    def test_set_extra_time_invalid_token(self):
+    def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.set_extra_time(admin_token='invalid token', extra_time=None, _ip=None)
 
         self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+
+    def test_set_extra_time_invalid_token(self):
+        with self.assertRaises(Forbidden) as ex:
+            self.admin_handler.set_extra_time(admin_token='admin token', extra_time=42, token="foobar", _ip=None)
+
+        self.assertIn("No such user", ex.exception.response.data.decode())
 
     def test_set_extra_time_global(self):
         self.admin_handler.set_extra_time(admin_token='admin token', extra_time=42, _ip='1.2.3.4')
