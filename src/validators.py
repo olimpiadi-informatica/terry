@@ -115,9 +115,6 @@ class Validators:
         elif "submission_id" in kwargs:
             submission = Database.get_submission(kwargs["submission_id"])
             if submission: return submission["token"]
-        else:
-            print("I cannot guess the token from these kwargs", kwargs)
-            traceback.print_stack()
         return None
 
     @staticmethod
