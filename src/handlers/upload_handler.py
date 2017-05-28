@@ -5,7 +5,7 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
-
+from ..validators import Validators
 from .info_handler import InfoHandler
 from .base_handler import BaseHandler
 
@@ -17,14 +17,14 @@ from werkzeug.exceptions import Forbidden
 
 class UploadHandler(BaseHandler):
 
-    @BaseHandler.during_contest
-    def upload_output(self, *, input_id, _ip, _file_content, _file_name, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_input_id
+    def upload_output(self, *, _file_content, _file_name, **kwargs):
         """
         POST /upload_output
         """
-        input = Database.get_input(input_id)
-        if input is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
+        input = kwargs["input"]
 
         output_id = Database.gen_id()
         path = StorageManager.new_output_file(output_id, _file_name)
@@ -32,28 +32,23 @@ class UploadHandler(BaseHandler):
         StorageManager.save_file(path, _file_content)
         file_size = StorageManager.get_file_size(path)
 
-        token = input["token"]
-        Database.register_ip(token, _ip)
-
         result = ContestManager.evaluate_output(input["task"], input["path"], path)
 
         Database.add_output(output_id, input["id"], path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    @BaseHandler.during_contest
-    def upload_source(self, *, input_id, _ip, _file_content, _file_name, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_input_id
+    def upload_source(self, *, _file_content, _file_name, **kwargs):
         """
         POST /upload_source
         """
-        input = Database.get_input(input_id)
-        if input is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
+        input = kwargs["input"]
 
         source_id = Database.gen_id()
-        token = input["token"]
-        Database.register_ip(token, _ip)
-
         path = StorageManager.new_source_file(source_id, _file_name)
+
         StorageManager.save_file(path, _file_content)
         file_size = StorageManager.get_file_size(path)
 

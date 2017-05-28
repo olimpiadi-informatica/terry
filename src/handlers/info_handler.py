@@ -9,10 +9,10 @@
 import json
 
 from .base_handler import BaseHandler
+from ..validators import Validators
 from ..database import Database
 
 from datetime import datetime
-from werkzeug.exceptions import Forbidden
 
 
 class InfoHandler(BaseHandler):
@@ -35,77 +35,57 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    @BaseHandler.during_contest
-    def get_input(self, *, input_id:str, _ip, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_input_id
+    def get_input(self, **kwargs):
         """
-        GET /input/<id>
+        GET /input/<input_id>
         """
-        input_file = Database.get_input(id=input_id)
-        if not input_file:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
-
-        token = input_file["token"]
-        Database.register_ip(token, _ip)
-
+        input_file = kwargs["input"]
         return BaseHandler.format_dates(input_file)
 
-    @BaseHandler.during_contest
-    def get_output(self, *, output_id:str, _ip, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_output_id
+    def get_output(self, **kwargs):
         """
-        GET /output/<id>
+        GET /output/<output_id>
         """
-        output_file = Database.get_output(id=output_id)
-        if not output_file:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required output")
-
-        input = Database.get_input(output_file["input"])
-        token = input["token"]
-        Database.register_ip(token, _ip)
-
+        output_file = kwargs["output"]
         return InfoHandler.patch_output(output_file)
 
-    @BaseHandler.during_contest
-    def get_source(self, *, source_id:str, _ip, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_source_id
+    def get_source(self, **kwargs):
         """
-        GET /source/<id>
+        GET /source/<source_id>
         """
-        source_file = Database.get_source(id=source_id)
-        if not source_file:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required source")
-
-        input = Database.get_input(source_file["input"])
-        token = input["token"]
-        Database.register_ip(token, _ip)
-
+        source_file = kwargs["source"]
         return BaseHandler.format_dates(source_file)
 
-    @BaseHandler.during_contest
-    def get_submission(self, *, submission_id:str, _ip, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_submission_id
+    def get_submission(self, **kwargs):
         """
-        GET /submission/<id>
+        GET /submission/<submission_id>
         """
-        submission = Database.get_submission(submission_id)
-        if not submission:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
-
-        token = submission["token"]
-        Database.register_ip(token, _ip)
-
+        submission = kwargs["submission"]
         return InfoHandler.patch_submission(submission)
 
-    @BaseHandler.during_contest
-    def get_user(self, *, token:str, _ip, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_token
+    def get_user(self, **kwargs):
         """
         GET /user/<token>
         """
-        user = Database.get_user(token)
-        if user is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
-
+        user = kwargs["user"]
         token = user["token"]
-        Database.register_ip(token, _ip)
 
-        user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
+        user["remaining_time"] = InfoHandler.get_remaining_time(user["extra_time"])
         del user["extra_time"]
         user["tasks"] = {}
 
@@ -130,23 +110,18 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date"])
 
-    @BaseHandler.during_contest
-    def get_submissions(self, *, token:str, task:str, _ip, **kwargs):
+    @Validators.during_contest
+    @Validators.register_ip
+    @Validators.valid_token
+    @Validators.valid_task
+    def get_submissions(self, **kwargs):
         """
         GET /user/<token>/submissions/<task>
         """
-        user = Database.get_user(token)
-        if user is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
-
-        task = Database.get_task(task)
-        if task is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid task")
-
-        Database.register_ip(token, _ip)
+        task = kwargs["task"]
 
         submissions = []
-        for sub in Database.get_submissions(token, task["name"]):
+        for sub in Database.get_submissions(kwargs["token"], task["name"]):
             submissions.append(InfoHandler.patch_submission(sub))
         return { "items": submissions }
 

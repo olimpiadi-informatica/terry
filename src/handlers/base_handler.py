@@ -8,9 +8,7 @@
 
 import inspect
 import json
-import traceback
 from datetime import datetime
-from functools import wraps
 
 from werkzeug.exceptions import HTTPException, BadRequest, Forbidden
 from werkzeug.wrappers import Response
@@ -76,7 +74,7 @@ class BaseHandler:
         return request.form
 
     @staticmethod
-    def _get_remaining_time(user_extra_time):
+    def get_remaining_time(user_extra_time):
         """
         Compute the remaining time for a user
         :param user_extra_time: Extra time specific for the user in seconds
@@ -209,77 +207,3 @@ class BaseHandler:
         if num_proxies == 0 or len(request.access_route) < num_proxies:
             return request.remote_addr
         return request.access_route[-num_proxies]
-
-    @staticmethod
-    def during_contest(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            token = BaseHandler.guess_token(**kwargs)
-            BaseHandler.ensure_contest_running(token)
-            return handler(*args, **kwargs)
-
-        return handle
-
-    @staticmethod
-    def admin_only(handler):
-        @wraps(handler)
-        def handle(*args, **kwargs):
-            admin_token = kwargs["admin_token"]
-            ip = kwargs["_ip"]
-            BaseHandler.validate_admin_token(admin_token, ip)
-            return handler(*args, **kwargs)
-
-        return handle
-
-    @staticmethod
-    def guess_token(**kwargs):
-        if "token" in kwargs:
-            return kwargs["token"]
-        elif "input_id" in kwargs:
-            input = Database.get_input(kwargs["input_id"])
-            if input: return input["token"]
-        elif "output_id" in kwargs:
-            output = Database.get_output(kwargs["output_id"])
-            if output:
-                input = Database.get_input(output["input"])
-                if input: return input["token"]
-        elif "source_id" in kwargs:
-            source = Database.get_source(kwargs["source_id"])
-            if source:
-                input = Database.get_input(source["input"])
-                if input: return input["token"]
-        elif "submission_id" in kwargs:
-            submission = Database.get_submission(kwargs["submission_id"])
-            if submission: return submission["token"]
-        else:
-            print("I cannot guess the token from these kwargs", kwargs)
-            traceback.print_stack()
-        return None
-
-    @staticmethod
-    def ensure_contest_running(token=None):
-        extra_time = None
-        if token:
-            user = Database.get_user(token)
-            if user:
-                extra_time = user["extra_time"]
-        if Database.get_meta("start_time") is None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has not started yet")
-        if BaseHandler._get_remaining_time(extra_time) < 0:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
-
-    @staticmethod
-    def validate_admin_token(token, ip):
-        """
-        Ensure the admin token is valid
-        :param token: Token to check
-        :param ip: IP of the client
-        """
-        if Config.admin_token == Config.default_values['admin_token']:
-            Logger.error("ADMIN", "Using default admin token!")
-        if token != Config.admin_token:
-            Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % ip)
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin token!")
-        else:
-            if Database.register_admin_ip(ip):
-                Logger.warning("LOGIN_ADMIN", "An admin has connected from a new ip: %s" % ip)

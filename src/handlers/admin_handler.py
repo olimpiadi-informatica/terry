@@ -15,13 +15,14 @@ from ..config import Config
 from ..logger import Logger
 from ..database import Database
 from ..contest_manager import ContestManager
+from ..validators import Validators
 
 from werkzeug.exceptions import Forbidden, BadRequest
 
 
 class AdminHandler(BaseHandler):
 
-    @BaseHandler.admin_only
+    @Validators.admin_only
     def extract(self, *, filename:str, password:str, **kwargs):
         """
         POST /admin/extract
@@ -42,7 +43,7 @@ class AdminHandler(BaseHandler):
         ContestManager.start()
         return {}
 
-    @BaseHandler.admin_only
+    @Validators.admin_only
     def log(self, *, start_date:str, end_date:str, level:str, category:str=None, **kwargs):
         """
         POST /admin/log
@@ -57,7 +58,7 @@ class AdminHandler(BaseHandler):
             "items": Logger.get_logs(level, category, start_date, end_date)
         })
 
-    @BaseHandler.admin_only
+    @Validators.admin_only
     def start(self, **kwargs):
         """
         POST /admin/start
@@ -72,25 +73,27 @@ class AdminHandler(BaseHandler):
             fields=["start_time"]
         )
 
-    @BaseHandler.admin_only
+    @Validators.admin_only
     def set_extra_time(self, *, extra_time:int, token:str=None, **kwargs):
         """
         POST /admin/set_extra_time
         """
         if token is None:
             Database.set_meta("extra_time", extra_time)
+        elif Database.get_user(token) is None:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such user")
         else:
             Database.set_extra_time(token, extra_time)
         return {}
 
-    @BaseHandler.admin_only
+    @Validators.admin_only
     def status(self, **kwargs):
         """
         POST /admin/status
         """
         start_time = Database.get_meta('start_time', type=int)
         extra_time = Database.get_meta('extra_time', type=int, default=0)
-        remaining_time = BaseHandler._get_remaining_time(0)
+        remaining_time = BaseHandler.get_remaining_time(0)
 
         return BaseHandler.format_dates({
             "start_time": start_time,
@@ -99,7 +102,7 @@ class AdminHandler(BaseHandler):
             "loaded": ContestManager.has_contest
         }, fields=["start_time"])
 
-    @BaseHandler.admin_only
+    @Validators.admin_only
     def user_list(self, **kwargs):
         """
         POST /admin/user_list

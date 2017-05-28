@@ -52,7 +52,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_input(input_id="invalid input", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("You cannot get the required input", response)
+        self.assertIn("No such input", response)
 
     def test_get_output(self):
         Database.add_user("token", "", "")
@@ -71,7 +71,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_output(output_id="invalid output", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("You cannot get the required output", response)
+        self.assertIn("No such output", response)
 
     def test_get_source(self):
         Utils.start_contest()
@@ -89,7 +89,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_source(source_id="invalid source", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("You cannot get the required source", response)
+        self.assertIn("No such source", response)
 
     def test_get_submission(self):
         Utils.start_contest()
@@ -113,7 +113,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_submission(submission_id="invalid submission", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("You cannot get the required submission", response)
+        self.assertIn("No such submission", response)
 
     def test_get_user_invalid_token(self):
         Utils.start_contest()
@@ -121,7 +121,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_user(token="invalid token", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("Invalid login", response)
+        self.assertIn("No such user", response)
 
     def test_get_user(self):
         Utils.start_contest(since=100, duration=200)
@@ -166,7 +166,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_submissions(token="invalid token", task="poldo", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("Invalid login", response)
+        self.assertIn("No such user", response)
 
     def test_get_submissions_invalid_task(self):
         Utils.start_contest()
@@ -175,7 +175,7 @@ class TestInfoHandler(unittest.TestCase):
             self.handler.get_submissions(token="token", task="invalid task", _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
-        self.assertIn("Invalid task", response)
+        self.assertIn("No such task", response)
 
     @patch("src.handlers.info_handler.InfoHandler.patch_output", return_value={"id":"outputid"})
     def test_patch_submission(self, mock):

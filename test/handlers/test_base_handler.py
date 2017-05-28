@@ -29,11 +29,6 @@ class TestBaseHandler(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
         self.handler = BaseHandler()
-        self.token_backup = Config.admin_token
-        Config.admin_token = 'admin token'
-
-        self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001 # disable the logs
 
     def test_raise_exc(self):
         with self.assertRaises(Forbidden) as ex:
@@ -88,11 +83,11 @@ class TestBaseHandler(unittest.TestCase):
         Database.set_meta("contest_duration", 150)
         Database.set_meta("extra_time", 20)
 
-        self.assertAlmostEqual(BaseHandler._get_remaining_time(20), 90, delta=1)
-        self.assertAlmostEqual(BaseHandler._get_remaining_time(0), 70, delta=1)
+        self.assertAlmostEqual(BaseHandler.get_remaining_time(20), 90, delta=1)
+        self.assertAlmostEqual(BaseHandler.get_remaining_time(0), 70, delta=1)
 
     def test_remaining_time_not_started(self):
-        self.assertIsNone(BaseHandler._get_remaining_time(0))
+        self.assertIsNone(BaseHandler.get_remaining_time(0))
 
     def test_format_dates(self):
         dct = {
@@ -258,33 +253,3 @@ class TestBaseHandler(unittest.TestCase):
 
         ip = BaseHandler.get_ip(request)
         self.assertEqual("1.2.3.4", ip)
-
-    def test_validate_token(self):
-        BaseHandler.validate_admin_token('admin token', '1.2.3.4')
-
-    def test_validate_invalid_token(self):
-        with self.assertRaises(Forbidden) as ex:
-            BaseHandler.validate_admin_token('wrong token', '1.2.3.4')
-
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
-
-        Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
-        row = Logger.c.fetchone()
-        self.assertIn("login failed", row[3])
-        self.assertIn("1.2.3.4", row[3])
-
-    def test_validate_token_log_ip(self):
-        BaseHandler.validate_admin_token('admin token', '1.2.3.4')
-
-        Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
-        row = Logger.c.fetchone()
-        self.assertIn("new ip", row[3])
-        self.assertIn("1.2.3.4", row[3])
-
-    def test_validate_token_default(self):
-        Config.admin_token = Config.default_values["admin_token"]
-        BaseHandler.validate_admin_token(Config.admin_token, '1.2.3.4')
-
-        Logger.c.execute("SELECT * FROM logs WHERE category = 'ADMIN'")
-        row = Logger.c.fetchone()
-        self.assertEqual("Using default admin token!", row[3])

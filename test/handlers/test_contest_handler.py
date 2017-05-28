@@ -115,7 +115,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.submit(output_id='invalid output', source_id='invalid source', _ip='1.1.1.1')
 
-        self.assertIn("No such output file", ex.exception.response.data.decode())
+        self.assertIn("No such output", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
@@ -129,7 +129,7 @@ class TestContestHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.handler.submit(output_id='outputid', source_id='invalid source', _ip='1.1.1.1')
 
-        self.assertIn("No such source file", ex.exception.response.data.decode())
+        self.assertIn("No such source", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
