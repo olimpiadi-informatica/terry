@@ -221,6 +221,17 @@ class BaseHandler:
         return handle
 
     @staticmethod
+    def admin_only(handler):
+        @wraps(handler)
+        def handle(*args, **kwargs):
+            admin_token = kwargs["admin_token"]
+            ip = kwargs["_ip"]
+            BaseHandler.validate_admin_token(admin_token, ip)
+            return handler(*args, **kwargs)
+
+        return handle
+
+    @staticmethod
     def guess_token(**kwargs):
         if "token" in kwargs:
             return kwargs["token"]
@@ -256,3 +267,19 @@ class BaseHandler:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has not started yet")
         if BaseHandler._get_remaining_time(extra_time) < 0:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
+
+    @staticmethod
+    def validate_admin_token(token, ip):
+        """
+        Ensure the admin token is valid
+        :param token: Token to check
+        :param ip: IP of the client
+        """
+        if Config.admin_token == Config.default_values['admin_token']:
+            Logger.error("ADMIN", "Using default admin token!")
+        if token != Config.admin_token:
+            Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % ip)
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin token!")
+        else:
+            if Database.register_admin_ip(ip):
+                Logger.warning("LOGIN_ADMIN", "An admin has connected from a new ip: %s" % ip)
