@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/algorithm-ninja/territoriali-backend.svg?branch=master)](https://travis-ci.org/algorithm-ninja/territoriali-backend)
 [![Code Climate](https://codeclimate.com/github/algorithm-ninja/territoriali-backend/badges/gpa.svg)](https://codeclimate.com/github/algorithm-ninja/territoriali-backend)
 [![Coverage Status](https://coveralls.io/repos/github/algorithm-ninja/territoriali-backend/badge.svg?branch=master)](https://coveralls.io/github/algorithm-ninja/territoriali-backend?branch=master)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![license](https://img.shields.io/github/license/algorithm-ninja/territoriali-backend.svg)]()
 
 **territoriali-backend** is a GoogleCodejam-like programming contest environment designed for the territorial phase of
 the Italian Olympiad of Informatics (OII, _Olimpiadi Italiane di Informatica_).
