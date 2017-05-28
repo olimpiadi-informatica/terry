@@ -126,9 +126,8 @@ class BaseHandler:
         :param request: Request object
         :return: The return value of method
         """
-        kwargs = {}
         sign = inspect.signature(method).parameters
-        general_attrs = {
+        kwargs = {
             '_request': request,
             '_route_args': route_args,
             '_file_content': BaseHandler._get_file_content(request),
@@ -138,21 +137,22 @@ class BaseHandler:
 
         missing_parameters = []
 
+        for key,value in request.form.items():
+            if key[0] != "_": kwargs[key] = value
+        for key,value in route_args.items():
+            if key[0] != "_": kwargs[key] = value
+
         for attr_name in sign:
-            if attr_name in route_args:
-                kwargs[attr_name] = route_args[attr_name]
-            elif attr_name in request.form:
-                kwargs[attr_name] = request.form[attr_name]
-            elif attr_name in general_attrs:
-                kwargs[attr_name] = general_attrs[attr_name]
-            elif sign[attr_name].default is inspect._empty:
-                missing_parameters.append(attr_name)
+            if attr_name not in kwargs and attr_name != "kwargs":
+                if sign[attr_name].default is inspect._empty:
+                    missing_parameters.append(attr_name)
 
         if len(missing_parameters) > 0:
             BaseHandler.raise_exc(BadRequest, "MISSING_PARAMETERS",
                                   "The missing parameters are: " + ", ".join(missing_parameters))
 
         for key, value in kwargs.items():
+            if key not in sign: continue
             type = sign[key].annotation
             if type is inspect._empty: continue
 
@@ -165,7 +165,7 @@ class BaseHandler:
             "HTTP",
             "Received request from %s for endpoint %s%s" %
             (
-                general_attrs['_ip'],
+                kwargs['_ip'],
                 method.__name__,
                 ", with parameters " + ", ".join(
                         "=".join((kv[0], str(kv[1]))) for kv in kwargs.items()

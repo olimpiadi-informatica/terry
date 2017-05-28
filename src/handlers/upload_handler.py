@@ -18,7 +18,7 @@ from werkzeug.exceptions import Forbidden
 class UploadHandler(BaseHandler):
 
     @BaseHandler.during_contest
-    def upload_output(self, *, input_id, _ip, _file_content, _file_name):
+    def upload_output(self, *, input_id, _ip, _file_content, _file_name, **kwargs):
         """
         POST /upload_output
         """
@@ -41,7 +41,7 @@ class UploadHandler(BaseHandler):
         return InfoHandler.patch_output(Database.get_output(output_id))
 
     @BaseHandler.during_contest
-    def upload_source(self, *, input_id, _ip, _file_content, _file_name):
+    def upload_source(self, *, input_id, _ip, _file_content, _file_name, **kwargs):
         """
         POST /upload_source
         """

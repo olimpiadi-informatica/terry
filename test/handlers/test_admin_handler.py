@@ -37,36 +37,6 @@ class TestAdminHandler(unittest.TestCase):
         Logger.LOG_LEVEL = self.log_backup
         Config.admin_token = self.token_backup
 
-    # def test_validate_token(self):
-    #     self.admin_handler._validate_token('admin token', '1.2.3.4')
-    #
-    # def test_validate_invalid_token(self):
-    #     with self.assertRaises(Forbidden) as ex:
-    #         self.admin_handler._validate_token('wrong token', '1.2.3.4')
-    #
-    #     self.assertIn("Invalid admin token", ex.exception.response.data.decode())
-    #
-    #     Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
-    #     row = Logger.c.fetchone()
-    #     self.assertIn("login failed", row[3])
-    #     self.assertIn("1.2.3.4", row[3])
-    #
-    # def test_validate_token_log_ip(self):
-    #     self.admin_handler._validate_token('admin token', '1.2.3.4')
-    #
-    #     Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
-    #     row = Logger.c.fetchone()
-    #     self.assertIn("new ip", row[3])
-    #     self.assertIn("1.2.3.4", row[3])
-    #
-    # def test_validate_token_default(self):
-    #     Config.admin_token = Config.default_values["admin_token"]
-    #     self.admin_handler._validate_token(Config.admin_token, '1.2.3.4')
-    #
-    #     Logger.c.execute("SELECT * FROM logs WHERE category = 'ADMIN'")
-    #     row = Logger.c.fetchone()
-    #     self.assertEqual("Using default admin token!", row[3])
-
     @patch('src.contest_manager.ContestManager.read_from_disk')
     @patch('src.contest_manager.ContestManager.start')
     def test_extract(self, start_mock, read_mock):

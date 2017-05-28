@@ -22,7 +22,7 @@ from werkzeug.exceptions import Forbidden, BadRequest
 class AdminHandler(BaseHandler):
 
     @BaseHandler.admin_only
-    def extract(self, *, admin_token:str, filename:str, password:str, _ip):
+    def extract(self, *, filename:str, password:str, **kwargs):
         """
         POST /admin/extract
         """
@@ -43,7 +43,7 @@ class AdminHandler(BaseHandler):
         return {}
 
     @BaseHandler.admin_only
-    def log(self, *, start_date:str, end_date:str, level:str, admin_token:str, category:str=None, _ip):
+    def log(self, *, start_date:str, end_date:str, level:str, category:str=None, **kwargs):
         """
         POST /admin/log
         """
@@ -58,7 +58,7 @@ class AdminHandler(BaseHandler):
         })
 
     @BaseHandler.admin_only
-    def start(self, *, admin_token:str, _ip):
+    def start(self, **kwargs):
         """
         POST /admin/start
         """
@@ -73,7 +73,7 @@ class AdminHandler(BaseHandler):
         )
 
     @BaseHandler.admin_only
-    def set_extra_time(self, *, admin_token:str, extra_time:int, _ip, token:str=None):
+    def set_extra_time(self, *, extra_time:int, token:str=None, **kwargs):
         """
         POST /admin/set_extra_time
         """
@@ -84,7 +84,7 @@ class AdminHandler(BaseHandler):
         return {}
 
     @BaseHandler.admin_only
-    def status(self, *, admin_token:str, _ip):
+    def status(self, **kwargs):
         """
         POST /admin/status
         """
@@ -100,7 +100,7 @@ class AdminHandler(BaseHandler):
         }, fields=["start_time"])
 
     @BaseHandler.admin_only
-    def user_list(self, *, admin_token:str, _ip):
+    def user_list(self, **kwargs):
         """
         POST /admin/user_list
         """

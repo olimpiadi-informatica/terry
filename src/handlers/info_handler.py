@@ -17,7 +17,7 @@ from werkzeug.exceptions import Forbidden
 
 class InfoHandler(BaseHandler):
 
-    def get_contest(self):
+    def get_contest(self, **kwargs):
         """
         GET /contest
         """
@@ -36,7 +36,7 @@ class InfoHandler(BaseHandler):
         }
 
     @BaseHandler.during_contest
-    def get_input(self, *, input_id:str, _ip):
+    def get_input(self, *, input_id:str, _ip, **kwargs):
         """
         GET /input/<id>
         """
@@ -50,7 +50,7 @@ class InfoHandler(BaseHandler):
         return BaseHandler.format_dates(input_file)
 
     @BaseHandler.during_contest
-    def get_output(self, *, output_id:str, _ip):
+    def get_output(self, *, output_id:str, _ip, **kwargs):
         """
         GET /output/<id>
         """
@@ -65,7 +65,7 @@ class InfoHandler(BaseHandler):
         return InfoHandler.patch_output(output_file)
 
     @BaseHandler.during_contest
-    def get_source(self, *, source_id:str, _ip):
+    def get_source(self, *, source_id:str, _ip, **kwargs):
         """
         GET /source/<id>
         """
@@ -80,7 +80,7 @@ class InfoHandler(BaseHandler):
         return BaseHandler.format_dates(source_file)
 
     @BaseHandler.during_contest
-    def get_submission(self, *, submission_id:str, _ip):
+    def get_submission(self, *, submission_id:str, _ip, **kwargs):
         """
         GET /submission/<id>
         """
@@ -94,7 +94,7 @@ class InfoHandler(BaseHandler):
         return InfoHandler.patch_submission(submission)
 
     @BaseHandler.during_contest
-    def get_user(self, *, token:str, _ip):
+    def get_user(self, *, token:str, _ip, **kwargs):
         """
         GET /user/<token>
         """
@@ -131,7 +131,7 @@ class InfoHandler(BaseHandler):
         return BaseHandler.format_dates(user, fields=["date"])
 
     @BaseHandler.during_contest
-    def get_submissions(self, *, token:str, task:str, _ip):
+    def get_submissions(self, *, token:str, task:str, _ip, **kwargs):
         """
         GET /user/<token>/submissions/<task>
         """

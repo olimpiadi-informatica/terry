@@ -33,7 +33,7 @@ class ContestHandler(BaseHandler):
             Database.set_user_score(token, task, score, autocommit=False)
 
     @BaseHandler.during_contest
-    def generate_input(self, *, token:str, task:str, _ip):
+    def generate_input(self, *, token:str, task:str, _ip, **kwargs):
         """
         POST /generate_input
         """
@@ -61,7 +61,7 @@ class ContestHandler(BaseHandler):
         return BaseHandler.format_dates(Database.get_input(id=id))
 
     @BaseHandler.during_contest
-    def submit(self, *, output_id:str, source_id:str, _ip):
+    def submit(self, *, output_id:str, source_id:str, _ip, **kwargs):
         """
         POST /submit
         """
