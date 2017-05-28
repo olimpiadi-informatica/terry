@@ -17,11 +17,12 @@ from werkzeug.exceptions import Forbidden
 
 class UploadHandler(BaseHandler):
 
-    def upload_output(self, input, _ip, _file_content, _file_name):
+    @BaseHandler.during_contest
+    def upload_output(self, *, input_id, _ip, _file_content, _file_name):
         """
         POST /upload_output
         """
-        input = Database.get_input(input)
+        input = Database.get_input(input_id)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
 
@@ -39,11 +40,12 @@ class UploadHandler(BaseHandler):
         Database.add_output(output_id, input["id"], path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    def upload_source(self, input, _ip, _file_content, _file_name):
+    @BaseHandler.during_contest
+    def upload_source(self, *, input_id, _ip, _file_content, _file_name):
         """
         POST /upload_source
         """
-        input = Database.get_input(input)
+        input = Database.get_input(input_id)
         if input is None:
             self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
 
