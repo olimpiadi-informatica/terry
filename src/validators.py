@@ -4,7 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-from werkzeug.exceptions import BadRequest, Forbidden
+from werkzeug.exceptions import Forbidden
 
 from src.config import Config
 from src.database import Database
@@ -20,7 +20,7 @@ class Validators:
             token = Validators._guess_token(**kwargs)
             Validators._ensure_contest_running(token)
             return handler(*args, **kwargs)
-        return BaseHandler.initialize_request_params(handle)
+        return BaseHandler.initialize_request_params(handle, handler)
 
     @staticmethod
     def validate_admin_only(handler):
@@ -31,9 +31,26 @@ class Validators:
             del kwargs["admin_token"]
             del kwargs["_ip"]
             return handler(*args, **kwargs)
-        BaseHandler.initialize_request_params(handle)
+        BaseHandler.initialize_request_params(handle, handler)
         BaseHandler.add_request_param(handle, "admin_token", str)
         BaseHandler.add_request_param(handle, "_ip", str)
+        return handle
+
+    @staticmethod
+    def validate_file(handler):
+        def handle(*args, **kwargs):
+            file = {
+                "name": kwargs["_file_name"],
+                "content": kwargs["_file_content"]
+            }
+            del kwargs["_file_name"]
+            del kwargs["_file_content"]
+            kwargs["file"] = file
+            return handler(*args, **kwargs)
+        BaseHandler.initialize_request_params(handle, handler)
+        BaseHandler.add_request_param(handle, "_file_name", None, True)
+        BaseHandler.add_request_param(handle, "_file_content", None, True)
+        del handle.request_params["file"]
         return handle
 
     @staticmethod
@@ -45,7 +62,7 @@ class Validators:
                 Database.register_ip(token, ip)
             del kwargs["_ip"]
             return handler(*args, **kwargs)
-        BaseHandler.initialize_request_params(handle)
+        BaseHandler.initialize_request_params(handle, handler)
         BaseHandler.add_request_param(handle, "_ip", str)
         return handle
 
@@ -59,8 +76,10 @@ class Validators:
                 del kwargs[param]
                 kwargs[name] = thing
                 return handler(*args, **kwargs)
-            BaseHandler.initialize_request_params(handle)
+            BaseHandler.initialize_request_params(handle, handler)
             BaseHandler.add_request_param(handle, param, str)
+            if name != param:
+                del handle.request_params[name]
             return handle
         return closure
 

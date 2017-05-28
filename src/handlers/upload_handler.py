@@ -19,14 +19,15 @@ class UploadHandler(BaseHandler):
     @Validators.validate_during_contest
     @Validators.register_user_ip
     @Validators.validate_input_id
-    def upload_output(self, input, _file_content, _file_name):
+    @Validators.validate_file
+    def upload_output(self, input, file):
         """
         POST /upload_output
         """
         output_id = Database.gen_id()
-        path = StorageManager.new_output_file(output_id, _file_name)
+        path = StorageManager.new_output_file(output_id, file["name"])
 
-        StorageManager.save_file(path, _file_content)
+        StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
         result = ContestManager.evaluate_output(input["task"], input["path"], path)
@@ -37,14 +38,15 @@ class UploadHandler(BaseHandler):
     @Validators.validate_during_contest
     @Validators.register_user_ip
     @Validators.validate_input_id
-    def upload_source(self, input, _file_content, _file_name):
+    @Validators.validate_file
+    def upload_source(self, input, file):
         """
         POST /upload_source
         """
         source_id = Database.gen_id()
-        path = StorageManager.new_source_file(source_id, _file_name)
+        path = StorageManager.new_source_file(source_id, file["name"])
 
-        StorageManager.save_file(path, _file_content)
+        StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
         Database.add_source(source_id, input["id"], path, file_size)

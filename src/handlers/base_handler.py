@@ -209,9 +209,12 @@ class BaseHandler:
 
     # TODO move this code somewhere else
     @staticmethod
-    def initialize_request_params(handle):
+    def initialize_request_params(handle, handler):
         if not hasattr(handle, "request_params"):
-            handle.request_params = BaseHandler.get_request_params(handle)
+            if hasattr(handler, "request_params"):
+                handle.request_params = handler.request_params
+            else:
+                handle.request_params = BaseHandler.get_request_params(handler)
         return handle
 
     @staticmethod
@@ -220,6 +223,7 @@ class BaseHandler:
         sign = inspect.signature(handle).parameters
 
         for name in sign:
+            if name == "self": continue
             type = sign[name].annotation if sign[name].annotation is not inspect._empty else None
             req = sign[name].default == inspect._empty
 

@@ -33,6 +33,10 @@ class TestValidators(unittest.TestCase):
     def admin_only(self):
         pass
 
+    @Validators.validate_file
+    def file(self, file):
+        return file
+
     @Validators.validate_input_id
     def valid_input_id(self, input):
         return input
@@ -80,6 +84,9 @@ class TestValidators(unittest.TestCase):
         Utils.prepare_test()
         Logger.set_log_level(9001)
         self.admin_only(admin_token=Config.admin_token, _ip="1.1.1.1")
+
+    def test_validate_file(self):
+        self.file(_file_name="foo", _file_content="bar")
 
     def test_valid_input_id_invalid_id(self):
         with self.assertRaises(Forbidden):
