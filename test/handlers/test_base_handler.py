@@ -22,6 +22,7 @@ from src.config import Config
 from src.database import Database
 from src.handlers.base_handler import BaseHandler
 from src.logger import Logger
+from src.validators import Validators
 from test.utils import Utils
 
 
@@ -52,6 +53,11 @@ class TestBaseHandler(unittest.TestCase):
 
         def file(self, file):
             return file["name"]
+
+        @Validators.validate_input_id
+        @Validators.validate_output_id
+        def with_decorators(self, input, output):
+            pass
 
     @patch('src.handlers.base_handler.BaseHandler._call', return_value={'foo': 'bar'})
     def test_handle(self, call_mock):
@@ -225,6 +231,17 @@ class TestBaseHandler(unittest.TestCase):
 
         res = handler._call(handler.file, {}, request)
         self.assertEqual("foo", res)
+
+    def test_call_with_decorators(self):
+        handler = TestBaseHandler.DummyHandler()
+        env = Environ({"wsgi.input": None})
+        request = Request(env)
+        Database.add_user("token", "", "")
+        Database.add_task("poldo", "", "", 1, 1)
+        Database.add_input("inputid", "token", "poldo", 1, "", 42)
+        Database.add_output("outputid", "inputid", "", 42, "")
+
+        handler._call(handler.with_decorators, {"input_id": "inputid", "output_id":"outputid"}, request)
 
     def test_get_file_name(self):
         request = Request(Environ())
