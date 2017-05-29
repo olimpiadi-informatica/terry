@@ -35,7 +35,7 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_input_id
     def get_input(self, input):
@@ -44,7 +44,7 @@ class InfoHandler(BaseHandler):
         """
         return BaseHandler.format_dates(input)
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_output_id
     def get_output(self, output):
@@ -53,7 +53,7 @@ class InfoHandler(BaseHandler):
         """
         return InfoHandler.patch_output(output)
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_source_id
     def get_source(self, source):
@@ -62,7 +62,7 @@ class InfoHandler(BaseHandler):
         """
         return BaseHandler.format_dates(source)
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_submission_id
     def get_submission(self, submission):
@@ -71,7 +71,7 @@ class InfoHandler(BaseHandler):
         """
         return InfoHandler.patch_submission(submission)
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_token
     def get_user(self, user):
@@ -105,7 +105,7 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date"])
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_token
     @Validators.validate_task

@@ -25,11 +25,11 @@ class TestValidators(unittest.TestCase):
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001 # disable the logs
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     def only_during_contest(self, token=None):
         pass
 
-    @Validators.validate_admin_only
+    @Validators.admin_only
     def admin_only(self):
         pass
 

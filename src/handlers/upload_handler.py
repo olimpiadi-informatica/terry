@@ -16,7 +16,7 @@ from ..contest_manager import ContestManager
 
 class UploadHandler(BaseHandler):
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_input_id
     @Validators.validate_file
@@ -35,7 +35,7 @@ class UploadHandler(BaseHandler):
         Database.add_output(output_id, input["id"], path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_input_id
     @Validators.validate_file

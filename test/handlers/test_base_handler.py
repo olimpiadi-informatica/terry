@@ -226,12 +226,6 @@ class TestBaseHandler(unittest.TestCase):
         res = handler._call(handler.file, {}, request)
         self.assertEqual("foo", res)
 
-
-
-
-
-
-
     def test_get_file_name(self):
         request = Request(Environ())
         request.files = { "file": FileStorage(filename="foo") }

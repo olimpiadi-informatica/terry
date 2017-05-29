@@ -33,7 +33,7 @@ class ContestHandler(BaseHandler):
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_token
     @Validators.validate_task
@@ -59,7 +59,7 @@ class ContestHandler(BaseHandler):
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    @Validators.validate_during_contest
+    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_output_id
     @Validators.validate_source_id

@@ -15,7 +15,12 @@ from .handlers.base_handler import BaseHandler
 class Validators:
 
     @staticmethod
-    def validate_during_contest(handler):
+    def during_contest(handler):
+        """
+        Ensure the handler is called only when the contest is running. Because the contest could end at different times
+        for each user it needs to guess the user token from the parameters. If the guess fails the user extra time is
+        ignored
+        """
         def handle(*args, **kwargs):
             token = Validators._guess_token(**kwargs)
             Validators._ensure_contest_running(token)
@@ -23,7 +28,10 @@ class Validators:
         return BaseHandler.initialize_request_params(handle, handler)
 
     @staticmethod
-    def validate_admin_only(handler):
+    def admin_only(handler):
+        """
+        Ensure the handler is called from an admin. The `admin_token` param is required
+        """
         def handle(*args, **kwargs):
             admin_token = kwargs["admin_token"]
             ip = kwargs["_ip"]
@@ -38,6 +46,11 @@ class Validators:
 
     @staticmethod
     def validate_file(handler):
+        """
+        Ensure a file is present in the request. The file must be provided in a multipart/form and the field must be
+        named "file".
+        It provides the handler with a "file" argument which is a dict with 2 properties: "name" and "content"
+        """
         def handle(*args, **kwargs):
             return handler(*args, **kwargs)
         BaseHandler.initialize_request_params(handle, handler)
@@ -46,6 +59,10 @@ class Validators:
 
     @staticmethod
     def register_user_ip(handler):
+        """
+        Guess the token from the request and log the ip of the client in the database. If the token cannot be guessed
+        nothing is logged.
+        """
         def handle(*args, **kwargs):
             token = Validators._guess_token(**kwargs)
             ip = kwargs["_ip"]
@@ -59,6 +76,11 @@ class Validators:
 
     @staticmethod
     def validate_id(param, name, getter):
+        """
+        Ensure that in the request "param" is present and it's valid. If it is present `getter` is called with the param
+        and the return values is sent to the handler as "name". If the getter returns None an error is thrown
+        It provides the handler with a `name` argument with the return value of getter.
+        """
         def closure(handler):
             def handle(*args, **kwargs):
                 thing = getter(kwargs[param])
@@ -69,6 +91,7 @@ class Validators:
                 return handler(*args, **kwargs)
             BaseHandler.initialize_request_params(handle, handler)
             BaseHandler.add_request_param(handle, param, str)
+            # the case when the name of the model corresponds with the param
             if name != param:
                 del handle.request_params[name]
             return handle
@@ -76,26 +99,44 @@ class Validators:
 
     @staticmethod
     def validate_input_id(handler):
+        """
+        Expects input_id in the request and provides input to the handler
+        """
         return Validators.validate_id("input_id", "input", Database.get_input)(handler)
 
     @staticmethod
     def validate_output_id(handler):
+        """
+        Expects output_id in the request and provides output to the handler
+        """
         return Validators.validate_id("output_id", "output", Database.get_output)(handler)
 
     @staticmethod
     def validate_source_id(handler):
+        """
+        Expects source_id in the request and provides source to the handler
+        """
         return Validators.validate_id("source_id", "source", Database.get_source)(handler)
 
     @staticmethod
     def validate_submission_id(handler):
+        """
+        Expects submission_id in the request and provides input to the handler
+        """
         return Validators.validate_id("submission_id", "submission", Database.get_submission)(handler)
 
     @staticmethod
     def validate_token(handler):
+        """
+        Expects token in the request and provides user to the handler
+        """
         return Validators.validate_id("token", "user", Database.get_user)(handler)
 
     @staticmethod
     def validate_task(handler):
+        """
+        Expects task (the name) in the request and provides task (the task) to the handler
+        """
         return Validators.validate_id("task", "task", Database.get_task)(handler)
 
     @staticmethod
