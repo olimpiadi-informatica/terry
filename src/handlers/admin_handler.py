@@ -74,16 +74,15 @@ class AdminHandler(BaseHandler):
         )
 
     @Validators.admin_only
-    def set_extra_time(self, extra_time:int, token:str=None):
+    @Validators.validate_id("token", "user", Database.get_user, required=False)
+    def set_extra_time(self, extra_time:int, user):
         """
         POST /admin/set_extra_time
         """
-        if token is None:
+        if user is None:
             Database.set_meta("extra_time", extra_time)
-        elif Database.get_user(token) is None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such user")
         else:
-            Database.set_extra_time(token, extra_time)
+            Database.set_extra_time(user["token"], extra_time)
         return {}
 
     @Validators.admin_only

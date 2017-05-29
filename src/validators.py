@@ -8,6 +8,7 @@ from werkzeug.exceptions import Forbidden
 
 from src.config import Config
 from src.database import Database
+from src.handler_params import HandlerParams
 from src.logger import Logger
 from .handlers.base_handler import BaseHandler
 
@@ -25,7 +26,7 @@ class Validators:
             token = Validators._guess_token(**kwargs)
             Validators._ensure_contest_running(token)
             return handler(*args, **kwargs)
-        return BaseHandler.initialize_request_params(handle, handler)
+        return HandlerParams.initialize_handler_params(handle, handler)
 
     @staticmethod
     def admin_only(handler):
@@ -39,9 +40,9 @@ class Validators:
             del kwargs["admin_token"]
             del kwargs["_ip"]
             return handler(*args, **kwargs)
-        BaseHandler.initialize_request_params(handle, handler)
-        BaseHandler.add_request_param(handle, "admin_token", str)
-        BaseHandler.add_request_param(handle, "_ip", str)
+        HandlerParams.initialize_handler_params(handle, handler)
+        HandlerParams.add_handler_param(handle, "admin_token", str)
+        HandlerParams.add_handler_param(handle, "_ip", str)
         return handle
 
     @staticmethod
@@ -53,8 +54,8 @@ class Validators:
         """
         def handle(*args, **kwargs):
             return handler(*args, **kwargs)
-        BaseHandler.initialize_request_params(handle, handler)
-        BaseHandler.add_request_param(handle, "file", None, True)
+        HandlerParams.initialize_handler_params(handle, handler)
+        HandlerParams.add_handler_param(handle, "file", None, True)
         return handle
 
     @staticmethod
@@ -70,12 +71,12 @@ class Validators:
                 Database.register_ip(token, ip)
             del kwargs["_ip"]
             return handler(*args, **kwargs)
-        BaseHandler.initialize_request_params(handle, handler)
-        BaseHandler.add_request_param(handle, "_ip", str)
+        HandlerParams.initialize_handler_params(handle, handler)
+        HandlerParams.add_handler_param(handle, "_ip", str)
         return handle
 
     @staticmethod
-    def validate_id(param, name, getter):
+    def validate_id(param, name, getter, required=True):
         """
         Ensure that in the request "param" is present and it's valid. If it is present `getter` is called with the param
         and the return values is sent to the handler as "name". If the getter returns None an error is thrown
@@ -83,17 +84,20 @@ class Validators:
         """
         def closure(handler):
             def handle(*args, **kwargs):
-                thing = getter(kwargs[param])
-                if thing is None:
-                    BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such " + name)
-                del kwargs[param]
+                if param in kwargs:
+                    thing = getter(kwargs[param])
+                    if thing is None:
+                        BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such " + name)
+                    del kwargs[param]
+                else:
+                    thing = None
                 kwargs[name] = thing
                 return handler(*args, **kwargs)
-            BaseHandler.initialize_request_params(handle, handler)
-            BaseHandler.add_request_param(handle, param, str)
+            HandlerParams.initialize_handler_params(handle, handler)
+            HandlerParams.add_handler_param(handle, param, str, required=required)
             # the case when the name of the model corresponds with the param
             if name != param:
-                del handle.request_params[name]
+                HandlerParams.remove_handler_param(handle, name)
             return handle
         return closure
 

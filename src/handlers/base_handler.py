@@ -6,13 +6,13 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
-import inspect
 import json
 from datetime import datetime
 
-from werkzeug.exceptions import HTTPException, BadRequest, Forbidden
+from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
 
+from ..handler_params import HandlerParams
 from ..config import Config
 from ..database import Database
 from ..logger import Logger
@@ -125,7 +125,7 @@ class BaseHandler:
         :return: The return value of method
         """
         kwargs = {}
-        params = method.request_params if hasattr(method, "request_params") else BaseHandler.get_request_params(method)
+        params = HandlerParams.get_handler_params(method)
         general_attrs = {
             '_request': request,
             '_route_args': route_args,
@@ -210,37 +210,3 @@ class BaseHandler:
         if num_proxies == 0 or len(request.access_route) < num_proxies:
             return request.remote_addr
         return request.access_route[-num_proxies]
-
-    # TODO move this code somewhere else
-    @staticmethod
-    def initialize_request_params(handle, handler):
-        if not hasattr(handle, "request_params"):
-            if hasattr(handler, "request_params"):
-                handle.request_params = handler.request_params
-            else:
-                handle.request_params = BaseHandler.get_request_params(handler)
-        return handle
-
-    @staticmethod
-    def get_request_params(handle):
-        params = {}
-        sign = inspect.signature(handle).parameters
-
-        for name in sign:
-            if name == "self": continue
-            type = sign[name].annotation if sign[name].annotation is not inspect._empty else None
-            req = sign[name].default == inspect._empty
-
-            params[name] = {
-                "type": type,
-                "required": req
-            }
-        return params
-
-    @staticmethod
-    def add_request_param(handle, param, type, required=True):
-        handle.request_params[param] = {
-            "type": type,
-            "required": required
-        }
-        return handle
