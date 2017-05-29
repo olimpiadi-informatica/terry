@@ -50,6 +50,9 @@ class TestBaseHandler(unittest.TestCase):
         def myip(self, _ip):
             return _ip
 
+        def file(self, file):
+            return file["name"]
+
     @patch('src.handlers.base_handler.BaseHandler._call', return_value={'foo': 'bar'})
     def test_handle(self, call_mock):
         handler = TestBaseHandler.DummyHandler()
@@ -213,6 +216,21 @@ class TestBaseHandler(unittest.TestCase):
 
         res = handler._call(handler.myip, {}, request)
         self.assertEqual("1.2.3.4", res)
+
+    def test_call_file(self):
+        handler = TestBaseHandler.DummyHandler()
+        env = Environ({"wsgi.input": None})
+        request = Request(env)
+        request.files = {"file": FileStorage(filename="foo")}
+
+        res = handler._call(handler.file, {}, request)
+        self.assertEqual("foo", res)
+
+
+
+
+
+
 
     def test_get_file_name(self):
         request = Request(Environ())
