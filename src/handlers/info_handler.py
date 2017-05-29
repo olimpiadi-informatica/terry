@@ -9,10 +9,10 @@
 import json
 
 from .base_handler import BaseHandler
+from ..validators import Validators
 from ..database import Database
 
 from datetime import datetime
-from werkzeug.exceptions import Forbidden
 
 
 class InfoHandler(BaseHandler):
@@ -35,72 +35,52 @@ class InfoHandler(BaseHandler):
             "tasks": Database.get_tasks()
         }
 
-    def get_input(self, id:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    def get_input(self, input):
         """
-        GET /input/<id>
+        GET /input/<input_id>
         """
-        input_file = Database.get_input(id=id)
-        if not input_file:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required input")
+        return BaseHandler.format_dates(input)
 
-        token = input_file["token"]
-        Database.register_ip(token, _ip)
-
-        return BaseHandler.format_dates(input_file)
-
-    def get_output(self, id:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_output_id
+    def get_output(self, output):
         """
-        GET /output/<id>
+        GET /output/<output_id>
         """
-        output_file = Database.get_output(id=id)
-        if not output_file:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required output")
+        return InfoHandler.patch_output(output)
 
-        input = Database.get_input(output_file["input"])
-        token = input["token"]
-        Database.register_ip(token, _ip)
-
-        return InfoHandler.patch_output(output_file)
-
-    def get_source(self, id:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_source_id
+    def get_source(self, source):
         """
-        GET /source/<id>
+        GET /source/<source_id>
         """
-        source_file = Database.get_source(id=id)
-        if not source_file:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required source")
+        return BaseHandler.format_dates(source)
 
-        input = Database.get_input(source_file["input"])
-        token = input["token"]
-        Database.register_ip(token, _ip)
-
-        return BaseHandler.format_dates(source_file)
-
-    def get_submission(self, id:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_submission_id
+    def get_submission(self, submission):
         """
-        GET /submission/<id>
+        GET /submission/<submission_id>
         """
-        submission = Database.get_submission(id)
-        if not submission:
-            self.raise_exc(Forbidden, "FORBIDDEN", "You cannot get the required submission")
-
-        token = submission["token"]
-        Database.register_ip(token, _ip)
-
         return InfoHandler.patch_submission(submission)
 
-    def get_user(self, token:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    def get_user(self, user):
         """
         GET /user/<token>
         """
-        user = Database.get_user(token)
-        if user is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
-
         token = user["token"]
-        Database.register_ip(token, _ip)
 
-        user["remaining_time"] = InfoHandler._get_remaining_time(user["extra_time"])
+        user["remaining_time"] = InfoHandler.get_remaining_time(user["extra_time"])
         del user["extra_time"]
         user["tasks"] = {}
 
@@ -125,22 +105,16 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["date"])
 
-    def get_submissions(self, token:str, task:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    @Validators.validate_task
+    def get_submissions(self, user, task):
         """
         GET /user/<token>/submissions/<task>
         """
-        user = Database.get_user(token)
-        if user is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid login")
-
-        task = Database.get_task(task)
-        if task is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid task")
-
-        Database.register_ip(token, _ip)
-
         submissions = []
-        for sub in Database.get_submissions(token, task["name"]):
+        for sub in Database.get_submissions(user["token"], task["name"]):
             submissions.append(InfoHandler.patch_submission(sub))
         return { "items": submissions }
 

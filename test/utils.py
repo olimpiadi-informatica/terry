@@ -88,3 +88,7 @@ class Utils:
     def random_string(length=8, chars=string.ascii_uppercase+string.ascii_lowercase+string.digits):
         return ''.join(random.choice(chars) for _ in range(length))
 
+    @staticmethod
+    def start_contest(since=5, duration=18000):
+        Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - since))
+        Database.set_meta("contest_duration", duration)

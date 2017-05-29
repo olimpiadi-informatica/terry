@@ -47,48 +47,53 @@ class TestContestHandler(unittest.TestCase):
         self.assertEqual(40, row[0])
 
     def test_generate_input_invalid_token(self):
+        Utils.start_contest()
         self._insert_data()
 
         with self.assertRaises(Forbidden) as ex:
-            self.handler.generate_input('invalid token', 'poldo', '1.1.1.1')
+            self.handler.generate_input(token='invalid token', task='poldo', _ip='1.1.1.1')
 
         self.assertIn("No such user", ex.exception.response.data.decode())
 
     def test_generate_input_invalid_task(self):
+        Utils.start_contest()
         self._insert_data()
 
         with self.assertRaises(Forbidden) as ex:
-            self.handler.generate_input('token', 'invalid task', '1.1.1.1')
+            self.handler.generate_input(token='token', task='invalid task', _ip='1.1.1.1')
 
         self.assertIn("No such task", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_generate_input_already_have(self, get_file_size_mock, get_input_mock):
+        Utils.start_contest()
         self._insert_data()
-        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
 
         with self.assertRaises(Forbidden) as ex:
-            self.handler.generate_input('token', 'poldo', '1.1.1.1')
+            self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
 
         self.assertIn("You already have a ready input", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
-    @patch("src.database.Database.commit", side_effect=Exception("ops..."))
     @patch("src.database.Database.register_ip", return_value=None)
-    def test_generate_input_transaction_broken(self, register_mock, commit_mock, get_file_size_mock, get_input_mock):
+    def test_generate_input_transaction_broken(self, register_mock, get_file_size_mock, get_input_mock):
+        Utils.start_contest()
         self._insert_data()
         with self.assertRaises(Exception) as ex:
-            self.handler.generate_input('token', 'poldo', '1.1.1.1')
+            with patch("src.database.Database.commit", side_effect=Exception("ops...")):
+                self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
         self.assertIn("ops...", ex.exception.args[0])
         self.assertIsNone(Database.get_input("inputid"))
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_generate_input(self, get_file_size_mock, get_input_mock):
+        Utils.start_contest()
         self._insert_data()
-        response = self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        response = self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
 
         self.assertEqual("inputid", response["id"])
         self.assertEqual("/path", response["path"])
@@ -104,44 +109,47 @@ class TestContestHandler(unittest.TestCase):
         self.assertEqual(1, row[3])
 
     def test_submit_invalid_output(self):
+        Utils.start_contest()
         self._insert_data()
 
         with self.assertRaises(Forbidden) as ex:
-            self.handler.submit('invalid output', 'invalid source', '1.1.1.1')
+            self.handler.submit(output_id='invalid output', source_id='invalid source', _ip='1.1.1.1')
 
-        self.assertIn("No such output file", ex.exception.response.data.decode())
+        self.assertIn("No such output", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=('inputid', '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_sumbit_invalid_source(self, g_f_s_mock, g_i_mock):
+        Utils.start_contest()
         self._insert_data()
 
-        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42, '{}')")
         with self.assertRaises(Forbidden) as ex:
-            self.handler.submit('outputid', 'invalid source', '1.1.1.1')
+            self.handler.submit(output_id='outputid', source_id='invalid source', _ip='1.1.1.1')
 
-        self.assertIn("No such source file", ex.exception.response.data.decode())
+        self.assertIn("No such source", ex.exception.response.data.decode())
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_sumbit_not_matching(self, g_f_s_mock, g_i_mock):
+        Utils.start_contest()
         self._insert_data(token="token", task="poldo")
         self._insert_data(token="token2", task="poldo")
         backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001
 
-        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
         g_i_mock.return_value = ("inputid2", "/path")
-        self.handler.generate_input('token2', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token2', task='poldo', _ip='1.1.1.1')
 
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42, '{}')")
         Database.c.execute("INSERT INTO sources (id, input, path, size) "
                            "VALUES ('sourceid', 'inputid2', '/source', 42)")
         with self.assertRaises(Forbidden) as ex:
-            self.handler.submit('outputid', 'sourceid', '1.1.1.1')
+            self.handler.submit(output_id='outputid', source_id='sourceid', _ip='1.1.1.1')
 
         self.assertIn("The provided pair of source-output is invalid", ex.exception.response.data.decode())
         Logger.LOG_LEVEL = backup
@@ -149,8 +157,9 @@ class TestContestHandler(unittest.TestCase):
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_submit_db_broken(self, g_i_mock, g_f_s_mock):
+        Utils.start_contest()
         self._insert_data()
-        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42,"
                            "'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}')")
@@ -159,7 +168,7 @@ class TestContestHandler(unittest.TestCase):
         with patch("src.database.Database.get_input", return_value=None):
             with Utils.nostderr() as stderr:
                 with self.assertRaises(BadRequest) as ex:
-                    self.handler.submit('outputid', 'sourceid', '1.1.1.1')
+                    self.handler.submit(output_id='outputid', source_id='sourceid', _ip='1.1.1.1')
         self.assertIn("DB_CONSISTENCY_ERROR", stderr.buffer)
         self.assertIn("Input inputid not found in the db", stderr.buffer)
         self.assertIn("WRONG_INPUT", ex.exception.response.data.decode())
@@ -170,8 +179,9 @@ class TestContestHandler(unittest.TestCase):
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_submit_broken_transaction(self, gen_i_mock, a_s_mock, g_f_s_mock, g_i_mock):
+        Utils.start_contest()
         self._insert_data()
-        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
 
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42,"
@@ -180,15 +190,16 @@ class TestContestHandler(unittest.TestCase):
                            "VALUES ('sourceid', 'inputid', '/source', 42)")
 
         with self.assertRaises(BadRequest) as ex:
-            self.handler.submit('outputid', 'sourceid', '1.1.1.1')
+            self.handler.submit(output_id='outputid', source_id='sourceid', _ip='1.1.1.1')
         self.assertIn("Error inserting the submission", ex.exception.response.data.decode())
         self.assertIsNone(Database.get_submission("subid"))
 
     @patch("src.contest_manager.ContestManager.get_input", return_value=("inputid", '/path'))
     @patch("src.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_submit(self, g_f_s_mock, g_i_mock):
+        Utils.start_contest()
         self._insert_data()
-        self.handler.generate_input('token', 'poldo', '1.1.1.1')
+        self.handler.generate_input(token='token', task='poldo', _ip='1.1.1.1')
 
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42,"
@@ -196,7 +207,7 @@ class TestContestHandler(unittest.TestCase):
         Database.c.execute("INSERT INTO sources (id, input, path, size) "
                            "VALUES ('sourceid', 'inputid', '/source', 42)")
 
-        response = self.handler.submit('outputid', 'sourceid', '1.1.1.1')
+        response = self.handler.submit(output_id='outputid', source_id='sourceid', _ip='1.1.1.1')
         self.assertEqual("token", response["token"])
         self.assertEqual("poldo", response["task"])
         self.assertEqual(21, response["score"])

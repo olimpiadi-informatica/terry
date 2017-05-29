@@ -6,13 +6,13 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
-import inspect
 import json
 from datetime import datetime
 
 from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
 
+from ..handler_params import HandlerParams
 from ..config import Config
 from ..database import Database
 from ..logger import Logger
@@ -74,7 +74,7 @@ class BaseHandler:
         return request.form
 
     @staticmethod
-    def _get_remaining_time(user_extra_time):
+    def get_remaining_time(user_extra_time):
         """
         Compute the remaining time for a user
         :param user_extra_time: Extra time specific for the user in seconds
@@ -86,6 +86,8 @@ class BaseHandler:
         contest_duration = Database.get_meta('contest_duration', type=int, default=0)
         contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
         now = int(datetime.now().timestamp())
+        if user_extra_time is None:
+            user_extra_time = 0
 
         return start + contest_duration - now + contest_extra_time + user_extra_time
 
@@ -123,35 +125,38 @@ class BaseHandler:
         :return: The return value of method
         """
         kwargs = {}
-        sign = inspect.signature(method).parameters
+        params = HandlerParams.get_handler_params(method)
         general_attrs = {
             '_request': request,
             '_route_args': route_args,
-            '_file_content': BaseHandler._get_file_content(request),
-            '_file_name': BaseHandler._get_file_name(request),
+            '_file': {
+                "content": BaseHandler._get_file_content(request),
+                "name": BaseHandler._get_file_name(request)
+            },
             '_ip': BaseHandler.get_ip(request)
         }
 
         missing_parameters = []
 
-        for attr_name in sign:
-            if attr_name in route_args:
-                kwargs[attr_name] = route_args[attr_name]
-            elif attr_name in request.form:
-                kwargs[attr_name] = request.form[attr_name]
-            elif attr_name in general_attrs:
-                kwargs[attr_name] = general_attrs[attr_name]
-            elif sign[attr_name].default is inspect._empty:
-                missing_parameters.append(attr_name)
+        for name, data in params.items():
+            if name in route_args and name[0] != "_":
+                kwargs[name] = route_args[name]
+            elif name in request.form and name[0] != "_":
+                kwargs[name] = request.form[name]
+            elif name in general_attrs:
+                kwargs[name] = general_attrs[name]
+            elif name == "file" and general_attrs["_file"]["name"] is not None:
+                kwargs[name] = general_attrs["_file"]
+            elif data["required"]:
+                missing_parameters.append(name)
 
         if len(missing_parameters) > 0:
             BaseHandler.raise_exc(BadRequest, "MISSING_PARAMETERS",
                                   "The missing parameters are: " + ", ".join(missing_parameters))
 
         for key, value in kwargs.items():
-            type = sign[key].annotation
-            if type is inspect._empty: continue
-
+            type = params[key]["type"]
+            if type is None: continue
             try:
                 kwargs[key] = type(value)
             except ValueError:
@@ -165,7 +170,7 @@ class BaseHandler:
                 method.__name__,
                 ", with parameters " + ", ".join(
                         "=".join((kv[0], str(kv[1]))) for kv in kwargs.items()
-                            if not kv[0].startswith("_")
+                            if not kv[0].startswith("_") and not kv[0] == "file"
                 ) if len(kwargs) > 0 else ""
             )
         )

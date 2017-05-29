@@ -22,6 +22,7 @@ from src.config import Config
 from src.database import Database
 from src.handlers.base_handler import BaseHandler
 from src.logger import Logger
+from src.validators import Validators
 from test.utils import Utils
 
 
@@ -41,12 +42,22 @@ class TestBaseHandler(unittest.TestCase):
         self.assertEqual("Ex message", data["message"])
 
     class DummyHandler(BaseHandler):
-        def dummy_endpoint(self, param:int = 123):
+        def dummy_endpoint(self, param:int=123):
             return {"incremented": param+1}
+
         def required(self, param):
             self.raise_exc(Forbidden, 'NOBUONO', 'nononono')
+
         def myip(self, _ip):
             return _ip
+
+        def file(self, file):
+            return file["name"]
+
+        @Validators.validate_input_id
+        @Validators.validate_output_id
+        def with_decorators(self, input, output):
+            pass
 
     @patch('src.handlers.base_handler.BaseHandler._call', return_value={'foo': 'bar'})
     def test_handle(self, call_mock):
@@ -83,11 +94,11 @@ class TestBaseHandler(unittest.TestCase):
         Database.set_meta("contest_duration", 150)
         Database.set_meta("extra_time", 20)
 
-        self.assertAlmostEqual(BaseHandler._get_remaining_time(20), 90, delta=1)
-        self.assertAlmostEqual(BaseHandler._get_remaining_time(0), 70, delta=1)
+        self.assertAlmostEqual(BaseHandler.get_remaining_time(20), 90, delta=1)
+        self.assertAlmostEqual(BaseHandler.get_remaining_time(0), 70, delta=1)
 
     def test_remaining_time_not_started(self):
-        self.assertIsNone(BaseHandler._get_remaining_time(0))
+        self.assertIsNone(BaseHandler.get_remaining_time(0))
 
     def test_format_dates(self):
         dct = {
@@ -211,6 +222,26 @@ class TestBaseHandler(unittest.TestCase):
 
         res = handler._call(handler.myip, {}, request)
         self.assertEqual("1.2.3.4", res)
+
+    def test_call_file(self):
+        handler = TestBaseHandler.DummyHandler()
+        env = Environ({"wsgi.input": None})
+        request = Request(env)
+        request.files = {"file": FileStorage(filename="foo")}
+
+        res = handler._call(handler.file, {}, request)
+        self.assertEqual("foo", res)
+
+    def test_call_with_decorators(self):
+        handler = TestBaseHandler.DummyHandler()
+        env = Environ({"wsgi.input": None})
+        request = Request(env)
+        Database.add_user("token", "", "")
+        Database.add_task("poldo", "", "", 1, 1)
+        Database.add_input("inputid", "token", "poldo", 1, "", 42)
+        Database.add_output("outputid", "inputid", "", 42, "")
+
+        handler._call(handler.with_decorators, {"input_id": "inputid", "output_id":"outputid"}, request)
 
     def test_get_file_name(self):
         request = Request(Environ())

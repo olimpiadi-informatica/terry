@@ -8,6 +8,7 @@
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import json
 
+from ..validators import Validators
 from ..logger import Logger
 from .info_handler import InfoHandler
 from .base_handler import BaseHandler
@@ -32,45 +33,40 @@ class ContestHandler(BaseHandler):
         if task_score["score"] < score:
             Database.set_user_score(token, task, score, autocommit=False)
 
-    def generate_input(self, token:str, task:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    @Validators.validate_task
+    def generate_input(self, task, user):
         """
         POST /generate_input
         """
-        if Database.get_user(token) is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such user")
-        if Database.get_task(task) is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such task")
-        if Database.get_user_task(token, task)["current_attempt"] is not None:
+        token = user["token"]
+        if Database.get_user_task(token, task["name"])["current_attempt"] is not None:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
 
-        Database.register_ip(token, _ip)
-
-        attempt = Database.get_next_attempt(token, task)
-        id, path = ContestManager.get_input(task, attempt)
+        attempt = Database.get_next_attempt(token, task["name"])
+        id, path = ContestManager.get_input(task["name"], attempt)
         size = StorageManager.get_file_size(path)
 
         Database.begin()
         try:
-            Database.add_input(id, token, task, attempt, path, size, autocommit=False)
-            Database.set_user_attempt(token, task, attempt, autocommit=False)
+            Database.add_input(id, token, task["name"], attempt, path, size, autocommit=False)
+            Database.set_user_attempt(token, task["name"], attempt, autocommit=False)
             Database.commit()
         except:
             Database.rollback()
             raise
         return BaseHandler.format_dates(Database.get_input(id=id))
 
-    def submit(self, output:str, source:str, _ip):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_output_id
+    @Validators.validate_source_id
+    def submit(self, output, source):
         """
         POST /submit
         """
-
-        output = Database.get_output(output)
-        if output is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such output file")
-        source = Database.get_source(source)
-        if source is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such source file")
-
         input = Database.get_input(output["input"])
         if input is None:
             Logger.warning("DB_CONSISTENCY_ERROR", "Input %s not found in the db" % output["input"])
@@ -78,9 +74,6 @@ class ContestHandler(BaseHandler):
         if output["input"] != source["input"]:
             Logger.warning("POSSIBLE_CHEAT", "Trying to submit wrong pair source-output")
             self.raise_exc(Forbidden, "WRONG_OUTPUT_SOURCE", "The provided pair of source-output is invalid")
-
-        token = input["token"]
-        Database.register_ip(token, _ip)
 
         score = ContestHandler.compute_score(input["task"], output["result"])
         Database.begin()

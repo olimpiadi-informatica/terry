@@ -45,10 +45,10 @@ class Server:
         # method of that handler
         self.router = Map([
             Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
-            Rule("/input/<id>", methods=["GET"], endpoint="info#get_input"),
-            Rule("/output/<id>", methods=["GET"], endpoint="info#get_output"),
-            Rule("/source/<id>", methods=["GET"], endpoint="info#get_source"),
-            Rule("/submission/<id>", methods=["GET"], endpoint="info#get_submission"),
+            Rule("/input/<input_id>", methods=["GET"], endpoint="info#get_input"),
+            Rule("/output/<output_id>", methods=["GET"], endpoint="info#get_output"),
+            Rule("/source/<source_id>", methods=["GET"], endpoint="info#get_source"),
+            Rule("/submission/<submission_id>", methods=["GET"], endpoint="info#get_submission"),
             Rule("/user/<token>", methods=["GET"], endpoint="info#get_user"),
             Rule("/user/<token>/submissions/<task>", methods=["GET"], endpoint="info#get_submissions"),
             Rule("/generate_input", methods=["POST"], endpoint="contest#generate_input"),

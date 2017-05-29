@@ -5,54 +5,48 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
-
+from ..validators import Validators
 from .info_handler import InfoHandler
 from .base_handler import BaseHandler
 
 from ..database import Database
 from ..storage_manager import StorageManager
 from ..contest_manager import ContestManager
-from werkzeug.exceptions import Forbidden
 
 
 class UploadHandler(BaseHandler):
 
-    def upload_output(self, input, _ip, _file_content, _file_name):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    @Validators.validate_file
+    def upload_output(self, input, file):
         """
         POST /upload_output
         """
-        input = Database.get_input(input)
-        if input is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
-
         output_id = Database.gen_id()
-        path = StorageManager.new_output_file(output_id, _file_name)
+        path = StorageManager.new_output_file(output_id, file["name"])
 
-        StorageManager.save_file(path, _file_content)
+        StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
-
-        token = input["token"]
-        Database.register_ip(token, _ip)
 
         result = ContestManager.evaluate_output(input["task"], input["path"], path)
 
         Database.add_output(output_id, input["id"], path, file_size, result)
         return InfoHandler.patch_output(Database.get_output(output_id))
 
-    def upload_source(self, input, _ip, _file_content, _file_name):
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    @Validators.validate_file
+    def upload_source(self, input, file):
         """
         POST /upload_source
         """
-        input = Database.get_input(input)
-        if input is None:
-            self.raise_exc(Forbidden, "FORBIDDEN", "No such input")
-
         source_id = Database.gen_id()
-        token = input["token"]
-        Database.register_ip(token, _ip)
+        path = StorageManager.new_source_file(source_id, file["name"])
 
-        path = StorageManager.new_source_file(source_id, _file_name)
-        StorageManager.save_file(path, _file_content)
+        StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
         Database.add_source(source_id, input["id"], path, file_size)
