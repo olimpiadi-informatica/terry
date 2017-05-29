@@ -129,20 +129,24 @@ class BaseHandler:
         general_attrs = {
             '_request': request,
             '_route_args': route_args,
-            '_file_content': BaseHandler._get_file_content(request),
-            '_file_name': BaseHandler._get_file_name(request),
+            '_file': {
+                "content": BaseHandler._get_file_content(request),
+                "name": BaseHandler._get_file_name(request)
+            },
             '_ip': BaseHandler.get_ip(request)
         }
 
         missing_parameters = []
 
         for name, data in params.items():
-            if name in route_args:
+            if name in route_args and name[0] != "_":
                 kwargs[name] = route_args[name]
-            elif name in request.form:
+            elif name in request.form and name[0] != "_":
                 kwargs[name] = request.form[name]
             elif name in general_attrs:
                 kwargs[name] = general_attrs[name]
+            elif name == "file" and general_attrs["_file"]["name"] is not None:
+                kwargs[name] = general_attrs["_file"]
             elif data["required"]:
                 missing_parameters.append(name)
 
@@ -166,7 +170,7 @@ class BaseHandler:
                 method.__name__,
                 ", with parameters " + ", ".join(
                         "=".join((kv[0], str(kv[1]))) for kv in kwargs.items()
-                            if not kv[0].startswith("_")
+                            if not kv[0].startswith("_") and not kv[0] == "file"
                 ) if len(kwargs) > 0 else ""
             )
         )

@@ -86,7 +86,7 @@ class TestValidators(unittest.TestCase):
         self.admin_only(admin_token=Config.admin_token, _ip="1.1.1.1")
 
     def test_validate_file(self):
-        self.file(_file_name="foo", _file_content="bar")
+        self.file(file={"content":"foobar".encode(),"name":"file.txt"})
 
     def test_valid_input_id_invalid_id(self):
         with self.assertRaises(Forbidden):

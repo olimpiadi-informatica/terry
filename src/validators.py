@@ -39,18 +39,9 @@ class Validators:
     @staticmethod
     def validate_file(handler):
         def handle(*args, **kwargs):
-            file = {
-                "name": kwargs["_file_name"],
-                "content": kwargs["_file_content"]
-            }
-            del kwargs["_file_name"]
-            del kwargs["_file_content"]
-            kwargs["file"] = file
             return handler(*args, **kwargs)
         BaseHandler.initialize_request_params(handle, handler)
-        BaseHandler.add_request_param(handle, "_file_name", None, True)
-        BaseHandler.add_request_param(handle, "_file_content", None, True)
-        del handle.request_params["file"]
+        BaseHandler.add_request_param(handle, "file", None, True)
         return handle
 
     @staticmethod

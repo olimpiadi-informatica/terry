@@ -30,7 +30,7 @@ class TestInfoHandler(unittest.TestCase):
         self._insert_data()
 
         res = self.handler.upload_output(input_id="inputid", _ip="1.1.1.1",
-                                         _file_content="foobar".encode(), _file_name="output.txt")
+                                         file={"content":"foobar".encode(),"name":"output.txt"})
         self.assertEqual("outputid", res["id"])
         self.assertIn("output.txt", res["path"])
         self.assertEqual(42, res["validation"])
@@ -53,7 +53,7 @@ class TestInfoHandler(unittest.TestCase):
         self._insert_data()
 
         res = self.handler.upload_source(input_id="inputid", _ip="1.1.1.1",
-                                         _file_content="foobar".encode(), _file_name="source.txt")
+                                         file={"content":"foobar".encode(),"name":"source.txt"})
         self.assertEqual("sourceid", res["id"])
         self.assertIn("source.txt", res["path"])
         self.assertEqual("inputid", res["input"])
