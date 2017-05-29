@@ -134,7 +134,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        self.assertEqual(180, res["remaining_time"])
+        self.assertAlmostEqual(180, res["remaining_time"], delta=5)
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
         self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
 
