@@ -1,0 +1,374 @@
+swagger: '2.0'
+info:
+  description: >-
+    territoriali-backend is a Google-Code-Jam-like programming contest
+    environment designed for the territorial phase of the Italian Olympiad in
+    Informatics (OII, Olimpiadi Italiane di Informatica).
+  version: 0.0.1
+  title: territoriali-backend
+  termsOfService: 'https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE'
+  license:
+    name: Mozilla Public Licence 2.0
+    url: >-
+      https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE
+paths:
+  /contest:
+    get:
+      tags:
+        - info
+      summary: Retreive contest information
+      operationId: getContest
+      responses:
+        '200':
+          description: Information about the contest
+          schema:
+            $ref: '#/definitions/Contest'
+  '/input/{input_id}':
+    get:
+      tags:
+        - info
+      summary: Retreive the information about a generated input
+      operationId: getInput
+      parameters:
+      - name: input_id
+        in: path
+        description: Id of the input file
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested input
+          schema:
+            $ref: '#/definitions/Input'
+        '403':
+          description: The contest is not running or the input doesn't exist
+  '/output/{output_id}':
+    get:
+      tags:
+        - info
+      summary: Retreive the information about an uploaded output
+      operationId: getOutput
+      parameters:
+      - name: output_id
+        in: path
+        description: Id of the output file
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested output
+          schema:
+            $ref: '#/definitions/Output'
+        '403':
+          description: The contest is not running or the output doesn't exist
+  '/source/{source_id}':
+    get:
+      tags:
+        - info
+      summary: Retreive the information about an uploaded source
+      operationId: getSource
+      parameters:
+      - name: source_id
+        in: path
+        description: Id of the source file
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested source
+          schema:
+            $ref: '#/definitions/Source'
+        '403':
+          description: The contest is not running or the source doesn't exist
+  '/submission/{submission_id}':
+    get:
+      tags:
+        - info
+      summary: Retreive the information about a submission
+      operationId: getSubmission
+      parameters:
+      - name: submission_id
+        in: path
+        description: Id of the submission
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested submission
+          schema:
+            $ref: '#/definitions/Submission'
+        '403':
+          description: The contest is not running or the submission doesn't exist
+  '/user/{token}':
+    get:
+      tags:
+        - info
+      summary: Retreive the information about a user
+      operationId: getUser
+      parameters:
+      - name: token
+        in: path
+        description: Token of the user
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested user
+          schema:
+            $ref: '#/definitions/User'
+        '403':
+          description: The contest is not running or the user doesn't exist
+  '/user/{token}/submissions/{task}':
+    get:
+      tags:
+        - info
+      summary: Retreive all the submissions of a user of a task
+      operationId: getSubmissions
+      parameters:
+      - name: token
+        in: path
+        description: Token of the user
+        required: true
+        type: string
+      - name: task
+        in: path
+        description: Name of the task
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The user's submissions
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/Submission'
+        '403':
+          description: The contest is not running or the user/task doesn't exist
+definitions:
+  Contest:
+    type: object
+    required:
+      - has_started
+    properties:
+      has_started:
+        type: "boolean"
+        description: 'If the contest has begun'
+      start_time:
+        type: "string"
+        format: "date-time"
+        description: "The start time of the contest"
+      tasks:
+        type: array
+        items:
+          $ref: '#/definitions/Task'
+  Task:
+    type: object
+    required:
+      - name
+      - title
+      - statement_path
+      - max_score
+      - num
+    properties:
+      name:
+        type: string
+        description: Name of the task
+      title:
+        type: string
+        description: Title of the task
+      statement_path:
+        type: string
+        description: Path to the statement file
+      max_score:
+        type: number
+        format: float
+        description: Maximum score of the task
+      num:
+        type: number
+        format: int32
+        description: Ordinal number of the task
+  Input:
+    type: object
+    required:
+      - id
+      - token
+      - task
+      - attempt
+      - date
+      - path
+      - size
+    properties:
+      id:
+        type: string
+        description: The id of the input
+      token:
+        type: string
+        description: The token of the user who owns the input
+      task:
+        type: string
+        description: The name of the task
+      attempt:
+        type: number
+        format: int32
+        description: Attempt number of the user on this task
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      path:
+        type: string
+        description: Path where you can download the file
+      size:
+        type: number
+        format: int32
+        description: number of bytes of the input
+  Output:
+    type: object
+    required:
+      - id
+      - input
+      - date
+      - path
+      - size
+      - validation
+    properties:
+      id:
+        type: string
+        description: The id of the output
+      input:
+        type: string
+        description: The id of the associated input
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      path:
+        type: string
+        description: Path where you can download the file
+      size:
+        type: number
+        format: int32
+        description: number of bytes of the input
+      validation:
+        type: object
+        properties:
+          cases:
+            type: array
+            items:
+              type: object
+              properties:
+                status:
+                  type: string
+          alerts:
+            type: array
+            items:
+              type: object
+              properties:
+                severity:
+                  type: string
+                message:
+                  type: string
+  Source:
+    type: object
+    required:
+      - id
+      - input
+      - date
+      - path
+      - size
+    properties:
+      id:
+        type: string
+        description: The id of the source
+      input:
+        type: string
+        description: The id of the associated input
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      path:
+        type: string
+        description: Path where you can download the file
+      size:
+        type: number
+        format: int32
+        description: number of bytes of the input
+  Submission:
+    type: object
+    required:
+      - id
+      - token
+      - task
+      - score
+      - date
+      - input
+      - output
+      - source
+      - feedback
+    properties:
+      id:
+        type: string
+        description: The id of the submission
+      token:
+        type: string
+        description: The token of the user who owns the submission
+      task:
+        type: string
+        description: The name of the task
+      score:
+        type: number
+        format: float
+        description: The score of the submission
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      input:
+        $ref: '#/definitions/Input'
+      output:
+        $ref: '#/definitions/Output'
+      source:
+        $ref: '#/definitions/Source'
+      feedback:
+        type: object
+        properties:
+          cases:
+            type: array
+            items:
+              type: object
+              properties:
+                correct:
+                  type: boolean
+  User:
+    type: object
+    properties:
+      token:
+        type: string
+        description: The token of the user
+      name:
+        type: string
+        description: Name of the user
+      surname:
+        type: string
+        description: Surname of the user
+      remaining_time:
+        type: number
+        format: int32
+        description: Number of seconds before the end of the contest for the user
+      tasks:
+        type: object
+        properties:
+          task_name:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: number
+                format: float
+              current_input:
+                $ref: '#/definitions/Input'
