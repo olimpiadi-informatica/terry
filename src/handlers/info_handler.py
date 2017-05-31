@@ -31,7 +31,8 @@ class InfoHandler(BaseHandler):
             }
 
         return {
-            "has_started": start_datetime.isoformat(),
+            "has_started": True,
+            "start_time": start_datetime.isoformat(),
             "tasks": Database.get_tasks()
         }
 

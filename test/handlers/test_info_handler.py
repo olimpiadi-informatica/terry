@@ -31,7 +31,8 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_meta("start_time", 1234)
 
         res = self.handler.get_contest()
-        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(), res["has_started"])
+        self.assertTrue(res["has_started"])
+        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(), res["start_time"])
         self.assertEqual(1, len(res["tasks"]))
         self.assertEqual("poldo", res["tasks"][0]["name"])
 
