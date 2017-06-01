@@ -154,7 +154,7 @@ paths:
       summary: Require a new input
       operationId: generateInput
       consumes:
-      - application/x-www-form-urlencoded
+      - multipart/form-data
       parameters:
       - name: token
         in: formData
@@ -180,7 +180,7 @@ paths:
       summary: Confirm the uploaded source and output and create the submission
       operationId: submit
       consumes:
-      - application/x-www-form-urlencoded
+      - multipart/form-data
       parameters:
       - name: output_id
         in: formData
@@ -199,6 +199,58 @@ paths:
             $ref: '#/definitions/Submission'
         '403':
           description: The contest is not running, the input/source id isn't corrent or the input of the source is not the same of the output one.
+  '/upload_output':
+    post:
+      tags:
+        - upload
+      summary: Upload an output file relative to a generated input file
+      operationId: uploadOutput
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: input_id
+        in: formData
+        description: The id of the input
+        required: true
+        type: string
+      - name: file
+        in: formData
+        description: The file to upload
+        required: true
+        type: file
+      responses:
+        '200':
+          description: The output file is received and stored
+          schema:
+            $ref: '#/definitions/Output'
+        '403':
+          description: The input file does not exists or the contest is not running
+  '/upload_source':
+    post:
+      tags:
+        - upload
+      summary: Upload a source file relative to a generated input file
+      operationId: uploadSource
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: input_id
+        in: formData
+        description: The id of the input
+        required: true
+        type: string
+      - name: file
+        in: formData
+        description: The file to upload
+        required: true
+        type: file
+      responses:
+        '200':
+          description: The source file is received and stored
+          schema:
+            $ref: '#/definitions/Source'
+        '403':
+          description: The input file does not exists or the contest is not running
 definitions:
   Contest:
     type: object
