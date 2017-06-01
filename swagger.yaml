@@ -16,7 +16,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive contest information
+      summary: Retrieve contest information
       operationId: getContest
       responses:
         '200':
@@ -27,7 +27,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive the information about a generated input
+      summary: Retrieve the information about a generated input
       operationId: getInput
       parameters:
       - name: input_id
@@ -46,7 +46,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive the information about an uploaded output
+      summary: Retrieve the information about an uploaded output
       operationId: getOutput
       parameters:
       - name: output_id
@@ -65,7 +65,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive the information about an uploaded source
+      summary: Retrieve the information about an uploaded source
       operationId: getSource
       parameters:
       - name: source_id
@@ -84,7 +84,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive the information about a submission
+      summary: Retrieve the information about a submission
       operationId: getSubmission
       parameters:
       - name: submission_id
@@ -103,7 +103,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive the information about a user
+      summary: Retrieve the information about a user
       operationId: getUser
       parameters:
       - name: token
@@ -122,7 +122,7 @@ paths:
     get:
       tags:
         - info
-      summary: Retreive all the submissions of a user of a task
+      summary: Retrieve all the submissions of a user of a task
       operationId: getSubmissions
       parameters:
       - name: token
@@ -202,7 +202,7 @@ paths:
   '/upload_output':
     post:
       tags:
-        - upload
+      - upload
       summary: Upload an output file relative to a generated input file
       operationId: uploadOutput
       consumes:
@@ -228,7 +228,7 @@ paths:
   '/upload_source':
     post:
       tags:
-        - upload
+      - upload
       summary: Upload a source file relative to a generated input file
       operationId: uploadSource
       consumes:
@@ -251,6 +251,203 @@ paths:
             $ref: '#/definitions/Source'
         '403':
           description: The input file does not exists or the contest is not running
+  '/admin/extract':
+    post:
+      tags:
+      - admin
+      summary: Extract the contest zip pack and prepare the contest to be started
+      operationId: adminExtract
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      - name: filename
+        in: formData
+        description: The name of the file to be extracted, the path is relative to Config.contest_zips configuration
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: The password to use to extract the pack
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The contest is succesfully extracted and loaded, it's ready to be started
+        '403':
+          description: The admin token is invalid, the contest was already extracted, or the password is wrong
+  '/admin/log':
+    post:
+      tags:
+      - admin
+      summary: Retrieve the log entries from the database
+      operationId: adminLog
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      - name: start_date
+        in: formData
+        description: The begin of the time interval of the logs to fetch
+        required: true
+        type: string
+      - name: end_date
+        in: formData
+        description: The end of the time interval of the logs to fetch
+        required: true
+        type: string
+      - name: level
+        in: formData
+        description: The minimum level of logs to fetch. The level is in human format (eg ERROR, WARING, INFO, DEBUG)
+        required: true
+        type: string
+      - name: category
+        in: formData
+        description: The category of the logs to filer with
+        required: false
+        type: string
+      responses:
+        '200':
+          description: The matching logs
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date-time
+                    category:
+                      type: string
+                    level:
+                      type: string
+                    message:
+                      type: string
+        '403':
+          description: The admin token is invalid
+        '400':
+          description: The provided log level is invalid
+  '/admin/start':
+    post:
+      tags:
+      - admin
+      summary: Start the contest for all the users
+      operationId: adminStart
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The contest has been started succesfully
+          schema:
+            type: object
+            properties:
+              start_time:
+                type: string
+                format: date-time
+        '403':
+          description: The admin token is invalid or the contest has already been started
+  '/admin/set_extra_time':
+    post:
+      tags:
+      - admin
+      summary: Set the extra time for a user or for the entire contest
+      operationId: adminSetExtraTime
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      - name: extra_time
+        in: formData
+        description: The extra time to set in seconds
+        required: true
+        type: integer
+      - name: token
+        in: formData
+        description: If provided, set the extra time only for that user
+        required: false
+        type: string
+      responses:
+        '200':
+          description: The extra time has been set
+          schema:
+            type: object
+        '403':
+          description: The admin token is invalid or the provided user token is invalid
+  '/admin/status':
+    post:
+      tags:
+      - admin
+      summary: Fetch some basic information about the server
+      operationId: adminStatus
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Some information about the server
+          schema:
+            type: object
+            properties:
+              start_time:
+                type: string
+                format: date-time
+              extra_time:
+                type: integer
+              remaining_time:
+                type: integer
+              loaded:
+                type: boolead
+        '403':
+          description: The admin token is invalid
+  '/admin/user_list':
+    post:
+      tags:
+      - admin
+      summary: Fetch all the users in the contest
+      operationId: adminUserList
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: A list of all the users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserByAdmin'
+        '403':
+          description: The admin token is invalid
 definitions:
   Contest:
     type: object
@@ -476,3 +673,24 @@ definitions:
                 format: float
               current_input:
                 $ref: '#/definitions/Input'
+  UserByAdmin:
+    type: object
+    properties:
+      ip:
+        type: array
+        items:
+          type: object
+          properties:
+            ip:
+              type: string
+            first_date:
+              type: string
+              format: date-time
+      token:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
+      extra_time:
+        type: integer
