@@ -147,6 +147,58 @@ paths:
                   $ref: '#/definitions/Submission'
         '403':
           description: The contest is not running or the user/task doesn't exist
+  '/generate_input':
+    post:
+      tags:
+        - contest
+      summary: Require a new input
+      operationId: generateInput
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: token
+        in: formData
+        description: The token of the user
+        required: true
+        type: string
+      - name: task
+        in: formData
+        description: The name of the task
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The input is generated and returned to the client
+          schema:
+            $ref: '#/definitions/Input'
+        '403':
+          description: The contest is not running, the token/task is invalid or the user already has an input
+  '/submit':
+    post:
+      tags:
+        - contest
+      summary: Confirm the uploaded source and output and create the submission
+      operationId: submit
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: output_id
+        in: formData
+        description: The id of the uploaded output
+        required: true
+        type: string
+      - name: source_id
+        in: formData
+        description: The id of the uploaded source
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The submission has been created and returned
+          schema:
+            $ref: '#/definitions/Submission'
+        '403':
+          description: The contest is not running, the input/source id isn't corrent or the input of the source is not the same of the output one.
 definitions:
   Contest:
     type: object
