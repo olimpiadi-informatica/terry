@@ -422,7 +422,7 @@ paths:
               remaining_time:
                 type: integer
               loaded:
-                type: boolead
+                type: boolean
         '403':
           description: The admin token is invalid
   '/admin/user_list':
