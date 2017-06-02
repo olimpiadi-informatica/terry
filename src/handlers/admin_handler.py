@@ -106,4 +106,4 @@ class AdminHandler(BaseHandler):
         """
         POST /admin/user_list
         """
-        return BaseHandler.format_dates({"items": Database.get_users()}, fields=["first_login"])
+        return BaseHandler.format_dates({"items": Database.get_users()}, fields=["first_date"])

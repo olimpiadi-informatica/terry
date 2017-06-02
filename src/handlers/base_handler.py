@@ -102,6 +102,9 @@ class BaseHandler:
         for k, v in dct.items():
             if isinstance(v, dict):
                 dct[k] = BaseHandler.format_dates(v, fields)
+            elif isinstance(v, list):
+                for item in v:
+                    BaseHandler.format_dates(item, fields)
             elif k in fields and v is not None:
                 dct[k] = datetime.fromtimestamp(v).isoformat()
         return dct
