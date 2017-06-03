@@ -12,3 +12,8 @@ engines:
           mass_threshold: 100
   fixme:
     enabled: true
+ratings:
+  paths:
+  - "**.py"
+exclude_paths:
+- test/**
