@@ -1,0 +1,14 @@
+engines:
+  radon:
+    enabled: true
+    config:
+      threshold: "C"
+  duplication:
+    enabled: true
+    config:
+      languages:
+        python:
+          python_version: 3
+          mass_threshold: 100
+  fixme:
+    enabled: true
