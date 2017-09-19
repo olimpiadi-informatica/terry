@@ -15,7 +15,7 @@ export default class Output extends Observable {
   upload() {
     const data = new FormData();
 
-    data.append("input", this.submission.input.id);
+    data.append("input_id", this.submission.input.id);
     data.append("file", this.file)
 
     let id;

@@ -75,9 +75,9 @@ export default class Submission extends Observable {
 
     const data = new FormData();
 
-    data.append("input", this.input.id);
-    data.append("source", this.getSource().data.id);
-    data.append("output", this.getOutput().data.id);
+    data.append("input_id", this.input.id);
+    data.append("source_id", this.getSource().data.id);
+    data.append("output_id", this.getOutput().data.id);
 
     this.fireUpdate();
 
