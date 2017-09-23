@@ -7,7 +7,7 @@ python:
 
 before_install:
   - cd $HOME
-  - mkdir bin
+  - mkdir -p bin
   - export PATH=$HOME/bin:$PATH
   - cd $HOME
   - "if [[ $TRAVIS_PYTHON_VERSION == 'pypy3' ]]; then
