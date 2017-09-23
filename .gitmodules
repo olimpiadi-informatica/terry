@@ -1,0 +1,9 @@
+[submodule "territoriali-backend"]
+	path = territoriali-backend
+	url = https://github.com/algorithm-ninja/territoriali-backend
+[submodule "territoriali-frontend"]
+	path = territoriali-frontend
+	url = https://github.com/algorithm-ninja/territoriali-frontend
+[submodule "territoriali-cli"]
+	path = territoriali-cli
+	url = https://github.com/algorithm-ninja/territoriali-cli
