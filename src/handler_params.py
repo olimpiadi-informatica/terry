@@ -18,6 +18,8 @@ class HandlerParams:
                 setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR, getattr(handler, HandlerParams.HANDLER_PARAMS_ATTR))
             else:
                 setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR, HandlerParams.get_handler_params(handler))
+        # forward the method name from the handler, useful for logging
+        handle.__name__ = handler.__name__
         return handle
 
     @staticmethod
