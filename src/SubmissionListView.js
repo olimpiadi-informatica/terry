@@ -41,17 +41,12 @@ export default class SubmissionListView extends Component {
     const submissionList = [];
 
     for (let submission of this.list.data.items) {
-      /** FIXME **/
-      // the "basename" property should probably be already provided!!!
       let cut = (s) => s.slice(s.lastIndexOf("/") + 1);
       submission.input.basename = cut(submission.input.path);
       submission.output.basename = cut(submission.output.path);
       submission.source.basename = cut(submission.source.path);
-      /** FIXME **/
 
-      // FIXME: Here we use "unshift" which means "push_front", maybe it would
-      // FIXME: be better to just provide us with correctly ordered data?
-      submissionList.unshift(
+      submissionList.push(
         <tr key={ submission.id }>
           <td>
             <DateView date={ submission.output.date }/>
@@ -113,7 +108,7 @@ export default class SubmissionListView extends Component {
       );
     }
 
-    return submissionList;
+    return submissionList.reverse();
   }
 
   renderBody() {
