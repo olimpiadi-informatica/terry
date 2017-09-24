@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import SubmissionView from './SubmissionView';
 
 export default class CreateSubmissionView extends Component {
@@ -20,7 +19,7 @@ export default class CreateSubmissionView extends Component {
   }
 
   render() {
-    if(this.submission === undefined) return <p>Cannot submit for this input.</p>
+    if(this.submission === undefined) return <p>Cannot submit for this input.</p>;
     return <SubmissionView model={this.model} submission={this.submission}></SubmissionView>;
   }
 }

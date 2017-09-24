@@ -1,4 +1,4 @@
-import React, { ReactDOM, Component } from 'react';
+import React, { Component } from 'react';
 import Modal from 'react-modal';
 import { withRouter } from 'react-router-dom';
 

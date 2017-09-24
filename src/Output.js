@@ -1,4 +1,3 @@
-import wait from './utils';
 import client from './TerryClient';
 import Observable from './Observable';
 
@@ -16,7 +15,7 @@ export default class Output extends Observable {
     const data = new FormData();
 
     data.append("input_id", this.submission.input.id);
-    data.append("file", this.file)
+    data.append("file", this.file);
 
     let id;
 

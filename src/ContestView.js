@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Link, NavLink, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 
-var FontAwesome = require('react-fontawesome');
-
 export default class ContestView extends Component {
   constructor(props) {
     super(props);

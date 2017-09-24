@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import ResultView from './ResultView';
 import FileView from './FileView';
 import { Link } from 'react-router-dom';
@@ -107,7 +106,7 @@ export default class SubmissionView extends Component {
   }
 
   renderSubmissionForm() {
-    if(this.submission.isSubmitting()) return <p>Submitting...</p>
+    if(this.submission.isSubmitting()) return <p>Submitting...</p>;
 
     return (
       <div>

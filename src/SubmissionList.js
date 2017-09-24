@@ -1,6 +1,4 @@
 import client from './TerryClient';
-import Source from './Source';
-import Output from './Output';
 import Observable from './Observable';
 
 export default class SubmissionList extends Observable {

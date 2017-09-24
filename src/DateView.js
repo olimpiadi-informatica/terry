@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import moment from "moment";
 
 export default class DateView extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <abbr title={ moment(this.props.date).toString() }>
