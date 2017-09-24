@@ -133,7 +133,7 @@ export default class SubmissionListView extends Component {
 
   render() {
     return (
-      <ModalView contentLabel="Task submissions">
+      <ModalView contentLabel="Task submissions" returnUrl={"/" + this.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
             Submissions for task <strong>{ this.taskName }</strong>

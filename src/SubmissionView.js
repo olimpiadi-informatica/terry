@@ -154,7 +154,7 @@ export default class SubmissionView extends Component {
 
   render() {
     return (
-      <ModalView contentLabel="Submission creation">
+      <ModalView contentLabel="Submission creation" returnUrl={"/" + this.submission.input.task}>
         <div className="modal-header">
           <h5 className="modal-title">
             Submission for input <strong>{ this.submission.input.id }</strong>

@@ -1,7 +1,8 @@
 import React, { ReactDOM, Component } from 'react';
 import Modal from 'react-modal';
+import { withRouter } from 'react-router-dom';
 
-export default class ModalView extends Component {
+class ModalView extends Component {
   constructor(props) {
     super(props);
 
@@ -32,13 +33,18 @@ export default class ModalView extends Component {
         padding                    : '0px',
       }
     };
+    this.history = this.props.history;
+    this.returnUrl = this.props.returnUrl;
   }
 
   render() {
     return (
-      <Modal isOpen={ true } contentLabel={ this.props.contentLabel } style={ this.modalStyle }>
+      <Modal isOpen={true} contentLabel={this.props.contentLabel} style={this.modalStyle}
+        onRequestClose={() => this.history.push(this.returnUrl)}>
         { this.props.children }
       </Modal>
     );
   }
 }
+
+export default ModalView = withRouter(ModalView);
