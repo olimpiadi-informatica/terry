@@ -54,7 +54,7 @@ class TestContestManager(unittest.TestCase):
         self.assertEqual(checker, task["checker"])
         self.assertEqual(validator, task["validator"])
         self.assertEqual(generator, task["generator"])
-        self.assertEqual(os.path.join(Config.statementdir, "poldo", "statement.md"), task["statement_path"])
+        self.assertEqual(os.path.join(Config.web_statementdir, "poldo", "statement.md"), task["statement_path"])
         self.assertEqual(0o755, os.stat(checker).st_mode & 0o777)
         self.assertEqual(0o755, os.stat(validator).st_mode & 0o777)
         self.assertEqual(0o755, os.stat(generator).st_mode & 0o777)

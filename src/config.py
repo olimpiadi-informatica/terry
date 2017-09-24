@@ -20,6 +20,7 @@ class Config:
         "port": 1234,
         "storedir": "./files/",
         "statementdir": "./files/statements/secret/",
+        "web_statementdir": "/statements/secret/",
         "queue_size": 64,
         "admin_token": "secret",
         "num_proxies": 0,

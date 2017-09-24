@@ -49,6 +49,7 @@ class ContestManager:
         for task in contest_config["tasks"]:
             # copy the statement directory into the statement folder
             statementdir = os.path.join(Config.statementdir, task)
+            web_statementdir = os.path.join(Config.web_statementdir, task)
             taskdir = os.path.join(path, task)
             if os.path.isdir(statementdir):
                 shutil.rmtree(statementdir)
@@ -75,7 +76,7 @@ class ContestManager:
                 task_config["validator"] = validator
                 os.chmod(validator, 0o755)
 
-            task_config["statement_path"] = os.path.join(statementdir, "statement.md")
+            task_config["statement_path"] = os.path.join(web_statementdir, "statement.md")
             tasks.append(task_config)
 
         contest_config["tasks"] = tasks

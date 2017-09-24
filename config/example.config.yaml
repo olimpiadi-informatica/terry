@@ -9,6 +9,8 @@ db: db.sqlite3
 # Store dir for files and statements
 storedir: ./files/
 statementdir: ./files/statements/secret/
+# Prefix of the public url for a task statement
+web_statementdir: /statements/secret/
 
 # Queue size for input generation
 queue_size: 64
