@@ -13,6 +13,7 @@ export default class SubmissionListView extends Component {
 
     this.model = props.model;
     this.taskName = props.taskName;
+    this.task = props.model.getContest().getTask(this.taskName);
     this.list = this.model.getTaskState(this.taskName).getSubmissionList();
   }
 
@@ -31,7 +32,7 @@ export default class SubmissionListView extends Component {
   getScoreSeverity(score) {
     if (score < 0.01) {
       return "danger";
-    } else if (score > 99.99) {
+    } else if (score > this.task.data.max_score-0.01) {
       return "success";
     } else {
       return "warning";
@@ -40,8 +41,6 @@ export default class SubmissionListView extends Component {
 
   renderSubmissionList() {
     const submissionList = [];
-
-    console.log(this.list.data.items);
 
     for (let submission of this.list.data.items) {
       /** FIXME **/
@@ -110,7 +109,7 @@ export default class SubmissionListView extends Component {
             </div>
           </td>
           <td className={"alert-" + this.getScoreSeverity(submission.score)}>
-            <span style={ {fontSize: "x-large"} }>{ submission.score }</span> / 100
+            <span style={ {fontSize: "x-large"} }>{ submission.score }</span> / {this.task.data.max_score}
           </td>
         </tr>
       );
