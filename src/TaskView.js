@@ -5,7 +5,6 @@ import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
 import ReactMarkdown from 'react-markdown';
 import client from './TerryClient';
-import Task from './Task';
 import DateView from './DateView';
 
 class TaskView extends Component {
@@ -74,15 +73,21 @@ class TaskView extends Component {
     }
   }
 
+  transformUri(url) {
+    const taskBaseUri = this.task.data.statement_path.match(/.*\//)[0];
+    return client.statementsBaseURI + taskBaseUri + url;
+  }
+
   renderTaskStatement() {
     if(this.task.isLoadingStatement()) return <p>Loading statement...</p>;
     if(!this.task.isLoadedStatement()) return <p>Failed to load task statement. Try reloading the page.</p>;
 
-    return <ReactMarkdown source={this.task.getStatement()}/>
+    return <ReactMarkdown source={this.task.getStatement()}
+                          transformImageUri={this.transformUri.bind(this)}
+                          transformLinkUri={this.transformUri.bind(this)}/>
   }
 
   renderSubmissionListButton() {
-    console.log(this.task)
     return (
       <div>
         <strong>Last submission</strong>: <DateView date={new Date()}/>

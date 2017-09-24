@@ -1,4 +1,4 @@
-import axios from 'axios';
+import client from './TerryClient';
 import Observable from './Observable';
 
 export default class Task extends Observable {
@@ -20,7 +20,7 @@ export default class Task extends Observable {
 
     this.fireUpdate();
 
-    return this.loadStatementPromise = axios.get('/' + this.name + '.md').then((response) => {
+    return this.loadStatementPromise = client.statements.get(this.data.statement_path).then((response) => {
       this.statement = response.data;
       delete this.loadStatementPromise;
       this.fireUpdate();
