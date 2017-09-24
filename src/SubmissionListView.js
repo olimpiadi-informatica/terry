@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import ResultView from './ResultView';
-import FileView from './FileView';
 import { Link } from 'react-router-dom';
 import DateView from './DateView';
 import client from './TerryClient';

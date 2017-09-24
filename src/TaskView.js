@@ -22,6 +22,7 @@ class TaskView extends Component {
 
   componentWillMount() {
     this.task.loadStatement();
+    this.getSubmissionList().load();
   }
 
   componentDidMount() {
@@ -88,9 +89,22 @@ class TaskView extends Component {
   }
 
   renderSubmissionListButton() {
+    const list = this.getSubmissionList();
+    let last_submission;
+    if (list.isLoading()) last_submission = <em>Loading...</em>;
+    else if(!list.isLoaded()) last_submission = <em>Loading submission list failed, reload page.</em>;
+    else {
+      const items = list.data.items;
+      if (items.length === 0)
+        last_submission = <em>None</em>;
+      else {
+        const submission = items[items.length-1];
+        last_submission = <DateView date={new Date(submission.date)}/>
+      }
+    }
     return (
       <div>
-        <strong>Last submission</strong>: <DateView date={new Date()}/>
+        <strong>Last submission</strong>: {last_submission}
         {' '}
         (<Link to={"/" + this.task.name + "/submissions"}>view all submissions</Link>)
       </div>
@@ -104,15 +118,15 @@ class TaskView extends Component {
         { this.renderCommands() }
 
         <Route path="/:taskName/submit/:inputId" render={
-          ({match}) => <CreateSubmissionView model={this.model} inputId={match.params.inputId} taskName={this.task.name}></CreateSubmissionView>
+          ({match}) => <CreateSubmissionView model={this.model} inputId={match.params.inputId} taskName={this.task.name}/>
         }>
         </Route>
         <Route path="/:taskName/submissions" render={
-          ({match}) => <SubmissionListView model={this.model} taskName={this.task.name}></SubmissionListView>
-        }></Route>
+          ({match}) => <SubmissionListView model={this.model} taskName={this.task.name}/>
+        }/>
         <Route path="/:taskName/submission/:submissionId" render={
-          ({match}) => <SubmissionReportView model={this.model} submissionId={match.params.submissionId} taskName={this.task.name}></SubmissionReportView>
-        }></Route>
+          ({match}) => <SubmissionReportView model={this.model} submissionId={match.params.submissionId} taskName={this.task.name}/>
+        }/>
 
         { this.renderSubmissionListButton() }
 
