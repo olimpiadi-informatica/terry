@@ -9,7 +9,8 @@ export default class SubmissionList extends Observable {
     }
 
     load() {
-      if(this.isLoading()) throw new Error("load() called while already loading");
+      // ignore double calls
+      if(this.isLoading()) return;
 
       this.fireUpdate();
       // TODO: handle errors
