@@ -57,6 +57,7 @@ class ContestHandler(BaseHandler):
         except:
             Database.rollback()
             raise
+        Logger.info("CONTEST", "Generated input %s for user %s on task %s" % (id, token, task["name"]))
         return BaseHandler.format_dates(Database.get_input(id=id))
 
     @Validators.during_contest
@@ -88,4 +89,5 @@ class ContestHandler(BaseHandler):
         except:
             Database.rollback()
             raise
+        Logger.info("CONTEST", "User %s has submitted %s on %s" % (input["token"], submission_id, input["task"]))
         return InfoHandler.patch_submission(Database.get_submission(submission_id))

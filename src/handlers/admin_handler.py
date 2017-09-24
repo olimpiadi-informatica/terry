@@ -68,6 +68,7 @@ class AdminHandler(BaseHandler):
 
         start_time = int(datetime.datetime.now().timestamp())
         Database.set_meta("start_time", start_time)
+        Logger.info("CONTEST", "Contest started")
         return BaseHandler.format_dates(
             {"start_time": start_time},
             fields=["start_time"]
@@ -81,7 +82,9 @@ class AdminHandler(BaseHandler):
         """
         if user is None:
             Database.set_meta("extra_time", extra_time)
+            Logger.info("ADMIN", "Global extra time set to %d" % extra_time)
         else:
+            Logger.info("ADMIN", "Extra time for user %s set to %d" % (user["token"], extra_time))
             Database.set_extra_time(user["token"], extra_time)
         return {}
 

@@ -68,7 +68,8 @@ class Validators:
             token = Validators._guess_token(**kwargs)
             ip = kwargs["_ip"]
             if token is not None and Database.get_user(token) is not None:
-                Database.register_ip(token, ip)
+                if Database.register_ip(token, ip):
+                    Logger.info("LOGIN", "User %s logged in from %s for the first time" % (token, ip))
             del kwargs["_ip"]
             return handler(*args, **kwargs)
         HandlerParams.initialize_handler_params(handle, handler)
