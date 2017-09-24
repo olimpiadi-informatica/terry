@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, NavLink, Route } from 'react-router-dom';
 import TaskView from './TaskView';
+import Countdown from './Countdown';
 
 export default class ContestView extends Component {
   constructor(props) {
@@ -41,6 +42,7 @@ export default class ContestView extends Component {
   }
 
   getNavBar() {
+    const user = this.model.user;
     return (
       <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
         <a className="navbar-brand" href="#">Terry</a>
@@ -54,6 +56,12 @@ export default class ContestView extends Component {
           </ul>
 
           <ul className="nav navbar-nav navbar-right">
+            <li className="nav-item">
+              <span className="nav-link">{user.name} {user.surname}</span>
+            </li>
+            <li>
+              <span className="nav-link"><Countdown remaining={user.remaining_time}/></span>
+            </li>
             <li className="nav-item">
               <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
                 <span aria-hidden="true" className="fa fa-sign-out"></span> Log Out</a>
