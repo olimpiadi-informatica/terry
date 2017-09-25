@@ -27,11 +27,15 @@ class InfoHandler(BaseHandler):
 
         if not start_timestamp or now < start_datetime:
             return {
-                "has_started": False
+                "has_started": False,
+                "name": Database.get_meta("contest_name"),
+                "description": Database.get_meta("contest_description")
             }
 
         return {
             "has_started": True,
+            "name": Database.get_meta("contest_name"),
+            "description": Database.get_meta("contest_description"),
             "start_time": start_datetime.isoformat(),
             "tasks": Database.get_tasks()
         }

@@ -98,6 +98,8 @@ class ContestManager:
             Database.begin()
             try:
                 Database.set_meta("contest_duration", contest["duration"], autocommit=False)
+                Database.set_meta("contest_name", contest.get("name", "Contest"), autocommit=False)
+                Database.set_meta("contest_description", contest.get("description", ""), autocommit=False)
                 count = 0
 
                 for task in contest["tasks"]:
