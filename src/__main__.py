@@ -21,6 +21,7 @@ def main():
 
     Config.set_config_file(args.config)
 
+    Logger.set_log_level(Config.log_level)
     Logger.connect_to_database()
     Database.connect_to_database()
     ContestManager.read_from_disk()

@@ -10,17 +10,14 @@ from .config import Config
 
 import sqlite3
 
-import atexit
 import datetime
 import sys
 from colorama import Fore, Style
-import gevent.lock
 
 
 class Logger:
     """A logger class that stores stuff on a database"""
 
-    lock = gevent.lock.BoundedSemaphore()
     connected = False
     num_logs = 0
 
@@ -29,7 +26,7 @@ class Logger:
     WARNING = 2
     ERROR = 3
     HUMAN_MESSAGES = ["DEBUG", "INFO", "WARNING", "ERROR"]
-    LOG_LEVEL = DEBUG # TODO: change this at some point
+    LOG_LEVEL = INFO
     COLOR = [Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.YELLOW + Style.BRIGHT, Fore.RED + Style.BRIGHT]
     FMT = "%% %ds" % max(map(len, HUMAN_MESSAGES))
 
@@ -70,7 +67,10 @@ class Logger:
         if isinstance(lvl, int):
             Logger.LOG_LEVEL = lvl
         else:
-            Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index(lvl)
+            if lvl not in Logger.HUMAN_MESSAGES:
+                Logger.log_console(Logger.ERROR, "LOGGER", "Invalid log level: %s" % lvl)
+            else:
+                Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index(lvl)
 
     @staticmethod
     def log(level, category, message):
@@ -81,20 +81,24 @@ class Logger:
         :param message: What really happened, it is converted to string using str()
         """
         if level >= Logger.LOG_LEVEL:
-            tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
-            tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
-            cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
-            print(
-                Logger.COLOR[level] + tag + Style.RESET_ALL,
-                "%s %s" % (cat, message),
-                file=sys.stderr
-            )
+            Logger.log_console(level, category, message)
         c = Logger.c
         c.execute("""
             INSERT INTO logs (level, category, message)
             VALUES (:level, :category, :message)
         """, {"level": level, "category": category, "message": str(message)})
         Logger.conn.commit()
+
+    @staticmethod
+    def log_console(level, category, message):
+        tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
+        tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
+        cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
+        print(
+            Logger.COLOR[level] + tag + Style.RESET_ALL,
+            "%s %s" % (cat, message),
+            file=sys.stderr
+        )
 
     @staticmethod
     def debug(*args, **kwargs):

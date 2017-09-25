@@ -24,3 +24,6 @@ num_proxies: 0
 # Path of the contest
 contest_path: ./contest/
 contest_zips: ./zips/
+
+# Log level: DEBUG INFO WARNING ERROR
+log_level: INFO

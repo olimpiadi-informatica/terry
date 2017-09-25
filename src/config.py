@@ -25,7 +25,8 @@ class Config:
         "admin_token": "secret",
         "num_proxies": 0,
         "contest_path": "./contest/",
-        "contest_zips": "./zips/"
+        "contest_zips": "./zips/",
+        "log_level": "INFO"
     }
 
     @staticmethod
