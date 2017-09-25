@@ -9,6 +9,7 @@
     "font-awesome": "^4.7.0",
     "http-proxy": "^1.16.2",
     "moment": "^2.18.1",
+    "moment-precise-range-plugin": "^1.2.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-fontawesome": "^1.6.1",
