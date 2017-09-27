@@ -115,19 +115,24 @@ export default class SubmissionListView extends Component {
     if(this.list.isLoading()) return <p>Loading...</p>;
     if(!this.list.isLoaded()) return <p>Loading submission list failed, reload page.</p>;
 
+    if (this.list.data.items.length === 0)
+      return <div className="modal-body"><em>You have not submitted yet.</em></div>;
+
     return (
-      <table className="table submissions-table" style={ {marginBottom: 0} }>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Download</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          { this.renderSubmissionList() }
-        </tbody>
-      </table>
+      <div className="modal-body no-padding">
+        <table className="table submissions-table" style={ {marginBottom: 0} }>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Download</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            { this.renderSubmissionList() }
+          </tbody>
+        </table>
+      </div>
     );
   }
 
@@ -142,9 +147,7 @@ export default class SubmissionListView extends Component {
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
-        <div className="modal-body no-padding">
-          { this.renderBody() }
-        </div>
+        { this.renderBody() }
         <div className="modal-footer">
           <Link to={"/" + this.taskName} role="button" className="btn btn-primary">
             <span aria-hidden="true" className="fa fa-times"></span> Close

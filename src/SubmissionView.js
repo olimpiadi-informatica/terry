@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import ResultView from './ResultView';
 import FileView from './FileView';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import ModalView from './ModalView';
 
-export default class SubmissionView extends Component {
+class SubmissionView extends Component {
   constructor(props) {
     super(props);
 
     this.model = props.model;
     this.submission = props.submission;
-  }
-
-  getTaskState() {
-    return this.model.getTaskState(this.taskName);
   }
 
   componentDidMount() {
@@ -74,7 +70,7 @@ export default class SubmissionView extends Component {
     if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
 
     return (
-      <ResultView model={this.model} result={output.data.validation}></ResultView>
+      <ResultView model={this.model} result={output.data.validation} validation/>
     );
   }
 
@@ -122,7 +118,11 @@ export default class SubmissionView extends Component {
           </Link>
           <button role="button" className="btn btn-success"
                   disabled={ !this.submission.canSubmit() }
-                  onClick={() => { this.submission.submit() }}>
+                  onClick={() => { this.submission.submit().then(() => {
+                    const taskName = this.submission.data.task;
+                    const id = this.submission.data.id;
+                    this.props.history.push("/" + taskName + "/submission/" + id);
+                  })}}>
             <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
           </button>
         </div>
@@ -130,23 +130,8 @@ export default class SubmissionView extends Component {
     );
   }
 
-  renderSubmissionFeedback() {
-    return (
-      <div>
-        <ResultView model={this.model} result={this.submission.data.feedback}></ResultView>
-        <div className="modal-footer">
-          <Link to={"/" + this.submission.input.task} role="button" className="btn btn-success">
-            <span aria-hidden="true" className="fa fa-check"></span> Okay
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   renderDialog() {
-    if(this.submission.isSubmitted()) {
-      return this.renderSubmissionFeedback();
-    } else {
+    if(!this.submission.isSubmitted()) {
       return this.renderSubmissionForm();
     }
   }
@@ -168,3 +153,5 @@ export default class SubmissionView extends Component {
     );
   }
 }
+
+export default SubmissionView = withRouter(SubmissionView);

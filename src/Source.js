@@ -15,7 +15,7 @@ export default class Source extends Observable {
     const data = new FormData();
 
     data.append("input_id", this.submission.input.id);
-    data.append("file", this.file)
+    data.append("file", this.file);
 
     // TODO: isUpdating()...
     return client.api.post("/upload_source", data).then((response) => {

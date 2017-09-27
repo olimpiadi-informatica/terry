@@ -2,6 +2,7 @@ import client from './TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import Task from './Task';
+import SubmissionResult from "./SubmissionResult";
 
 export default class Contest extends Observable {
   constructor() {
@@ -9,6 +10,7 @@ export default class Contest extends Observable {
 
     this.cookies = new Cookies();
     this.inputGenerationPromise = {};
+    this.submissions = {};
   }
 
   isLoading() {
@@ -43,5 +45,11 @@ export default class Contest extends Observable {
       byName[task.name] = task;
     }
     return byName[taskName];
+  }
+
+  getSubmission(id) {
+    if (this.submissions[id] !== undefined) return this.submissions[id];
+
+    return this.submissions[id] = new SubmissionResult(this, id);
   }
 }
