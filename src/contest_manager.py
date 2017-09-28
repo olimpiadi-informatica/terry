@@ -241,11 +241,12 @@ class ContestManager:
                 StorageManager.get_absolute_path(output_path)
             ])
         except:
+            # TODO log the stdout and stderr of the checker
             Logger.error(
                 "TASK", "Error while evaluating output %s "
                 "for task %s, with input %s: %s" %
                 (output_path, task_name, input_path, traceback.format_exc())
             )
             raise
-        Logger.debug("TASK", "Evaluated output %s for task %s, with input %s" % (output_path, task_name, input_path))
+        Logger.info("TASK", "Evaluated output %s for task %s, with input %s" % (output_path, task_name, input_path))
         return output

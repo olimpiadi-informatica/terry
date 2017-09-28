@@ -5,6 +5,8 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
+from werkzeug.exceptions import InternalServerError
+
 from .base_handler import BaseHandler
 from .info_handler import InfoHandler
 from ..contest_manager import ContestManager
@@ -30,7 +32,10 @@ class UploadHandler(BaseHandler):
         StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
-        result = ContestManager.evaluate_output(input["task"], input["path"], path)
+        try:
+            result = ContestManager.evaluate_output(input["task"], input["path"], path)
+        except:
+            BaseHandler.raise_exc(InternalServerError, "INTERNAL_ERROR", "Failed to evaluate the output")
 
         Database.add_output(output_id, input["id"], path, file_size, result)
         Logger.info("UPLOAD", "User %s has uploaded the output %s" % (input["token"], output_id))
