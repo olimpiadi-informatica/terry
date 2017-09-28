@@ -36,6 +36,10 @@ export default class Model extends Observable {
     return this.user !== undefined;
   }
 
+  isUserLoading() {
+    return this.userLoadingPromise !== undefined;
+  }
+
   maybeLoadUser() {
     if(this.isLoggedIn()) {
       this.refreshUser();
@@ -46,10 +50,18 @@ export default class Model extends Observable {
     if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
     const userToken = this.cookies.get('userToken');
 
-    return this.loadUser(userToken).then((response) => {
-      this.user = response.data;
-      this.fireUpdate();
-    });
+    return this.userLoadingPromise = this.loadUser(userToken)
+      .then(response => {
+        delete this.userLoadingPromise;
+        this.user = response.data;
+        this.fireUpdate();
+      })
+      .catch(response => {
+        delete this.userLoadingPromise;
+        console.log("Forced logout because: ", response);
+        this.logout();
+        return Promise.reject(response);
+      });
   }
 
   attemptLogin(token) {
@@ -62,9 +74,12 @@ export default class Model extends Observable {
       .then((response) => {
         this.user = response.data;
         this.cookies.set('userToken', token);
-        this.fireUpdate();
+        // if the login is valid the contest must be reloaded, in fact most of the useful properties are not present yet
+        // like the tasks and the start time. contest.load() will fire all the required updates
+        this.contest.load();
       })
       .catch((response) => {
+        console.error(response);
         this.loginAttempt.error = response;
         this.fireUpdate();
       });
