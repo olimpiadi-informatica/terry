@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import TaskView from './TaskView';
-import Countdown from './Countdown';
-import TaskNavbarItem from './TaskNavbarItem';
+import Countdown from './CountdownView';
+import TaskNavbarItem from './NavbarItemView';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import 'moment-precise-range-plugin';

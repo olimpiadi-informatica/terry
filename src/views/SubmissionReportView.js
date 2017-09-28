@@ -3,7 +3,7 @@ import ModalView from './ModalView';
 import DateView from './DateView';
 import ResultView from './ResultView';
 import { Link } from 'react-router-dom';
-import {colorFromScore} from "./utils";
+import {colorFromScore} from "../utils";
 
 export default class SubmissionReportView extends Component {
   constructor(props) {

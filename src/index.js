@@ -4,7 +4,7 @@ import './style.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AppView from './AppView';
+import AppView from './views/AppView';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 /******** DEVELOPMENT SPECIFIC **********/

@@ -1,4 +1,4 @@
-import client from './TerryClient';
+import client from '../TerryClient';
 import Source from './Source';
 import Output from './Output';
 import Observable from './Observable';

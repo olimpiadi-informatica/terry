@@ -1,4 +1,4 @@
-import client from './TerryClient';
+import client from '../TerryClient';
 import Observable from './Observable';
 
 export default class Output extends Observable {

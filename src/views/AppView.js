@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import ContestView from './ContestView';
 import LoginView from './LoginView';
-import Model from './Model';
+import Model from '../models/Model';
 
 export default class AppView extends Component {
   constructor(props) {

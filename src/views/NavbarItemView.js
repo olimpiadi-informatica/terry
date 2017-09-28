@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { colorFromScore } from './utils';
+import { colorFromScore } from '../utils';
 
 export default class TaskNavbarItem extends Component {
   constructor(props) {

@@ -1,4 +1,4 @@
-import client from './TerryClient';
+import client from '../TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import Task from './Task';

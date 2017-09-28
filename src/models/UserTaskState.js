@@ -1,4 +1,4 @@
-import client from './TerryClient';
+import client from '../TerryClient';
 import Submission from './Submission';
 import SubmissionList from './SubmissionList';
 import Observable from './Observable';

@@ -4,7 +4,7 @@ import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
 import ReactMarkdown from 'react-markdown';
-import client from './TerryClient';
+import client from '../TerryClient';
 import DateView from './DateView';
 
 class TaskView extends Component {

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import DateView from './DateView';
-import client from './TerryClient';
+import client from '../TerryClient';
 import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
-import {colorFromScore} from "./utils";
+import {colorFromScore} from "../utils";
 
 export default class SubmissionListView extends Component {
   constructor(props) {
