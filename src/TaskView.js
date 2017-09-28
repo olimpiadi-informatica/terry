@@ -92,7 +92,7 @@ class TaskView extends Component {
     const list = this.getSubmissionList();
     let last_submission;
     if (list.isLoading()) last_submission = <em>Loading...</em>;
-    else if(!list.isLoaded()) last_submission = <em>Loading submission list failed, reload page.</em>;
+    else if(!list.isLoaded()) last_submission = <em>Loading submission list failed, reload the page.</em>;
     else {
       const items = list.data.items;
       if (items.length === 0)
