@@ -40,7 +40,7 @@ h5.modal-subtitle {
 }
 
 .sidebar {
-  height: calc(100vh - 56px) ;
+  height: calc(100vh - 62px);
   padding: 0px;
   padding-top: 16px;
 }
@@ -68,9 +68,6 @@ li.title {
 
 main {
   padding: 16px;
-  height: calc(100vh - 56px) ;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 .task-score-badge {
@@ -81,20 +78,6 @@ main {
 .task-list-item {
   overflow-x: hidden;
 }
-
-/*
-
-.oii-modal.modal {
-  background-color: rgba(0, 0, 0, 0.5);
-  display: block;
-}
-
-.oii-modal .modal-dialog {
-  background-color: white;
-  border-radius: .3rem;
-}
-
-*/
 
 .submissionView {
   margin: 16px;
@@ -113,11 +96,6 @@ main {
 -------------------------------------------------- */
 
 /* Base styles (regardless of theme) */
-/*
-  background-color: #f0f7fd;
-  border-left-color: #0275d8;
-*/
-
 .card-header {
   background-color: #0275d8;
   color: #FFF;

@@ -7,11 +7,17 @@ import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import 'moment-precise-range-plugin';
 
+import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
+
 export default class ContestView extends Component {
   constructor(props) {
     super(props);
 
     this.model = props.model;
+    this.toggleNavbar = this.toggleNavbar.bind(this);
+    this.state = {
+      collapsed: true
+    };
   }
 
   componentWillMount() {
@@ -34,35 +40,40 @@ export default class ContestView extends Component {
     );
   }
 
+  toggleNavbar() {
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+  }
+
   getNavBar() {
     const user = this.model.user;
-    return (
-      <nav className="navbar navbar-toggleable-md navbar-inverse bg-primary">
-        <a className="navbar-brand" href="#">Terry</a>
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <Link to="/" className="nav-link">
-                <span aria-hidden="true" className="fa fa-home"></span> Home
-              </Link>
-            </li>
-          </ul>
-
-          <ul className="nav navbar-nav navbar-right">
-            <li className="nav-item">
-              <span className="nav-link">{user.name} {user.surname}</span>
-            </li>
-            <li>
-              <span className="nav-link"><Countdown remaining={user.remaining_time}/></span>
-            </li>
-            <li className="nav-item">
-              <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
-                <span aria-hidden="true" className="fa fa-sign-out"></span> Log Out</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    );
+    return <Navbar color="primary" inverse toggleable>
+      <NavbarToggler onClick={this.toggleNavbar} right/>
+      <Link to="/" className="navbar-brand">Terry</Link>
+      <Collapse navbar className="navbar-toggleable-sm" isOpen={!this.state.collapsed}>
+        <ul className="navbar-nav mr-auto">
+          <li className="nav-item active">
+           <Link to="/" className="nav-link">
+             <span aria-hidden="true" className="fa fa-home"></span> Home
+           </Link>
+          </li>
+        </ul>
+        <ul className="nav navbar-nav navbar-right">
+          <li className="nav-item">
+            <span className="nav-link">{user.name} {user.surname}</span>
+          </li>
+          <li>
+            <span className="nav-link"><Countdown remaining={user.remaining_time}/></span>
+          </li>
+          <li className="nav-item">
+            <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
+              <span aria-hidden="true" className="fa fa-sign-out"></span> Log Out
+            </a>
+          </li>
+        </ul>
+      </Collapse>
+    </Navbar>
   }
 
   render_index() {
