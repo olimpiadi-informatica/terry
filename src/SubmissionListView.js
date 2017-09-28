@@ -4,6 +4,7 @@ import DateView from './DateView';
 import client from './TerryClient';
 import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
+import {colorFromScore} from "./utils";
 
 export default class SubmissionListView extends Component {
   constructor(props) {
@@ -101,7 +102,7 @@ export default class SubmissionListView extends Component {
               </a>
             </div>
           </td>
-          <td className={"alert-" + this.getScoreSeverity(submission.score)}>
+          <td className={"alert-" + colorFromScore(submission.score, this.task.data.max_score)}>
             <span style={ {fontSize: "x-large"} }>{ submission.score }</span> / {this.task.data.max_score}
           </td>
         </tr>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Link, NavLink, Route } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import TaskView from './TaskView';
 import Countdown from './Countdown';
+import TaskNavbarItem from './TaskNavbarItem';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import 'moment-precise-range-plugin';
@@ -17,17 +18,6 @@ export default class ContestView extends Component {
     this.model.enterContest();
   }
 
-  taskNavItem(item, i) {
-    return (
-      <li key={i} className="nav-item">
-        <NavLink to={ "/" + item.name } className="nav-link tasklist-item" activeClassName="active">
-          <div className="task-score-badge col-4 col-lg-3 badge badge-pill badge-danger">0/100</div>
-          <div className="task-list-item col-8 col-lg-9">{ item.name }</div>
-        </NavLink>
-      </li>
-    );
-  }
-
   getSideBar() {
     return (
       <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
@@ -38,7 +28,7 @@ export default class ContestView extends Component {
 
           <li className="divider-vertical"></li>
 
-          { this.model.getContest().data.tasks.map(this.taskNavItem.bind(this)) }
+          { this.model.getContest().data.tasks.map((task,i) => <TaskNavbarItem key={i} taskName={task.name} model={this.model} />)}
         </ul>
       </nav>
     );

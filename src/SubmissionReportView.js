@@ -3,6 +3,7 @@ import ModalView from './ModalView';
 import DateView from './DateView';
 import ResultView from './ResultView';
 import { Link } from 'react-router-dom';
+import {colorFromScore} from "./utils";
 
 export default class SubmissionReportView extends Component {
   constructor(props) {
@@ -33,8 +34,7 @@ export default class SubmissionReportView extends Component {
     const submission = this.submission.data;
     const score = submission.score;
     const max_score = this.model.contest.getTask(submission.task).data.max_score;
-    const color = score === max_score ? "success" :
-        score === 0 ? "danger" : "warning";
+    const color = colorFromScore(score, max_score);
     return (
         <div>
           <div className="modal-body">

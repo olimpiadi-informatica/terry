@@ -12,7 +12,7 @@ class Client {
       baseURL: this.filesBaseURI,
     });
 
-    this.statementsBaseURI = process.env.REACT_APP_STATEMENTS_BASE_URI || "http://localhost:5050/api/";
+    this.statementsBaseURI = process.env.REACT_APP_STATEMENTS_BASE_URI || "http://localhost:5050/files/";
     this.statements = axios.create({
       baseURL: this.statementsBaseURI,
     });
