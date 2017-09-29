@@ -6,7 +6,6 @@ import TaskNavbarItem from './NavbarItemView';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import 'moment-precise-range-plugin';
-
 import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
 
 export default class ContestView extends Component {
@@ -50,7 +49,7 @@ export default class ContestView extends Component {
     const user = this.model.user;
     return <Navbar color="primary" inverse toggleable>
       <NavbarToggler onClick={this.toggleNavbar} right/>
-      <Link to="/" className="navbar-brand">Terry</Link>
+      <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
       <Collapse navbar className="navbar-toggleable-sm" isOpen={!this.state.collapsed}>
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
