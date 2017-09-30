@@ -17,7 +17,7 @@ from ..database import Database
 from ..contest_manager import ContestManager
 from ..validators import Validators
 
-from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 
 class AdminHandler(BaseHandler):
@@ -37,6 +37,14 @@ class AdminHandler(BaseHandler):
             with zipfile.ZipFile(z) as f:
                 f.extractall(pwd=password.encode())
             Logger.info("CONTEST", "Contest extracted")
+        except FileNotFoundError:
+            BaseHandler.raise_exc(NotFound, "NOT_FOUND", "Archive %s not found" % z)
+        except RuntimeError as ex:
+            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
+        except PermissionError as ex:
+            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
+        except zipfile.BadZipFile as ex:
+            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
         finally:
             os.chdir(wd)
         ContestManager.read_from_disk()

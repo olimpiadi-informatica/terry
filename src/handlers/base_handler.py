@@ -40,6 +40,7 @@ class BaseHandler:
             "code": code,
             "message": message
         })
+        Logger.warning(cls.__name__.upper(), code + ": " + message)
         raise cls(response=response)
 
     def handle(self, endpoint, route_args, request):
