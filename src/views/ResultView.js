@@ -22,11 +22,12 @@ class ResultView extends Component {
   }
 
   renderValidationCase(c, id) {
+    const { t } = this.props;
     const color = c.status === "parsed" ? "warning" :
         c.status === "missing" ? "danger" : "dark";
     return (
         <li key={id} className={"list-group-item list-group-item-"+color}>
-          <span>Case #<samp>{id}</samp>: <b>{c.status}</b><br/><em>{c.message}</em></span>
+          <span>Case #<samp>{id}</samp>: <b>{t("submission.validation."+c.status)}</b><br/><em>{c.message}</em></span>
         </li>
     )
   }

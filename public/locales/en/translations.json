@@ -54,6 +54,11 @@
       "change output": "Change output",
       "submit": "Submit",
       "title": "Submission for input"
+    },
+    "validation": {
+      "parsed": "parsed",
+      "missing": "missing",
+      "invalid": "invalid"
     }
   },
   "login": {

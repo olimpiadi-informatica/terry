@@ -49,7 +49,7 @@ class SubmissionReportView extends Component {
           </div>
           <div className="modal-footer">
             <Link to={"/" + submission.task} role="button" className="btn btn-primary">
-              <span aria-hidden="true" className="fa fa-times"></span> {t("close")}
+              <span aria-hidden="true" className="fa fa-times" /> {t("close")}
             </Link>
           </div>
         </div>

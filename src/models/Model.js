@@ -60,6 +60,7 @@ export default class Model extends Observable {
         delete this.userLoadingPromise;
         console.log("Forced logout because: ", response);
         this.logout();
+        // TODO redirect to /
         return Promise.reject(response);
       });
   }

@@ -54,6 +54,11 @@
       "change output": "Modifica output",
       "submit": "Invia",
       "title": "Sottoponi per l'input"
+    },
+    "validation": {
+      "parsed": "forato corretto",
+      "missing": "mancante",
+      "invalid": "formato invalido"
     }
   },
   "login": {
