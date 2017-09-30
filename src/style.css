@@ -202,3 +202,9 @@ main {
     opacity: 0;
   }
 }
+
+/* Admin
+-------------------------------------------------- */
+.admin-jumbotron {
+  background-color: #f0ad4e;
+}

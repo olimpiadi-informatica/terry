@@ -2,7 +2,10 @@ import client from '../../TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from '../Observable';
 
+
 export default class Session extends Observable {
+  static cookieName = "adminToken";
+
   constructor() {
     super();
 
@@ -26,7 +29,7 @@ export default class Session extends Observable {
 
   tryLogin() {
     if (this.isLoggedIn()) {
-      const adminToken = this.cookies.get('adminToken');
+      const adminToken = this.cookies.get(Session.cookieName);
       this.attemptLogin(adminToken);
     }
   }
@@ -38,7 +41,7 @@ export default class Session extends Observable {
     return this.loadingStatus = this.loadStatus(token)
         .then((response) => {
           this.status = response.data;
-          this.cookies.set('adminToken', token);
+          this.cookies.set(Session.cookieName, token);
           delete this.loadingStatus;
           delete this.error;
           this.fireUpdate();
@@ -54,7 +57,7 @@ export default class Session extends Observable {
 
   logout() {
     if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
-    this.cookies.remove('adminToken');
+    this.cookies.remove(Session.cookieName);
     delete this.status;
     this.fireUpdate();
   }

@@ -70,7 +70,7 @@ class ContestView extends Component {
             <span className="nav-link"><Countdown remaining={user.remaining_time}/></span>
           </li>
           <li className="nav-item">
-            <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
+            <a className="btn btn-danger" href="#" role="button" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
               <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
             </a>
           </li>
