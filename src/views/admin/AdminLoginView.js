@@ -1,31 +1,30 @@
 import React, { Component } from 'react';
-import ReactMarkdown from 'react-markdown';
-import {translateComponent} from "../utils";
+import {translateComponent} from "../../utils";
 
-class LoginView extends Component {
+class AdminLoginView extends Component {
   constructor(props) {
     super(props);
 
-    this.model = props.model;
+    this.session = props.session;
   }
 
   componentDidMount() {
-    this.model.pushObserver(this);
+    this.session.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.model.popObserver(this);
+    this.session.popObserver(this);
   }
 
   login() {
-    this.model.attemptLogin(this.refs.form.token.value);
+    this.session.attemptLogin(this.refs.form.token.value);
   }
 
   getLoginError() {
     const { t } = this.props;
-    const attempt = this.model.loginAttempt;
-    if (attempt && attempt.error) {
-      const message = attempt.error.response.data.message;
+    const error = this.session.error;
+    if (error) {
+      const message = error.response.data.message;
       return (<div className="alert alert-danger col-md-8 offset-md-2" role="alert">
         <strong>{t("login.error")}</strong> {message}
       </div>);
@@ -47,24 +46,15 @@ class LoginView extends Component {
     </div>;
   }
 
-  renderNotStarted() {
-    const { t } = this.props;
-    return <em>{t("login.not started")}</em>;
-  }
-
   render() {
-    const form = this.model.contest.data.has_started ? this.renderLoginForm() : this.renderNotStarted();
     return (
-      <div className="container-fluid mt-4">
-        <div className="jumbotron col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-        <h1 className="display-3 center-align">{this.model.contest.data.name}</h1>
-          <ReactMarkdown source={this.model.contest.data.description} />
-          <hr />
-          { form }
+        <div className="container-fluid mt-4">
+          <div className="jumbotron col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+            { this.renderLoginForm() }
+          </div>
         </div>
-    </div>
     );
   }
 }
 
-export default translateComponent(LoginView);
+export default translateComponent(AdminLoginView, "admin");

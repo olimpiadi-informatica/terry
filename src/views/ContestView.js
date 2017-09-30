@@ -102,7 +102,7 @@ class ContestView extends Component {
 
   render() {
     return (
-      <div >
+      <div>
         { this.getNavBar() }
 
         <div className="container-fluid">

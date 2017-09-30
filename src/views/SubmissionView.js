@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ResultView from './ResultView';
 import FileView from './FileView';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
 import {translateComponent} from "../utils";
 

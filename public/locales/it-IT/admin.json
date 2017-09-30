@@ -1,0 +1,12 @@
+{
+  "navbar": {
+    "title": "Admin",
+    "logout": "Esci"
+  },
+  "login": {
+    "please login": "Effettua il login",
+    "token": "Token",
+    "login": "Entra",
+    "error": "Errore:"
+  }
+}

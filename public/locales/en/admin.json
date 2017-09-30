@@ -1,0 +1,12 @@
+{
+  "navbar": {
+    "title": "Admin",
+    "logout": "Logout"
+  },
+  "login": {
+    "please login": "Please login",
+    "token": "Token",
+    "login": "Log in",
+    "error": "Error:"
+  }
+}

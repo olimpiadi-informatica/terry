@@ -65,6 +65,7 @@
     "error": "Error!",
     "please login": "Please login",
     "token": "Token",
+    "login": "Log in",
     "not started": "The contest has not started yet! Refresh this page when the constest has started to be able to login."
   },
   "task": {

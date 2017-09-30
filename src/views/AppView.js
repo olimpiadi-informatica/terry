@@ -3,6 +3,7 @@ import ContestView from './ContestView';
 import LoginView from './LoginView';
 import Model from '../models/Model';
 import {translateComponent} from "../utils";
+import LoadingView from "./LoadingView";
 
 class AppView extends Component {
   constructor(props) {
@@ -25,15 +26,6 @@ class AppView extends Component {
     this.model.getContest().popObserver(this);
   }
 
-  renderLoading() {
-    return <div className="sk-folding-cube">
-      <div className="sk-cube1 sk-cube"></div>
-      <div className="sk-cube2 sk-cube"></div>
-      <div className="sk-cube4 sk-cube"></div>
-      <div className="sk-cube3 sk-cube"></div>
-    </div>
-  }
-
   renderError() {
     const { t } = this.props;
     return <div className="container">
@@ -47,10 +39,10 @@ class AppView extends Component {
   }
 
   render() {
-    if (this.model.getContest().isLoading()) return this.renderLoading();
+    if (this.model.getContest().isLoading()) return <LoadingView />;
     if (!this.model.getContest().isLoaded()) return this.renderError();
 
-    if (this.model.isUserLoading()) return this.renderLoading();
+    if (this.model.isUserLoading()) return <LoadingView />;
     if (!this.model.isLoggedIn()) return <LoginView model={this.model}/>;
     if (!this.model.isUserLoaded()) return this.renderError();
 
