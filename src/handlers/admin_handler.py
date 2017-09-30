@@ -52,8 +52,11 @@ class AdminHandler(BaseHandler):
             self.raise_exc(BadRequest, 'INVALID_PARAMETER', 'The level provided is invalid')
         level = Logger.HUMAN_MESSAGES.index(level)
 
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
-        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+        try:
+            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+            end_date = datetime.datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+        except ValueError as e:
+            BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates({
             "items": Logger.get_logs(level, category, start_date, end_date)
         })
