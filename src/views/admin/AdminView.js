@@ -6,6 +6,7 @@ import Countdown from '../CountdownView';
 import Session from "../../models/admin/Session";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "../LoadingView";
+import LogsView from "./LogsView";
 
 class ContestView extends Component {
   constructor(props) {
@@ -38,6 +39,8 @@ class ContestView extends Component {
 
   getNavBar() {
     const { t } = this.props;
+    const countdown = this.session.status.start_time ? <Countdown remaining={this.session.status.remaining_time}/> : "";
+
     return <Navbar color="danger" inverse toggleable>
       <NavbarToggler onClick={this.toggleNavbar} right />
       <Link to="/" className="navbar-brand">{t("navbar.title")}</Link>
@@ -45,10 +48,10 @@ class ContestView extends Component {
         <ul className="navbar-nav mr-auto" />
         <ul className="nav navbar-nav navbar-right">
           <li>
-            <span className="nav-link"><Countdown remaining={this.session.status.remaining_time}/></span>
+            <span className="nav-link">{countdown}</span>
           </li>
           <li className="nav-item">
-            <a className="btn btn-danger" href="#" role="button" onClick={() => this.session.logout()}>
+            <a className="btn btn-danger" href="#" role="button" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
               <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
             </a>
           </li>
@@ -67,7 +70,7 @@ class ContestView extends Component {
       <div className="container-fluid">
         <div className="row">
           <main className="col-sm-12">
-            <h1>Admin page</h1>
+            <LogsView session={this.session} />
           </main>
         </div>
       </div>

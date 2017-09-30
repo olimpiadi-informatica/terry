@@ -8,5 +8,20 @@
     "token": "Token",
     "login": "Entra",
     "error": "Errore:"
+  },
+  "logs": {
+    "title": "Registro",
+    "date": "Data",
+    "category": "Categoria",
+    "level": "Livello",
+    "message": "Messaggio",
+    "category filter": "Filtro categoria",
+    "message filter": "Filtro messaggio",
+    "levels": {
+      "DEBUG": "DEBUG",
+      "INFO": "INFO",
+      "WARNING": "AVVISO",
+      "ERROR": "ERRORE"
+    }
   }
 }

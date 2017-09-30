@@ -8,5 +8,20 @@
     "token": "Token",
     "login": "Log in",
     "error": "Error:"
+  },
+  "logs": {
+    "title": "Logs",
+    "date": "Date",
+    "category": "Category",
+    "level": "Level",
+    "message": "Message",
+    "category filter": "Category filter",
+    "message filter": "Message filter",
+    "levels": {
+      "DEBUG": "DEBUG",
+      "INFO": "INFO",
+      "WARNING": "WARNING",
+      "ERROR": "ERROR"
+    }
   }
 }

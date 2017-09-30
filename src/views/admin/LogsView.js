@@ -1,0 +1,166 @@
+import React, { Component } from 'react';
+import {translateComponent, formatDate} from "../../utils";
+import Logs from "../../models/admin/Logs";
+import LoadingView from "../LoadingView";
+
+class LogsTable extends Component {
+  constructor(props) {
+    super(props);
+    this.logs = props.logs;
+    this.changeLevel = props.changeLevel;
+    this.changeCategory = props.changeCategory;
+  }
+
+  componentDidMount() {
+    this.logs.pushObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.logs.popObserver(this);
+  }
+
+  filter(log) {
+    const filter = this.props.filter.toLowerCase();
+    if (!filter) return true;
+    return log.message.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  formatLog(log, i) {
+    const { t } = this.props;
+    const levelToClass = (level) =>
+        level === "DEBUG" ? "light" :
+        level === "INFO" ? "info" :
+        level === "WARNING" ? "warning" :
+        level === "ERROR" ? "danger" : "light";
+
+    return <tr key={i} className={"table-"+levelToClass(log.level)}>
+      <td>{new Date(log.date).toLocaleString()}</td>
+      <td>
+        <a href="/admin" onClick={(e) => { e.preventDefault(); this.changeCategory(log.category)}}>
+        {log.category}
+        </a>
+      </td>
+      <td>
+        <a href="/admin" onClick={(e) => { e.preventDefault(); this.changeLevel(log.level)}}>
+        {t("logs.levels."+log.level)}
+        </a>
+      </td>
+      <td>{log.message}</td>
+    </tr>;
+  }
+
+  render() {
+    const { t } = this.props;
+    if (this.logs.isLoading()) return <LoadingView />;
+
+    return <div style={{maxHeight: "500px", overflowY: "auto"}}>
+      <table className="table table-bordered">
+        <thead>
+        <tr>
+          <th>{t("logs.date")}</th>
+          <th>{t("logs.category")}</th>
+          <th>{t("logs.level")}</th>
+          <th>{t("logs.message")}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {this.logs.data.items.filter((log) => this.filter(log)).map(this.formatLog.bind(this))}
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+LogsTable = translateComponent(LogsTable, "admin");
+
+class LogsView extends Component {
+  constructor(props) {
+    super(props);
+
+    this.session = props.session;
+    this.logs = new Logs(this.session);
+    this.state = {
+      level: "INFO",
+      category: "",
+      filter: ""
+    };
+  }
+
+  componentWillMount() {
+    this.updateLogs();
+    this.setInterval();
+  }
+
+  updateLogs() {
+    const start = new Date(Date.now()-10000000);
+    const end = new Date();
+    const options = {
+      start_date: formatDate(start),
+      end_date: formatDate(end),
+      level: this.state.level
+    };
+    if (this.state.category)
+      options.category = this.state.category;
+    this.logs.load(options);
+  }
+
+  setInterval() {
+    this.interval = setInterval(this.updateLogs.bind(this), 5000);
+  }
+  clearInterval() {
+    clearInterval(this.interval);
+  }
+
+  componentDidUpdate(props, state) {
+    if (state.level !== this.state.level || state.category !== this.state.category)
+      this.updateLogs();
+  }
+
+  changeLevel(level) {
+    this.setState({level: level});
+    this.clearInterval();
+    this.setInterval();
+  }
+
+  changeCategory(cat) {
+    this.setState({category: cat});
+    this.clearInterval();
+    this.setInterval();
+  }
+
+  changeFilter(filter) {
+    this.setState({filter: filter});
+  }
+
+  render() {
+    const { t } = this.props;
+
+    return <div>
+      <h1>{t("logs.title")}</h1>
+
+      <div className="row">
+        <div className="col-4 form-group">
+          <input placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
+                 onChange={(e) => this.changeCategory(e.target.value)}/>
+        </div>
+        <div className="col-4 form-group">
+          <select id="level" className="form-control" onChange={(e) => this.changeLevel(e.target.value)}
+                  value={this.state.level}>
+            <option value="DEBUG">DEBUG</option>
+            <option value="INFO">INFO</option>
+            <option value="WARNING">WARNING</option>
+            <option value="ERROR">ERROR</option>
+          </select>
+        </div>
+        <div className="col-4 form-group">
+          <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
+                 onChange={(e) => this.changeFilter(e.target.value)}/>
+        </div>
+      </div>
+      <LogsTable logs={this.logs} filter={this.state.filter}
+                 changeCategory={this.changeCategory.bind(this)} changeLevel={this.changeLevel.bind(this)} />
+    </div>;
+  }
+}
+
+export default translateComponent(LogsView, "admin");

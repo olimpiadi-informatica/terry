@@ -7,6 +7,14 @@ class Client {
       baseURL: this.apiBaseURI,
     });
 
+    this.adminApi = (token, path, options={}) => {
+      options.admin_token = token;
+      const data = new FormData();
+      for (const key in options)
+        data.append(key, options[key]);
+      return this.api.post("/admin/" + path, data);
+    };
+
     this.filesBaseURI = process.env.REACT_APP_FILES_BASE_URI || "http://localhost:5050/files/";
     this.files = axios.create({
       baseURL: this.filesBaseURI,

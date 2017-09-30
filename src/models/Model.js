@@ -5,7 +5,7 @@ import UserTaskState from './UserTaskState';
 import Contest from './Contest';
 
 export default class Model extends Observable {
-  static tokenName = "userToken";
+  static cookieName = "userToken";
 
   constructor() {
     super();
@@ -30,7 +30,7 @@ export default class Model extends Observable {
   }
 
   isLoggedIn() {
-    const userToken = this.cookies.get(Model.tokenName);
+    const userToken = this.cookies.get(Model.cookieName);
     return userToken !== undefined;
   }
 
@@ -50,7 +50,7 @@ export default class Model extends Observable {
 
   refreshUser() {
     if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
-    const userToken = this.cookies.get(Model.tokenName);
+    const userToken = this.cookies.get(Model.cookieName);
 
     return this.userLoadingPromise = this.loadUser(userToken)
       .then(response => {
@@ -75,7 +75,7 @@ export default class Model extends Observable {
     return this.loadUser(token)
       .then((response) => {
         this.user = response.data;
-        this.cookies.set(Model.tokenName, token);
+        this.cookies.set(Model.cookieName, token);
         // if the login is valid the contest must be reloaded, in fact most of the useful properties are not present yet
         // like the tasks and the start time. contest.load() will fire all the required updates
         this.contest.load();
@@ -89,7 +89,7 @@ export default class Model extends Observable {
 
   logout() {
     if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
-    this.cookies.remove(Model.tokenName);
+    this.cookies.remove(Model.cookieName);
     delete this.user;
     // TODO redirect to /
     this.fireUpdate();

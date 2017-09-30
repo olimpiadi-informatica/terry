@@ -12,9 +12,12 @@ export default class Session extends Observable {
     this.cookies = new Cookies();
   }
 
+  adminToken() {
+    return this.cookies.get(Session.cookieName);
+  }
+
   isLoggedIn() {
-    const adminToken = this.cookies.get('adminToken');
-    return adminToken !== undefined;
+    return this.adminToken() !== undefined;
   }
 
   isLoading() {
@@ -22,15 +25,12 @@ export default class Session extends Observable {
   }
 
   loadStatus(adminToken) {
-    const data = new FormData();
-    data.append("admin_token", adminToken);
-    return client.api.post("/admin/status", data);
+    return client.adminApi(adminToken, "/status");
   }
 
   tryLogin() {
     if (this.isLoggedIn()) {
-      const adminToken = this.cookies.get(Session.cookieName);
-      this.attemptLogin(adminToken);
+      this.attemptLogin(this.adminToken());
     }
   }
 
