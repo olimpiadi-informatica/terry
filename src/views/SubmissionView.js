@@ -3,6 +3,7 @@ import ResultView from './ResultView';
 import FileView from './FileView';
 import { Link, withRouter } from 'react-router-dom';
 import ModalView from './ModalView';
+import {translateComponent} from "../utils";
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -21,21 +22,23 @@ class SubmissionView extends Component {
   }
 
   renderSourceStatus(output) {
-    if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
+    const { t } = this.props;
+    if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
       <div className="alert alert-success">
-        The source file looks good.
+        {t("submission.submit.source ok")}
       </div>
     );
   }
 
   renderSourceSelector() {
+    const { t } = this.props;
     if(!this.submission.hasSource()) {
       return (
         <label className="custom-file">
           <input key="absent" ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.submission.setSource(this.refs.source.files[0]) } />
-          <span className="custom-file-control" id="source-file-span"></span>
+          <span className="custom-file-control" id="source-file-span" />
         </label>
       );
     } else {
@@ -43,13 +46,13 @@ class SubmissionView extends Component {
       return (
         <div key="present" className="card card-outline-primary">
           <div className="card-header">
-            <h5 className="modal-subtitle pull-left">Source file info</h5>
+            <h5 className="modal-subtitle pull-left">{t("submission.submit.source info")}</h5>
             <button key="present" className="btn btn-primary pull-right" role="button" onClick={ () => this.submission.resetSource() }>
-              <span aria-hidden="true" className="fa fa-trash"></span> Change source
+              <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change source")}
             </button>
           </div>
           <div className="card-block">
-            <FileView file={source.file}></FileView>
+            <FileView file={source.file} />
             { this.renderSourceStatus(source) }
           </div>
         </div>
@@ -61,13 +64,14 @@ class SubmissionView extends Component {
     return (
       <label className="custom-file">
         <input key="absent" ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.submission.setOutput(this.refs.output.files[0])} />
-        <span className="custom-file-control" id="output-file-span"></span>
+        <span className="custom-file-control" id="output-file-span" />
       </label>
     );
   }
 
   renderOutputValidation(output) {
-    if(!output.isUploaded()) return (<div><br/><h5>Processing...</h5></div>);
+    const { t } = this.props;
+    if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
       <ResultView model={this.model} result={output.data.validation} validation/>
@@ -75,18 +79,19 @@ class SubmissionView extends Component {
   }
 
   renderOutputInfo() {
+    const { t } = this.props;
     const output = this.submission.getOutput();
 
     return (
       <div key="present" className="card card-outline-primary">
         <div className="card-header">
-          <h5 className="modal-subtitle pull-left">Output file info</h5>
+          <h5 className="modal-subtitle pull-left">{t("submission.submit.output info")}</h5>
           <button key="present" className="btn btn-primary pull-right" role="button" onClick={ () => this.submission.resetOutput() }>
-            <span aria-hidden="true" className="fa fa-trash"></span> Change output
+            <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change output")}
           </button>
         </div>
         <div className="card-block">
-          <FileView file={output.file}></FileView>
+          <FileView file={output.file} />
           { this.renderOutputValidation(output) }
         </div>
       </div>
@@ -102,7 +107,8 @@ class SubmissionView extends Component {
   }
 
   renderSubmissionForm() {
-    if(this.submission.isSubmitting()) return <p>Submitting...</p>;
+    const { t } = this.props;
+    if(this.submission.isSubmitting()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
       <div>
@@ -114,7 +120,7 @@ class SubmissionView extends Component {
         </div>
         <div className="modal-footer">
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
-            <span aria-hidden="true" className="fa fa-times"></span> Cancel
+            <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
           </Link>
           <button role="button" className="btn btn-success"
                   disabled={ !this.submission.canSubmit() }
@@ -123,7 +129,7 @@ class SubmissionView extends Component {
                     const id = this.submission.data.id;
                     this.props.history.push("/" + taskName + "/submission/" + id);
                   })}}>
-            <span aria-hidden="true" className="fa fa-paper-plane"></span> Submit
+            <span aria-hidden="true" className="fa fa-paper-plane" /> {t("submission.submit.submit")}
           </button>
         </div>
       </div>
@@ -137,11 +143,12 @@ class SubmissionView extends Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <ModalView contentLabel="Submission creation" returnUrl={"/" + this.submission.input.task}>
         <div className="modal-header">
           <h5 className="modal-title">
-            Submission for input <strong>{ this.submission.input.id }</strong>
+            {t("submission.submit.title")} <strong>{ this.submission.input.id }</strong>
           </h5>
           <Link to={"/" + this.submission.input.task} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -154,4 +161,4 @@ class SubmissionView extends Component {
   }
 }
 
-export default SubmissionView = withRouter(SubmissionView);
+export default translateComponent(SubmissionView);

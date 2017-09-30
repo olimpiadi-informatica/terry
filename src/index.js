@@ -7,6 +7,8 @@ import ReactDOM from 'react-dom';
 import AppView from './views/AppView';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import './i18n';
+
 /******** DEVELOPMENT SPECIFIC **********/
 if (window.location.origin.endsWith(":3000")) location.replace("http://localhost:5050");
 /******** DEVELOPMENT SPECIFIC **********/

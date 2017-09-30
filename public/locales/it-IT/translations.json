@@ -1,0 +1,75 @@
+{
+  "loading": "Caricamento...",
+  "error": "Errore!",
+  "reload": "Ricarica la pagina",
+  "close": "Chiudi",
+  "cancel": "Annulla",
+  "navbar": {
+    "task list": "Problemi",
+    "home": "Home",
+    "logout": "Esci"
+  },
+  "homepage": {
+    "guide": {
+      "title": "Guida",
+      "part1": "Nella parte sinistra di questa pagina trovi la lista dei problemi, premi sul nome di un problema per aprirlo.",
+      "part2": "Puoi inviare soluzioni <1>quante volte vuoi</1> ma avrai degli input differenti ogni volta. Quando crei una sottoposizione ricorda di inviare il file sorgente corretto e il file di output corrispondente all'ultimo input generato. Quando hai caricato i file <3>ricorda di inviarli</3> premendo sul pulsante verde!",
+      "part3": "Se vuoi inviare più di un file sorgente sei pregato di creare un archivio compresso (zip).",
+      "part4": "Questa gara dura {{length}}."
+    },
+    "contest ended": "Gara terminata"
+  },
+  "submission": {
+    "cannot submit": "Cannot submit for this input.",
+    "file": {
+      "file": "File:",
+      "last update": "Modificato:",
+      "size": "Dimensione:"
+    },
+    "correct": "correcto",
+    "wrong": "errato",
+    "list": {
+      "view details": "vedi dettagli",
+      "input": "Input",
+      "source": "Sorgente",
+      "output": "Output",
+      "load failed": "Caricamento della lista delle sottoposizioni fallito, ricarica la pagina.",
+      "no submissions": "Non hai ancora inviato sottoposizioni.",
+      "date": "Data",
+      "download": "Download",
+      "score": "Punteggio",
+      "title": "Sottoposizioni per il problema"
+    },
+    "feedback": {
+      "date": "Data",
+      "score": "Punteggio",
+      "title": "Sottoposizione"
+    },
+    "submit": {
+      "processing": "Elaborazione...",
+      "source ok": "Sorgente caricato correttamente.",
+      "source info": "Informazioni sul sorgente",
+      "change source": "Modifica sorgente",
+      "output info": "Informazioni sull'output",
+      "change output": "Modifica output",
+      "submit": "Invia",
+      "title": "Sottoponi per l'input"
+    }
+  },
+  "login": {
+    "error": "Errore!",
+    "please login": "Effettua il login",
+    "token": "Token",
+    "not started": "La gara non è ancora iniziata! Per connetterti ricarica questa pagina quando la gara sarà iniziata."
+  },
+  "task": {
+    "request input": "Richiedi input",
+    "download input": "Scarica input",
+    "upload solution": "Carica soluzione",
+    "requesting": "Generazione...",
+    "statement fail": "Caricamento del testo fallito, ricarica la pagina.",
+    "last submission": "Ultima sottoposizione:",
+    "none": "Nessuna",
+    "view all": "esplora sottoposizioni"
+  }
+}

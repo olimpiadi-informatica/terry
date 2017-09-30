@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import SubmissionView from './SubmissionView';
+import {translateComponent} from "../utils";
 
-export default class CreateSubmissionView extends Component {
+class CreateSubmissionView extends Component {
   constructor(props) {
     super(props);
 
@@ -19,7 +20,10 @@ export default class CreateSubmissionView extends Component {
   }
 
   render() {
-    if(this.submission === undefined) return <p>Cannot submit for this input.</p>;
-    return <SubmissionView model={this.model} submission={this.submission}></SubmissionView>;
+    const { t } = this.props;
+    if(this.submission === undefined) return <p>{t("submission.cannot submit")}</p>;
+    return <SubmissionView model={this.model} submission={this.submission} />;
   }
 }
+
+export default translateComponent(CreateSubmissionView);

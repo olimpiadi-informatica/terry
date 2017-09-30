@@ -4,9 +4,9 @@ import DateView from './DateView';
 import client from '../TerryClient';
 import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
-import {colorFromScore} from "../utils";
+import {colorFromScore, translateComponent} from "../utils";
 
-export default class SubmissionListView extends Component {
+class SubmissionListView extends Component {
   constructor(props) {
     super(props);
 
@@ -28,17 +28,8 @@ export default class SubmissionListView extends Component {
     this.list.popObserver(this);
   }
 
-  getScoreSeverity(score) {
-    if (score < 0.01) {
-      return "danger";
-    } else if (score > this.task.data.max_score-0.01) {
-      return "success";
-    } else {
-      return "warning";
-    }
-  }
-
   renderSubmissionList() {
+    const { t } = this.props;
     const submissionList = [];
 
     for (let submission of this.list.data.items) {
@@ -53,7 +44,7 @@ export default class SubmissionListView extends Component {
             <DateView date={ submission.output.date }/>
             <br/>
             <Link to={ "/" + submission.task + "/submission/" + submission.id }>
-              view details
+              {t("submission.list.view details")}
             </Link>
           </td>
           <td>
@@ -74,9 +65,9 @@ export default class SubmissionListView extends Component {
                                download
                                data-tip
                                data-for={"input-" + submission.id}>
-                <span aria-hidden="true" className="fa fa-download"></span>
+                <span aria-hidden="true" className="fa fa-download" />
                 {' '}
-                <span className="hidden-md-down">Input file</span>
+                <span className="hidden-md-down">{t("submission.list.input")}</span>
               </a>
 
               <a role="button" className="btn btn-secondary"
@@ -85,9 +76,9 @@ export default class SubmissionListView extends Component {
                                download
                                data-tip
                                data-for={"source-" + submission.id}>
-                <span aria-hidden="true" className="fa fa-download"></span>
+                <span aria-hidden="true" className="fa fa-download" />
                 {' '}
-                <span className="hidden-md-down">Source file</span>
+                <span className="hidden-md-down">{t("submission.list.source")}</span>
               </a>
 
               <a role="button" className="btn btn-secondary"
@@ -96,9 +87,9 @@ export default class SubmissionListView extends Component {
                                download
                                data-tip
                                data-for={"output-" + submission.id}>
-                <span aria-hidden="true" className="fa fa-download"></span>
+                <span aria-hidden="true" className="fa fa-download" />
                 {' '}
-                <span className="hidden-md-down">Output file</span>
+                <span className="hidden-md-down">{t("submission.list.output")}</span>
               </a>
             </div>
           </td>
@@ -113,20 +104,21 @@ export default class SubmissionListView extends Component {
   }
 
   renderBody() {
-    if(this.list.isLoading()) return <p>Loading...</p>;
-    if(!this.list.isLoaded()) return <p>Loading submission list failed, reload page.</p>;
+    const { t } = this.props;
+    if(this.list.isLoading()) return <p>{t("loading")}</p>;
+    if(!this.list.isLoaded()) return <p>{t("submission.list.load failed")}</p>;
 
     if (this.list.data.items.length === 0)
-      return <div className="modal-body"><em>You have not submitted yet.</em></div>;
+      return <div className="modal-body"><em>{t("submission.list.no submissions")}</em></div>;
 
     return (
       <div className="modal-body no-padding">
         <table className="table submissions-table" style={ {marginBottom: 0} }>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Download</th>
-              <th>Score</th>
+              <th>{t("submission.list.date")}</th>
+              <th>{t("submission.list.download")}</th>
+              <th>{t("submission.list.score")}</th>
             </tr>
           </thead>
           <tbody>
@@ -138,11 +130,13 @@ export default class SubmissionListView extends Component {
   }
 
   render() {
+    const taskName = this.taskName;
+    const { t } = this.props;
     return (
       <ModalView contentLabel="Task submissions" returnUrl={"/" + this.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
-            Submissions for task <strong>{ this.taskName }</strong>
+            {t("submission.list.title")} <strong>{taskName}</strong>
           </h5>
           <Link to={"/" + this.taskName} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -151,10 +145,12 @@ export default class SubmissionListView extends Component {
         { this.renderBody() }
         <div className="modal-footer">
           <Link to={"/" + this.taskName} role="button" className="btn btn-primary">
-            <span aria-hidden="true" className="fa fa-times"></span> Close
+            <span aria-hidden="true" className="fa fa-times"></span> {t("close")}
           </Link>
         </div>
       </ModalView>
     );
   }
 }
+
+export default translateComponent(SubmissionListView);

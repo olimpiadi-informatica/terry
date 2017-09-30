@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
+import {translateComponent} from "../utils";
 
-export default class LoginView extends Component {
+class LoginView extends Component {
   constructor(props) {
     super(props);
 
     this.model = props.model;
+  }
+
+  componentDidMount() {
+    this.model.pushObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.model.popObserver(this);
   }
 
   login() {
@@ -13,21 +22,23 @@ export default class LoginView extends Component {
   }
 
   getLoginError() {
+    const { t } = this.props;
     const attempt = this.model.loginAttempt;
     if (attempt && attempt.error) {
       const message = attempt.error.response.data.message;
       return (<div className="alert alert-danger col-md-8 offset-md-2" role="alert">
-        <strong>Error!</strong> {message}
+        <strong>{t("login.error")}</strong> {message}
       </div>);
     }
   }
 
   renderLoginForm() {
+    const { t } = this.props;
     return <div>
-      <h2 className={"text-center"}>Please login</h2>
+      <h2 className={"text-center"}>{t("login.please login")}</h2>
       <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
         <div className="form-group">
-          <label htmlFor="token" className="sr-only">Token</label>
+          <label htmlFor="token" className="sr-only">{t("login.token")}</label>
           <input name="token" id="token" className="col-md-8 offset-md-2 form-control text-center" required placeholder="Token"/>
         </div>
         { this.getLoginError() }
@@ -37,7 +48,8 @@ export default class LoginView extends Component {
   }
 
   renderNotStarted() {
-    return <em>The contest has not started yet! Refresh this page when the constest has started to be able to login.</em>;
+    const { t } = this.props;
+    return <em>{t("login.not started")}</em>;
   }
 
   render() {
@@ -54,3 +66,5 @@ export default class LoginView extends Component {
     );
   }
 }
+
+export default translateComponent(LoginView);

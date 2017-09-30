@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-
 import ContestView from './ContestView';
 import LoginView from './LoginView';
 import Model from '../models/Model';
+import {translateComponent} from "../utils";
 
-export default class AppView extends Component {
+class AppView extends Component {
   constructor(props) {
     super(props);
 
@@ -35,11 +35,12 @@ export default class AppView extends Component {
   }
 
   renderError() {
+    const { t } = this.props;
     return <div className="container">
       <div className="mt-4">
         <div className="alert alert-danger" role="alert">
-          <h4 className="alert-heading">An error occurred!</h4>
-          <p>Please reload the page.</p>
+          <h4 className="alert-heading">{t("error")}</h4>
+          <p>{t("reload")}</p>
         </div>
       </div>
     </div>
@@ -56,3 +57,5 @@ export default class AppView extends Component {
     return <ContestView model={this.model}/>;
   }
 }
+
+export default translateComponent(AppView);

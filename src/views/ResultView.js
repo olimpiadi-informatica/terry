@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import {translateComponent} from "../utils";
 
-export default class ResultView extends Component {
+class ResultView extends Component {
   constructor(props) {
     super(props);
 
@@ -31,10 +32,11 @@ export default class ResultView extends Component {
   }
 
   renderFeedbackCase(c, id) {
+    const { t } = this.props;
     const color = c.correct ? "success" : "danger";
     return (
         <li key={id} className={"list-group-item list-group-item-"+color}>
-          <span>Case #<samp>{id}</samp>: <b>{c.correct ? "correct" : "wrong"}</b><br/><em>{c.message}</em></span>
+          <span>Case #<samp>{id}</samp>: <b>{c.correct ? t("submission.correct") : t("submission.wrong")}</b><br/><em>{c.message}</em></span>
         </li>
     )
   }
@@ -52,3 +54,5 @@ export default class ResultView extends Component {
     );
   }
 }
+
+export default translateComponent(ResultView);

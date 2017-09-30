@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import {Link, Route} from 'react-router-dom';
 import TaskView from './TaskView';
 import Countdown from './CountdownView';
 import TaskNavbarItem from './NavbarItemView';
@@ -7,8 +7,10 @@ import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import 'moment-precise-range-plugin';
 import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
+import { Trans } from 'react-i18next';
+import {translateComponent} from "../utils";
 
-export default class ContestView extends Component {
+class ContestView extends Component {
   constructor(props) {
     super(props);
 
@@ -24,14 +26,15 @@ export default class ContestView extends Component {
   }
 
   getSideBar() {
+    const { t } = this.props;
     return (
       <nav className="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
-            <h3>Task list</h3>
+            <h3>{t("navbar.task list")}</h3>
           </li>
 
-          <li className="divider-vertical"></li>
+          <li className="divider-vertical" />
 
           { this.model.getContest().data.tasks.map((task,i) => <TaskNavbarItem key={i} taskName={task.name} model={this.model} />)}
         </ul>
@@ -46,6 +49,7 @@ export default class ContestView extends Component {
   }
 
   getNavBar() {
+    const { t } = this.props;
     const user = this.model.user;
     return <Navbar color="primary" inverse toggleable>
       <NavbarToggler onClick={this.toggleNavbar} right/>
@@ -54,7 +58,7 @@ export default class ContestView extends Component {
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
            <Link to="/" className="nav-link">
-             <span aria-hidden="true" className="fa fa-home"></span> Home
+             <span aria-hidden="true" className="fa fa-home" /> {t("navbar.home")}
            </Link>
           </li>
         </ul>
@@ -67,7 +71,7 @@ export default class ContestView extends Component {
           </li>
           <li className="nav-item">
             <a className="btn btn-danger" href="#" role="button" onClick={() => this.model.logout()}>
-              <span aria-hidden="true" className="fa fa-sign-out"></span> Log Out
+              <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
             </a>
           </li>
         </ul>
@@ -80,19 +84,19 @@ export default class ContestView extends Component {
     const start = moment(this.model.contest.data.start_time).seconds(0);
     const end = moment().add(this.model.user.remaining_time, 'seconds').seconds(0);
     const length = moment.preciseDiff(start, end);
+    const { t } = this.props;
 
     return <div>
       <h1>{this.model.contest.data.name}</h1>
       <ReactMarkdown source={this.model.contest.data.description}/>
       <hr />
-      <h2>Usage guide</h2>
-      <p>On the left side of this page you can find the tasks, click on any one to open it.</p>
-      <p>You can submit <em>as many times as you want</em>, but you will have a different input every time. When you
-        make a submission remember to send the correct source file and the output corresponding to the last
-        generated input. When you have uploaded your files <em>remember to submit</em> them by clicking the green
-        button!</p>
-      <p>If you want to submit more than one source code file, please create a zip file containing them.</p>
-      <p>This contest is {length} long.</p>
+      <h2>{t("homepage.guide.title")}</h2>
+      <p>{t("homepage.guide.part1")}</p>
+      <Trans i18nKey="homepage.guide.part2">
+        You can submit <em>as many times as you want</em>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <em>remember to submit</em> them by clicking the green button!
+      </Trans>
+      <p>{t("homepage.guide.part3")}</p>
+      <p>{t("homepage.guide.part4", {length: length})}</p>
     </div>
   }
 
@@ -107,7 +111,7 @@ export default class ContestView extends Component {
 
             <main className="col-sm-9 col-md-10">
               <Route path={'/:taskName'} render={ ({match}) =>
-                  <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName}/>
+                  <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
               }/>
               <Route exact path={'/'} render={({match}) => this.render_index()}/>
             </main>
@@ -117,3 +121,5 @@ export default class ContestView extends Component {
     );
   }
 }
+
+export default translateComponent(ContestView);

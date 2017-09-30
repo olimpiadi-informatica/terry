@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import {translateComponent} from "../utils";
 
-export default class Countdown extends Component {
+class CountdownView extends Component {
   constructor(props) {
     super(props);
 
@@ -26,9 +27,11 @@ export default class Countdown extends Component {
 
   tick() {
     const delta = (this.end - new Date()) / 1000;
+    const { t } = this.props;
+
     if (delta <= 0) {
       if (this.timer) this.clearInterval();
-      this.setState({ time: "Contest ended" });
+      this.setState({ time: t("homepage.contest ended") });
       return;
     }
 
@@ -44,3 +47,5 @@ export default class Countdown extends Component {
     return <span>{this.state.time}</span>
   }
 }
+
+export default translateComponent(CountdownView);

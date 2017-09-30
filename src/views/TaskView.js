@@ -6,6 +6,7 @@ import SubmissionReportView from './SubmissionReportView';
 import ReactMarkdown from 'react-markdown';
 import client from '../TerryClient';
 import DateView from './DateView';
+import {translateComponent} from "../utils";
 
 class TaskView extends Component {
   constructor(props) {
@@ -44,16 +45,17 @@ class TaskView extends Component {
   }
 
   renderCommands() {
+    const { t } = this.props;
     if(this.getTaskState().hasCurrentInput()) {
       const currentInput = this.getTaskState().getCurrentInput();
       return (
         <div>
           <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
-            <span aria-hidden="true" className="fa fa-download"></span> Download input
+            <span aria-hidden="true" className="fa fa-download" /> {t("task.download input")}
           </a>
           {' '}
           <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
-            <span aria-hidden="true" className="fa fa-upload"></span> Upload solution
+            <span aria-hidden="true" className="fa fa-upload" /> {t("task.upload solution")}
           </Link>
         </div>
       )
@@ -61,13 +63,13 @@ class TaskView extends Component {
       if (this.getTaskState().isGeneratingInput()) {
         return (
           <button disabled={true} role="button" className="btn btn-success">
-            <span aria-hidden="true" className="fa fa-plus"></span> Requesting...
+            <span aria-hidden="true" className="fa fa-plus" /> {t("task.requesting")}
           </button>
         );
       } else {
         return (
           <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-          <span aria-hidden="true" className="fa fa-plus"></span> Request input
+          <span aria-hidden="true" className="fa fa-plus" /> {t("task.request input")}
           </button>
         );
       }
@@ -80,8 +82,9 @@ class TaskView extends Component {
   }
 
   renderTaskStatement() {
-    if(this.task.isLoadingStatement()) return <p>Loading statement...</p>;
-    if(!this.task.isLoadedStatement()) return <p>Failed to load task statement. Try reloading the page.</p>;
+    const { t } = this.props;
+    if(this.task.isLoadingStatement()) return <p>{t("loading")}</p>;
+    if(!this.task.isLoadedStatement()) return <p>{t("task.statement fail")}</p>;
 
     return <ReactMarkdown source={this.task.getStatement()}
                           transformImageUri={this.transformUri.bind(this)}
@@ -89,14 +92,15 @@ class TaskView extends Component {
   }
 
   renderSubmissionListButton() {
+    const { t } = this.props;
     const list = this.getSubmissionList();
     let last_submission;
-    if (list.isLoading()) last_submission = <em>Loading...</em>;
-    else if(!list.isLoaded()) last_submission = <em>Loading submission list failed, reload the page.</em>;
+    if (list.isLoading()) last_submission = <em>{t("loading")}</em>;
+    else if(!list.isLoaded()) last_submission = <em>{t("submission.list.load failed")}</em>;
     else {
       const items = list.data.items;
       if (items.length === 0)
-        last_submission = <em>None</em>;
+        last_submission = <em>{t("task.none")}</em>;
       else {
         const submission = items[items.length-1];
         last_submission = <DateView date={new Date(submission.date)}/>
@@ -104,9 +108,9 @@ class TaskView extends Component {
     }
     return (
       <div>
-        <strong>Last submission</strong>: {last_submission}
+        <strong>{t("task.last submission")}</strong> {last_submission}
         {' '}
-        (<Link to={"/" + this.task.name + "/submissions"}>view all submissions</Link>)
+        (<Link to={"/" + this.task.name + "/submissions"}>{t("task.view all")}</Link>)
       </div>
     );
   }
@@ -138,4 +142,4 @@ class TaskView extends Component {
   }
 }
 
-export default TaskView;
+export default translateComponent(TaskView);
