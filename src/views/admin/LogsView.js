@@ -78,6 +78,7 @@ class LogsView extends Component {
     super(props);
 
     this.session = props.session;
+    this.session.updateLogs = this.updateLogs.bind(this);
     this.logs = new Logs(this.session);
     this.state = {
       level: "INFO",
@@ -91,7 +92,12 @@ class LogsView extends Component {
     this.setInterval();
   }
 
+  componentWillUnmount() {
+    this.clearInterval();
+  }
+
   updateLogs() {
+    // TODO lol, dunno how to do that xD
     const start = new Date(Date.now()-10000000);
     const end = new Date();
     const options = {

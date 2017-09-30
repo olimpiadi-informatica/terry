@@ -1,4 +1,5 @@
 {
+  "error": "Error",
   "navbar": {
     "title": "Admin",
     "logout": "Logout"
@@ -23,5 +24,21 @@
       "WARNING": "WARNING",
       "ERROR": "ERROR"
     }
+  },
+  "contest": {
+    "title": "Contest",
+    "need to extract": "The contest is not ready to start! You need to extract it.",
+    "archive": "Contest archive",
+    "enter zip": "Enter zip name",
+    "include extension": "It should include the file extension.",
+    "password": "Archive password",
+    "extract": "Extract",
+    "not started": "The contest has not stated yet!",
+    "start": "Start",
+    "started at": "Contest started at",
+    "extratime disclamer": "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <1>is logged</1> and must be justified to the committee.",
+    "extra time": "Extra time",
+    "in seconds": "Expressed in seconds.",
+    "set extra time": "Set extra time"
   }
 }

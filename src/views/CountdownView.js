@@ -20,6 +20,12 @@ class CountdownView extends Component {
     this.clearInterval();
   }
 
+  componentWillReceiveProps(props) {
+    this.end = new Date();
+    this.end.setSeconds(this.end.getSeconds() + props.remaining);
+    this.tick();
+  }
+
   clearInterval() {
     clearInterval(this.timer);
     delete this.timer;

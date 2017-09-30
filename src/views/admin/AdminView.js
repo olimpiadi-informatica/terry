@@ -7,8 +7,9 @@ import Session from "../../models/admin/Session";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "../LoadingView";
 import LogsView from "./LogsView";
+import ContestView from "./ContestView";
 
-class ContestView extends Component {
+class AdminView extends Component {
   constructor(props) {
     super(props);
 
@@ -71,6 +72,7 @@ class ContestView extends Component {
         <div className="row">
           <main className="col-sm-12">
             <LogsView session={this.session} />
+            <ContestView session={this.session} />
           </main>
         </div>
       </div>
@@ -78,4 +80,4 @@ class ContestView extends Component {
   }
 }
 
-export default translateComponent(ContestView, "admin");
+export default translateComponent(AdminView, "admin");

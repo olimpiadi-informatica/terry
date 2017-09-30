@@ -61,4 +61,58 @@ export default class Session extends Observable {
     delete this.status;
     this.fireUpdate();
   }
+
+  updateStatus() {
+    this.loadingStatus = this.loadStatus(this.adminToken())
+        .then(response => {
+          this.status = response.data;
+          delete this.loadingStatus;
+          delete this.error;
+          this.fireUpdate();
+          this.updateLogs();
+        })
+        .catch(response => {
+          console.error(response);
+          this.fireUpdate();
+        });
+  }
+
+  startContest() {
+    if (!this.isLoggedIn()) throw Error("You have to be logged in to start the contest");
+    return client.adminApi(this.adminToken(), "/start")
+        .then(response => {
+          this.updateStatus();
+        }).catch(response => {
+          console.error(response);
+          this.error = response.response.data.message;
+          this.fireUpdate();
+        });
+  }
+
+  extractContest(filename, password) {
+    if (!this.isLoggedIn()) throw Error("You have to be logged in to extract the contest");
+    return client.adminApi(this.adminToken(), "/extract", {filename: filename, password: password})
+        .then(response => {
+          this.updateStatus();
+        }).catch(response => {
+          console.error(response);
+          this.error = response.response.data.message;
+          this.fireUpdate();
+          return Promise.reject(response);
+        });
+  }
+
+  setExtraTime(token) {
+    if (!this.isLoggedIn()) throw Error("You have to be logged in to set the extra time");
+    const options = { extra_time: this.status.extra_time };
+    if (token) options.token = token;
+    return client.adminApi(this.adminToken(), "/set_extra_time", options)
+        .then(response => {
+          this.updateStatus();
+        }).catch(response => {
+          console.error(response);
+          this.error = response.response.data.message;
+          this.fireUpdate();
+        });
+  }
 }

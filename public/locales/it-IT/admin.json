@@ -1,4 +1,5 @@
 {
+  "error": "Errore",
   "navbar": {
     "title": "Admin",
     "logout": "Esci"
@@ -23,5 +24,21 @@
       "WARNING": "AVVISO",
       "ERROR": "ERRORE"
     }
+  },
+  "contest": {
+    "title": "Gara",
+    "need to extract": "La gara non è pronta! È necessario estrarre l'archivio.",
+    "archive": "Archivio della gara",
+    "enter zip": "Inserisi il nome dell'archivio",
+    "include extension": "Deve includere anche l'estensione del file.",
+    "password": "Password dell'archivio",
+    "extract": "Estrai",
+    "not started": "La gara non è ancora iniziata!",
+    "start": "Avvia",
+    "started at": "La gara è iniziata il",
+    "extratime disclamer": "Puoi impotare del tempo extra per tutti i partecipanti nel caso di problemi che hanno afflitto tutti. Questa azione <1>viene registrata</1> e deve essere giustificata al comitato.",
+    "extra time": "Tempo extra",
+    "in seconds": "Espresso in secondi.",
+    "set extra time": "Imposta tempo extra"
   }
 }
