@@ -26,7 +26,8 @@ class ContestView extends Component {
   renderNotLoaded() {
     const { t } = this.props;
     return <div>
-      <p>{t("contest.need to extract")}</p>
+      <p>{t("contest.need to extract.part1")}</p>
+      <p>{t("contest.need to extract.part2")}</p>
       <form ref="form" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.extractContest(); }}>
         {this.renderError()}
         <div className="form-group">
@@ -66,7 +67,7 @@ class ContestView extends Component {
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>
 
-      <form ref="form" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.session.setExtraTime(); }}>
+      <form ref="form" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.session.setExtraTime(this.session.status.extra_time); }}>
         {this.renderError()}
         <div className="form-group">
           <label htmlFor="extraTime">{t("contest.extra time")}</label>
@@ -104,7 +105,7 @@ class ContestView extends Component {
     else body = this.renderStarted();
 
     return <div>
-      <h1>{t("contest.title")}</h1>
+      <h1 className="mt-4">{t("contest.title")}</h1>
       {body}
     </div>;
   }

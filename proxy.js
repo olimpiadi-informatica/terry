@@ -1,7 +1,7 @@
 const http = require("http"),
     httpProxy = require("http-proxy");
 
-const proxy = httpProxy.createProxyServer({});
+const proxy = httpProxy.createProxyServer({ xfwd: true });
 
 const server = http.createServer(function(req, res) {
   if (req.url.startsWith("/api/")) {

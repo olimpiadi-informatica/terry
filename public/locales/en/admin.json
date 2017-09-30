@@ -27,7 +27,10 @@
   },
   "contest": {
     "title": "Contest",
-    "need to extract": "The contest is not ready to start! You need to extract it.",
+    "need to extract": {
+      "part1": "The contest is not ready to start! You need to extract it.",
+      "part2": "This action will not start the contest, it will prepare the server. It's suggested to extract the contest as soon as possible to discover early eventual problems."
+    },
     "archive": "Contest archive",
     "enter zip": "Enter zip name",
     "include extension": "It should include the file extension.",
@@ -40,5 +43,15 @@
     "extra time": "Extra time",
     "in seconds": "Expressed in seconds.",
     "set extra time": "Set extra time"
+  },
+  "users": {
+    "title": "Contestants",
+    "name": "Name",
+    "surname": "Surname",
+    "token": "Token",
+    "ips": "IPs",
+    "extra time": "Extra time",
+    "in seconds": "(in seconds)",
+    "set": "Set"
   }
 }

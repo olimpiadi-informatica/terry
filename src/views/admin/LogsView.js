@@ -152,10 +152,10 @@ class LogsView extends Component {
         <div className="col-4 form-group">
           <select id="level" className="form-control" onChange={(e) => this.changeLevel(e.target.value)}
                   value={this.state.level}>
-            <option value="DEBUG">DEBUG</option>
-            <option value="INFO">INFO</option>
-            <option value="WARNING">WARNING</option>
-            <option value="ERROR">ERROR</option>
+            <option value="DEBUG">{t("logs.levels.DEBUG")}</option>
+            <option value="INFO">{t("logs.levels.INFO")}</option>
+            <option value="WARNING">{t("logs.levels.WARNING")}</option>
+            <option value="ERROR">{t("logs.levels.ERROR")}</option>
           </select>
         </div>
         <div className="col-4 form-group">

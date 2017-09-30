@@ -27,7 +27,10 @@
   },
   "contest": {
     "title": "Gara",
-    "need to extract": "La gara non è pronta! È necessario estrarre l'archivio.",
+    "need to extract": {
+      "part1": "La gara non è pronta! È necessario estrarre l'archivio.",
+      "part2": "Quest'azione non avvierà la gara, preparerà il server. Si suggerisce di estrarre l'archivio il prima possibile per poter correggere eventuali problemi."
+    },
     "archive": "Archivio della gara",
     "enter zip": "Inserisi il nome dell'archivio",
     "include extension": "Deve includere anche l'estensione del file.",
@@ -40,5 +43,15 @@
     "extra time": "Tempo extra",
     "in seconds": "Espresso in secondi.",
     "set extra time": "Imposta tempo extra"
+  },
+  "users": {
+    "title": "Partecipanti",
+    "name": "Nome",
+    "surname": "Cognome",
+    "token": "Token",
+    "ips": "IP",
+    "extra time": "Tempo extra",
+    "in seconds": "(in secondi)",
+    "set": "Imposta"
   }
 }

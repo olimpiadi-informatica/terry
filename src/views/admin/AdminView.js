@@ -8,6 +8,7 @@ import AdminLoginView from "./AdminLoginView";
 import LoadingView from "../LoadingView";
 import LogsView from "./LogsView";
 import ContestView from "./ContestView";
+import UsersView from "./UsersView";
 
 class AdminView extends Component {
   constructor(props) {
@@ -73,6 +74,7 @@ class AdminView extends Component {
           <main className="col-sm-12">
             <LogsView session={this.session} />
             <ContestView session={this.session} />
+            { this.session.status.loaded ? <UsersView session={this.session} /> : ""}
           </main>
         </div>
       </div>

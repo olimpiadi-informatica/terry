@@ -102,9 +102,9 @@ export default class Session extends Observable {
         });
   }
 
-  setExtraTime(token) {
+  setExtraTime(extra_time, token) {
     if (!this.isLoggedIn()) throw Error("You have to be logged in to set the extra time");
-    const options = { extra_time: this.status.extra_time };
+    const options = { extra_time: extra_time };
     if (token) options.token = token;
     return client.adminApi(this.adminToken(), "/set_extra_time", options)
         .then(response => {
