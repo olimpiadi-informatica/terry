@@ -87,15 +87,6 @@ main {
   margin: 16px;
 }
 
-#source-file-span:lang(en)::after {
-    content: "Source code...";
-}
-
-#output-file-span:lang(en)::after {
-    content: "Output file...";
-}
-
-
 /* Side notes for calling out things
 -------------------------------------------------- */
 

@@ -1,18 +1,22 @@
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import './style.css';
+import './i18n.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppView from './views/AppView';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-import './i18n';
+import i18n from './i18n';
 import AdminView from "./views/admin/AdminView";
 
 /******** DEVELOPMENT SPECIFIC **********/
 if (window.location.origin.endsWith(":3000")) location.replace("http://localhost:5050");
 /******** DEVELOPMENT SPECIFIC **********/
+
+// when the language changes set the attribute so that bootstrap components can be translated via css
+i18n.on("languageChanged", lang => document.getElementsByTagName("html")[0].setAttribute("lang", lang.substr(0,2)));
 
 ReactDOM.render(
   <Router>
