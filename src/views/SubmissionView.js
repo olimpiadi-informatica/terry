@@ -71,6 +71,7 @@ class SubmissionView extends Component {
 
   renderOutputValidation(output) {
     const { t } = this.props;
+    if(output.hasErrored()) return <p>{output.error}</p>;
     if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
 
     return (

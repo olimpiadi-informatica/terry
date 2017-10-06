@@ -23,6 +23,11 @@ export default class Output extends Observable {
       .then(() => {
         return client.api.post("/upload_output", data).then((response) => {
           id = response.data.id;
+          delete this.error;
+        }).catch(error => {
+          this.error = error.response.data.message;
+          this.fireUpdate();
+          return Promise.reject();
         });
       })
       .then(() => {
@@ -37,8 +42,11 @@ export default class Output extends Observable {
     return this.data !== undefined;
   }
 
+  hasErrored() {
+    return this.error !== undefined;
+  }
+
   isValidForSubmit() {
-    // TODO: return this.isUploaded() && this.data.validation_result.valid_for_submit;
-    return this.isUploaded();
+    return !this.hasErrored() && this.isUploaded();
   }
 }
