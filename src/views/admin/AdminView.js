@@ -45,7 +45,7 @@ class AdminView extends Component {
 
     return <Navbar color="danger" inverse toggleable>
       <NavbarToggler onClick={this.toggleNavbar} right />
-      <Link to="/" className="navbar-brand">{t("navbar.title")}</Link>
+      <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
       <Collapse navbar className="navbar-toggleable-sm" isOpen={!this.state.collapsed}>
         <ul className="navbar-nav mr-auto" />
         <ul className="nav navbar-nav navbar-right">
