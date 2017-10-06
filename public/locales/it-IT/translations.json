@@ -77,5 +77,15 @@
     "last submission": "Ultima sottoposizione:",
     "none": "Nessuna",
     "view all": "esplora sottoposizioni"
+  },
+  "timespan": {
+    "day": "giorno",
+    "days": "giorni",
+    "hour": "ora",
+    "hours": "ore",
+    "minute": "minuto",
+    "minutes": "minuti",
+    "second": "secondo",
+    "seconds": "secondi"
   }
 }

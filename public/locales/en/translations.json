@@ -77,5 +77,15 @@
     "last submission": "Last submission:",
     "none": "None",
     "view all": "view all submissions"
+  },
+  "timespan": {
+    "day": "day",
+    "days": "days",
+    "hour": "hour",
+    "hours": "hours",
+    "minute": "minute",
+    "minutes": "minutes",
+    "second": "second",
+    "seconds": "seconds"
   }
 }

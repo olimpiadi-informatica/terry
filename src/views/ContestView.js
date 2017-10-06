@@ -5,10 +5,9 @@ import Countdown from './CountdownView';
 import TaskNavbarItem from './NavbarItemView';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
-import 'moment-precise-range-plugin';
 import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
 import { Trans } from 'react-i18next';
-import {translateComponent} from "../utils";
+import {formatTimeSpan, translateComponent} from "../utils";
 
 class ContestView extends Component {
   constructor(props) {
@@ -80,11 +79,12 @@ class ContestView extends Component {
   }
 
   render_index() {
+    const { t } = this.props;
     // start and end are rounded to minutes
     const start = moment(this.model.contest.data.start_time).seconds(0);
     const end = moment().add(this.model.user.remaining_time, 'seconds').seconds(0);
-    const length = moment.preciseDiff(start, end);
-    const { t } = this.props;
+    const seconds = end.unix() - start.unix();
+    const length = formatTimeSpan(seconds, t);
 
     return <div>
       <h1>{this.model.contest.data.name}</h1>
