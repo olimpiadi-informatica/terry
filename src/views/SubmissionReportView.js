@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ModalView from './ModalView';
 import DateView from './DateView';
-import ResultView from './ResultView';
+import FeedbackView from './FeedbackView';
 import { Link } from 'react-router-dom';
 import {colorFromScore, translateComponent} from "../utils";
 
@@ -45,7 +45,7 @@ class SubmissionReportView extends Component {
               <dt className="col-2">{t("submission.feedback.score")}:</dt>
               <dd className="col-10"><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
             </dl>
-            <ResultView model={this.model} result={submission.feedback} feedback />
+            <FeedbackView model={this.model} result={submission.feedback} />
           </div>
           <div className="modal-footer">
             <Link to={"/" + submission.task} role="button" className="btn btn-primary">

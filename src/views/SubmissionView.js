@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ResultView from './ResultView';
+import ValidationView from './ValidationView';
 import FileView from './FileView';
 import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
@@ -75,7 +75,7 @@ class SubmissionView extends Component {
     if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
-      <ResultView model={this.model} result={output.data.validation} validation/>
+      <ValidationView model={this.model} result={output.data.validation} />
     );
   }
 

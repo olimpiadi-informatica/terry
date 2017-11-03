@@ -7,10 +7,9 @@ class ResultView extends Component {
 
     this.model = props.model;
     this.result = props.result;
-    this.validation = props.validation;
-    this.feedback = props.feedback;
-    if (!this.validation && !this.feedback)
-      throw new Error("You need to specify if this is a validation or a feedback!");
+
+    console.log(props);
+    this.renderCase = props.renderCase;
   }
 
   renderAlert(a) {
@@ -21,27 +20,6 @@ class ResultView extends Component {
     )
   }
 
-  renderValidationCase(c, id) {
-    const { t } = this.props;
-    const color = c.status === "parsed" ? "warning" :
-        c.status === "missing" ? "danger" : "dark";
-    return (
-        <li key={id} className={"list-group-item list-group-item-"+color}>
-          <span>Case #<samp>{id}</samp>: <b>{t("submission.validation."+c.status)}</b><br/><em>{c.message}</em></span>
-        </li>
-    )
-  }
-
-  renderFeedbackCase(c, id) {
-    const { t } = this.props;
-    const color = c.correct ? "success" : "danger";
-    return (
-        <li key={id} className={"list-group-item list-group-item-"+color}>
-          <span>Case #<samp>{id}</samp>: <b>{c.correct ? t("submission.correct") : t("submission.wrong")}</b><br/><em>{c.message}</em></span>
-        </li>
-    )
-  }
-
   render() {
     return (
       <div>
@@ -49,7 +27,7 @@ class ResultView extends Component {
             this.result.alerts.map((a, i) => <li key={i}>{ this.renderAlert(a) }</li>)
         }</ul>
         <ul className="list-group">{
-            this.result.cases.map((c, i) => this.validation ? this.renderValidationCase(c, i+1) : this.renderFeedbackCase(c, i+1))
+            this.result.cases.map((c, i) => this.renderCase(c, i+1))
         }</ul>
       </div>
     );
