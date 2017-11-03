@@ -1,17 +1,8 @@
 import client from '../TerryClient';
-import Observable from './Observable';
+import SubmissionUploadable from './SubmissionUploadable';
 
-export default class Output extends Observable {
-  constructor(file, submission) {
-    super();
-
-    this.file = file;
-    this.submission = submission;
-
-    this.model = submission.model;
-  }
-
-  upload() {
+export default class Output extends SubmissionUploadable {
+  doUpload() {
     const data = new FormData();
 
     data.append("input_id", this.submission.input.id);
@@ -31,22 +22,7 @@ export default class Output extends Observable {
         });
       })
       .then(() => {
-        return client.api.get("/output/" + id).then((response) => {
-          this.data = response.data;
-          this.fireUpdate();
-        });
+        return client.api.get("/output/" + id);
       });
-  }
-
-  isUploaded() {
-    return this.data !== undefined;
-  }
-
-  hasErrored() {
-    return this.error !== undefined;
-  }
-
-  isValidForSubmit() {
-    return !this.hasErrored() && this.isUploaded();
   }
 }

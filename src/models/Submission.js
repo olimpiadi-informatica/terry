@@ -14,6 +14,8 @@ export default class Submission extends Observable {
   }
 
   setSource(file) {
+    if(this.hasSource()) throw Error("setSource called when hasSource is true")
+
     this.source = new Source(file, this);
     this.source.upload();
 
@@ -37,6 +39,8 @@ export default class Submission extends Observable {
   }
 
   setOutput(file) {
+    if(this.hasOutput()) throw Error("setOutput called when hasOutput is true")
+
     this.output = new Output(file, this);
     this.output.upload();
 
