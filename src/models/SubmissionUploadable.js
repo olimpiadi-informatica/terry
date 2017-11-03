@@ -12,30 +12,16 @@ export default class SubmissionUploadable extends Observable {
   }
 
   upload() {
-    const data = new FormData();
-
-    data.append("input_id", this.submission.input.id);
-    data.append("file", this.file);
-
-    let id;
-
-    return Promise.resolve()
-      .then(() => {
-        return client.api.post("/upload_output", data).then((response) => {
-          id = response.data.id;
-          delete this.error;
-        }).catch(error => {
-          this.error = error.response.data.message;
-          this.fireUpdate();
-          return Promise.reject();
-        });
-      })
-      .then(() => {
-        return client.api.get("/output/" + id).then((response) => {
-          this.data = response.data;
-          this.fireUpdate();
-        });
-      });
+    this.fireUpdate();
+    this.uploadPromise = this.doUpload().then((response) => {
+      this.data = response.data;
+      this.fireUpdate();
+      delete this.uploadPromise;
+    }).catch((error) => {
+      this.fireUpdate();
+      delete this.uploadPromise;
+      return Promise.reject(error);
+    });
   }
 
   doUpload() {
