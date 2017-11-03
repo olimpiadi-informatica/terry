@@ -18,6 +18,7 @@ export default class SubmissionUploadable extends Observable {
       this.fireUpdate();
       delete this.uploadPromise;
     }).catch((error) => {
+      this.error = error;
       this.fireUpdate();
       delete this.uploadPromise;
       return Promise.reject(error);

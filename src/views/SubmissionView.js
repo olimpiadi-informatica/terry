@@ -4,6 +4,7 @@ import FileView from './FileView';
 import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
 import {translateComponent} from "../utils";
+import './SubmissionView.css'
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -113,7 +114,7 @@ class SubmissionView extends Component {
 
     return (
       <div>
-        <div className="modal-body">
+        <div className="modal-body submission-modal-body">
           <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault() }}>
             <div className="form-group">{ this.renderSourceSelector() }</div>
             <div className="form-group">{ this.renderOutputSelector() }</div>
@@ -148,8 +149,8 @@ class SubmissionView extends Component {
     return (
       <ModalView contentLabel="Submission creation" returnUrl={"/" + this.submission.input.task}>
         <div className="modal-header">
-          <h5 className="modal-title">
-            {t("submission.submit.title")} <strong>{ this.submission.input.id }</strong>
+          <h5 className="modal-title submission-modal-title">
+            {t("submission.submit.title")} <strong>{ this.submission.input.id.slice(0, 6) }</strong>
           </h5>
           <Link to={"/" + this.submission.input.task} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
