@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import {Link, Route} from 'react-router-dom';
 import TaskView from './TaskView';
 import Countdown from './CountdownView';
-import TaskNavbarItem from './NavbarItemView';
+import NavbarItemView from './NavbarItemView';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
 import { Trans } from 'react-i18next';
 import {formatTimeSpan, translateComponent} from "../utils";
+import TotalScoreView from './TotalScoreView'
 
 class ContestView extends Component {
   constructor(props) {
@@ -30,12 +31,17 @@ class ContestView extends Component {
       <nav className="col-sm-3 col-md-2 col-xs-12 bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
-            <h3>{t("navbar.task list")}</h3>
+            <h3>{t("navbar.total score")}</h3>
+            <TotalScoreView model={this.model} />
           </li>
-
           <li className="divider-vertical" />
 
-          { this.model.getContest().data.tasks.map((task,i) => <TaskNavbarItem key={i} taskName={task.name} model={this.model} />)}
+          <li className="nav-item title">
+            <h3>{t("navbar.task list")}</h3>
+          </li>
+          <li className="divider-vertical" />
+
+          { this.model.getContest().data.tasks.map((task,i) => <NavbarItemView key={i} taskName={task.name} model={this.model} />)}
         </ul>
       </nav>
     );

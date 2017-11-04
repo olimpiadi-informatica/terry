@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { colorFromScore } from '../utils';
 
-export default class TaskNavbarItem extends Component {
+export default class NavbarItemView extends Component {
   constructor(props) {
     super(props);
     this.model = props.model;
