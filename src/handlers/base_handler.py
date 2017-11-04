@@ -201,7 +201,7 @@ class BaseHandler:
         """
         if "file" not in request.files:
             return None
-        return request.files["file"].stream.getvalue()
+        return request.files["file"].stream.read()
 
     @staticmethod
     def get_ip(request):
