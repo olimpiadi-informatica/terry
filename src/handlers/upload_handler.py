@@ -57,6 +57,12 @@ class UploadHandler(BaseHandler):
                 "message": "You have submitted an executable! Please send the source code."
             })
             Logger.info("UPLOAD", "User %s has uploaded an executable" % input["token"])
+        if not alerts:
+            alerts.append({
+                "severity": "success",
+                "message": "Source file uploaded correctly."
+            })
+
         source_id = Database.gen_id()
         path = StorageManager.new_source_file(source_id, file["name"])
 
