@@ -17,13 +17,13 @@ class ValidationView extends Component {
   }
 
   renderCaseSummary(c, id) {
-    return <span className={"badge badge-" + this.getColor(c)}>{id}</span>
+    return <a href={"#case-" + id} className={"badge badge-" + this.getColor(c)}>{id}</a>
   }
 
   renderCase(c, id) {
     const { t } = this.props;
     return (
-        <li key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
+        <li id={"case-" + id} key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
           <span>Case #<samp>{id}</samp>: <b>{t("submission.validation."+c.status)}</b><br/><em>{c.message}</em></span>
         </li>
     )
