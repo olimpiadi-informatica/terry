@@ -32,12 +32,14 @@ class InfoHandler(BaseHandler):
                 "description": Database.get_meta("contest_description")
             }
 
+        tasks = Database.get_tasks()
         return {
             "has_started": True,
             "name": Database.get_meta("contest_name"),
             "description": Database.get_meta("contest_description"),
             "start_time": start_datetime.isoformat(),
-            "tasks": Database.get_tasks()
+            "tasks": tasks,
+            "max_total_score": sum(task["max_score"] for task in tasks)
         }
 
     @Validators.during_contest
@@ -107,6 +109,8 @@ class InfoHandler(BaseHandler):
                 "score": task["score"],
                 "current_input": current_input
             }
+
+        user["total_score"] = sum(task["score"] for task in tasks)
 
         return BaseHandler.format_dates(user, fields=["date"])
 
