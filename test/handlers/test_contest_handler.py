@@ -23,6 +23,12 @@ class TestContestHandler(unittest.TestCase):
         self.handler = ContestHandler()
         self.inputid = "inputid"
 
+        self.log_backup = Logger.LOG_LEVEL
+        Logger.LOG_LEVEL = 9001  # disable the logs
+
+    def tearDown(self):
+        Logger.LOG_LEVEL = self.log_backup
+
     def test_compute_score(self):
         self._insert_data()
         self.assertEqual(21, ContestHandler.compute_score('poldo', '{"score":0.5}'))
@@ -169,8 +175,6 @@ class TestContestHandler(unittest.TestCase):
             with Utils.nostderr() as stderr:
                 with self.assertRaises(BadRequest) as ex:
                     self.handler.submit(output_id='outputid', source_id='sourceid', _ip='1.1.1.1')
-        self.assertIn("DB_CONSISTENCY_ERROR", stderr.buffer)
-        self.assertIn("Input inputid not found in the db", stderr.buffer)
         self.assertIn("WRONG_INPUT", ex.exception.response.data.decode())
         self.assertIn("The provided input in invalid", ex.exception.response.data.decode())
 

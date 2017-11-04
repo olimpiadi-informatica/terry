@@ -31,6 +31,12 @@ class TestBaseHandler(unittest.TestCase):
         Utils.prepare_test()
         self.handler = BaseHandler()
 
+        self.log_backup = Logger.LOG_LEVEL
+        Logger.LOG_LEVEL = 9001  # disable the logs
+
+    def tearDown(self):
+        Logger.LOG_LEVEL = self.log_backup
+
     def test_raise_exc(self):
         with self.assertRaises(Forbidden) as ex:
             self.handler.raise_exc(Forbidden, "EX_CODE", "Ex message")

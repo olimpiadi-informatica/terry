@@ -14,6 +14,7 @@ from werkzeug.exceptions import Forbidden
 from src.config import Config
 from src.database import Database
 from src.handlers.upload_handler import UploadHandler
+from src.logger import Logger
 from test.utils import Utils
 
 
@@ -22,6 +23,12 @@ class TestInfoHandler(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
         self.handler = UploadHandler()
+
+        self.log_backup = Logger.LOG_LEVEL
+        Logger.LOG_LEVEL = 9001  # disable the logs
+
+    def tearDown(self):
+        Logger.LOG_LEVEL = self.log_backup
 
     @patch("src.contest_manager.ContestManager.evaluate_output", return_value='{"validation":42}')
     @patch("src.database.Database.gen_id", return_value="outputid")

@@ -9,7 +9,7 @@ import unittest
 import datetime
 import shutil
 
-from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 from unittest.mock import patch
 
 from src.config import Config
@@ -31,7 +31,7 @@ class TestAdminHandler(unittest.TestCase):
         Config.admin_token = 'admin token'
 
         self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001 # disable the logs
+        Logger.LOG_LEVEL = 9001  # disable the logs
 
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
@@ -66,7 +66,7 @@ class TestAdminHandler(unittest.TestCase):
 
     def test_extract_file_not_found(self):
         ContestManager.has_contest = False
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(NotFound):
             self.admin_handler.extract(admin_token='admin token', filename='/foo/bar.zip',
                                        password='passwd', _ip='1.2.3.4')
 
@@ -75,10 +75,10 @@ class TestAdminHandler(unittest.TestCase):
     def test_extract_wrong_password(self, start_mock, read_mock):
         self._prepare_zip()
 
-        with self.assertRaises(RuntimeError) as ex:
+        with self.assertRaises(Forbidden) as ex:
             self.admin_handler.extract(admin_token='admin token', filename='contest.zip',
                                        password="passwd", _ip='1.2.3.4')
-        self.assertIn("Bad password", ex.exception.args[0])
+        self.assertIn("Bad password", ex.exception.response.data.decode())
 
     def test_log_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:

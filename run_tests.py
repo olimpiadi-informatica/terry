@@ -5,12 +5,12 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
-import unittest
 import sys
+import unittest
 # these rows are magic, they change the path from where the modules are loaded
 # the test suite should use "import src.stuff"
-from os import path, mkdir
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from os import path
 
-program = unittest.TestProgram(argv=['discover'], module=None)
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+program = unittest.TestProgram(argv=['discover']+sys.argv[1:], module=None)
 program.runTests()

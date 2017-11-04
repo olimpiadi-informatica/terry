@@ -13,6 +13,7 @@ from werkzeug.exceptions import Forbidden
 
 from src.database import Database
 from src.handlers.info_handler import InfoHandler
+from src.logger import Logger
 from test.utils import Utils
 
 
@@ -20,6 +21,12 @@ class TestInfoHandler(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
         self.handler = InfoHandler()
+
+        self.log_backup = Logger.LOG_LEVEL
+        Logger.LOG_LEVEL = 9001  # disable the logs
+
+    def tearDown(self):
+        Logger.LOG_LEVEL = self.log_backup
 
     def test_get_contest_not_started(self):
         res = self.handler.get_contest()
