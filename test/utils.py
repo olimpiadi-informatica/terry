@@ -27,11 +27,14 @@ class Utils:
         config_file_name = Utils.new_tmp_file()
         log_file_name = Utils.new_tmp_file()
         db_file_name = Utils.new_tmp_file()
+        contest_dir = Utils.new_tmp_dir("contest", create=False)
 
         with open(config_file_name, 'w') as file:
             file.write("logfile: %s\n"
                        "db: %s\n"
-                       "storedir: %s\n" % (log_file_name, db_file_name, Utils.new_tmp_dir()))
+                       "storedir: %s\n"
+                       "contest_path: %s\n" % (log_file_name, db_file_name,
+                                               Utils.new_tmp_dir(), contest_dir))
 
         if load_config:
             Config.loaded = False

@@ -27,9 +27,9 @@ class AdminHandler(BaseHandler):
         """
         POST /admin/extract
         """
-        if ContestManager.has_contest:
+        if os.path.exists(Config.contest_path):
             self.raise_exc(Forbidden, "CONTEST", "Contest already loaded")
-        os.makedirs(Config.contest_path, exist_ok=True)
+        os.makedirs(Config.contest_path)
         wd = os.getcwd()
         z = os.path.abspath(os.path.join(Config.contest_zips, filename))
         os.chdir(Config.contest_path)

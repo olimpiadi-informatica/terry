@@ -50,7 +50,7 @@ class TestAdminHandler(unittest.TestCase):
         start_mock.assert_called_once_with()
 
     def test_already_extracted(self):
-        ContestManager.has_contest = True
+        os.makedirs(Config.contest_path)
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.extract(admin_token='admin token', filename='/foo/bar.zip',
                                        password='passwd', _ip='1.2.3.4')
