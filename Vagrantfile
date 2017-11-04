@@ -9,7 +9,6 @@ Vagrant.configure(2) do |config|
     vb.name = "Server gare territoriali OII"
     vb.memory = 2048
     vb.cpus = 2
-    vb.gui = true
   end
 
   config.vm.provision "shell", inline: "mkdir -p /app/zips"
