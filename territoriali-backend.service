@@ -1,0 +1,10 @@
+[Unit]
+Description=Backend per territoriali OII
+
+[Service]
+ExecStart=/usr/local/bin/terr-server -c /app/config.yaml
+WorkingDirectory=/app/territoriali-backend
+Restart=always
+
+[Install]
+WantedBy=default.target
