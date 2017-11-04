@@ -10,6 +10,8 @@ import datetime
 import os
 import zipfile
 
+import shutil
+
 from .base_handler import BaseHandler
 from ..config import Config
 from ..logger import Logger
@@ -48,7 +50,19 @@ class AdminHandler(BaseHandler):
         finally:
             os.chdir(wd)
         ContestManager.read_from_disk()
-        ContestManager.start()
+        return {}
+
+    @Validators.admin_only
+    def drop_contest(self):
+        """
+        POST /admin/drop_contest
+        """
+        if Database.get_meta("start_time", default=None, type=int) is not None:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
+        if not os.path.exists(Config.contest_path):
+            self.raise_exc(NotFound, "CONTEST", "Contest not loaded")
+        Database.set_meta("contest_imported", False)
+        shutil.rmtree(Config.contest_path)
         return {}
 
     @Validators.admin_only
@@ -77,6 +91,7 @@ class AdminHandler(BaseHandler):
         if Database.get_meta("start_time", default=None, type=int) is not None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
 
+        ContestManager.start()
         start_time = int(datetime.datetime.now().timestamp())
         Database.set_meta("start_time", start_time)
         Logger.info("CONTEST", "Contest started")

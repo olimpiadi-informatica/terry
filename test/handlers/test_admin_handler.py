@@ -38,8 +38,7 @@ class TestAdminHandler(unittest.TestCase):
         Config.admin_token = self.token_backup
 
     @patch('src.contest_manager.ContestManager.read_from_disk')
-    @patch('src.contest_manager.ContestManager.start')
-    def test_extract(self, start_mock, read_mock):
+    def test_extract(self, read_mock):
         self._prepare_zip()
 
         ContestManager.has_contest = False
@@ -47,7 +46,6 @@ class TestAdminHandler(unittest.TestCase):
                                    password='password', _ip='1.2.3.4')
 
         read_mock.assert_called_once_with()
-        start_mock.assert_called_once_with()
 
     def test_already_extracted(self):
         os.makedirs(Config.contest_path)
@@ -79,6 +77,28 @@ class TestAdminHandler(unittest.TestCase):
             self.admin_handler.extract(admin_token='admin token', filename='contest.zip',
                                        password="passwd", _ip='1.2.3.4')
         self.assertIn("Bad password", ex.exception.response.data.decode())
+
+    def test_drop_contest_valid(self):
+        os.makedirs(Config.contest_path)
+
+        self.admin_handler.drop_contest(admin_token='admin token', _ip='1.2.3.4')
+
+        self.assertFalse(os.path.exists(Config.contest_path))
+        self.assertFalse(Database.get_meta("contest_imported", type=bool))
+
+    def test_drop_contest_started(self):
+        Database.set_meta("start_time", 123456789)
+
+        with self.assertRaises(Forbidden) as ex:
+            self.admin_handler.drop_contest(admin_token='admin token', _ip='1.2.3.4')
+
+        self.assertIn("Contest has already been started!", ex.exception.response.data.decode())
+
+    def test_drop_contest_not_fount(self):
+        with self.assertRaises(NotFound) as ex:
+            self.admin_handler.drop_contest(admin_token='admin token', _ip='1.2.3.4')
+
+        self.assertIn("Contest not loaded", ex.exception.response.data.decode())
 
     def test_log_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
@@ -126,13 +146,15 @@ class TestAdminHandler(unittest.TestCase):
 
         self.assertIn("Contest has already been started", ex.exception.response.data.decode())
 
-    def test_start_ok(self):
+    @patch('src.contest_manager.ContestManager.start')
+    def test_start_ok(self, start_mock):
         out = self.admin_handler.start(admin_token='admin token', _ip='1.2.3.4')
 
         start_time = datetime.datetime.strptime(out["start_time"], "%Y-%m-%dT%H:%M:%S").timestamp()
         self.assertTrue(start_time >= datetime.datetime.now().timestamp() - 10)
 
         self.assertEqual(start_time, Database.get_meta('start_time', type=int))
+        start_mock.assert_called_once_with()
 
     def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:

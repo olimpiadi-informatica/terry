@@ -57,6 +57,7 @@ class Server:
             Rule("/upload_output", methods=["POST"], endpoint="upload#upload_output"),
 
             Rule("/admin/extract", methods=["POST"], endpoint="admin#extract"),
+            Rule("/admin/drop_contest", methods=["POST"], endpoint="admin#drop_contest"),
             Rule("/admin/log", methods=["POST"], endpoint="admin#log"),
             Rule("/admin/start", methods=["POST"], endpoint="admin#start"),
             Rule("/admin/set_extra_time", methods=["POST"], endpoint="admin#set_extra_time"),

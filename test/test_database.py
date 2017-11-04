@@ -118,6 +118,15 @@ class TestDatabase(unittest.TestCase):
 
         self.assertIsNone(Database.get_meta('not_existing_key', type=int))
 
+    def test_get_meta_type_bool(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        Database.set_meta('boooool', True)
+        self.assertTrue(Database.get_meta('boooool', type=bool))
+        Database.set_meta('boooool2', False)
+        self.assertFalse(Database.get_meta('boooool2', type=bool))
+
     def test_set_meta(self):
         Database.connected = False
         Database.connect_to_database()
@@ -134,6 +143,21 @@ class TestDatabase(unittest.TestCase):
         Database.set_meta('random_key', 42)
         value = Database.get_meta('random_key', type=int)
         self.assertEqual(42, value)
+
+    def test_del_meta(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        Database.set_meta('random_key', 4242)
+        self.assertTrue(Database.del_meta('random_key'))
+        self.assertIsNone(Database.get_meta('random_key'))
+
+    def test_del_meta_non_exist(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        self.assertFalse(Database.del_meta('random_key'))
+        self.assertIsNone(Database.get_meta('random_key'))
 
     def test_transaction_commit(self):
         Database.connected = False

@@ -280,6 +280,27 @@ paths:
           description: The contest is succesfully extracted and loaded, it's ready to be started
         '403':
           description: The admin token is invalid, the contest was already extracted, or the password is wrong
+  '/admin/drop_contest':
+    post:
+      tags:
+      - admin
+      summary: Drop a loaded but not started contest
+      operationId: adminDropContest
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The contest has been removed
+        '403':
+          description: The admin token is invalid or the contest is running
+        '404':
+          description: The contest is not extracted
   '/admin/log':
     post:
       tags:

@@ -256,7 +256,12 @@ class Database:
             return default
         row = c.fetchone()
         if row:
-            return type(row[0]) if type is not None else row[0]
+            if type is None:
+                return row[0]
+            elif type == bool:
+                return row[0] == "True"
+            else:
+                return type(row[0])
         return default
 
     @staticmethod
@@ -264,6 +269,12 @@ class Database:
         return 1 == Database.do_write(autocommit, """
             INSERT OR REPLACE INTO metadata(key, value) VALUES (:key, :value)
         """, {"key": key, "value": str(value)})
+
+    @staticmethod
+    def del_meta(key, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            DELETE FROM metadata WHERE key = :key
+        """, {"key": key})
 
     @staticmethod
     def add_user(token, name, surname, autocommit=True):
