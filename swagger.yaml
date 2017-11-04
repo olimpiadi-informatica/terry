@@ -486,6 +486,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Task'
+      max_total_score:
+        type: number
+        format: float
+        description: Maximum total score of the contest
   Task:
     type: object
     required:
@@ -619,15 +623,18 @@ definitions:
         type: number
         format: int32
         description: Number of bytes of the input
-      alerts:
-        type: array
-        items:
-          type: object
-          properties:
-            severity:
-              type: string
-            message:
-              type: string
+      validation:
+        type: object
+        properties:
+          alerts:
+            type: array
+            items:
+              type: object
+              properties:
+                severity:
+                  type: string
+                message:
+                  type: string
   Submission:
     type: object
     required:
@@ -690,6 +697,9 @@ definitions:
         type: number
         format: int32
         description: Number of seconds before the end of the contest for the user
+      total_score:
+        type: number
+        format: float
       tasks:
         type: object
         properties:

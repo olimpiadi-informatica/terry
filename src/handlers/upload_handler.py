@@ -66,5 +66,7 @@ class UploadHandler(BaseHandler):
         Database.add_source(source_id, input["id"], path, file_size)
         Logger.info("UPLOAD", "User %s has uploaded the source %s" % (input["token"], source_id))
         output = BaseHandler.format_dates(Database.get_source(source_id))
-        output["alerts"] = alerts
+        output["validation"] = dict(
+          alerts=alerts,
+        )
         return output
