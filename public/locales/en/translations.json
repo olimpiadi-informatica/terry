@@ -48,7 +48,6 @@
     },
     "submit": {
       "processing": "Processing...",
-      "source ok": "The source file looks good.",
       "source info": "Source file info",
       "change source": "Change source",
       "output info": "Output file info",

@@ -22,13 +22,21 @@ class SubmissionView extends Component {
     this.submission.popObserver(this);
   }
 
+  renderSourceAlert(alert, i) {
+    return (
+      <div key={i} className={"alert alert-" + alert.severity}>
+        { alert.message }
+      </div>
+    );
+  }
+
   renderSourceStatus(output) {
     const { t } = this.props;
     if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
-      <div className="alert alert-success">
-        {t("submission.submit.source ok")}
+      <div>
+        { output.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
       </div>
     );
   }

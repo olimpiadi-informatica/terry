@@ -48,7 +48,6 @@
     },
     "submit": {
       "processing": "Elaborazione...",
-      "source ok": "Sorgente caricato correttamente.",
       "source info": "Informazioni sul sorgente",
       "change source": "Modifica sorgente",
       "output info": "Informazioni sull'output",
