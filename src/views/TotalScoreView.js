@@ -13,8 +13,8 @@ class TotalScoreView extends Component {
     const total_score = this.model.user.total_score
     const max_total_score = this.model.getContest().data.max_total_score
 
-    return <div style={{'text-align': 'right', 'font-size': '2rem', 'margin-right': '16px'}}>
-      <span style={ {fontSize: "4rem"} }>{ total_score }</span> / {max_total_score}
+    return <div style={{textAlign: 'right', fontSize: '2rem', marginRight: '16px'}}>
+      <span style={{fontSize: '4rem'}}>{total_score}</span> / {max_total_score}
     </div>
   }
 }
