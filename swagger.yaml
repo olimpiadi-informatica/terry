@@ -618,7 +618,16 @@ definitions:
       size:
         type: number
         format: int32
-        description: number of bytes of the input
+        description: Number of bytes of the input
+      alerts:
+        type: array
+        items:
+          type: object
+          properties:
+            severity:
+              type: string
+            message:
+              type: string
   Submission:
     type: object
     required:

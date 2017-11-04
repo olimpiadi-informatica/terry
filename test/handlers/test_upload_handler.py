@@ -65,9 +65,23 @@ class TestInfoHandler(unittest.TestCase):
         self.assertIn("source.txt", res["path"])
         self.assertEqual("inputid", res["input"])
         self.assertEqual(6, res["size"])
+        self.assertEqual([], res["alerts"])
         path = os.path.join(Config.storedir, res["path"])
         with open(path, "r") as file:
             self.assertEqual("foobar", file.read())
+
+    @patch("src.database.Database.gen_id", return_value="sourceid")
+    def test_upload_source_with_exe(self, gen_mock):
+        Utils.start_contest()
+        self._insert_data()
+        executable = b"\x4D\x5Adeadbaba"
+
+        res = self.handler.upload_source(input_id="inputid", _ip="1.1.1.1",
+                                         file={"content": executable,
+                                               "name": "lol.exe"})
+        self.assertEqual(1, len(res["alerts"]))
+        self.assertIn("executable", res["alerts"][0]["message"])
+        self.assertEqual("warning", res["alerts"][0]["severity"])
 
     def test_upload_source_invalid_input(self):
         Utils.start_contest()

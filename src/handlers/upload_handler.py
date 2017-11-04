@@ -7,6 +7,7 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 from werkzeug.exceptions import InternalServerError
 
+from src.detect_exe import get_exeflags
 from .base_handler import BaseHandler
 from .info_handler import InfoHandler
 from ..contest_manager import ContestManager
@@ -49,6 +50,13 @@ class UploadHandler(BaseHandler):
         """
         POST /upload_source
         """
+        alerts = []
+        if get_exeflags(file["content"]):
+            alerts.append({
+                "severity": "warning",
+                "message": "You have submitted an executable! Please send the source code."
+            })
+            Logger.info("UPLOAD", "User %s has uploaded an executable" % input["token"])
         source_id = Database.gen_id()
         path = StorageManager.new_source_file(source_id, file["name"])
 
@@ -57,4 +65,6 @@ class UploadHandler(BaseHandler):
 
         Database.add_source(source_id, input["id"], path, file_size)
         Logger.info("UPLOAD", "User %s has uploaded the source %s" % (input["token"], source_id))
-        return BaseHandler.format_dates(Database.get_source(source_id))
+        output = BaseHandler.format_dates(Database.get_source(source_id))
+        output["alerts"] = alerts
+        return output
