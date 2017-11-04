@@ -18,6 +18,11 @@ if (window.location.origin.endsWith(":3000")) location.replace("http://localhost
 // when the language changes set the attribute so that bootstrap components can be translated via css
 i18n.on("languageChanged", lang => document.getElementsByTagName("html")[0].setAttribute("lang", lang.substr(0,2)));
 
+// handle errors in promises
+window.addEventListener('unhandledrejection', event => {
+    window.alert('An error occurred. Please reload the page. (' + (event.reason||'<no reason>') + ')');
+});
+
 ReactDOM.render(
   <Router>
     <Switch>
