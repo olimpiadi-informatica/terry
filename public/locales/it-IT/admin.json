@@ -41,7 +41,7 @@
     "started at": "La gara è iniziata il",
     "extratime disclamer": "Puoi impotare del tempo extra per tutti i partecipanti nel caso di problemi che hanno afflitto tutti. Questa azione <1>viene registrata</1> e deve essere giustificata al comitato.",
     "extra time": "Tempo extra",
-    "in seconds": "Espresso in secondi.",
+    "in minutes": "Espresso in minuti.",
     "set extra time": "Imposta tempo extra"
   },
   "users": {
@@ -51,7 +51,7 @@
     "token": "Token",
     "ips": "IP",
     "extra time": "Tempo extra",
-    "in seconds": "(in secondi)",
+    "in minutes": "(in minuti)",
     "set": "Imposta"
   }
 }

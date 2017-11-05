@@ -41,7 +41,7 @@
     "started at": "Contest started at",
     "extratime disclamer": "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <1>is logged</1> and must be justified to the committee.",
     "extra time": "Extra time",
-    "in seconds": "Expressed in seconds.",
+    "in minutes": "Expressed in minutes.",
     "set extra time": "Set extra time"
   },
   "users": {
@@ -51,7 +51,7 @@
     "token": "Token",
     "ips": "IPs",
     "extra time": "Extra time",
-    "in seconds": "(in seconds)",
+    "in minutes": "(in minutes)",
     "set": "Set"
   }
 }

@@ -59,6 +59,16 @@ class ContestView extends Component {
     </div>;
   }
 
+  setExtraTime() {
+    const minutes = this.refs.extraTimeForm.minutes.value
+    this.session.setExtraTime(minutes * 60);
+    this.forceUpdate();
+  }
+
+  extraTimeMinutes() {
+    return Math.round(this.session.status.extra_time / 60)
+  }
+
   renderStarted() {
     const { t } = this.props;
     return <div>
@@ -67,16 +77,19 @@ class ContestView extends Component {
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>
 
-      <form ref="form" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.session.setExtraTime(this.session.status.extra_time); }}>
+      <form ref="extraTimeForm" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.setExtraTime() }}>
         {this.renderError()}
         <div className="form-group">
-          <label htmlFor="extraTime">{t("contest.extra time")}</label>
-          <input type="number" className="form-control" id="extraTime" placeholder={t("contest.extra time")} required
-                 value={this.session.status.extra_time} onChange={(e) => {
-            this.session.status.extra_time = e.target.value;
-            this.forceUpdate();
-          }}/>
-          <small className="form-text text-muted">{t("contest.in seconds")}</small>
+          <label htmlFor="minutes">{t("contest.extra time")}</label>
+          <input
+            id="minutes"
+            name="minutes"
+            type="number"
+            className="form-control"
+            required
+            defaultValue={this.extraTimeMinutes()}
+          />
+        <small className="form-text text-muted">{t("contest.in minutes")}</small>
         </div>
         <button type="submit" className="btn btn-warning">
           <span className="fa fa-clock-o" aria-hidden="true" /> {t("contest.set extra time")}

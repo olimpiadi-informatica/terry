@@ -3,6 +3,37 @@ import {translateComponent} from "../../utils";
 import Users from "../../models/admin/Users";
 import LoadingView from "../LoadingView";
 
+class UserExtraTimeView extends Component {
+  constructor(props) {
+    super(props);
+
+    this.session = props.session;
+    this.user = props.user;
+  }
+
+  setExtraTime() {
+    const minutes = this.refs.form.minutes.value
+    this.session.setExtraTime(minutes * 60, this.user.token);
+  }
+
+  extraTimeMinutes() {
+    return Math.round(this.user.extra_time / 60)
+  }
+
+  render() {
+    const { t } = this.props;
+
+    return <form ref="form" className="form-inline" onSubmit={e => { e.preventDefault(); this.setExtraTime() } }>
+      <input name="minutes" type="number" className="form-control mr-sm-2" defaultValue={this.extraTimeMinutes()} />
+      <button type="submit" className="btn btn-warning">
+        <span className="fa fa-clock-o" aria-hidden="true" /> {t("users.set")}
+      </button>
+    </form>;
+  }
+}
+
+UserExtraTimeView = translateComponent(UserExtraTimeView, "admin");
+
 class UsersView extends Component {
   constructor(props) {
     super(props);
@@ -22,24 +53,6 @@ class UsersView extends Component {
     this.users.popObserver(this);
   }
 
-  setExtraTime(user) {
-    this.session.setExtraTime(user.extra_time, user.token);
-  }
-
-  renderExtraTime(user) {
-    const { t } = this.props;
-
-    return <form className="form-inline" onSubmit={e => { e.preventDefault(); this.setExtraTime(user) } }>
-      <input type="number" className="form-control mr-sm-2" value={user.extra_time} onChange={(e) => {
-        user.extra_time = e.target.value;
-        this.forceUpdate();
-      }} />
-      <button type="submit" className="btn btn-warning">
-        <span className="fa fa-clock-o" aria-hidden="true" /> {t("users.set")}
-      </button>
-    </form>;
-  }
-
   renderUser(user, i) {
     const ips = user.ip
         .map((ip,i) => <abbr key={i} title={new Date(ip.first_date).toLocaleString()}>{ip.ip}</abbr>)
@@ -49,7 +62,7 @@ class UsersView extends Component {
       <td>{user.surname}</td>
       <td>{user.token}</td>
       <td>{ips}</td>
-      <td>{this.renderExtraTime(user)}</td>
+      <td><UserExtraTimeView session={this.session} user={user}/></td>
     </tr>
   }
 
@@ -62,7 +75,7 @@ class UsersView extends Component {
           <th>{t("users.surname")}</th>
           <th>{t("users.title")}</th>
           <th>{t("users.ips")}</th>
-          <th>{t("users.extra time")} <small>{t("users.in seconds")}</small></th>
+          <th>{t("users.extra time")} <small>{t("users.in minutes")}</small></th>
         </tr>
       </thead>
       <tbody>
