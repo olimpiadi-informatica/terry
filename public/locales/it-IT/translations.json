@@ -56,7 +56,7 @@
       "title": "Sottoponi per l'input"
     },
     "validation": {
-      "parsed": "forato corretto",
+      "parsed": "formato corretto",
       "missing": "mancante",
       "invalid": "formato invalido"
     }

@@ -197,3 +197,7 @@ main {
 .admin-jumbotron {
   background-color: #f0ad4e;
 }
+
+pre {
+  margin-bottom: 0;
+}

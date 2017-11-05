@@ -45,7 +45,7 @@ class LogsTable extends Component {
         {t("logs.levels."+log.level)}
         </a>
       </td>
-      <td>{log.message}</td>
+      <td><pre>{log.message}</pre></td>
     </tr>;
   }
 
