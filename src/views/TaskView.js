@@ -101,7 +101,7 @@ class TaskView extends Component {
     else {
       const items = list.data.items;
       if (items.length === 0)
-        last_submission = <em>{t("task.none")}</em>;
+        return (<div></div>);
       else {
         const submission = items[items.length-1];
         last_submission = <DateView date={new Date(submission.date)}/>
