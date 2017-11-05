@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Markdown from 'react-rich-markdown';
-import 'katex-all/dist/katex.min.css';
+import ReactMarkdown from 'react-markdown';
 import {translateComponent} from "../utils";
 
 class LoginView extends Component {
@@ -60,7 +59,7 @@ class LoginView extends Component {
       <div className="container-fluid mt-4">
         <div className="jumbotron col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
         <h1 className="display-3 center-align">{this.model.contest.data.name}</h1>
-          <Markdown source={this.model.contest.data.description} />
+          <ReactMarkdown source={this.model.contest.data.description} />
           <hr />
           { form }
         </div>

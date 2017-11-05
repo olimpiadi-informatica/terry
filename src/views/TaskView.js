@@ -3,11 +3,16 @@ import { Link, Route } from 'react-router-dom';
 import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
-import Markdown from 'react-rich-markdown';
 import client from '../TerryClient';
 import DateView from './DateView';
 import {translateComponent} from "../utils";
+
+import ReactMarkdown from 'react-markdown';
 import 'katex-all/dist/katex.min.css';
+import katex from 'katex-all/dist/katex.min.js';
+import renderMathInElement from 'katex-all/dist/contrib/auto-render.min.js';
+
+window.katex = katex
 
 class TaskView extends Component {
   constructor(props) {
@@ -39,6 +44,19 @@ class TaskView extends Component {
     this.getSubmissionList().popObserver(this);
     this.getTaskState().popObserver(this);
     this.task.popObserver(this);
+  }
+
+  componentDidUpdate() {
+    if(this.task.isLoadedStatement()) {
+      console.log(this.refs);
+      renderMathInElement(this.refs.statement_md, {
+        delimiters: [
+          {left: "$", right: "$", display: false},
+          {left: "$$", right: "$$", display: true},
+          {left: "\\[", right: "\\]", display: true},
+        ]
+      });
+    }
   }
 
   getTaskState() {
@@ -87,9 +105,13 @@ class TaskView extends Component {
     if(this.task.isLoadingStatement()) return <p>{t("loading")}</p>;
     if(!this.task.isLoadedStatement()) return <p>{t("task.statement fail")}</p>;
 
-    return <Markdown source={this.task.getStatement()}
-                          transformImageUri={this.transformUri.bind(this)}
-                          transformLinkUri={this.transformUri.bind(this)}/>
+    return <div ref="statement_md">
+      <ReactMarkdown
+        source={this.task.getStatement()}
+        transformImageUri={this.transformUri.bind(this)}
+        transformLinkUri={this.transformUri.bind(this)}
+      />
+    </div>
   }
 
   renderSubmissionListButton() {

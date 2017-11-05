@@ -3,8 +3,7 @@ import {Link, Route} from 'react-router-dom';
 import TaskView from './TaskView';
 import Countdown from './CountdownView';
 import NavbarItemView from './NavbarItemView';
-import Markdown from 'react-rich-markdown';
-import 'katex-all/dist/katex.min.css';
+import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
 import { Trans } from 'react-i18next';
@@ -95,7 +94,7 @@ class ContestView extends Component {
 
     return <div>
       <h1>{this.model.contest.data.name}</h1>
-      <Markdown source={this.model.contest.data.description}/>
+      <ReactMarkdown source={this.model.contest.data.description}/>
       <hr />
       <h2>{t("homepage.guide.title")}</h2>
       <p>{t("homepage.guide.part1")}</p>
