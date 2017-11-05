@@ -144,7 +144,7 @@ class InfoHandler(BaseHandler):
             else:
                 result[k] = v
 
-        result["feedback"] = json.loads(result["output"]["result"])["feedback"]
+        result["feedback"] = json.loads(result["output"]["result"].decode())["feedback"]
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]
@@ -165,7 +165,7 @@ class InfoHandler(BaseHandler):
             "date": output["date"],
             "path": output["path"],
             "size": output["size"],
-            "validation": json.loads(output["result"])["validation"]
+            "validation": json.loads(output["result"].decode())["validation"]
         }
 
         if "input" in output:

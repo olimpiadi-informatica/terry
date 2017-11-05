@@ -66,7 +66,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
-        Database.add_output("outputid", "inputid", "/path", 42, '{"validation":42}')
+        Database.add_output("outputid", "inputid", "/path", 42, b'{"validation":42}')
         Utils.start_contest()
 
         res = self.handler.get_output(output_id="outputid", _ip="1.1.1.1")
@@ -104,7 +104,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
-        Database.add_output("outputid", "inputid", "/path", 42, '{"validation":42,"feedback":42}')
+        Database.add_output("outputid", "inputid", "/path", 42, b'{"validation":42,"feedback":42}')
         Database.add_source("sourceid", "inputid", "/path", 42)
         Database.add_submission("subid", "inputid", "outputid", "sourceid", 42)
 
@@ -160,7 +160,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
-        Database.add_output("outputid", "inputid", "/path", 42, '{"validation":42,"feedback":42}')
+        Database.add_output("outputid", "inputid", "/path", 42, b'{"validation":42,"feedback":42}')
         Database.add_source("sourceid", "inputid", "/path", 42)
         Database.add_submission("subid", "inputid", "outputid", "sourceid", 42)
 
@@ -191,7 +191,7 @@ class TestInfoHandler(unittest.TestCase):
         submission = {
             "id": "subid",
             "nested_item": 42,
-            "output_result": '{"feedback":123}'
+            "output_result": b'{"feedback":123}'
         }
 
         res = InfoHandler.patch_submission(submission)
@@ -207,7 +207,7 @@ class TestInfoHandler(unittest.TestCase):
             "date": 1234,
             "path": "/path",
             "size": 42,
-            "result": '{"validation":42}'
+            "result": b'{"validation":42}'
         }
 
         res = InfoHandler.patch_output(output)

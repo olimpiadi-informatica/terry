@@ -31,7 +31,7 @@ class TestContestHandler(unittest.TestCase):
 
     def test_compute_score(self):
         self._insert_data()
-        self.assertEqual(21, ContestHandler.compute_score('poldo', '{"score":0.5}'))
+        self.assertEqual(21, ContestHandler.compute_score('poldo', b'{"score":0.5}'))
 
     def test_update_user_score(self):
         self._insert_data()
@@ -189,7 +189,8 @@ class TestContestHandler(unittest.TestCase):
 
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42,"
-                           "'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}')")
+                           ":result)",
+                           {"result": b'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}'})
         Database.c.execute("INSERT INTO sources (id, input, path, size) "
                            "VALUES ('sourceid', 'inputid', '/source', 42)")
 
@@ -207,7 +208,8 @@ class TestContestHandler(unittest.TestCase):
 
         Database.c.execute("INSERT INTO outputs (id, input, path, size, result) "
                            "VALUES ('outputid', 'inputid', '/output', 42,"
-                           "'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}')")
+                           ":result)",
+                           {"result":b'{\"score\":0.5,\"feedback\":{\"a\":1},\"validation\":{\"b\":2}}'})
         Database.c.execute("INSERT INTO sources (id, input, path, size) "
                            "VALUES ('sourceid', 'inputid', '/source', 42)")
 

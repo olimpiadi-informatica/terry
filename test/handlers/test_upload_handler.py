@@ -30,7 +30,7 @@ class TestInfoHandler(unittest.TestCase):
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
 
-    @patch("src.contest_manager.ContestManager.evaluate_output", return_value='{"validation":42}')
+    @patch("src.contest_manager.ContestManager.evaluate_output", return_value=b'{"validation":42}')
     @patch("src.database.Database.gen_id", return_value="outputid")
     def test_upload_output(self, gen_mock, eval_mock):
         Utils.start_contest()

@@ -24,7 +24,7 @@ class ContestHandler(BaseHandler):
     @staticmethod
     def compute_score(task, result):
         max_score = Database.get_task(task)["max_score"]
-        percent = json.loads(result)["score"]
+        percent = json.loads(result.decode())["score"]
         return max_score * percent
 
     @staticmethod
