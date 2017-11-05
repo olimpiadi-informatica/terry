@@ -3,10 +3,11 @@ import { Link, Route } from 'react-router-dom';
 import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-rich-markdown';
 import client from '../TerryClient';
 import DateView from './DateView';
 import {translateComponent} from "../utils";
+import 'katex-all/dist/katex.min.css';
 
 class TaskView extends Component {
   constructor(props) {
@@ -86,7 +87,7 @@ class TaskView extends Component {
     if(this.task.isLoadingStatement()) return <p>{t("loading")}</p>;
     if(!this.task.isLoadedStatement()) return <p>{t("task.statement fail")}</p>;
 
-    return <ReactMarkdown source={this.task.getStatement()}
+    return <Markdown source={this.task.getStatement()}
                           transformImageUri={this.transformUri.bind(this)}
                           transformLinkUri={this.transformUri.bind(this)}/>
   }
