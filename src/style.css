@@ -66,6 +66,7 @@ li.title {
 
 main {
   padding: 16px;
+  font-size: large;
 }
 
 .task-score-badge {
