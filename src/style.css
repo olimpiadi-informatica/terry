@@ -39,12 +39,6 @@ h5.modal-subtitle {
   margin-bottom: 0px;
 }
 
-@media (min-width: 576px) {
-  .sidebar {
-    height: calc(100vh - 62px);
-  }
-}
-
 .sidebar {
   padding: 16px 0px 0px;
 }
@@ -72,6 +66,7 @@ li.title {
 
 main {
   padding: 16px;
+  font-size: large;
 }
 
 .task-score-badge {
@@ -202,4 +197,8 @@ main {
 -------------------------------------------------- */
 .admin-jumbotron {
   background-color: #f0ad4e;
+}
+
+pre {
+  margin-bottom: 0;
 }
