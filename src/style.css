@@ -39,12 +39,6 @@ h5.modal-subtitle {
   margin-bottom: 0px;
 }
 
-@media (min-width: 576px) {
-  .sidebar {
-    height: calc(100vh - 62px);
-  }
-}
-
 .sidebar {
   padding: 16px 0px 0px;
 }
