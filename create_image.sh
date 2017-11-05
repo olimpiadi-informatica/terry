@@ -12,5 +12,7 @@ popd
 
 vagrant up
 vagrant halt
+vboxmanage modifyvm "Server gare territoriali OII" --nataliasmode1 proxyonly
+rm -f server_oii.ova
 vboxmanage export "Server gare territoriali OII" -o server_oii.ova
 vboxmanage unregistervm "Server gare territoriali OII" --delete
