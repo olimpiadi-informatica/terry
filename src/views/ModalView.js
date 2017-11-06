@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import { withRouter } from 'react-router-dom';
+import './ModalView.css';
 
 class ModalView extends Component {
   constructor(props) {

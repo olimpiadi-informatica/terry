@@ -4,7 +4,6 @@ import FileView from './FileView';
 import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
 import {translateComponent} from "../utils";
-import './SubmissionView.css'
 
 class SubmissionView extends Component {
   constructor(props) {
