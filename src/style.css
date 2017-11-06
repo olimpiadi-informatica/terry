@@ -202,3 +202,16 @@ main {
 pre {
   margin-bottom: 0;
 }
+
+body.ReactModal__Body--open {
+  overflow-y: hidden;
+}
+
+.modal-title {
+  white-space: nowrap;
+}
+
+.modal-body {
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+}

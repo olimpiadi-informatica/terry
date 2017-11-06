@@ -12,8 +12,8 @@ class ValidationView extends Component {
   }
 
   getColor(c) {
-    return c.status === "parsed" ? "warning" :
-        c.status === "missing" ? "danger" : "dark";
+    return c.status === "parsed" ? "info" :
+        c.status === "missing" ? "warning" : "danger";
   }
 
   renderCaseSummary(c, id) {

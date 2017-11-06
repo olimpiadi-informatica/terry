@@ -1,8 +1,0 @@
-.submission-modal-title {
-  white-space: nowrap;
-}
-
-.submission-modal-body {
-  max-height: calc(100vh - 260px);
-  overflow-y: auto;
-}
