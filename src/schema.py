@@ -25,6 +25,7 @@ class Schema:
                 name TEXT NOT NULL,
                 surname TEXT NOT NULL,
                 extra_time INTEGER NOT NULL DEFAULT 0,
+                sso_user INTEGER DEFAULT 0,
                 CHECK (extra_time >= 0)
             );
 

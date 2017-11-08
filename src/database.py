@@ -277,11 +277,12 @@ class Database:
         """, {"key": key})
 
     @staticmethod
-    def add_user(token, name, surname, autocommit=True):
+    def add_user(token, name, surname, sso_user=False, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT INTO users (token, name, surname)
-            VALUES (:token, :name, :surname)
-        """, {"token": token, "name": name, "surname": surname})
+            INSERT INTO users (token, name, surname, sso_user)
+            VALUES (:token, :name, :surname, :sso_user)
+        """, {"token": token, "name": name, "surname": surname,
+              "sso_user": 1 if sso_user else 0})
 
     @staticmethod
     def add_task(name, title, statement_path, max_score, num, autocommit=True):

@@ -4,7 +4,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-from werkzeug.exceptions import Forbidden
+
+import jwt
+from werkzeug.exceptions import Forbidden, BadRequest
 
 from src.config import Config
 from src.database import Database
@@ -135,7 +137,41 @@ class Validators:
         """
         Expects token in the request and provides user to the handler
         """
-        return Validators.validate_id("token", "user", Database.get_user)(handler)
+        def handle(*args, **kwargs):
+            request = kwargs["_request"]
+            jwt_token = request.cookies.get("token", None)
+            token = kwargs["token"]
+
+            user = Database.get_user(token)
+            if not user and not Config.jwt_secret:
+                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such user")
+            elif not user and Config.jwt_secret and jwt_token:
+                kwargs["user"] = Validators._get_user_from_sso(jwt_token, token)
+            elif not user and Config.jwt_secret and not jwt_token:
+                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Please login at %s" % Config.sso_url)
+            elif not Config.jwt_secret and not user["sso_user"]:
+                kwargs["user"] = user
+            elif not Config.jwt_secret and user["sso_user"]:
+                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No login method available for this user")
+            elif Config.jwt_secret and not user["sso_user"]:
+                kwargs["user"] = user
+            elif Config.jwt_secret and user["sso_user"]:
+                kwargs["user"] = Validators._get_user_from_sso(jwt_token, token)
+            else:
+                BaseHandler.raise_exc(BadRequest, "INTERNAL_ERROR", "Login failed")
+
+            if kwargs["user"] is None:
+                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such user")
+
+            del kwargs["token"]
+            del kwargs["_request"]
+            return handler(*args, **kwargs)
+
+        HandlerParams.initialize_handler_params(handle, handler)
+        HandlerParams.add_handler_param(handle, "_request", None)
+        HandlerParams.add_handler_param(handle, "token", str)
+        HandlerParams.remove_handler_param(handle, "user")
+        return handle
 
     @staticmethod
     def validate_task(handler):
@@ -193,3 +229,23 @@ class Validators:
         else:
             if Database.register_admin_ip(ip):
                 Logger.warning("LOGIN_ADMIN", "An admin has connected from a new ip: %s" % ip)
+
+    @staticmethod
+    def _get_user_from_sso(jwt_token, token):
+        try:
+            data = jwt.decode(jwt_token, Config.jwt_secret, algorithms=['HS256'])
+            username = data["username"]
+            name = data.get("firstName", username)
+            surname = data.get("lastName", "")
+            if username != token:
+                BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Use the same username from the SSO")
+            if Database.get_user(username) is None:
+                Database.begin()
+                Database.add_user(username, name, surname, sso_user=True, autocommit=False)
+                for task in Database.get_tasks():
+                    Database.add_user_task(username, task["name"], autocommit=False)
+                Database.commit()
+                Logger.info("NEW_USER", "User %s created from SSO" % username)
+            return Database.get_user(username)
+        except jwt.exceptions.DecodeError:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Please login at %s" % Config.sso_url)

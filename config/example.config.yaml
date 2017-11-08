@@ -27,3 +27,8 @@ contest_zips: ./zips/
 
 # Log level: DEBUG INFO WARNING ERROR
 log_level: INFO
+
+# Secret for the JWT token, leave blank to disable SSO authentication
+jwt_secret: # none
+# URL to show where to login with SSO
+sso_url: # none

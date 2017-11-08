@@ -26,7 +26,9 @@ class Config:
         "num_proxies": 0,
         "contest_path": "./contest/",
         "contest_zips": "./zips/",
-        "log_level": "INFO"
+        "log_level": "INFO",
+        "jwt_secret": None,
+        "sso_url": ""
     }
 
     @staticmethod
