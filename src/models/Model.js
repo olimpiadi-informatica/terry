@@ -75,7 +75,7 @@ export default class Model extends Observable {
     return this.loadUser(token)
       .then((response) => {
         this.user = response.data;
-        this.cookies.set(Model.cookieName, token);
+        this.cookies.set(Model.cookieName, this.user.token);
         // if the login is valid the contest must be reloaded, in fact most of the useful properties are not present yet
         // like the tasks and the start time. contest.load() will fire all the required updates
         this.contest.load();
