@@ -138,8 +138,11 @@ class Validators:
         Expects token in the request and provides user to the handler
         """
         def handle(*args, **kwargs):
-            request = kwargs["_request"]
-            jwt_token = request.cookies.get("token", None)
+            if "_request" in kwargs:
+                request = kwargs["_request"]
+                jwt_token = request.cookies.get("token", None)
+            else:
+                jwt_token = None
             token = kwargs["token"]
 
             user = Database.get_user(token)
@@ -164,7 +167,8 @@ class Validators:
                 BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such user")
 
             del kwargs["token"]
-            del kwargs["_request"]
+            if "_request" in kwargs:
+                del kwargs["_request"]
             return handler(*args, **kwargs)
 
         HandlerParams.initialize_handler_params(handle, handler)
