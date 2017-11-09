@@ -133,12 +133,14 @@ class Logger:
                 SELECT date, category, level, message FROM logs
                 WHERE level >= :level AND date >= :begin AND date <= :end
                 ORDER BY date DESC
+                LIMIT 50
             """, {"level": level, "begin": begin, "end": end})
         else:
             c.execute("""
                 SELECT date, category, level, message FROM logs
                 WHERE level >= :level AND date >= :begin AND date <= :end AND category = :category
                 ORDER BY date DESC
+                LIMIT 50
             """, {"level": level, "category": category, "begin": begin, "end": end})
         for row in c.fetchall():
             ret.append({

@@ -76,6 +76,7 @@ class ContestHandler(BaseHandler):
             Logger.warning("POSSIBLE_CHEAT", "Trying to submit wrong pair source-output")
             self.raise_exc(Forbidden, "WRONG_OUTPUT_SOURCE", "The provided pair of source-output is invalid")
 
+        # TODO check if the input_id has already been used (maybe same for output and source)
         score = ContestHandler.compute_score(input["task"], output["result"])
         Database.begin()
         try:
