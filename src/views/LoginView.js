@@ -40,7 +40,7 @@ class LoginView extends Component {
         <div className="form-group">
           <label htmlFor="token" className="sr-only">{t("login.token")}</label>
           <input name="token" id="token" className="col-md-8 offset-md-2 form-control text-center" required
-                 placeholder={t("login.token")} type="password"/>
+                 placeholder={t("login.token")} type="text"/>
         </div>
         { this.getLoginError() }
         <input type="submit" className="btn btn-primary col-md-2 offset-md-5" value={t("login.login")} />
