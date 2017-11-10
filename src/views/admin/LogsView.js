@@ -98,7 +98,7 @@ class LogsView extends Component {
 
   updateLogs() {
     // TODO lol, dunno how to do that xD
-    const start = new Date(Date.now()-10000000);
+    const start = new Date(Date.now()-1000000000);
     const end = new Date();
     const options = {
       start_date: formatDate(start),
