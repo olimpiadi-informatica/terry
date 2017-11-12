@@ -7,16 +7,17 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import json
-
-from ..validators import Validators
-from ..logger import Logger
-from .info_handler import InfoHandler
-from .base_handler import BaseHandler
-from ..database import Database
-from ..storage_manager import StorageManager
-from ..contest_manager import ContestManager
+import sqlite3
 
 from werkzeug.exceptions import Forbidden, BadRequest
+
+from .base_handler import BaseHandler
+from .info_handler import InfoHandler
+from ..contest_manager import ContestManager
+from ..database import Database
+from ..logger import Logger
+from ..storage_manager import StorageManager
+from ..validators import Validators
 
 
 class ContestHandler(BaseHandler):
@@ -76,7 +77,6 @@ class ContestHandler(BaseHandler):
             Logger.warning("POSSIBLE_CHEAT", "Trying to submit wrong pair source-output")
             self.raise_exc(Forbidden, "WRONG_OUTPUT_SOURCE", "The provided pair of source-output is invalid")
 
-        # TODO check if the input_id has already been used (maybe same for output and source)
         score = ContestHandler.compute_score(input["task"], output["result"])
         Database.begin()
         try:
@@ -87,6 +87,11 @@ class ContestHandler(BaseHandler):
             ContestHandler.update_user_score(input["token"], input["task"], score)
             Database.set_user_attempt(input["token"], input["task"], None, autocommit=False)
             Database.commit()
+        except sqlite3.IntegrityError as ex:
+            Database.rollback()
+            # provide a better error message if the input has already been submitted
+            if "UNIQUE constraint failed: submissions.input" in str(ex):
+                self.raise_exc(Forbidden, "ALREADY_SUBMITTED", "This input has already been submitted")
         except:
             Database.rollback()
             raise
