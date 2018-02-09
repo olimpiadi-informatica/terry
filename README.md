@@ -13,7 +13,7 @@ First of all you need to install all the dependencies of this project: `npm inst
 
 Remember to start the contest! For example you can issue
 ```
-curl -X POST -F admin_token=password  http://localhost:1234/admin/start
+curl -X POST -F admin_token=secret  http://localhost:1234/admin/start
 ```
 where `secret` is the admin token you have chosen.
 
