@@ -91,7 +91,7 @@ class ContestManager:
         try:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
-            Logger.warning("CONTEST", "Contest not found, you probably need to"
+            Logger.warning("CONTEST", "Contest not found, you probably need to "
                                       "unzip it. Missing file %s" % ex.filename)
             return
 
