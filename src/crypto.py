@@ -3,15 +3,21 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017 - Luca Versari <veluca93@gmail.com>
+# Copyright 2018 - Luca Versari <veluca93@gmail.com>
 
+import argparse
 import base64
+import os
+import sys
 import nacl
 import nacl.hash
 import nacl.pwhash
 import nacl.secret
 
-NACL_SALT = bytes.fromhex("0d44ed211e4b5eac161b80d09e485f4597a1c1e6")
+NACL_SALT = bytes.fromhex(
+    "5b6a78a780ea0ee560442cf5a528f0fb743d79e45a3a33af68671eba9cde0e17")
+SECRET_LEN = 3
+USERNAME_LEN = 6
 
 
 def user_to_bytes(user: str):
@@ -71,3 +77,58 @@ def decode(password: bytes, input_data: bytes):
     key = password_to_key(password)
     box = nacl.secret.SecretBox(key)
     return box.decrypt(input_data)
+
+
+def gen_password_main():
+    parser = argparse.ArgumentParser(
+        description='Generate admin tokens for a given username')
+    parser.add_argument(
+        '--secret-len',
+        type=int,
+        help='number of bytes in the password secret',
+        default=SECRET_LEN)
+    parser.add_argument(
+        '--username-len',
+        type=int,
+        help='username length',
+        default=USERNAME_LEN)
+    parser.add_argument('zip_password', help='hexified zip password')
+    parser.add_argument(
+        'username',
+        help='username (read by stdin by default)',
+        nargs='?',
+        default='-')
+    args = parser.parse_args()
+    if args.username == '-':
+        user = sys.stdin.readline().strip()
+    else:
+        user = args.username
+    if len(user) != args.username_len:
+        raise ValueError("Invalid username length")
+    secret = os.urandom(args.secret_len)
+    print(gen_user_password(user, secret, bytes.fromhex(args.zip_password)))
+
+
+def crypt_file_main():
+    parser = argparse.ArgumentParser(
+        description='(De)Crypt a file according to a given password')
+    parser.add_argument('-d', '--decrypt', action='store_true')
+    parser.add_argument('zip_password', help='hexified zip password')
+    parser.add_argument(
+        'input_file',
+        help='input file (stdin by default)',
+        nargs='?',
+        default='-')
+    parser.add_argument(
+        'output_file',
+        help='output file (stdout by default)',
+        nargs='?',
+        default='-')
+    args = parser.parse_args()
+    input_file = open(args.input_file,
+                      'rb') if args.input_file != '-' else sys.stdin.buffer
+    output_file = open(args.output_file,
+                       'wb') if args.output_file != '-' else sys.stdout.buffer
+    action = decode if args.decrypt else encode
+    output_file.write(
+        action(bytes.fromhex(args.zip_password), input_file.read()))
