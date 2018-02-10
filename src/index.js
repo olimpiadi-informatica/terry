@@ -12,7 +12,7 @@ import i18n from './i18n';
 import AdminView from "./views/admin/AdminView";
 
 /******** DEVELOPMENT SPECIFIC **********/
-if (window.location.origin.endsWith(":3000")) location.replace("http://localhost:5050");
+if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:5050");
 /******** DEVELOPMENT SPECIFIC **********/
 
 // when the language changes set the attribute so that bootstrap components can be translated via css
