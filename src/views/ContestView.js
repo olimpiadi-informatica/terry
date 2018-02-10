@@ -5,7 +5,6 @@ import Countdown from './CountdownView';
 import NavbarItemView from './NavbarItemView';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
-import { Collapse, Navbar, NavbarToggler } from 'reactstrap';
 import { Trans } from 'react-i18next';
 import {formatTimeSpan, translateComponent} from "../utils";
 import TotalScoreView from './TotalScoreView'
@@ -26,6 +25,10 @@ class SidebarView extends Component {
             <TotalScoreView model={this.model} />
           </li>
           <li className="divider-vertical" />
+
+          <li className="nav-item title">
+            {t("navbar.remaining time")} <Countdown remaining={this.model.user.remaining_time}/>
+          </li>
 
           <li className="nav-item title">
             <h3>{t("navbar.task list")}</h3>
@@ -50,27 +53,13 @@ class NavbarView extends Component {
   render() {
     const { t } = this.props;
     const user = this.model.user;
-    return <Navbar color="primary" inverse toggleable>
-      <NavbarToggler onClick={this.toggleNavbar} right/>
+    return <nav className="terry-navbar">
       <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
-      <Collapse navbar className="navbar-toggleable-sm">
-        <ul className="navbar-nav mr-auto">
-        </ul>
-        <ul className="nav navbar-nav navbar-right">
-          <li className="nav-item">
-            <span className="nav-link">{user.name} {user.surname}</span>
-          </li>
-          <li>
-            <span className="nav-link"><Countdown remaining={user.remaining_time}/></span>
-          </li>
-          <li className="nav-item">
-            <a className="btn btn-danger" href="#" role="button" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
-              <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-            </a>
-          </li>
-        </ul>
-      </Collapse>
-    </Navbar>
+      <span className="terry-user-name">{user.name} {user.surname}</span>
+      <a className="terry-logout-button" href="#" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+        <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
+      </a>
+    </nav>
   }
 }
 

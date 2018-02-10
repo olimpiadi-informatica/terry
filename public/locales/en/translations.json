@@ -6,6 +6,7 @@
   "cancel": "Cancel",
   "navbar": {
     "task list": "Task list",
+    "remaining time": "Remaining time",
     "total score": "Your score",
     "logout": "Logout"
   },

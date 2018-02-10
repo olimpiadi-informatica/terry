@@ -6,6 +6,7 @@
   "cancel": "Annulla",
   "navbar": {
     "task list": "Problemi",
+    "remaining time": "Tempo rimanente",
     "total score": "Punteggio",
     "logout": "Esci"
   },

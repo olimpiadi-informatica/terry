@@ -15,6 +15,30 @@ html, body {
   flex-direction: row;
 }
 
+.terry-navbar {
+  display: flex;
+  background-color: #0275d8;
+  align-items: center;
+  padding: 8px;
+  color: white;
+}
+
+.terry-navbar a {
+  color: white;
+}
+
+.terry-navbar-admin {
+  background-color: #f0ad4e;
+}
+
+.terry-user-name {
+  margin-right: 1em;
+}
+
+.terry-admin-logout-button, .terry-user-name {
+  margin-left: auto;
+}
+
 .sidebar {
   order: -1;
   flex: 0 0 auto;
