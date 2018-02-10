@@ -36,7 +36,7 @@
     "include extension": "It should include the file extension.",
     "password": "Archive password",
     "extract": "Extract",
-    "not started": "The contest has not stated yet!",
+    "not started": "The contest has not started yet!",
     "start": "Start",
     "started at": "Contest started at",
     "extratime disclamer": "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <1>is logged</1> and must be justified to the committee.",
