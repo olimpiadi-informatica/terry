@@ -77,6 +77,10 @@ class ContestManager:
             os.chdir(Config.contest_path)
             with zipfile.ZipFile(zip_abs_path) as f:
                 f.extractall()
+            real_yaml = os.path.join('__users__', username + '.yaml')
+            if not os.path.exists(real_yaml):
+                raise ValueError('Invalid username for the given pack')
+            os.symlink(real_yaml, 'contest.yaml')
             Logger.info("CONTEST", "Contest extracted")
         except zipfile.BadZipFile as ex:
             BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
@@ -111,15 +115,15 @@ class ContestManager:
             with open(os.path.join(path, task, "task.yaml")) as f:
                 task_config = yaml.load(f)
 
-            checker = os.path.join(taskdir, "managers",
-                                   "checker" +
-                                   ContestManager.system_extension())
-            generator = os.path.join(taskdir, "managers",
-                                     "generator" +
-                                     ContestManager.system_extension())
-            validator = os.path.join(taskdir, "managers",
-                                     "validator" +
-                                     ContestManager.system_extension())
+            checker = os.path.join(
+                taskdir, "managers",
+                "checker" + ContestManager.system_extension())
+            generator = os.path.join(
+                taskdir, "managers",
+                "generator" + ContestManager.system_extension())
+            validator = os.path.join(
+                taskdir, "managers",
+                "validator" + ContestManager.system_extension())
             task_config["checker"] = checker
             task_config["generator"] = generator
 
@@ -132,8 +136,8 @@ class ContestManager:
                 task_config["validator"] = validator
                 os.chmod(validator, 0o755)
 
-            task_config["statement_path"] = os.path.join(web_statementdir,
-                                                         "statement.md")
+            task_config["statement_path"] = os.path.join(
+                web_statementdir, "statement.md")
             tasks.append(task_config)
 
         contest_config["tasks"] = tasks
@@ -147,39 +151,47 @@ class ContestManager:
         try:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
-            Logger.warning("CONTEST", "Contest not found, you probably need to "
-                                      "unzip it. Missing file %s" % ex.filename)
+            Logger.warning("CONTEST",
+                           "Contest not found, you probably need to "
+                           "unzip it. Missing file %s" % ex.filename)
             return
 
         if not Database.get_meta("contest_imported", default=False, type=bool):
             Database.begin()
             try:
-                Database.set_meta("contest_duration", contest["duration"],
-                                  autocommit=False)
-                Database.set_meta("contest_name",
-                                  contest.get("name", "Contest"),
-                                  autocommit=False)
-                Database.set_meta("contest_description",
-                                  contest.get("description", ""),
-                                  autocommit=False)
+                Database.set_meta(
+                    "contest_duration", contest["duration"], autocommit=False)
+                Database.set_meta(
+                    "contest_name",
+                    contest.get("name", "Contest"),
+                    autocommit=False)
+                Database.set_meta(
+                    "contest_description",
+                    contest.get("description", ""),
+                    autocommit=False)
                 count = 0
 
                 for task in contest["tasks"]:
                     Database.add_task(
-                        task["name"], task["description"],
+                        task["name"],
+                        task["description"],
                         task["statement_path"],
-                        task["max_score"], count, autocommit=False
-                    )
+                        task["max_score"],
+                        count,
+                        autocommit=False)
                     count += 1
 
                 for user in contest["users"]:
-                    Database.add_user(user["token"], user["name"],
-                                      user["surname"], autocommit=False)
+                    Database.add_user(
+                        user["token"],
+                        user["name"],
+                        user["surname"],
+                        autocommit=False)
 
                 for user in Database.get_users():
                     for task in Database.get_tasks():
-                        Database.add_user_task(user["token"], task["name"],
-                                               autocommit=False)
+                        Database.add_user_task(
+                            user["token"], task["name"], autocommit=False)
 
                 Database.set_meta("contest_imported", True, autocommit=False)
                 Database.commit()
@@ -192,8 +204,7 @@ class ContestManager:
 
         # store the task in the ContestManager singleton
         ContestManager.tasks = dict(
-            (task["name"], task) for task in contest["tasks"]
-        )
+            (task["name"], task) for task in contest["tasks"])
         ContestManager.has_contest = True
 
         # create the queues for the task inputs
@@ -211,18 +222,16 @@ class ContestManager:
             try:
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
-                    os.O_WRONLY | os.O_CREAT, 0o644
-                )
+                    os.O_WRONLY | os.O_CREAT, 0o644)
 
                 try:
                     # generate the input and store the stdout into a file
                     retcode = gevent.subprocess.call(
-                        [task["generator"], str(seed), "0"], stdout=stdout
-                    )
+                        [task["generator"], str(seed), "0"], stdout=stdout)
                 finally:
                     os.close(stdout)
 
@@ -238,13 +247,12 @@ class ContestManager:
                 # if there is a validator in the task use it to check if the
                 # generated input is valid
                 if "validator" in task:
-                    stdin = os.open(StorageManager.get_absolute_path(path),
-                                    os.O_RDONLY)
+                    stdin = os.open(
+                        StorageManager.get_absolute_path(path), os.O_RDONLY)
                     try:
                         # execute the validator piping the input file to stdin
                         retcode = gevent.subprocess.call(
-                            [task["validator"], "0"], stdin=stdin
-                        )
+                            [task["validator"], "0"], stdin=stdin)
                     finally:
                         os.close(stdin)
 
@@ -313,13 +321,11 @@ class ContestManager:
             ])
         except:
             # TODO log the stdout and stderr of the checker
-            Logger.error(
-                "TASK", "Error while evaluating output %s "
-                        "for task %s, with input %s: %s" %
-                        (output_path, task_name, input_path,
-                         traceback.format_exc())
-            )
+            Logger.error("TASK", "Error while evaluating output %s "
+                         "for task %s, with input %s: %s" %
+                         (output_path, task_name, input_path,
+                          traceback.format_exc()))
             raise
-        Logger.info("TASK", "Evaluated output %s for task %s, with input %s" % (
-            output_path, task_name, input_path))
+        Logger.info("TASK", "Evaluated output %s for task %s, with input %s" %
+                    (output_path, task_name, input_path))
         return output
