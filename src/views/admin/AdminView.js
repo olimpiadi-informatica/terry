@@ -34,9 +34,9 @@ class AdminView extends Component {
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
       {countdown}
-      <a className="terry-admin-logout-button" href="#" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
+      <button className="terry-admin-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
         <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-      </a>
+      </button>
     </nav>
   }
 

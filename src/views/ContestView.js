@@ -56,9 +56,9 @@ class NavbarView extends Component {
     return <nav className="terry-navbar">
       <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
       <span className="terry-user-name">{user.name} {user.surname}</span>
-      <a className="terry-logout-button" href="#" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+      <button className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
         <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-      </a>
+      </button>
     </nav>
   }
 }

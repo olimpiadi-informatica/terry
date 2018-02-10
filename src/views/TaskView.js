@@ -80,14 +80,14 @@ class TaskView extends Component {
     } else {
       if (this.getTaskState().isGeneratingInput()) {
         return (
-          <button disabled={true} role="button" className="btn btn-success">
+          <button disabled={true} className="btn btn-success">
             <span aria-hidden="true" className="fa fa-plus" /> {t("task.requesting")}
           </button>
         );
       } else {
         return (
-          <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-          <span aria-hidden="true" className="fa fa-plus" /> {t("task.request input")}
+          <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+            <span aria-hidden="true" className="fa fa-plus" /> {t("task.request input")}
           </button>
         );
       }
@@ -129,7 +129,7 @@ class TaskView extends Component {
       }
     }
     return (
-      <div class="terry-submission-list-button">
+      <div className="terry-submission-list-button">
         <strong>{t("task.last submission")}</strong> {last_submission}
         {' '}
         (<Link to={"/" + this.task.name + "/submissions"}>{t("task.view all")}</Link>)

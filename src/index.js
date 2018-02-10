@@ -32,5 +32,5 @@ ReactDOM.render(
       <Route component={AppView} />
     </Switch>
   </Router>,
-  document.body
+  document.getElementById("terry-container")
 );
