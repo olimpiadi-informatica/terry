@@ -29,6 +29,6 @@ contest_zips: ./zips/
 log_level: INFO
 
 # Secret for the JWT token, leave blank to disable SSO authentication
-jwt_secret: # none
+jwt_secret: ~
 # URL to show where to login with SSO
-sso_url: # none
+sso_url: ~
