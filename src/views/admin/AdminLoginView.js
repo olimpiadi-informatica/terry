@@ -20,7 +20,7 @@ class AdminLoginView extends Component {
     this.session.attemptLogin(this.refs.form.token.value);
   }
 
-  getLoginError() {
+  renderLoginError() {
     const { t } = this.props;
     const error = this.session.error;
     if (error) {
@@ -31,28 +31,22 @@ class AdminLoginView extends Component {
     }
   }
 
-  renderLoginForm() {
-    const { t } = this.props;
-    return <React.Fragment>
-      <h1 className="text-center display-3">{t("navbar.title")}</h1>
-      <hr />
-      <h2 className="text-center">{t("login.please login")}</h2>
-      <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
-        <div className="form-group">
-          <label htmlFor="token" className="sr-only">{t("login.token")}</label>
-          <input name="token" id="token" className="form-control text-center" required
-                 placeholder={t("login.token")} type="password"/>
-        </div>
-        { this.getLoginError() }
-        <input type="submit" className="btn btn-danger" value={t("login.login")} />
-      </form>
-    </React.Fragment>;
-  }
-
   render() {
+    const { t } = this.props;
     return (
       <div className="jumbotron admin-jumbotron">
-        { this.renderLoginForm() }
+        <h1 className="text-center display-3">{t("navbar.title")}</h1>
+        <hr />
+        <h2 className="text-center">{t("login.please login")}</h2>
+        <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
+          <div className="form-group">
+            <label htmlFor="token" className="sr-only">{t("login.token")}</label>
+            <input name="token" id="token" className="form-control text-center" required
+                   placeholder={t("login.token")} type="password"/>
+          </div>
+          { this.renderLoginError() }
+          <input type="submit" className="btn btn-danger" value={t("login.login")} />
+        </form>
       </div>
     );
   }

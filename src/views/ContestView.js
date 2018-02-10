@@ -1,69 +1,12 @@
 import React, { Component } from 'react';
 import {Link, Route} from 'react-router-dom';
 import TaskView from './TaskView';
-import Countdown from './CountdownView';
-import NavbarItemView from './NavbarItemView';
 import ReactMarkdown from 'react-markdown';
 import moment from 'moment';
 import { Trans } from 'react-i18next';
 import {formatTimeSpan, translateComponent} from "../utils";
-import TotalScoreView from './TotalScoreView'
-
-class SidebarView extends Component {
-  constructor(props) {
-    super(props);
-    this.model = props.model;
-  }
-
-  render() {
-    const { t } = this.props;
-    return (
-      <nav className="bg-faded sidebar">
-        <ul className="nav nav-pills flex-column">
-          <li className="nav-item title">
-            <h3>{t("navbar.total score")}</h3>
-            <TotalScoreView model={this.model} />
-          </li>
-          <li className="divider-vertical" />
-
-          <li className="nav-item title">
-            {t("navbar.remaining time")} <Countdown remaining={this.model.user.remaining_time}/>
-          </li>
-
-          <li className="nav-item title">
-            <h3>{t("navbar.task list")}</h3>
-          </li>
-          <li className="divider-vertical" />
-
-          { this.model.getContest().data.tasks.map((task,i) => <NavbarItemView key={i} taskName={task.name} model={this.model} />)}
-        </ul>
-      </nav>
-    );
-  }
-}
-
-SidebarView = translateComponent(SidebarView);
-
-class NavbarView extends Component {
-  constructor(props) {
-    super(props);
-    this.model = props.model;
-  }
-
-  render() {
-    const { t } = this.props;
-    const user = this.model.user;
-    return <nav className="terry-navbar">
-      <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
-      <span className="terry-user-name">{user.name} {user.surname}</span>
-      <button className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
-        <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-      </button>
-    </nav>
-  }
-}
-
-NavbarView = translateComponent(NavbarView);
+import SidebarView from './SidebarView';
+import IndexView from './IndexView';
 
 class ContestView extends Component {
   constructor(props) {
@@ -98,17 +41,26 @@ class ContestView extends Component {
   }
 
   render() {
+    const { t } = this.props;
     return <React.Fragment>
-      <NavbarView model={this.model} />
+      <nav className="terry-navbar">
+        <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
+        <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
+        <button className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+          <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
+        </button>
+      </nav>
 
       <div className="terry-body">
         <SidebarView model={this.model} />
 
         <main>
           <Route path={'/:taskName'} render={ ({match}) =>
-              <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
+            <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
           }/>
-          <Route exact path={'/'} render={({match}) => this.render_index()}/>
+          <Route exact path={'/'} render={ ({match}) =>
+            <IndexView model={this.model}/>
+          }/>
         </main>
       </div>
     </React.Fragment>;
