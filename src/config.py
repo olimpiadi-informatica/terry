@@ -22,7 +22,6 @@ class Config:
         "statementdir": "./files/statements/secret/",
         "web_statementdir": "/statements/secret/",
         "queue_size": 64,
-        "admin_token": "secret",
         "num_proxies": 0,
         "contest_path": "./contest/",
         "encrypted_file": "./zips/pack.zip.enc",

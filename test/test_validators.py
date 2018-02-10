@@ -20,8 +20,7 @@ from test.utils import Utils
 class TestValidators(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
-        self.token_backup = Config.admin_token
-        Config.admin_token = 'admin token'
+        Database.set_meta("admin_token", "admin token")
 
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001 # disable the logs
@@ -83,8 +82,9 @@ class TestValidators(unittest.TestCase):
 
     def test_admin_only(self):
         Utils.prepare_test()
+        Database.set_meta("admin_token", "admin token")
         Logger.set_log_level(9001)
-        self.admin_only(admin_token=Config.admin_token, _ip="1.1.1.1")
+        self.admin_only(admin_token="admin token", _ip="1.1.1.1")
 
     def test_validate_file(self):
         self.file(file={"content":"foobar".encode(),"name":"file.txt"})
@@ -196,14 +196,6 @@ class TestValidators(unittest.TestCase):
         row = Logger.c.fetchone()
         self.assertIn("new ip", row[3])
         self.assertIn("1.2.3.4", row[3])
-
-    def test_validate_token_default(self):
-        Config.admin_token = Config.default_values["admin_token"]
-        Validators._validate_admin_token(Config.admin_token, '1.2.3.4')
-
-        Logger.c.execute("SELECT * FROM logs WHERE category = 'ADMIN'")
-        row = Logger.c.fetchone()
-        self.assertEqual("Using default admin token!", row[3])
 
     def _insert_data(self):
         Database.add_user("token", "", "")

@@ -27,78 +27,13 @@ class TestAdminHandler(unittest.TestCase):
         Utils.prepare_test()
         self.admin_handler = AdminHandler()
 
-        self.token_backup = Config.admin_token
-        Config.admin_token = 'admin token'
+        Database.set_meta("admin_token", "admin token")
 
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001  # disable the logs
 
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
-        Config.admin_token = self.token_backup
-
-    @patch('src.contest_manager.ContestManager.read_from_disk')
-    def test_extract(self, read_mock):
-        self._prepare_zip()
-
-        ContestManager.has_contest = False
-        self.admin_handler.extract(admin_token='admin token', filename='contest.zip',
-                                   password='password', _ip='1.2.3.4')
-
-        read_mock.assert_called_once_with()
-
-    def test_already_extracted(self):
-        os.makedirs(Config.contest_path)
-        with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.extract(admin_token='admin token', filename='/foo/bar.zip',
-                                       password='passwd', _ip='1.2.3.4')
-
-        self.assertIn("Contest already loaded", ex.exception.response.data.decode())
-
-    def test_extract_invalid_token(self):
-        with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.extract(admin_token='invalid token', filename='/foo/bar.zip',
-                                       password='passwd', _ip='1.2.3.4')
-
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
-
-    def test_extract_file_not_found(self):
-        ContestManager.has_contest = False
-        with self.assertRaises(NotFound):
-            self.admin_handler.extract(admin_token='admin token', filename='/foo/bar.zip',
-                                       password='passwd', _ip='1.2.3.4')
-
-    @patch('src.contest_manager.ContestManager.read_from_disk')
-    @patch('src.contest_manager.ContestManager.start')
-    def test_extract_wrong_password(self, start_mock, read_mock):
-        self._prepare_zip()
-
-        with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.extract(admin_token='admin token', filename='contest.zip',
-                                       password="passwd", _ip='1.2.3.4')
-        self.assertIn("Bad password", ex.exception.response.data.decode())
-
-    def test_drop_contest_valid(self):
-        os.makedirs(Config.contest_path)
-
-        self.admin_handler.drop_contest(admin_token='admin token', _ip='1.2.3.4')
-
-        self.assertFalse(os.path.exists(Config.contest_path))
-        self.assertFalse(Database.get_meta("contest_imported", type=bool))
-
-    def test_drop_contest_started(self):
-        Database.set_meta("start_time", 123456789)
-
-        with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.drop_contest(admin_token='admin token', _ip='1.2.3.4')
-
-        self.assertIn("Contest has already been started!", ex.exception.response.data.decode())
-
-    def test_drop_contest_not_fount(self):
-        with self.assertRaises(NotFound) as ex:
-            self.admin_handler.drop_contest(admin_token='admin token', _ip='1.2.3.4')
-
-        self.assertIn("Contest not loaded", ex.exception.response.data.decode())
 
     def test_log_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:

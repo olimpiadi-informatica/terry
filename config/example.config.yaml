@@ -15,15 +15,13 @@ web_statementdir: /statements/secret/
 # Queue size for input generation
 queue_size: 64
 
-# Password for the admin
-admin_token: secret
-
 # Number of proxies
 num_proxies: 0
 
 # Path of the contest
 contest_path: ./contest/
-contest_zips: ./zips/
+encrypted_file: ./zips/pack.zip.enc
+decrypted_file: ./zips/pack.zip
 
 # Log level: DEBUG INFO WARNING ERROR
 log_level: INFO
