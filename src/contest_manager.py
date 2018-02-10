@@ -16,7 +16,7 @@ from hashlib import sha256
 import gevent
 import gevent.queue
 import gevent.subprocess
-import nacl.excecptions
+import nacl.exceptions
 import yaml
 from werkzeug.exceptions import NotFound, Forbidden
 
