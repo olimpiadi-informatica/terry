@@ -132,7 +132,10 @@ class TestInfoHandler(unittest.TestCase):
         self.assertIn("No such user", response)
 
     def test_get_user(self):
-        Utils.start_contest(since=100, duration=200)
+        now = int(datetime.datetime.now().timestamp())
+        Database.set_meta("start_time", now)
+        Database.set_meta("contest_duration", 1000)
+
         Database.set_meta("extra_time", 50)
         Database.add_user("token", "", "")
         Database.set_extra_time("token", 30)
@@ -142,7 +145,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        self.assertAlmostEqual(180, res["remaining_time"], delta=5)
+        self.assertEqual(now + 1080, res["end_time"])
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
         self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
 

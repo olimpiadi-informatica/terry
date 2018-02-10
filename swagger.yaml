@@ -440,8 +440,9 @@ paths:
                 format: date-time
               extra_time:
                 type: integer
-              remaining_time:
-                type: integer
+              end_time:
+                type: string
+                format: date-time
               loaded:
                 type: boolean
         '403':
@@ -693,10 +694,10 @@ definitions:
       surname:
         type: string
         description: Surname of the user
-      remaining_time:
-        type: number
-        format: int32
-        description: Number of seconds before the end of the contest for the user
+      end_time:
+        type: string
+        format: date-time
+        description: End time for the user
       total_score:
         type: number
         format: float

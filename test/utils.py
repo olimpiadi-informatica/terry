@@ -92,6 +92,6 @@ class Utils:
         return ''.join(random.choice(chars) for _ in range(length))
 
     @staticmethod
-    def start_contest(since=5, duration=18000):
-        Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - since))
+    def start_contest(since=5, duration=100):
+        Database.set_meta("start_time", int(datetime.datetime.now().timestamp()) - since)
         Database.set_meta("contest_duration", duration)

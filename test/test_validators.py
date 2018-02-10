@@ -5,6 +5,7 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
+import datetime
 import unittest
 
 from werkzeug.exceptions import Forbidden, BadRequest
@@ -70,12 +71,12 @@ class TestValidators(unittest.TestCase):
             self.only_during_contest()
 
     def test_during_contest_ended(self):
-        Utils.start_contest(since=100, duration=50)
+        Utils.start_contest(since=100, duration=20)
         with self.assertRaises(Forbidden):
             self.only_during_contest()
 
     def test_during_contest_extra_time(self):
-        Utils.start_contest(since=100, duration=50)
+        Utils.start_contest(since=100, duration=20)
         Database.add_user("token", "", "")
         Database.set_extra_time("token", 100)
         self.only_during_contest(token="token")

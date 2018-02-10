@@ -87,7 +87,7 @@ class InfoHandler(BaseHandler):
         """
         token = user["token"]
 
-        user["remaining_time"] = InfoHandler.get_remaining_time(user["extra_time"])
+        user["end_time"] = InfoHandler.get_end_time(user["extra_time"])
         del user["extra_time"]
         user["tasks"] = {}
 

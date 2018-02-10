@@ -5,7 +5,9 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
+import datetime
 import jwt
+
 from werkzeug.exceptions import Forbidden, BadRequest
 
 from src.config import Config
@@ -215,7 +217,7 @@ class Validators:
                 extra_time = user["extra_time"]
         if Database.get_meta("start_time") is None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has not started yet")
-        if BaseHandler.get_remaining_time(extra_time) < 0:
+        if BaseHandler.get_end_time(extra_time) < datetime.datetime.now().timestamp():
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
 
     @staticmethod

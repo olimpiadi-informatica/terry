@@ -95,16 +95,16 @@ class TestBaseHandler(unittest.TestCase):
         body = self.handler.parse_body(request)
         self.assertEqual("bar", body["foo"])
 
-    def test_remaining_time(self):
-        Database.set_meta("start_time", int(datetime.datetime.now().timestamp() - 100))
+    def test_end_time(self):
+        Database.set_meta("start_time", 1000)
         Database.set_meta("contest_duration", 150)
         Database.set_meta("extra_time", 20)
 
-        self.assertAlmostEqual(BaseHandler.get_remaining_time(20), 90, delta=1)
-        self.assertAlmostEqual(BaseHandler.get_remaining_time(0), 70, delta=1)
+        self.assertEqual(BaseHandler.get_end_time(20), 1190)
+        self.assertEqual(BaseHandler.get_end_time(0), 1170)
 
-    def test_remaining_time_not_started(self):
-        self.assertIsNone(BaseHandler.get_remaining_time(0))
+    def test_end_time_not_started(self):
+        self.assertIsNone(BaseHandler.get_end_time(0))
 
     def test_format_dates(self):
         dct = {

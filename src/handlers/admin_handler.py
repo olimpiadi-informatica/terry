@@ -121,12 +121,12 @@ class AdminHandler(BaseHandler):
         """
         start_time = Database.get_meta('start_time', type=int)
         extra_time = Database.get_meta('extra_time', type=int, default=0)
-        remaining_time = BaseHandler.get_remaining_time(0)
+        end_time = BaseHandler.get_end_time(0)
 
         return BaseHandler.format_dates({
             "start_time": start_time,
             "extra_time": extra_time,
-            "remaining_time": remaining_time,
+            "end_time": end_time,
             "loaded": ContestManager.has_contest
         }, fields=["start_time"])
 
