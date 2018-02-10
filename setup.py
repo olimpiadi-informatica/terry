@@ -4,6 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2018 - Luca Versari <veluca93@gmail.com>
 
 import os
 from setuptools import setup, find_packages

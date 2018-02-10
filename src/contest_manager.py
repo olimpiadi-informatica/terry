@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 import os
@@ -70,10 +70,12 @@ class ContestManager:
         except PermissionError as ex:
             BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
 
+        zip_abs_path = os.path.realpath(Config.decrypted_file)
         wd = os.getcwd()
         try:
+            os.makedirs(Config.contest_path, exist_ok=True)
             os.chdir(Config.contest_path)
-            with zipfile.ZipFile(Config.decrypted_file) as f:
+            with zipfile.ZipFile(zip_abs_path) as f:
                 f.extractall()
             Logger.info("CONTEST", "Contest extracted")
         except zipfile.BadZipFile as ex:
