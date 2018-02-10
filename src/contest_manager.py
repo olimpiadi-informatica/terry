@@ -3,24 +3,30 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
-
-import gevent
-import gevent.queue
-import gevent.subprocess
+# Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 import os
 import platform
 import shutil
 import traceback
-import yaml
+import zipfile
+from hashlib import sha256
 
+import gevent
+import gevent.queue
+import gevent.subprocess
+import nacl.exceptions
+import yaml
+from werkzeug.exceptions import NotFound, Forbidden
+
+from src.handlers.base_handler import BaseHandler
 from .config import Config
+from .crypto import decode_data, recover_file_password, decode, SECRET_LEN, \
+    combine_username_password
 from .database import Database
 from .logger import Logger
 from .storage_manager import StorageManager
-
-from hashlib import sha256
 
 
 class ContestManager:
@@ -34,6 +40,50 @@ class ContestManager:
         Get a file extension dependent of the system platform
         """
         return "." + platform.system().lower() + "." + platform.machine()
+
+    @staticmethod
+    def extract_contest(username, password):
+        """
+        Decrypt and extract the contest and store the used admin token in the
+        database
+        """
+        if not os.path.exists(Config.encrypted_file):
+            raise ValueError("The pack is not present")
+        token = combine_username_password(username, password)
+        secret, scrambled_password = decode_data(password, SECRET_LEN)
+        file_password = recover_file_password(username, secret,
+                                              scrambled_password)
+        try:
+            with open(Config.encrypted_file, "rb") as encrypted_file:
+                encrypted_data = encrypted_file.read()
+                decrypted_data = decode(file_password, encrypted_data)
+                with open(Config.decrypted_file, "wb") as decrypted_file:
+                    decrypted_file.write(decrypted_data)
+        except FileNotFoundError:
+            BaseHandler.raise_exc(NotFound, "NOT_FOUND",
+                                  "The contest pack has not uploaded yet")
+        except nacl.exceptions.CryptoError:
+            BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
+                                  "The provided password is wrong")
+        except RuntimeError as ex:
+            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
+        except PermissionError as ex:
+            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
+
+        zip_abs_path = os.path.realpath(Config.decrypted_file)
+        wd = os.getcwd()
+        try:
+            os.makedirs(Config.contest_path, exist_ok=True)
+            os.chdir(Config.contest_path)
+            with zipfile.ZipFile(zip_abs_path) as f:
+                f.extractall()
+            Logger.info("CONTEST", "Contest extracted")
+        except zipfile.BadZipFile as ex:
+            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
+        finally:
+            os.chdir(wd)
+
+        Database.set_meta("admin_token", token)
 
     @staticmethod
     def import_contest(path):
@@ -61,9 +111,15 @@ class ContestManager:
             with open(os.path.join(path, task, "task.yaml")) as f:
                 task_config = yaml.load(f)
 
-            checker = os.path.join(taskdir, "managers", "checker" + ContestManager.system_extension())
-            generator = os.path.join(taskdir, "managers", "generator" + ContestManager.system_extension())
-            validator = os.path.join(taskdir, "managers", "validator" + ContestManager.system_extension())
+            checker = os.path.join(taskdir, "managers",
+                                   "checker" +
+                                   ContestManager.system_extension())
+            generator = os.path.join(taskdir, "managers",
+                                     "generator" +
+                                     ContestManager.system_extension())
+            validator = os.path.join(taskdir, "managers",
+                                     "validator" +
+                                     ContestManager.system_extension())
             task_config["checker"] = checker
             task_config["generator"] = generator
 
@@ -76,12 +132,12 @@ class ContestManager:
                 task_config["validator"] = validator
                 os.chmod(validator, 0o755)
 
-            task_config["statement_path"] = os.path.join(web_statementdir, "statement.md")
+            task_config["statement_path"] = os.path.join(web_statementdir,
+                                                         "statement.md")
             tasks.append(task_config)
 
         contest_config["tasks"] = tasks
         return contest_config
-
 
     @staticmethod
     def read_from_disk():
@@ -98,24 +154,32 @@ class ContestManager:
         if not Database.get_meta("contest_imported", default=False, type=bool):
             Database.begin()
             try:
-                Database.set_meta("contest_duration", contest["duration"], autocommit=False)
-                Database.set_meta("contest_name", contest.get("name", "Contest"), autocommit=False)
-                Database.set_meta("contest_description", contest.get("description", ""), autocommit=False)
+                Database.set_meta("contest_duration", contest["duration"],
+                                  autocommit=False)
+                Database.set_meta("contest_name",
+                                  contest.get("name", "Contest"),
+                                  autocommit=False)
+                Database.set_meta("contest_description",
+                                  contest.get("description", ""),
+                                  autocommit=False)
                 count = 0
 
                 for task in contest["tasks"]:
                     Database.add_task(
-                        task["name"], task["description"], task["statement_path"],
+                        task["name"], task["description"],
+                        task["statement_path"],
                         task["max_score"], count, autocommit=False
                     )
                     count += 1
 
                 for user in contest["users"]:
-                    Database.add_user(user["token"], user["name"], user["surname"], autocommit=False)
+                    Database.add_user(user["token"], user["name"],
+                                      user["surname"], autocommit=False)
 
                 for user in Database.get_users():
                     for task in Database.get_tasks():
-                        Database.add_user_task(user["token"], task["name"], autocommit=False)
+                        Database.add_user_task(user["token"], task["name"],
+                                               autocommit=False)
 
                 Database.set_meta("contest_imported", True, autocommit=False)
                 Database.commit()
@@ -134,7 +198,8 @@ class ContestManager:
 
         # create the queues for the task inputs
         for task in ContestManager.tasks:
-            ContestManager.input_queue[task] = gevent.queue.Queue(Config.queue_size)
+            ContestManager.input_queue[task] = gevent.queue.Queue(
+                Config.queue_size)
 
     @staticmethod
     def worker(task_name):
@@ -146,7 +211,7 @@ class ContestManager:
             try:
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
@@ -170,9 +235,11 @@ class ContestManager:
                     # skip the input
                     continue
 
-                # if there is a validator in the task use it to check if the generated input is valid
+                # if there is a validator in the task use it to check if the
+                # generated input is valid
                 if "validator" in task:
-                    stdin = os.open(StorageManager.get_absolute_path(path), os.O_RDONLY)
+                    stdin = os.open(StorageManager.get_absolute_path(path),
+                                    os.O_RDONLY)
                     try:
                         # execute the validator piping the input file to stdin
                         retcode = gevent.subprocess.call(
@@ -198,7 +265,9 @@ class ContestManager:
                 # this method is blocking if the queue is full
                 queue.put({"id": id, "path": path})
             except:
-                Logger.error("TASK", "Exception while creating an input file: " + traceback.format_exc())
+                Logger.error("TASK",
+                             "Exception while creating an input file: " +
+                             traceback.format_exc())
 
     @staticmethod
     def start():
@@ -214,7 +283,8 @@ class ContestManager:
         Fetch an input from the queue and properly rename it
         :param task_name: Name of the task
         :param attempt: Number of the attempt for the user
-        :return: A pair, the first element is the id of the input file, the second the path
+        :return: A pair, the first element is the id of the input file,
+        the second the path
         """
         if ContestManager.input_queue[task_name].empty():
             Logger.warning("TASK", "Empty queue for task %s!" % task_name)
@@ -245,9 +315,11 @@ class ContestManager:
             # TODO log the stdout and stderr of the checker
             Logger.error(
                 "TASK", "Error while evaluating output %s "
-                "for task %s, with input %s: %s" %
-                (output_path, task_name, input_path, traceback.format_exc())
+                        "for task %s, with input %s: %s" %
+                        (output_path, task_name, input_path,
+                         traceback.format_exc())
             )
             raise
-        Logger.info("TASK", "Evaluated output %s for task %s, with input %s" % (output_path, task_name, input_path))
+        Logger.info("TASK", "Evaluated output %s for task %s, with input %s" % (
+            output_path, task_name, input_path))
         return output

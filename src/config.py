@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 import sys
 import yaml
@@ -25,7 +25,8 @@ class Config:
         "admin_token": "secret",
         "num_proxies": 0,
         "contest_path": "./contest/",
-        "contest_zips": "./zips/",
+        "encrypted_file": "./zips/pack.zip.enc",
+        "decrypted_file": "./zips/pack.zip",
         "log_level": "INFO",
         "jwt_secret": None,
         "sso_url": ""

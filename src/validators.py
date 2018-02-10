@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
 import datetime
 import jwt
@@ -227,9 +227,13 @@ class Validators:
         :param token: Token to check
         :param ip: IP of the client
         """
-        if Config.admin_token == Config.default_values['admin_token']:
-            Logger.error("ADMIN", "Using default admin token!")
-        if token != Config.admin_token:
+        correct_token = Database.get_meta("admin_token")
+        if not correct_token:
+            Logger.warning("LOGIN_ADMIN", "Token provided but the contest is "
+                                          "not running %s" % ip)
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "Invalid admin token!")
+        if token != correct_token:
             Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % ip)
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin token!")
         else:

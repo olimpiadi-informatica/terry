@@ -3,80 +3,74 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
 import datetime
-import os
-import zipfile
+import os.path
 
-import shutil
+from werkzeug.exceptions import Forbidden, BadRequest
 
 from .base_handler import BaseHandler
 from ..config import Config
-from ..logger import Logger
-from ..database import Database
 from ..contest_manager import ContestManager
+from ..crypto import combine_username_password
+from ..database import Database
+from ..logger import Logger
+from ..storage_manager import StorageManager
 from ..validators import Validators
-
-from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 
 class AdminHandler(BaseHandler):
 
-    @Validators.admin_only
-    def extract(self, filename:str, password:str):
+    @Validators.validate_file
+    def upload_pack(self, file):
         """
-        POST /admin/extract
+        POST /admin/upload_pack
         """
-        if os.path.exists(Config.contest_path):
-            self.raise_exc(Forbidden, "CONTEST", "Contest already loaded")
-        os.makedirs(Config.contest_path)
-        wd = os.getcwd()
-        z = os.path.abspath(os.path.join(Config.contest_zips, filename))
-        os.chdir(Config.contest_path)
-        try:
-            with zipfile.ZipFile(z) as f:
-                f.extractall(pwd=password.encode())
-            Logger.info("CONTEST", "Contest extracted")
-        except FileNotFoundError:
-            BaseHandler.raise_exc(NotFound, "NOT_FOUND", "Archive %s not found" % z)
-        except RuntimeError as ex:
-            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
-        except PermissionError as ex:
-            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
-        except zipfile.BadZipFile as ex:
-            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
-        finally:
-            os.chdir(wd)
-        ContestManager.read_from_disk()
+        if not Database.get_meta("admin_token"):
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "The pack has already been extracted")
+        elif os.path.exists(Config.encrypted_file):
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "The pack has already been uploaded")
+
+        StorageManager.save_file(Config.encrypted_file, file["content"])
+        return {}
+
+    def login(self, username: str, password: str, _ip):
+        """
+        POST /admin/login
+        """
+        admin_token = Database.get_meta("admin_token")
+        token = combine_username_password(username, password)
+
+        if not admin_token:
+            ContestManager.extract_contest(username, password)
+            admin_token = token
+
+        if admin_token != token:
+            Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % _ip)
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin "
+                                                          "token!")
         return {}
 
     @Validators.admin_only
-    def drop_contest(self):
-        """
-        POST /admin/drop_contest
-        """
-        if Database.get_meta("start_time", default=None, type=int) is not None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
-        if not os.path.exists(Config.contest_path):
-            self.raise_exc(NotFound, "CONTEST", "Contest not loaded")
-        Database.set_meta("contest_imported", False)
-        shutil.rmtree(Config.contest_path)
-        return {}
-
-    @Validators.admin_only
-    def log(self, start_date:str, end_date:str, level:str, category:str=None):
+    def log(self, start_date: str, end_date: str, level: str,
+            category: str = None):
         """
         POST /admin/log
         """
         if level not in Logger.HUMAN_MESSAGES:
-            self.raise_exc(BadRequest, 'INVALID_PARAMETER', 'The level provided is invalid')
+            self.raise_exc(BadRequest, 'INVALID_PARAMETER',
+                           'The level provided is invalid')
         level = Logger.HUMAN_MESSAGES.index(level)
 
         try:
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
-            end_date = datetime.datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+            start_date = datetime.datetime.strptime(start_date,
+                                                    "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+            end_date = datetime.datetime.strptime(end_date,
+                                                  "%Y-%m-%dT%H:%M:%S.%f").timestamp()
         except ValueError as e:
             BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates({
@@ -89,7 +83,8 @@ class AdminHandler(BaseHandler):
         POST /admin/start
         """
         if Database.get_meta("start_time", default=None, type=int) is not None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Contest has already been started!")
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "Contest has already been started!")
 
         ContestManager.start()
         start_time = int(datetime.datetime.now().timestamp())
@@ -102,7 +97,7 @@ class AdminHandler(BaseHandler):
 
     @Validators.admin_only
     @Validators.validate_id("token", "user", Database.get_user, required=False)
-    def set_extra_time(self, extra_time:int, user):
+    def set_extra_time(self, extra_time: int, user):
         """
         POST /admin/set_extra_time
         """
@@ -110,7 +105,8 @@ class AdminHandler(BaseHandler):
             Database.set_meta("extra_time", extra_time)
             Logger.info("ADMIN", "Global extra time set to %d" % extra_time)
         else:
-            Logger.info("ADMIN", "Extra time for user %s set to %d" % (user["token"], extra_time))
+            Logger.info("ADMIN", "Extra time for user %s set to %d" % (
+            user["token"], extra_time))
             Database.set_extra_time(user["token"], extra_time)
         return {}
 
@@ -135,4 +131,5 @@ class AdminHandler(BaseHandler):
         """
         POST /admin/user_list
         """
-        return BaseHandler.format_dates({"items": Database.get_users()}, fields=["first_date"])
+        return BaseHandler.format_dates({"items": Database.get_users()},
+                                        fields=["first_date"])
