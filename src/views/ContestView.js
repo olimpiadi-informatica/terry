@@ -110,17 +110,15 @@ class ContestView extends Component {
     return [
       this.getNavBar(),
 
-      <div className="container-fluid height-100">
-        <div className="row height-100">
-          { this.getSideBar() }
+      <div className="page-content">
+        { this.getSideBar() }
 
-          <main className="col-sm-9 col-md-10">
-            <Route path={'/:taskName'} render={ ({match}) =>
-                <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
-            }/>
-            <Route exact path={'/'} render={({match}) => this.render_index()}/>
-          </main>
-        </div>
+        <main className="col-sm-9 col-md-10">
+          <Route path={'/:taskName'} render={ ({match}) =>
+              <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
+          }/>
+          <Route exact path={'/'} render={({match}) => this.render_index()}/>
+        </main>
       </div>
     ];
   }
