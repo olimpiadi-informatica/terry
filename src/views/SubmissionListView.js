@@ -5,6 +5,7 @@ import client from '../TerryClient';
 import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
 import {colorFromScore, translateComponent} from "../utils";
+import "./SubmissionListView.css";
 
 class SubmissionListView extends Component {
   constructor(props) {
@@ -94,7 +95,7 @@ class SubmissionListView extends Component {
             </div>
           </td>
           <td className={"alert-" + colorFromScore(submission.score, this.task.data.max_score)}>
-            <span style={ {fontSize: "x-large"} }>{ submission.score }</span> / {this.task.data.max_score}
+            <span className="terry-submission-score">{ submission.score }</span> / {this.task.data.max_score}
           </td>
         </tr>
       );
@@ -113,7 +114,7 @@ class SubmissionListView extends Component {
 
     return (
       <div className="modal-body no-padding">
-        <table className="table submissions-table" style={ {marginBottom: 0} }>
+        <table className="table submissions-table">
           <thead>
             <tr>
               <th>{t("submission.list.date")}</th>

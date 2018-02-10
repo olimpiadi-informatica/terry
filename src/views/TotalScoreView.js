@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {translateComponent} from "../utils";
+import "./TotalScoreView.css";
 
 class TotalScoreView extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ class TotalScoreView extends Component {
     const total_score = this.model.user.total_score
     const max_total_score = this.model.getContest().data.max_total_score
 
-    return <div style={{textAlign: 'right', fontSize: '2rem', marginRight: '16px'}}>
-      <span style={{fontSize: '4rem'}}>{total_score}</span> / {max_total_score}
+    return <div className="terry-total-score">
+      <span className="terry-total-score-value">{total_score}</span> / {max_total_score}
     </div>
   }
 }

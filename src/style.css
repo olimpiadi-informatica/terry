@@ -2,12 +2,12 @@ html {
   min-height: 100%;
 }
 
-html, body, .terry-container, .terry-body {
+html, body, #terry-container, .terry-body {
   flex: 1 0 100%;
   display: flex;
 }
 
-html, body {
+html, body, #terry-container {
   flex-direction: column;
 }
 

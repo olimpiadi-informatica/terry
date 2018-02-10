@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {translateComponent, formatDate} from "../../utils";
 import Logs from "../../models/admin/Logs";
 import LoadingView from "../LoadingView";
+import "./LogsView.css";
 
 class LogsTable extends Component {
   constructor(props) {
@@ -53,7 +54,7 @@ class LogsTable extends Component {
     const { t } = this.props;
     if (this.logs.isLoading()) return <LoadingView />;
 
-    return <div style={{maxHeight: "500px", overflowY: "auto"}}>
+    return <div className="terry-log-table">
       <table className="table table-bordered">
         <thead>
         <tr>
@@ -64,7 +65,7 @@ class LogsTable extends Component {
         </tr>
         </thead>
         <tbody>
-        {this.logs.data.items.filter((log) => this.filter(log)).map(this.formatLog.bind(this))}
+          {this.logs.data.items.filter((l) => this.filter(l)).map((l) => this.formatLog(l))}
         </tbody>
       </table>
     </div>
