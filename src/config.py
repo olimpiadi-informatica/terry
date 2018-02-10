@@ -25,7 +25,8 @@ class Config:
         "admin_token": "secret",
         "num_proxies": 0,
         "contest_path": "./contest/",
-        "contest_zips": "./zips/",
+        "encrypted_file": "./zips/pack.zip.enc",
+        "decrypted_file": "./zips/pack.zip",
         "log_level": "INFO",
         "jwt_secret": None,
         "sso_url": ""

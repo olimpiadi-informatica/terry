@@ -225,9 +225,13 @@ class Validators:
         :param token: Token to check
         :param ip: IP of the client
         """
-        if Config.admin_token == Config.default_values['admin_token']:
-            Logger.error("ADMIN", "Using default admin token!")
-        if token != Config.admin_token:
+        correct_token = Database.get_meta("admin_token")
+        if not correct_token:
+            Logger.warning("LOGIN_ADMIN", "Token provided but the contest is "
+                                          "not running %s" % ip)
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "Invalid admin token!")
+        if token != correct_token:
             Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % ip)
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin token!")
         else:

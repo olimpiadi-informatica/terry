@@ -9,6 +9,7 @@ import argparse
 import base64
 import os
 import sys
+
 import nacl
 import nacl.hash
 import nacl.pwhash
@@ -26,13 +27,17 @@ def user_to_bytes(user: str):
     return user.encode('ascii')
 
 
+def combine_username_password(username: str, password: str):
+    return username + "-" + password
+
+
 def encode_data(user: str, data: bytes):
     b32data = base64.b32encode(data)
     if b32data[-1] == ord('='):
         raise ValueError(
             "Invalid secret + password length: %s" % b32data.decode('ascii'))
-    return user + '-' + '-'.join(b32data[i:i + 4].decode('ascii')
-                                 for i in range(0, len(b32data), 4))
+    return combine_username_password(user, '-'.join(b32data[i:i + 4].decode(
+        'ascii') for i in range(0, len(b32data), 4)))
 
 
 def decode_data(b32data: str, secret_len: int):

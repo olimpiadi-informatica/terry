@@ -69,13 +69,13 @@ class StorageManager:
         return os.stat(absolute_path).st_size
 
     @staticmethod
-    def save_file(relative_path, file_content):
+    def save_file(path, file_content):
         """
         Store a file in the filesystem, creates the directories needed
-        :param relative_path: Relative path of the file
+        :param path: Path of the file
         :param file_content: Content of the file
         """
-        absolute_path = StorageManager.get_absolute_path(relative_path)
+        absolute_path = StorageManager.get_absolute_path(path)
         StorageManager._create_dir(absolute_path)
         file = open(absolute_path, "wb")
         file.write(file_content)
@@ -100,6 +100,8 @@ class StorageManager:
         :param relative_path: Relative path of the file
         :return: The absolute path of the file
         """
+        if os.path.isabs(relative_path):
+            return relative_path
         return os.path.abspath(os.path.join(Config.storedir, relative_path))
 
     @staticmethod

@@ -5,6 +5,7 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
+# Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 
 import json
 
