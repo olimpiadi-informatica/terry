@@ -25,7 +25,7 @@ class AdminLoginView extends Component {
     const error = this.session.error;
     if (error) {
       const message = error.response.data.message;
-      return (<div className="alert alert-danger col-md-8 offset-md-2" role="alert">
+      return (<div className="alert alert-danger" role="alert">
         <strong>{t("login.error")}</strong> {message}
       </div>);
     }
@@ -33,29 +33,27 @@ class AdminLoginView extends Component {
 
   renderLoginForm() {
     const { t } = this.props;
-    return <div>
+    return <React.Fragment>
       <h1 className="text-center display-3">{t("navbar.title")}</h1>
       <hr />
       <h2 className="text-center">{t("login.please login")}</h2>
       <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
         <div className="form-group">
           <label htmlFor="token" className="sr-only">{t("login.token")}</label>
-          <input name="token" id="token" className="col-md-8 offset-md-2 form-control text-center" required
+          <input name="token" id="token" className="form-control text-center" required
                  placeholder={t("login.token")} type="password"/>
         </div>
         { this.getLoginError() }
-        <input type="submit" className="btn btn-danger col-md-2 offset-md-5" value={t("login.login")} />
+        <input type="submit" className="btn btn-danger" value={t("login.login")} />
       </form>
-    </div>;
+    </React.Fragment>;
   }
 
   render() {
     return (
-        <div className="container-fluid mt-4">
-          <div className="jumbotron admin-jumbotron col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-            { this.renderLoginForm() }
-          </div>
-        </div>
+      <div className="jumbotron admin-jumbotron">
+        { this.renderLoginForm() }
+      </div>
     );
   }
 }

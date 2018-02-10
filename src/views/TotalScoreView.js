@@ -6,7 +6,6 @@ class TotalScoreView extends Component {
     super(props);
 
     this.model = props.model;
-    console.log(this.model.user);
   }
 
   render() {

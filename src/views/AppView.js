@@ -28,13 +28,9 @@ class AppView extends Component {
 
   renderError() {
     const { t } = this.props;
-    return <div className="container">
-      <div className="mt-4">
-        <div className="alert alert-danger" role="alert">
-          <h4 className="alert-heading">{t("error")}</h4>
-          <p>{t("reload")}</p>
-        </div>
-      </div>
+    return <div className="alert alert-danger" role="alert">
+      <h4 className="alert-heading">{t("error")}</h4>
+      <p>{t("reload")}</p>
     </div>
   }
 

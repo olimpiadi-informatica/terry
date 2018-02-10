@@ -13,15 +13,15 @@ class FileView extends Component {
   render() {
     const { t } = this.props;
     return (
-      <dl className="file-view row">
-        <dt className="col-2">{t("submission.file.file")}</dt>
-        <dd className="col-10">{ this.file.name }</dd>
+      <dl className="file-view">
+        <dt>{t("submission.file.file")}</dt>
+        <dd>{ this.file.name }</dd>
 
-        <dt className="col-2">{t("submission.file.last update")}</dt>
-        <dd className="col-10"><DateView date={ this.file.lastModifiedDate }/></dd>
+        <dt>{t("submission.file.last update")}</dt>
+        <dd><DateView date={ this.file.lastModifiedDate }/></dd>
 
-        <dt className="col-2">{t("submission.file.size")}</dt>
-        <dd className="col-10">{ filesize(this.file.size, { standard: "iec" }) }</dd>
+        <dt>{t("submission.file.size")}</dt>
+        <dd>{ filesize(this.file.size, { standard: "iec" }) }</dd>
       </dl>
     );
   }

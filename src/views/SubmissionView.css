@@ -1,0 +1,8 @@
+.terry-submission-object-card {
+  display: flex;
+  flex-direction: row;
+}
+
+.terry-submission-object-drop {
+  margin-left: auto;
+}

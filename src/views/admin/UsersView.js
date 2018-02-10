@@ -91,10 +91,10 @@ class UsersView extends Component {
     if (this.users.isLoading()) body = <LoadingView/>;
     else body = this.renderUserList(this.users.data.items);
 
-    return <div>
+    return <React.Fragment>
       <h1 className="mt-4">{t("users.title")}</h1>
       {body}
-    </div>;
+    </React.Fragment>;
   }
 }
 

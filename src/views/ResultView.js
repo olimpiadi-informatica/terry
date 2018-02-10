@@ -22,7 +22,7 @@ class ResultView extends Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <ul className="list-unstyled">
           { this.result.alerts.map((a, i) => <li key={i}>{ this.renderAlert(a) }</li>) }
         </ul>
@@ -34,7 +34,7 @@ class ResultView extends Component {
             { this.result.cases.map((c, i) => this.renderCase(c, i+1)) }
           </ul>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

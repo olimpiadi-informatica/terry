@@ -25,10 +25,10 @@ class ContestView extends Component {
 
   renderNotLoaded() {
     const { t } = this.props;
-    return <div>
+    return <React.Fragment>
       <p>{t("contest.need to extract.part1")}</p>
       <p>{t("contest.need to extract.part2")}</p>
-      <form ref="form" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.extractContest(); }}>
+      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.extractContest(); }}>
         {this.renderError()}
         <div className="form-group">
           <label htmlFor="filename">{t("contest.archive")}</label>
@@ -43,20 +43,20 @@ class ContestView extends Component {
           <span className="fa fa-file-archive-o" aria-hidden="true" /> {t("contest.extract")}
         </button>
       </form>
-    </div>;
+    </React.Fragment>;
   }
 
   renderNotStarted() {
     const { t } = this.props;
-    return <div>
+    return <React.Fragment>
       <p>{t("contest.not started")}</p>
-      <form ref="form" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
+      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
         {this.renderError()}
         <button type="submit" className="btn btn-primary">
           <span className="fa fa-play" aria-hidden="true" /> {t("contest.start")}
         </button>
       </form>
-    </div>;
+    </React.Fragment>;
   }
 
   setExtraTime() {
@@ -71,13 +71,13 @@ class ContestView extends Component {
 
   renderStarted() {
     const { t } = this.props;
-    return <div>
+    return <React.Fragment>
       <p>{t("contest.started at")} <em>{new Date(this.session.status.start_time).toLocaleString()}</em>.</p>
       <Trans i18nKey="contest.extratime disclamer" parent="p">
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>
 
-      <form ref="extraTimeForm" className="col-md-6" onSubmit={(e) => { e.preventDefault(); this.setExtraTime() }}>
+      <form ref="extraTimeForm" onSubmit={(e) => { e.preventDefault(); this.setExtraTime() }}>
         {this.renderError()}
         <div className="form-group">
           <label htmlFor="minutes">{t("contest.extra time")}</label>
@@ -95,7 +95,7 @@ class ContestView extends Component {
           <span className="fa fa-clock-o" aria-hidden="true" /> {t("contest.set extra time")}
         </button>
       </form>
-    </div>
+    </React.Fragment>
   }
 
   renderError() {
@@ -117,10 +117,10 @@ class ContestView extends Component {
     else if (!status.start_time) body = this.renderNotStarted();
     else body = this.renderStarted();
 
-    return <div>
+    return <React.Fragment>
       <h1 className="mt-4">{t("contest.title")}</h1>
       {body}
-    </div>;
+    </React.Fragment>;
   }
 }
 

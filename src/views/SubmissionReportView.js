@@ -37,22 +37,20 @@ class SubmissionReportView extends Component {
     const max_score = this.model.contest.getTask(submission.task).data.max_score;
     const color = colorFromScore(score, max_score);
     return (
-        <div>
-          <div className="modal-body">
-            <dl className="row">
-              <dt className="col-2">{t("submission.feedback.date")}:</dt>
-              <dd className="col-10"><DateView date={ submission.date }/></dd>
-              <dt className="col-2">{t("submission.feedback.score")}:</dt>
-              <dd className="col-10"><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
-            </dl>
-            <FeedbackView model={this.model} result={submission.feedback} />
-          </div>
-          <div className="modal-footer">
-            <Link to={"/" + submission.task} role="button" className="btn btn-primary">
-              <span aria-hidden="true" className="fa fa-times" /> {t("close")}
-            </Link>
-          </div>
+      <React.Fragment>
+        <div className="modal-body">
+          <dt>{t("submission.feedback.date")}:</dt>
+          <dd><DateView date={ submission.date }/></dd>
+          <dt>{t("submission.feedback.score")}:</dt>
+          <dd><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
+          <FeedbackView model={this.model} result={submission.feedback} />
         </div>
+        <div className="modal-footer">
+          <Link to={"/" + submission.task} role="button" className="btn btn-primary">
+            <span aria-hidden="true" className="fa fa-times" /> {t("close")}
+          </Link>
+        </div>
+      </React.Fragment>
     );
   }
 

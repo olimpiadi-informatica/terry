@@ -2,25 +2,23 @@ html {
   min-height: 100%;
 }
 
-body,
-.page-content {
-  height: 100%;
+html, body, .terry-body {
+  flex: 1 0 100%;
   display: flex;
+}
+
+html, body {
   flex-direction: column;
+}
+
+.terry-body {
+  flex-direction: row;
 }
 
 .sidebar {
   order: -1;
-}
-
-@media (min-width: 768px) {
-  .page-content {
-    flex-direction: row;
-    flex: 1;
-  }
-  main {
-    flex: 1;
-  }
+  flex: 0 0 auto;
+  width: 16em;
 }
 
 table.sample-case {
@@ -69,12 +67,6 @@ h5.modal-subtitle {
   order: -1;
 }
 
-@media (min-width: 768px) {
-  .sidebar {
-    flex: 0 0 auto;
-  }
-}
-
 .no-padding {
   padding: 0px;
 }
@@ -99,6 +91,11 @@ li.title {
 main {
   padding: 16px;
   font-size: large;
+}
+
+.jumbotron {
+  margin: auto;
+  min-width: 50em;
 }
 
 .task-score-badge {

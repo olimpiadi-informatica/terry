@@ -4,6 +4,7 @@ import FileView from './FileView';
 import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
 import {translateComponent} from "../utils";
+import "./SubmissionView.css";
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -34,9 +35,9 @@ class SubmissionView extends Component {
     if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
-      <div>
+      <React.Fragment>
         { output.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -53,9 +54,9 @@ class SubmissionView extends Component {
       const source = this.submission.getSource();
       return (
         <div key="present" className="card card-outline-primary">
-          <div className="card-header">
-            <h5 className="modal-subtitle pull-left">{t("submission.submit.source info")}</h5>
-            <button key="present" className="btn btn-primary pull-right" role="button" onClick={ () => this.submission.resetSource() }>
+          <div className="card-header terry-submission-object-card">
+            <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
+            <button key="present" className="terry-submission-object-drop btn btn-primary" role="button" onClick={ () => this.submission.resetSource() }>
               <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change source")}
             </button>
           </div>
@@ -93,9 +94,9 @@ class SubmissionView extends Component {
 
     return (
       <div key="present" className="card card-outline-primary">
-        <div className="card-header">
-          <h5 className="modal-subtitle pull-left">{t("submission.submit.output info")}</h5>
-          <button key="present" className="btn btn-primary pull-right" role="button" onClick={ () => this.submission.resetOutput() }>
+        <div className="card-header terry-submission-object-card">
+          <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
+          <button key="present" className="btn btn-primary terry-submission-object-drop" role="button" onClick={ () => this.submission.resetOutput() }>
             <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change output")}
           </button>
         </div>
@@ -120,7 +121,7 @@ class SubmissionView extends Component {
     if(this.submission.isSubmitting()) return <p>{t("submission.submit.processing")}</p>;
 
     return (
-      <div>
+      <React.Fragment>
         <div className="modal-body">
           <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault() }}>
             <div className="form-group">{ this.renderSourceSelector() }</div>
@@ -141,7 +142,7 @@ class SubmissionView extends Component {
             <span aria-hidden="true" className="fa fa-paper-plane" /> {t("submission.submit.submit")}
           </button>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 

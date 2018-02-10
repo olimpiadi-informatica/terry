@@ -10,25 +10,16 @@ import { Trans } from 'react-i18next';
 import {formatTimeSpan, translateComponent} from "../utils";
 import TotalScoreView from './TotalScoreView'
 
-class ContestView extends Component {
+class SidebarView extends Component {
   constructor(props) {
     super(props);
-
     this.model = props.model;
-    this.toggleNavbar = this.toggleNavbar.bind(this);
-    this.state = {
-      collapsed: true
-    };
   }
 
-  componentWillMount() {
-    this.model.enterContest();
-  }
-
-  getSideBar() {
+  render() {
     const { t } = this.props;
     return (
-      <nav className="col-sm-3 col-md-2 col-xs-12 bg-faded sidebar">
+      <nav className="bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
             <h3>{t("navbar.total score")}</h3>
@@ -46,26 +37,24 @@ class ContestView extends Component {
       </nav>
     );
   }
+}
 
-  toggleNavbar() {
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
+SidebarView = translateComponent(SidebarView);
+
+class NavbarView extends Component {
+  constructor(props) {
+    super(props);
+    this.model = props.model;
   }
 
-  getNavBar() {
+  render() {
     const { t } = this.props;
     const user = this.model.user;
     return <Navbar color="primary" inverse toggleable>
       <NavbarToggler onClick={this.toggleNavbar} right/>
       <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
-      <Collapse navbar className="navbar-toggleable-sm" isOpen={!this.state.collapsed}>
+      <Collapse navbar className="navbar-toggleable-sm">
         <ul className="navbar-nav mr-auto">
-          <li className="nav-item active">
-           <Link to="/" className="nav-link">
-             <span aria-hidden="true" className="fa fa-home" /> {t("navbar.home")}
-           </Link>
-          </li>
         </ul>
         <ul className="nav navbar-nav navbar-right">
           <li className="nav-item">
@@ -83,6 +72,19 @@ class ContestView extends Component {
       </Collapse>
     </Navbar>
   }
+}
+
+NavbarView = translateComponent(NavbarView);
+
+class ContestView extends Component {
+  constructor(props) {
+    super(props);
+    this.model = props.model;
+  }
+
+  componentWillMount() {
+    this.model.enterContest();
+  }
 
   render_index() {
     const { t } = this.props;
@@ -92,7 +94,7 @@ class ContestView extends Component {
     const seconds = end.unix() - start.unix();
     const length = formatTimeSpan(seconds, t);
 
-    return <div>
+    return <React.Fragment>
       <h1>{this.model.contest.data.name}</h1>
       <ReactMarkdown source={this.model.contest.data.description}/>
       <hr />
@@ -103,24 +105,24 @@ class ContestView extends Component {
       </Trans>
       <p>{t("homepage.guide.part3")}</p>
       <p>{t("homepage.guide.part4", {length: length})}</p>
-    </div>
+    </React.Fragment>
   }
 
   render() {
-    return [
-      this.getNavBar(),
+    return <React.Fragment>
+      <NavbarView model={this.model} />
 
-      <div className="page-content">
-        { this.getSideBar() }
+      <div className="terry-body">
+        <SidebarView model={this.model} />
 
-        <main className="col-sm-9 col-md-10">
+        <main>
           <Route path={'/:taskName'} render={ ({match}) =>
               <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
           }/>
           <Route exact path={'/'} render={({match}) => this.render_index()}/>
         </main>
       </div>
-    ];
+    </React.Fragment>;
   }
 }
 

@@ -26,7 +26,7 @@ class LoginView extends Component {
     const attempt = this.model.loginAttempt;
     if (attempt && attempt.error) {
       const message = attempt.error.response.data.message;
-      return (<div className="alert alert-danger col-md-8 offset-md-2" role="alert">
+      return (<div className="alert alert-danger" role="alert">
         <strong>{t("login.error")}</strong> {message}
       </div>);
     }
@@ -34,18 +34,18 @@ class LoginView extends Component {
 
   renderLoginForm() {
     const { t } = this.props;
-    return <div>
+    return <React.Fragment>
       <h2 className={"text-center"}>{t("login.please login")}</h2>
       <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
         <div className="form-group">
           <label htmlFor="token" className="sr-only">{t("login.token")}</label>
-          <input name="token" id="token" className="col-md-8 offset-md-2 form-control text-center" required
+          <input name="token" id="token" className="form-control text-center" required
                  placeholder={t("login.token")} type="text"/>
         </div>
         { this.getLoginError() }
-        <input type="submit" className="btn btn-primary col-md-2 offset-md-5" value={t("login.login")} />
+        <input type="submit" className="btn btn-primary" value={t("login.login")} />
       </form>
-    </div>;
+    </React.Fragment>;
   }
 
   renderNotStarted() {
@@ -56,14 +56,12 @@ class LoginView extends Component {
   render() {
     const form = this.model.contest.data.has_started ? this.renderLoginForm() : this.renderNotStarted();
     return (
-      <div className="container-fluid mt-4">
-        <div className="jumbotron col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+      <div className="jumbotron">
         <h1 className="display-3 center-align">{this.model.contest.data.name}</h1>
-          <ReactMarkdown source={this.model.contest.data.description} />
-          <hr />
-          { form }
-        </div>
-    </div>
+        <ReactMarkdown source={this.model.contest.data.description} />
+        <hr />
+        { form }
+      </div>
     );
   }
 }

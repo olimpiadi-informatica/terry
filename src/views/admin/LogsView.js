@@ -141,31 +141,29 @@ class LogsView extends Component {
   render() {
     const { t } = this.props;
 
-    return <div>
+    return <React.Fragment>
       <h1>{t("logs.title")}</h1>
 
-      <div className="row">
-        <div className="col-4 form-group">
-          <input placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
-                 onChange={(e) => this.changeCategory(e.target.value)}/>
-        </div>
-        <div className="col-4 form-group">
-          <select id="level" className="form-control" onChange={(e) => this.changeLevel(e.target.value)}
-                  value={this.state.level}>
-            <option value="DEBUG">{t("logs.levels.DEBUG")}</option>
-            <option value="INFO">{t("logs.levels.INFO")}</option>
-            <option value="WARNING">{t("logs.levels.WARNING")}</option>
-            <option value="ERROR">{t("logs.levels.ERROR")}</option>
-          </select>
-        </div>
-        <div className="col-4 form-group">
-          <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
-                 onChange={(e) => this.changeFilter(e.target.value)}/>
-        </div>
+      <input
+        placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
+        onChange={(e) => this.changeCategory(e.target.value)}
+      />
+      <div className="form-group">
+        <select id="level" className="form-control" onChange={(e) => this.changeLevel(e.target.value)}
+                value={this.state.level}>
+          <option value="DEBUG">{t("logs.levels.DEBUG")}</option>
+          <option value="INFO">{t("logs.levels.INFO")}</option>
+          <option value="WARNING">{t("logs.levels.WARNING")}</option>
+          <option value="ERROR">{t("logs.levels.ERROR")}</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
+               onChange={(e) => this.changeFilter(e.target.value)}/>
       </div>
       <LogsTable logs={this.logs} filter={this.state.filter}
                  changeCategory={this.changeCategory.bind(this)} changeLevel={this.changeLevel.bind(this)} />
-    </div>;
+    </React.Fragment>;
   }
 }
 

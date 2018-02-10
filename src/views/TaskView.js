@@ -48,7 +48,6 @@ class TaskView extends Component {
 
   componentDidUpdate() {
     if(this.task.isLoadedStatement()) {
-      console.log(this.refs);
       renderMathInElement(this.refs.statement_md, {
         delimiters: [
           {left: "$", right: "$", display: false},
@@ -68,7 +67,7 @@ class TaskView extends Component {
     if(this.getTaskState().hasCurrentInput()) {
       const currentInput = this.getTaskState().getCurrentInput();
       return (
-        <div>
+        <React.Fragment>
           <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
             <span aria-hidden="true" className="fa fa-download" /> {t("task.download input")}
           </a>
@@ -76,7 +75,7 @@ class TaskView extends Component {
           <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
             <span aria-hidden="true" className="fa fa-upload" /> {t("task.upload solution")}
           </Link>
-        </div>
+        </React.Fragment>
       )
     } else {
       if (this.getTaskState().isGeneratingInput()) {
@@ -123,14 +122,14 @@ class TaskView extends Component {
     else {
       const items = list.data.items;
       if (items.length === 0)
-        return (<div></div>);
+        return (<React.Fragment />);
       else {
         const submission = items[items.length-1];
         last_submission = <DateView date={new Date(submission.date)}/>
       }
     }
     return (
-      <div>
+      <div class="terry-submission-list-button">
         <strong>{t("task.last submission")}</strong> {last_submission}
         {' '}
         (<Link to={"/" + this.task.name + "/submissions"}>{t("task.view all")}</Link>)
@@ -140,7 +139,7 @@ class TaskView extends Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <h1>{this.task.data.title}</h1>
         { this.renderCommands() }
 
@@ -160,7 +159,7 @@ class TaskView extends Component {
         <hr/>
 
         { this.renderTaskStatement() }
-      </div>
+      </React.Fragment>
     );
   }
 }

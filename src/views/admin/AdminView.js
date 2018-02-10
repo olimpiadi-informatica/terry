@@ -66,19 +66,15 @@ class AdminView extends Component {
     if (this.session.isLoading()) return <LoadingView />;
     if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} />;
 
-    return <div>
+    return <React.Fragment>
       { this.getNavBar() }
 
-      <div className="container-fluid">
-        <div className="row">
-          <main className="col-sm-12">
-            <LogsView session={this.session} />
-            <ContestView session={this.session} />
-            { this.session.status.loaded ? <UsersView session={this.session} /> : ""}
-          </main>
-        </div>
-      </div>
-    </div>
+      <main>
+        <LogsView session={this.session} />
+        <ContestView session={this.session} />
+        { this.session.status.loaded ? <UsersView session={this.session} /> : ""}
+      </main>
+    </React.Fragment>
   }
 }
 

@@ -24,10 +24,10 @@ export default class NavbarItemView extends Component {
     return (
         <li className="nav-item">
           <NavLink to={ "/" + this.taskName } className="nav-link tasklist-item" activeClassName="active">
-            <div className={"task-score-badge col-5 col-md-5 col-lg-4 badge badge-pill badge-" + color}>
+            <div className={"task-score-badge badge badge-pill badge-" + color}>
               {score}/{this.max_score}
             </div>
-            <div className="task-list-item col-7 col-md-7 col-lg-8">{ this.taskName }</div>
+            <div className="task-list-item">{ this.taskName }</div>
           </NavLink>
         </li>
     );
