@@ -65,7 +65,7 @@ class LogsTable extends Component {
         </tr>
         </thead>
         <tbody>
-          {this.logs.data.items.filter((l) => this.filter(l)).map((l) => this.formatLog(l))}
+          {this.logs.data.items.filter((l) => this.filter(l)).map((l, i) => this.formatLog(l, i))}
         </tbody>
       </table>
     </div>
