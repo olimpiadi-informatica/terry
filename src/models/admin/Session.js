@@ -29,7 +29,7 @@ export default class Session extends Observable {
   }
 
   tryLogin() {
-    if (this.isLoggedIn()) {
+    if (!this.isLoggedIn()) {
       this.attemptLogin(this.adminToken());
     }
   }
@@ -51,7 +51,7 @@ export default class Session extends Observable {
           this.error = response;
           delete this.loadingStatus;
           if (this.isLoggedIn()) this.logout();
-          else this.fireUpdate();
+          this.fireUpdate();
         });
   }
 

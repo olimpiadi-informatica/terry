@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { Link, Route } from 'react-router-dom';
 import {translateComponent} from "../../utils";
-import {Link} from "react-router-dom";
 import Session from "../../models/admin/Session";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "../LoadingView";
@@ -12,9 +12,6 @@ class AdminView extends Component {
   constructor(props) {
     super(props);
     this.session = new Session();
-  }
-
-  componentWillMount() {
     this.session.tryLogin();
   }
 
@@ -44,9 +41,11 @@ class AdminView extends Component {
       { this.getNavBar() }
 
       <main>
-        <LogsView session={this.session} />
+        <Route path="/admin/logs" render={
+          ({match}) => <LogsView session={this.session} />
+        }/>
         <ContestView session={this.session} />
-        { this.session.status.loaded ? <UsersView session={this.session} /> : ""}
+        <UsersView session={this.session} />
       </main>
     </React.Fragment>
   }

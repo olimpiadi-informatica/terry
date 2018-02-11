@@ -135,7 +135,7 @@ class SubmissionListView extends Component {
     const taskName = this.taskName;
     const { t } = this.props;
     return (
-      <ModalView contentLabel="Task submissions" returnUrl={"/" + this.taskName}>
+      <ModalView contentLabel={t("submission.list.title")} returnUrl={"/" + this.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
             {t("submission.list.title")} <strong>{taskName}</strong>

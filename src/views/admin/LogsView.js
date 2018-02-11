@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import {translateComponent, formatDate} from "../../utils";
 import Logs from "../../models/admin/Logs";
 import LoadingView from "../LoadingView";
+import ModalView from '../ModalView';
 import "./LogsView.css";
 
 class LogsTable extends Component {
@@ -170,35 +172,50 @@ class LogsView extends Component {
   render() {
     const { t } = this.props;
 
-    return <React.Fragment>
-      <h1>{t("logs.title")}</h1>
-
-      <div className="form-group">
-        <div className="btn-group" role="group" aria-label="Download submission data">
-          {Object.entries(this.LOG_LEVELS).map(([level, obj]) => (
-            <button
-            className={[
-              'btn',
-              ((this.state.level === level) ? 'active' : ''),
-              'btn-' + obj.color
-            ].join(' ')}
-            role="button"
-            onClick={(e) => this.changeLevel(level)}
-            >
-              {t("logs.levels." + level)}
-            </button>
-          ))}
+    return (
+      <ModalView contentLabel={t("logs.title")} returnUrl={"/admin"}>
+        <div className="modal-header">
+          <h5 className="modal-title">
+            {t("logs.title")}
+          </h5>
+          <Link to={"/admin"} role="button" className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </Link>
         </div>
-        <input
-          placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
-          onChange={(e) => this.changeCategory(e.target.value)}
-        />
-        <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
-               onChange={(e) => this.changeFilter(e.target.value)}/>
-      </div>
-      <LogsTable logs={this.logs} filter={this.state.filter}
-                 changeCategory={this.changeCategory.bind(this)} changeLevel={this.changeLevel.bind(this)} />
-    </React.Fragment>;
+        <div className="modal-body">
+          <div className="form-group">
+            <div className="btn-group" role="group" aria-label="Choose log level">
+              {Object.entries(this.LOG_LEVELS).map(([level, obj]) => (
+                <button
+                className={[
+                  'btn',
+                  ((this.state.level === level) ? 'active' : ''),
+                  'btn-' + obj.color
+                ].join(' ')}
+                role="button"
+                onClick={(e) => this.changeLevel(level)}
+                >
+                  {t("logs.levels." + level)}
+                </button>
+              ))}
+            </div>
+            <input
+              placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
+              onChange={(e) => this.changeCategory(e.target.value)}
+            />
+            <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
+                  onChange={(e) => this.changeFilter(e.target.value)}/>
+          </div>
+          <LogsTable logs={this.logs} filter={this.state.filter}
+                    changeCategory={this.changeCategory.bind(this)} changeLevel={this.changeLevel.bind(this)} />
+        </div>
+        <div className="modal-footer">
+          <Link to={"/admin"} role="button" className="btn btn-primary">
+            <span aria-hidden="true" className="fa fa-times"></span> {t("close")}
+          </Link>
+        </div>
+      </ModalView>
+    );
   }
 }
 
