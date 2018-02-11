@@ -4,16 +4,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-import os
-import unittest
 import datetime
-import shutil
-
-from werkzeug.exceptions import Forbidden, BadRequest, NotFound
+import os.path
+import tempfile
+import unittest
 from unittest.mock import patch
 
+from werkzeug.exceptions import Forbidden, BadRequest
+
 from src.config import Config
-from src.contest_manager import ContestManager
 from src.database import Database
 from src.handlers.admin_handler import AdminHandler
 from src.logger import Logger
@@ -35,43 +34,118 @@ class TestAdminHandler(unittest.TestCase):
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
 
+    def test_upload_pack_already_extracted(self):
+        Database.set_meta("admin_token", "totally the real token")
+        with self.assertRaises(Forbidden):
+            self.admin_handler.upload_pack(
+                file={"content": "foobar".encode(), "name": "pack.zip.enc"})
+
+    def test_upload_pack_already_uploaded(self):
+        d = tempfile.TemporaryDirectory()
+        path = os.path.join(d.name, "pack.zip.enc")
+        with open(path, "wb") as f:
+            f.write(b"hola!")
+        Config.encrypted_file = path
+        Database.del_meta("admin_token")
+        with self.assertRaises(Forbidden):
+            self.admin_handler.upload_pack(
+                file={"content": "foobar".encode(), "name": "pack.zip.enc"})
+
+    def test_upload_pack(self):
+        d = tempfile.TemporaryDirectory()
+        upload_path = os.path.join(os.path.dirname(__file__),
+                                   "../assets/pack.zip.enc")
+        enc_path = os.path.join(d.name, "pack.zip.enc")
+        Config.encrypted_file = enc_path
+
+        with open(upload_path, "rb") as f:
+            content = f.read()
+        Database.del_meta("admin_token")
+
+        self.admin_handler.upload_pack(
+            file={"content": content, "name": "pack.zip.enc"})
+        self.assertTrue(os.path.exists(enc_path))
+
+    def test_append_log_invalid_secret(self):
+        Config.append_log_secret = "yep"
+        with self.assertRaises(Forbidden):
+            self.admin_handler.append_log(append_log_secret="nope",
+                                          level="ERROR", category="TESTING",
+                                          message="You shall not pass!")
+
+    def test_append_log_invalid_level(self):
+        Config.append_log_secret = "yep"
+        with self.assertRaises(BadRequest):
+            self.admin_handler.append_log(append_log_secret="yep",
+                                          level="BARABBA", category="TESTING",
+                                          message="You shall not pass!")
+
+    def test_append_log(self):
+        Config.append_log_secret = "yep"
+        self.admin_handler.append_log(append_log_secret="yep",
+                                      level="ERROR", category="TESTING",
+                                      message="Message")
+        Logger.c.execute("SELECT * FROM logs WHERE category = 'TESTING'")
+        row = Logger.c.fetchone()
+        self.assertEqual('TESTING', row[1])
+        self.assertEqual(Logger.ERROR, int(row[2]))
+        self.assertEqual('Message', row[3])
+
     def test_log_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.log(start_date=None, end_date=None, level=None,
-                                   category=None, admin_token='invalid token', _ip=None)
+                                   category=None, admin_token='invalid token',
+                                   _ip=None)
 
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token",
+                      ex.exception.response.data.decode())
 
     def test_log_get_dates(self):
         TestLogger.load_logs()
 
-        start_date = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() - 10).isoformat()
-        end_date = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() + 10).isoformat()
+        start_date = datetime.datetime.fromtimestamp(
+            datetime.datetime.now().timestamp() - 10).isoformat()
+        end_date = datetime.datetime.fromtimestamp(
+            datetime.datetime.now().timestamp() + 10).isoformat()
 
-        res = self.admin_handler.log(start_date=start_date, end_date=end_date, level='WARNING',
+        res = self.admin_handler.log(start_date=start_date, end_date=end_date,
+                                     level='WARNING',
                                      admin_token='admin token', _ip='1.2.3.4')
-        self.assertEqual(3, len(res["items"])) # NOTE: there is also the LOGIN_ADMIN row
+        self.assertEqual(3, len(
+            res["items"]))  # NOTE: there is also the LOGIN_ADMIN row
 
     def test_log_category(self):
         TestLogger.load_logs()
 
-        start_date = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() - 10).isoformat()
-        end_date = datetime.datetime.fromtimestamp(datetime.datetime.now().timestamp() + 10).isoformat()
+        start_date = datetime.datetime.fromtimestamp(
+            datetime.datetime.now().timestamp() - 10).isoformat()
+        end_date = datetime.datetime.fromtimestamp(
+            datetime.datetime.now().timestamp() + 10).isoformat()
 
-        res = self.admin_handler.log(start_date=start_date, end_date=end_date, level='DEBUG',
-                                     admin_token='admin token', _ip='1.2.3.4', category='CATEGORY')
+        res = self.admin_handler.log(start_date=start_date, end_date=end_date,
+                                     level='DEBUG',
+                                     admin_token='admin token', _ip='1.2.3.4',
+                                     category='CATEGORY')
         self.assertEqual(2, len(res["items"]))
 
     def test_log_invalid_level(self):
         with self.assertRaises(BadRequest):
-            self.admin_handler.log(start_date=None, end_date=None, level='NOT-EXISTING-LEVEL',
+            self.admin_handler.log(start_date=None, end_date=None,
+                                   level='NOT-EXISTING-LEVEL',
+                                   admin_token='admin token', _ip='1.2.3.4')
+
+    def test_log_invalid_date(self):
+        with self.assertRaises(BadRequest):
+            self.admin_handler.log(start_date="i'm not a date", end_date=None,
+                                   level='ERROR',
                                    admin_token='admin token', _ip='1.2.3.4')
 
     def test_start_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.start(admin_token='invalid token', _ip=None)
 
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token",
+                      ex.exception.response.data.decode())
 
     def test_start_already_started(self):
         Database.set_meta('start_time', 12345)
@@ -79,13 +153,15 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.start(admin_token='admin token', _ip='1.2.3.4')
 
-        self.assertIn("Contest has already been started", ex.exception.response.data.decode())
+        self.assertIn("Contest has already been started",
+                      ex.exception.response.data.decode())
 
     @patch('src.contest_manager.ContestManager.start')
     def test_start_ok(self, start_mock):
         out = self.admin_handler.start(admin_token='admin token', _ip='1.2.3.4')
 
-        start_time = datetime.datetime.strptime(out["start_time"], "%Y-%m-%dT%H:%M:%S").timestamp()
+        start_time = datetime.datetime.strptime(out["start_time"],
+                                                "%Y-%m-%dT%H:%M:%S").timestamp()
         self.assertTrue(start_time >= datetime.datetime.now().timestamp() - 10)
 
         self.assertEqual(start_time, Database.get_meta('start_time', type=int))
@@ -93,25 +169,34 @@ class TestAdminHandler(unittest.TestCase):
 
     def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.set_extra_time(admin_token='invalid token', extra_time=None, _ip=None)
+            self.admin_handler.set_extra_time(admin_token='invalid token',
+                                              extra_time=None, _ip=None)
 
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token",
+                      ex.exception.response.data.decode())
 
     def test_set_extra_time_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.set_extra_time(admin_token='admin token', extra_time=42, token="foobar", _ip=None)
+            self.admin_handler.set_extra_time(admin_token='admin token',
+                                              extra_time=42, token="foobar",
+                                              _ip=None)
 
         self.assertIn("No such user", ex.exception.response.data.decode())
 
     def test_set_extra_time_global(self):
-        self.admin_handler.set_extra_time(admin_token='admin token', extra_time=42, _ip='1.2.3.4')
+        self.admin_handler.set_extra_time(admin_token='admin token',
+                                          extra_time=42, _ip='1.2.3.4')
 
         self.assertEqual(42, Database.get_meta('extra_time', type=int))
 
     def test_set_extra_time_user(self):
-        Database.c.execute("INSERT INTO users (token, name, surname, extra_time) VALUES ('user token', 'a', 'b', 0)")
+        Database.c.execute(
+            "INSERT INTO users (token, name, surname, extra_time) VALUES ("
+            "'user token', 'a', 'b', 0)")
 
-        self.admin_handler.set_extra_time(admin_token='admin token', extra_time=42, _ip='1.2.3.4', token='user token')
+        self.admin_handler.set_extra_time(admin_token='admin token',
+                                          extra_time=42, _ip='1.2.3.4',
+                                          token='user token')
 
         user = Database.get_user('user token')
         self.assertEqual(42, user["extra_time"])
@@ -120,13 +205,16 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.status(admin_token='invalid token', _ip=None)
 
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token",
+                      ex.exception.response.data.decode())
 
     def test_status(self):
         Database.set_meta('start_time', 1234)
-        res = self.admin_handler.status(admin_token='admin token', _ip='1.2.3.4')
+        res = self.admin_handler.status(admin_token='admin token',
+                                        _ip='1.2.3.4')
 
-        start_time = int(datetime.datetime.strptime(res["start_time"], "%Y-%m-%dT%H:%M:%S").timestamp())
+        start_time = int(datetime.datetime.strptime(res["start_time"],
+                                                    "%Y-%m-%dT%H:%M:%S").timestamp())
 
         self.assertEqual(start_time, Database.get_meta('start_time', type=int))
         self.assertEqual(0, Database.get_meta('extra_time', default=0))
@@ -135,7 +223,8 @@ class TestAdminHandler(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.user_list(admin_token='invalid token', _ip=None)
 
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token",
+                      ex.exception.response.data.decode())
 
     def test_user_list(self):
         Database.add_user("token", "Name", "Surname")
@@ -155,11 +244,3 @@ class TestAdminHandler(unittest.TestCase):
 
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
-
-    def _prepare_zip(self):
-        ContestManager.has_contest = False
-        Config.contest_zips = Utils.new_tmp_dir("contest_zips")
-        os.makedirs(Config.contest_zips, exist_ok=True)
-        here = os.path.dirname(__file__)
-        shutil.copyfile(os.path.join(here, "..", "assets", "contest.zip"),
-                        os.path.join(Config.contest_zips, "contest.zip"))

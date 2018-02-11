@@ -27,7 +27,7 @@ class AdminHandler(BaseHandler):
         """
         POST /admin/upload_pack
         """
-        if not Database.get_meta("admin_token"):
+        if Database.get_meta("admin_token"):
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The pack has already been extracted")
         elif os.path.exists(Config.encrypted_file):
