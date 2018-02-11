@@ -132,7 +132,7 @@ class SubmissionView extends Component {
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
             <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
           </Link>
-          <span role="button" className="btn btn-success"
+          <button role="button" className="btn btn-success"
                   disabled={ !this.submission.canSubmit() }
                   onClick={() => { this.submission.submit().then(() => {
                     const taskName = this.submission.data.task;
@@ -140,7 +140,7 @@ class SubmissionView extends Component {
                     this.props.history.push("/" + taskName + "/submission/" + id);
                   })}}>
             <span aria-hidden="true" className="fa fa-paper-plane" /> {t("submission.submit.submit")}
-          </span>
+          </button>
         </div>
       </React.Fragment>
     );
