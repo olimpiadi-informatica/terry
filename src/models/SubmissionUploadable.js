@@ -25,7 +25,7 @@ export default class SubmissionUploadable extends Observable {
   }
 
   doUpload() {
-    throw Error("not implemented")
+    throw Error("not implemented");
   }
 
   isUploading() {

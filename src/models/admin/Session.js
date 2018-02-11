@@ -92,4 +92,23 @@ export default class Session extends Observable {
           this.fireUpdate();
         });
   }
+
+  uploadPack(file) {
+    if (!this.isLoggedIn()) throw Error();
+
+    const data = new FormData();
+
+    data.append("file", file);
+
+    return client.api.post("/admin/upload_pack", data)
+    .then(response => {
+      return this.updateStatus();
+    }).catch(response => {
+      console.error(response);
+      this.error = response.response.data.message;
+      this.fireUpdate();
+    })
+    ;
+  }
+
 }

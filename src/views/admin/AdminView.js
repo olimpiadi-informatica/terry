@@ -7,6 +7,7 @@ import LoadingView from "../LoadingView";
 import LogsView from "./LogsView";
 import ContestView from "./ContestView";
 import UsersView from "./UsersView";
+import UploadPackView from "./UploadPackView";
 
 class AdminView extends Component {
   constructor(props) {
@@ -47,8 +48,15 @@ class AdminView extends Component {
         <Route path="/admin/logs" render={
           ({match}) => <LogsView session={this.session} />
         }/>
-        <ContestView session={this.session} />
-        <UsersView session={this.session} />
+        <Route path="/admin" exact render={
+          ({match}) => <React.Fragment>
+            <ContestView session={this.session} />
+            <UsersView session={this.session} />
+          </React.Fragment>
+        }/>
+        <Route path="/admin/upload" render={
+          ({match}) => <UploadPackView session={this.session} />
+        }/>
       </main>
     </React.Fragment>
   }

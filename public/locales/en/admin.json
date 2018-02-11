@@ -11,6 +11,11 @@
     "login": "Log in",
     "error": "Error:"
   },
+  "upload pack": {
+    "select file": "Please select the contest file...",
+    "file": "File",
+    "upload": "Upload"
+  },
   "logs": {
     "title": "Logs",
     "date": "Date",
