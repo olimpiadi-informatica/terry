@@ -41,11 +41,11 @@ class AdminHandler(BaseHandler):
         return {}
 
 
-    def pack_uploaded(self):
+    def pack_status(self):
         """
-        POST /admin/pack_uploaded
+        POST /admin/pack_status
         """
-        return {"pack_uploaded": os.path.exists(Config.encrypted_file)}
+        return {"uploaded": os.path.exists(Config.encrypted_file)}
 
 
     @Validators.admin_only
