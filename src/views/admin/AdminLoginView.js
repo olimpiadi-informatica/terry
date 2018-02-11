@@ -42,7 +42,7 @@ class AdminLoginView extends Component {
           <div className="form-group">
             <label htmlFor="token" className="sr-only">{t("login.token")}</label>
             <input name="token" id="token" className="form-control text-center" required
-                   placeholder={t("login.token")} type="password"/>
+                   placeholder={t("login.token")}/>
           </div>
           { this.renderLoginError() }
           <input type="submit" className="btn btn-danger" value={t("login.login")} />
