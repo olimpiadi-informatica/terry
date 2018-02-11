@@ -232,6 +232,7 @@ class Validators:
 
         if not correct_token:
             ContestManager.extract_contest(token)
+            ContestManager.read_from_disk()
             correct_token = token
 
         if token != correct_token:
