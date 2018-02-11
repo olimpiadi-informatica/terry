@@ -56,9 +56,9 @@ class SubmissionView extends Component {
         <div key="present" className="card card-outline-primary">
           <div className="card-header terry-submission-object-card">
             <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
-            <span role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.submission.resetSource() }>
+            <button role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.submission.resetSource() }>
               <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change source")}
-            </span>
+            </button>
           </div>
           <div className="card-block">
             <FileView file={source.file} />
@@ -96,9 +96,9 @@ class SubmissionView extends Component {
       <div key="present" className="card card-outline-primary">
         <div className="card-header terry-submission-object-card">
           <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
-          <span role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>
+          <button role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>
             <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change output")}
-          </span>
+          </button>
         </div>
         <div className="card-block">
           <FileView file={output.file} />

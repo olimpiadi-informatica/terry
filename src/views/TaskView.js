@@ -5,6 +5,7 @@ import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
 import client from '../TerryClient';
 import DateView from './DateView';
+import { DateTime } from 'luxon';
 import {translateComponent} from "../utils";
 
 import ReactMarkdown from 'react-markdown';
@@ -86,9 +87,9 @@ class TaskView extends Component {
         );
       } else {
         return (
-          <span role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+          <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
             <span aria-hidden="true" className="fa fa-plus" /> {t("task.request input")}
-          </span>
+          </button>
         );
       }
     }
@@ -125,7 +126,7 @@ class TaskView extends Component {
         return (<React.Fragment />);
       else {
         const submission = items[items.length-1];
-        last_submission = <DateView date={new Date(submission.date)}/>
+        last_submission = <DateView date={ DateTime.fromMillis(submission.date * 1000)}/>
       }
     }
     return (

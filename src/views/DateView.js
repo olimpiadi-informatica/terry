@@ -7,7 +7,7 @@ class DateView extends Component {
   render() {
     const { i18n } = this.props;
     return (
-      <abbr title={ this.props.date.locale(i18n.language).toFormat('LLLL') }>
+      <abbr title={ this.props.date.setLocale(i18n.language).toFormat('LLLL') }>
         { moment(this.props.date).fromNow() }
       </abbr>
     );

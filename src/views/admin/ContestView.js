@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
+import Countdown from '../CountdownView';
+import { DateTime } from 'luxon';
 
 class ContestView extends Component {
   constructor(props) {
@@ -71,8 +73,15 @@ class ContestView extends Component {
 
   renderStarted() {
     const { t } = this.props;
+    // FIXME: delta=0 ????
+    const countdown = this.session.status.start_time ? <Countdown delta={0} end={
+      DateTime.fromMillis(this.session.status.end_time * 1000)
+    }/> : "";
     return <React.Fragment>
-      <p>{t("contest.started at")} <em>{new Date(this.session.status.start_time).toLocaleString()}</em>.</p>
+      <p>{t("contest.started at")} <em>{
+        new Date(this.session.status.start_time).toLocaleString()
+      }</em>.</p>
+      <p>{t("contest.remaining time")} {countdown}</p>
       <Trans i18nKey="contest.extratime disclamer" parent="p">
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>

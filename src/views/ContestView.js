@@ -41,9 +41,9 @@ class ContestView extends Component {
       <nav className="terry-navbar">
         <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
         <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
-        <span role="button" className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+        <button role="button" className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
           <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-        </span>
+        </button>
       </nav>
 
       <div className="terry-body">
