@@ -58,7 +58,7 @@ class AdminHandler(BaseHandler):
         except gevent.subprocess.CalledProcessError as e:
             Logger.error("ADMIN", "Zip error: %s" % e.output)
             raise e
-        return {"path": os.path.relpath(zipf_name, Config.storedir)}
+        return {"path": os.path.relpath(zipf_name, Config.storedir)} # pragma: nocover
 
     def append_log(self, append_log_secret: str, level: str, category: str,
                    message: str):
