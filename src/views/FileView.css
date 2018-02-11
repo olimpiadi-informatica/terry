@@ -1,0 +1,16 @@
+dl.terry-file-view {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+dl.terry-file-view > dt {
+  margin-bottom: 0px;
+  min-width: 6rem;
+}
+
+dl.terry-file-view > dd {
+  margin-bottom: 0px;
+  margin-left: -6rem;
+  padding-left: 8rem;
+  flex: 1 1 100%;
+}
