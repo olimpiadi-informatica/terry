@@ -24,7 +24,10 @@ class SidebarView extends Component {
           <li className="divider-vertical" />
 
           <li className="nav-item title">
-            {t("navbar.remaining time")} <Countdown delta={this.model.timeDelta} end={this.model.user.end_time}/>
+            <h3>{t("navbar.remaining time")}</h3>
+            <div style={{'font-size': 'larger', 'text-align': 'right', 'margin-right': '1em'}}>
+              <Countdown delta={this.model.timeDelta} end={this.model.user.end_time}/>
+            </div>
           </li>
 
           <li className="nav-item title">
