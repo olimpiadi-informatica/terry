@@ -50,9 +50,22 @@ class LogsTable extends Component {
     </tr>;
   }
 
+  renderTableBody() {
+    const { t } = this.props;
+
+    if (this.logs.isLoading())
+      return <tr><td colspan="4">{t("loading")}</td></tr>;
+
+    const items = this.logs.data.items.filter((l) => this.filter(l));
+
+    if (items.length === 0)
+      return <tr><td colspan="4">{t("no messages yet")}</td></tr>;
+
+    return items.map((l, i) => this.formatLog(l, i));
+  }
+
   render() {
     const { t } = this.props;
-    if (this.logs.isLoading()) return <LoadingView />;
 
     return <div className="terry-log-table">
       <table className="table table-bordered">
@@ -65,7 +78,7 @@ class LogsTable extends Component {
         </tr>
         </thead>
         <tbody>
-          {this.logs.data.items.filter((l) => this.filter(l)).map((l, i) => this.formatLog(l, i))}
+          {this.renderTableBody()}
         </tbody>
       </table>
     </div>
@@ -85,6 +98,21 @@ class LogsView extends Component {
       level: "INFO",
       category: "",
       filter: ""
+    };
+
+    this.LOG_LEVELS = {
+      DEBUG: {
+        color: 'secondary',
+      },
+      INFO: {
+        color: 'info',
+      },
+      WARNING: {
+        color: 'warning',
+      },
+      ERROR: {
+        color: 'danger',
+      },
     };
   }
 
@@ -145,20 +173,26 @@ class LogsView extends Component {
     return <React.Fragment>
       <h1>{t("logs.title")}</h1>
 
-      <input
-        placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
-        onChange={(e) => this.changeCategory(e.target.value)}
-      />
       <div className="form-group">
-        <select id="level" className="form-control" onChange={(e) => this.changeLevel(e.target.value)}
-                value={this.state.level}>
-          <option value="DEBUG">{t("logs.levels.DEBUG")}</option>
-          <option value="INFO">{t("logs.levels.INFO")}</option>
-          <option value="WARNING">{t("logs.levels.WARNING")}</option>
-          <option value="ERROR">{t("logs.levels.ERROR")}</option>
-        </select>
-      </div>
-      <div className="form-group">
+        <div className="btn-group" role="group" aria-label="Download submission data">
+          {Object.entries(this.LOG_LEVELS).map(([level, obj]) => (
+            <button
+            className={[
+              'btn',
+              ((this.state.level === level) ? 'active' : ''),
+              'btn-' + obj.color
+            ].join(' ')}
+            role="button"
+            onClick={(e) => this.changeLevel(level)}
+            >
+              {t("logs.levels." + level)}
+            </button>
+          ))}
+        </div>
+        <input
+          placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
+          onChange={(e) => this.changeCategory(e.target.value)}
+        />
         <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
                onChange={(e) => this.changeFilter(e.target.value)}/>
       </div>

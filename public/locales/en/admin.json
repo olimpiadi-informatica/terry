@@ -1,4 +1,5 @@
 {
+  "loading": "Loading...",
   "error": "Error",
   "navbar": {
     "title": "Admin",

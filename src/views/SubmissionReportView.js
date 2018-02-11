@@ -29,8 +29,8 @@ class SubmissionReportView extends Component {
 
   renderFeedback() {
     const { t } = this.props;
-    if (this.submission.isLoading()) return <em>{t("loading")}</em>;
-    if (!this.submission.isLoaded()) return <em>{t("error")}</em>;
+    if (this.submission.isLoading()) return <div className="modal-body">{t("loading")}</div>;
+    if (!this.submission.isLoaded()) return <div className="modal-body">{t("error")}</div>;
 
     const submission = this.submission.data;
     const score = submission.score;

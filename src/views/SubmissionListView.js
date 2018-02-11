@@ -106,8 +106,8 @@ class SubmissionListView extends Component {
 
   renderBody() {
     const { t } = this.props;
-    if(this.list.isLoading()) return <p>{t("loading")}</p>;
-    if(!this.list.isLoaded()) return <p>{t("submission.list.load failed")}</p>;
+    if(this.list.isLoading()) return <div className="modal-body">{t("loading")}</div>;
+    if(!this.list.isLoaded()) return <div className="modal-body">{t("submission.list.load failed")}</div>;
 
     if (this.list.data.items.length === 0)
       return <div className="modal-body"><em>{t("submission.list.no submissions")}</em></div>;

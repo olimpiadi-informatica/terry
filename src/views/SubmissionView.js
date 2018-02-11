@@ -118,7 +118,11 @@ class SubmissionView extends Component {
 
   renderSubmissionForm() {
     const { t } = this.props;
-    if(this.submission.isSubmitting()) return <p>{t("submission.submit.processing")}</p>;
+    if(this.submission.isSubmitting()) return (
+      <div className="modal-body">
+        {t("submission.submit.processing")}
+      </div>
+    );
 
     return (
       <React.Fragment>

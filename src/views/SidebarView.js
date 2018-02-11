@@ -21,6 +21,7 @@ class SidebarView extends Component {
             <h3>{t("navbar.total score")}</h3>
             <TotalScoreView model={this.model} />
           </li>
+
           <li className="divider-vertical" />
 
           <li className="nav-item title">
@@ -29,6 +30,8 @@ class SidebarView extends Component {
               <Countdown delta={this.model.timeDelta} end={this.model.user.end_time}/>
             </div>
           </li>
+
+          <li className="divider-vertical" />
 
           <li className="nav-item title">
             <h3>{t("navbar.task list")}</h3>
