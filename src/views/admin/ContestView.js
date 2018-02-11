@@ -45,7 +45,7 @@ class ContestView extends Component {
     const { t } = this.props;
     // FIXME: delta=0 ????
     const countdown = this.session.status.start_time ? <Countdown delta={0} end={
-      DateTime.fromMillis(this.session.status.end_time * 1000)
+      DateTime.fromISO(this.session.status.end_time)
     }/> : "";
     return <React.Fragment>
       <p>{t("contest.started at")} <em>{

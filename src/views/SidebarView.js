@@ -4,6 +4,7 @@ import {translateComponent} from "../utils";
 import CountdownView from './CountdownView';
 import NavbarItemView from './NavbarItemView';
 import TotalScoreView from './TotalScoreView';
+import "./SidebarView.css";
 
 class SidebarView extends Component {
   constructor(props) {
@@ -25,11 +26,11 @@ class SidebarView extends Component {
 
           <li className="nav-item title">
             <h3>{t("navbar.remaining time")}</h3>
-            <div style={{'font-size': 'larger', 'text-align': 'right', 'margin-right': '1em'}}>
+            <p className="terry-remaining-time">
               <CountdownView delta={this.model.timeDelta} end={
-                DateTime.fromMillis(this.model.user.end_time * 1000)
+                DateTime.fromISO(this.model.user.end_time)
               }/>
-            </div>
+            </p>
           </li>
 
           <li className="nav-item title">

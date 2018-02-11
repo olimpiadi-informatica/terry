@@ -43,7 +43,7 @@ class SubmissionListView extends Component {
       submissionList.push(
         <tr key={ submission.id }>
           <td>
-            <DateView date={ DateTime.fromMillis(submission.output.date * 1000) }/>
+            <DateView date={ DateTime.fromISO(submission.date) }/>
             <br/>
             <Link to={ "/" + submission.task + "/submission/" + submission.id }>
               {t("submission.list.view details")}
