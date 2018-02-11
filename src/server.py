@@ -31,6 +31,7 @@ monkey.patch_all()
 
 class Server:
     """ Main server """
+
     def __init__(self):
         self.handlers = {
             "contest": ContestHandler(),
@@ -45,25 +46,60 @@ class Server:
         # method of that handler
         self.router = Map([
             Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
-            Rule("/input/<input_id>", methods=["GET"], endpoint="info#get_input"),
-            Rule("/output/<output_id>", methods=["GET"], endpoint="info#get_output"),
-            Rule("/source/<source_id>", methods=["GET"], endpoint="info#get_source"),
-            Rule("/submission/<submission_id>", methods=["GET"], endpoint="info#get_submission"),
+            Rule(
+                "/input/<input_id>",
+                methods=["GET"],
+                endpoint="info#get_input"),
+            Rule(
+                "/output/<output_id>",
+                methods=["GET"],
+                endpoint="info#get_output"),
+            Rule(
+                "/source/<source_id>",
+                methods=["GET"],
+                endpoint="info#get_source"),
+            Rule(
+                "/submission/<submission_id>",
+                methods=["GET"],
+                endpoint="info#get_submission"),
             Rule("/user/<token>", methods=["GET"], endpoint="info#get_user"),
-            Rule("/user/<token>/submissions/<task>", methods=["GET"], endpoint="info#get_submissions"),
-            Rule("/generate_input", methods=["POST"], endpoint="contest#generate_input"),
+            Rule(
+                "/user/<token>/submissions/<task>",
+                methods=["GET"],
+                endpoint="info#get_submissions"),
+            Rule(
+                "/generate_input",
+                methods=["POST"],
+                endpoint="contest#generate_input"),
             Rule("/submit", methods=["POST"], endpoint="contest#submit"),
-            Rule("/upload_source", methods=["POST"], endpoint="upload#upload_source"),
-            Rule("/upload_output", methods=["POST"], endpoint="upload#upload_output"),
-
-            Rule("/admin/upload_pack", methods=["POST"],
-                 endpoint="admin#upload_pack"),
+            Rule(
+                "/upload_source",
+                methods=["POST"],
+                endpoint="upload#upload_source"),
+            Rule(
+                "/upload_output",
+                methods=["POST"],
+                endpoint="upload#upload_output"),
+            Rule(
+                "/admin/upload_pack",
+                methods=["POST"],
+                endpoint="admin#upload_pack"),
             Rule("/admin/login", methods=["POST"], endpoint="admin#login"),
             Rule("/admin/log", methods=["POST"], endpoint="admin#log"),
+            Rule(
+                "/admin/append_log",
+                methods=["POST"],
+                endpoint="admin#append_log"),
             Rule("/admin/start", methods=["POST"], endpoint="admin#start"),
-            Rule("/admin/set_extra_time", methods=["POST"], endpoint="admin#set_extra_time"),
+            Rule(
+                "/admin/set_extra_time",
+                methods=["POST"],
+                endpoint="admin#set_extra_time"),
             Rule("/admin/status", methods=["POST"], endpoint="admin#status"),
-            Rule("/admin/user_list", methods=["POST"], endpoint="admin#user_list")
+            Rule(
+                "/admin/user_list",
+                methods=["POST"],
+                endpoint="admin#user_list")
         ])
 
     @responder
@@ -81,7 +117,9 @@ class Server:
         try:
             endpoint, args = route.match()
         except HTTPException:
-            Logger.warning("HTTP_ERROR", "%s %s %s 404" % (BaseHandler.get_ip(request), request.method, request.url))
+            Logger.warning("HTTP_ERROR",
+                           "%s %s %s 404" % (BaseHandler.get_ip(request),
+                                             request.method, request.url))
             return NotFound()
 
         controller, action = endpoint.split("#")
@@ -92,13 +130,16 @@ class Server:
         """
         Start a greenlet with the main HTTP server loop
         """
-        server = gevent.wsgi.WSGIServer((Config.address, Config.port), self, log=None)
+        server = gevent.wsgi.WSGIServer(
+            (Config.address, Config.port), self, log=None)
         try:
             server.init_socket()
         except OSError:
-            Logger.error("PORT_ALREADY_IN_USE", "Address: '%s' Port: %d" % (Config.address, Config.port))
+            Logger.error("PORT_ALREADY_IN_USE", "Address: '%s' Port: %d" %
+                         (Config.address, Config.port))
             sys.exit(1)
         greenlet = gevent.spawn(server.serve_forever)
-        Logger.info("SERVER_STATUS", "Server started at http://%s%s/"
-                    % (str(Config.address), "" if Config.port == 80 else ":" + str(Config.port)))
+        Logger.info("SERVER_STATUS", "Server started at http://%s%s/" %
+                    (str(Config.address), ""
+                     if Config.port == 80 else ":" + str(Config.port)))
         greenlet.join()
