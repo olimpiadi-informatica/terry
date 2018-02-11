@@ -42,14 +42,17 @@ class ContestManager:
         return "." + platform.system().lower() + "." + platform.machine()
 
     @staticmethod
-    def extract_contest(username, password):
+    def extract_contest(token):
         """
         Decrypt and extract the contest and store the used admin token in the
         database
         """
-        if not os.path.exists(Config.encrypted_file):
-            raise ValueError("The pack is not present")
-        token = combine_username_password(username, password)
+
+        if "-" not in token:
+            BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
+                                  "The provided password is wrong")
+
+        username, password = token.split("-", 1)
         secret, scrambled_password = decode_data(password, SECRET_LEN)
         file_password = recover_file_password(username, secret,
                                               scrambled_password)

@@ -11,11 +11,11 @@ import jwt
 from werkzeug.exceptions import Forbidden, BadRequest
 
 from src.config import Config
+from src.contest_manager import ContestManager
 from src.database import Database
 from src.handler_params import HandlerParams
 from src.logger import Logger
 from .handlers.base_handler import BaseHandler
-
 
 class Validators:
 
@@ -227,12 +227,13 @@ class Validators:
         :param token: Token to check
         :param ip: IP of the client
         """
+
         correct_token = Database.get_meta("admin_token")
+
         if not correct_token:
-            Logger.warning("LOGIN_ADMIN", "Token provided but the contest is "
-                                          "not running %s" % ip)
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "Invalid admin token!")
+            ContestManager.extract_contest(token)
+            correct_token = token
+
         if token != correct_token:
             Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % ip)
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin token!")

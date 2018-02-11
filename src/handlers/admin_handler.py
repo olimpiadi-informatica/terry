@@ -38,23 +38,6 @@ class AdminHandler(BaseHandler):
         StorageManager.save_file(Config.encrypted_file, file["content"])
         return {}
 
-    def login(self, username: str, password: str, _ip):
-        """
-        POST /admin/login
-        """
-        admin_token = Database.get_meta("admin_token")
-        token = combine_username_password(username, password)
-
-        if not admin_token:
-            ContestManager.extract_contest(username, password)
-            admin_token = token
-
-        if admin_token != token:
-            Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % _ip)
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin "
-                                                          "token!")
-        return {}
-
     @Validators.admin_only
     def log(self, start_date: str, end_date: str, level: str,
             category: str = None):
