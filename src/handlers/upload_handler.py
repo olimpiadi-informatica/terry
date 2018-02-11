@@ -6,13 +6,11 @@
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
-import os.path
 
 from werkzeug.exceptions import InternalServerError
 
 from .base_handler import BaseHandler
 from .info_handler import InfoHandler
-from ..config import Config
 from ..contest_manager import ContestManager
 from ..database import Database
 from ..detect_exe import get_exeflags
@@ -34,8 +32,7 @@ class UploadHandler(BaseHandler):
         output_id = Database.gen_id()
         path = StorageManager.new_output_file(output_id, file["name"])
 
-        StorageManager.save_file(os.path.join(Config.storedir, path),
-                                 file["content"])
+        StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
         try:
@@ -76,8 +73,7 @@ class UploadHandler(BaseHandler):
         source_id = Database.gen_id()
         path = StorageManager.new_source_file(source_id, file["name"])
 
-        StorageManager.save_file(os.path.join(Config.storedir, path),
-                                 file["content"])
+        StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
         Database.add_source(source_id, input["id"], path, file_size)

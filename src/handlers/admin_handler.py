@@ -34,7 +34,8 @@ class AdminHandler(BaseHandler):
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The pack has already been uploaded")
 
-        StorageManager.save_file(Config.encrypted_file, file["content"])
+        StorageManager.save_file(os.path.realpath(Config.encrypted_file),
+                                 file["content"])
         return {}
 
     def append_log(self, append_log_secret: str, level: str, category: str,

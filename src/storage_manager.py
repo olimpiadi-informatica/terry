@@ -77,9 +77,8 @@ class StorageManager:
         """
         absolute_path = StorageManager.get_absolute_path(path)
         StorageManager._create_dir(absolute_path)
-        file = open(absolute_path, "wb")
-        file.write(file_content)
-        file.close()
+        with open(absolute_path, "wb") as f:
+            f.write(file_content)
 
     @staticmethod
     def rename_file(src_path, dst_path):
