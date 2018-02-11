@@ -13,24 +13,22 @@ class Config:
     """ Main config file """
 
     loaded = False
-    default_values = {
-        "logfile": "log.sqlite3",
-        "db": "db.sqlite3",
-        "address": "",
-        "port": 1234,
-        "storedir": "./files/",
-        "statementdir": "./files/statements/secret/",
-        "web_statementdir": "/statements/secret/",
-        "queue_size": 64,
-        "num_proxies": 0,
-        "contest_path": "./contest/",
-        "encrypted_file": "./zips/pack.zip.enc",
-        "decrypted_file": "./zips/pack.zip",
-        "log_level": "INFO",
-        "jwt_secret": None,
-        "sso_url": "",
-        "append_log_secret": "secret"
-    }
+    logfile = "log.sqlite3"
+    db = "db.sqlite3"
+    address = ""
+    port = 1234
+    storedir = "./files/"
+    statementdir = "./files/statements/secret/"
+    web_statementdir = "/statements/secret/"
+    queue_size = 64
+    num_proxies = 0
+    contest_path = "./contest/"
+    encrypted_file = "./zips/pack.zip.enc"
+    decrypted_file = "./zips/pack.zip"
+    log_level = "INFO"
+    jwt_secret = None
+    sso_url = ""
+    append_log_secret = "secret"
 
     @staticmethod
     def set_config_file(config_file):
@@ -58,6 +56,3 @@ class Config:
 
         for key, value in cfg.items():
             setattr(Config, key, value)
-        for key, value in Config.default_values.items():
-            if key not in cfg:
-                setattr(Config, key, value)
