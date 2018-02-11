@@ -27,7 +27,7 @@ class AdminView extends Component {
     this.session.popObserver(this);
   }
 
-  getNavBar() {
+  renderNavBar() {
     const { t } = this.props;
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
@@ -42,21 +42,13 @@ class AdminView extends Component {
     if (!this.session.isLoaded()) return <AdminLoginView session={this.session} />;
 
     return <React.Fragment>
-      { this.getNavBar() }
-
+      { this.renderNavBar() }
       <main>
         <Route path="/admin/logs" render={
           ({match}) => <LogsView session={this.session} />
         }/>
-        <Route path="/admin" exact render={
-          ({match}) => <React.Fragment>
-            <ContestView session={this.session} />
-            <UsersView session={this.session} />
-          </React.Fragment>
-        }/>
-        <Route path="/admin/upload" render={
-          ({match}) => <UploadPackView session={this.session} />
-        }/>
+        <ContestView session={this.session} />
+        <UsersView session={this.session} />
       </main>
     </React.Fragment>
   }

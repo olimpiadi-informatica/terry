@@ -9,7 +9,7 @@ import AppView from './views/AppView';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import i18n from './i18n';
-import AdminView from "./views/admin/AdminView";
+import PackView from "./views/admin/PackView";
 
 /******** DEVELOPMENT SPECIFIC **********/
 if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:5050");
@@ -28,7 +28,7 @@ window.addEventListener('unhandledrejection', event => {
 ReactDOM.render(
   <Router>
     <Switch>
-      <Route path={'/admin'} component={AdminView} />
+      <Route path={'/admin'} component={PackView} />
       <Route component={AppView} />
     </Switch>
   </Router>,

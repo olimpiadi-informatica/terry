@@ -4,19 +4,19 @@ import {translateComponent} from "../../utils";
 class UploadPackView extends Component {
   constructor(props) {
     super(props);
-    this.session = props.session;
+    this.pack = props.pack;
   }
 
   componentDidMount() {
-    this.session.pushObserver(this);
+    this.pack.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.session.popObserver(this);
+    this.pack.popObserver(this);
   }
 
   upload() {
-    this.session.uploadPack(this.refs.form.file.files[0]);
+    this.pack.upload(this.refs.form.file.files[0]);
   }
 
   render() {

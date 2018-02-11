@@ -15,6 +15,10 @@ html, body, #terry-container {
   flex-direction: row;
 }
 
+.terry-body > main {
+  flex: 1 1 auto;
+}
+
 .terry-navbar {
   display: flex;
   background-color: #0275d8;
