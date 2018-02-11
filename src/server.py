@@ -84,6 +84,10 @@ class Server:
                 "/admin/upload_pack",
                 methods=["POST"],
                 endpoint="admin#upload_pack"),
+            Rule(
+                "/admin/download_pack",
+                methods=["POST"],
+                endpoint="admin#download_pack"),
             Rule("/admin/login", methods=["POST"], endpoint="admin#login"),
             Rule("/admin/log", methods=["POST"], endpoint="admin#log"),
             Rule(

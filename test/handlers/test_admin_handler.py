@@ -6,11 +6,14 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import datetime
 import os.path
+import shutil
+import subprocess
 import tempfile
 import unittest
-from unittest.mock import patch
 
-from werkzeug.exceptions import Forbidden, BadRequest
+import gevent
+from werkzeug.exceptions import Forbidden, BadRequest, NotFound
+from unittest.mock import patch
 
 from src.config import Config
 from src.database import Database
@@ -21,7 +24,6 @@ from test.utils import Utils
 
 
 class TestAdminHandler(unittest.TestCase):
-
     def setUp(self):
         Utils.prepare_test()
         self.admin_handler = AdminHandler()
@@ -158,7 +160,8 @@ class TestAdminHandler(unittest.TestCase):
 
     @patch('src.contest_manager.ContestManager.start')
     def test_start_ok(self, start_mock):
-        out = self.admin_handler.start(admin_token='admin token', _ip='1.2.3.4')
+        out = self.admin_handler.start(
+            admin_token='admin token', _ip='1.2.3.4')
 
         start_time = datetime.datetime.strptime(out["start_time"],
                                                 "%Y-%m-%dT%H:%M:%S").timestamp()
@@ -244,3 +247,21 @@ class TestAdminHandler(unittest.TestCase):
 
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
+
+    def test_download_pack(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            Config.storedir = tmp_dir
+            zip_location = self.admin_handler.download_pack(
+                admin_token='admin token', _ip='1.2.3.4')['path']
+            with open(os.path.join(Config.storedir, zip_location)) as f:
+                pass
+
+    def test_failed_download_pack(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            Config.storedir = tmp_dir
+            wd = os.getcwd()
+            os.chdir(tmp_dir)
+            with self.assertRaises(subprocess.CalledProcessError) as ex:
+                self.admin_handler.download_pack(
+                    admin_token='admin token', _ip='1.2.3.4')
+            os.chdir(wd)

@@ -8,13 +8,15 @@
 
 import datetime
 import os.path
+import subprocess
+import tempfile
 
+import gevent
 from werkzeug.exceptions import Forbidden, BadRequest
 
 from .base_handler import BaseHandler
 from ..config import Config
 from ..contest_manager import ContestManager
-from ..crypto import combine_username_password
 from ..database import Database
 from ..logger import Logger
 from ..storage_manager import StorageManager
@@ -34,9 +36,29 @@ class AdminHandler(BaseHandler):
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The pack has already been uploaded")
 
-        StorageManager.save_file(os.path.realpath(Config.encrypted_file),
-                                 file["content"])
+        StorageManager.save_file(
+            os.path.realpath(Config.encrypted_file), file["content"])
         return {}
+
+    @Validators.admin_only
+    def download_pack(self):
+        """
+        POST /admin/download_pack
+        """
+        Logger.info("ADMIN", "Creating zip file")
+        zip_directory = os.path.join(Config.storedir, "zips")
+        os.makedirs(zip_directory, exist_ok=True)
+        zip_directory = tempfile.mkdtemp(dir=zip_directory)
+        zipf_name = os.path.join(zip_directory, "results.zip")
+        command = "zip -r " + zipf_name + " db.sqlite3* log.sqlite3* files/input files/output files/source"
+
+        try:
+            output = gevent.subprocess.check_output(
+                command, shell=True, stderr=subprocess.STDOUT)
+        except gevent.subprocess.CalledProcessError as e:
+            Logger.error("ADMIN", "Zip error: %s" % e.output)
+            raise e
+        return {"path": os.path.relpath(zipf_name, Config.storedir)}
 
     def append_log(self, append_log_secret: str, level: str, category: str,
                    message: str):
