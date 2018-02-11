@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ModalView from './ModalView';
 import DateView from './DateView';
+import { DateTime } from 'luxon';
 import FeedbackView from './FeedbackView';
 import { Link } from 'react-router-dom';
 import {colorFromScore, translateComponent} from "../utils";
@@ -40,7 +41,7 @@ class SubmissionReportView extends Component {
       <React.Fragment>
         <div className="modal-body">
           <dt>{t("submission.feedback.date")}:</dt>
-          <dd><DateView date={ submission.date }/></dd>
+          <dd><DateView date={ DateTime.fromMillis(submission.date * 1000) }/></dd>
           <dt>{t("submission.feedback.score")}:</dt>
           <dd><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
           <FeedbackView model={this.model} result={submission.feedback} />

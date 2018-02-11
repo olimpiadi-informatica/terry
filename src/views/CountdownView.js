@@ -1,19 +1,11 @@
-import moment from 'moment';
+import { DateTime, Duration } from 'luxon';
 import React, { Component } from 'react';
 import { translateComponent } from '../utils';
 
 class CountdownView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.end = moment();
-    this.end.add(props.remaining, 'seconds');
-
-    this.tickrate = 1000;
-  }
-
   componentDidMount() {
-    this.timer = setInterval(() => this.tick(), this.tickrate);
+    const tickrate = 1000;
+    this.timer = setInterval(() => this.forceUpdate(), tickrate);
   }
 
   componentWillUnmount() {
@@ -23,23 +15,9 @@ class CountdownView extends Component {
     }
   }
 
-  tick() {
-    this.forceUpdate();
-  }
-
   render() {
-    let remaining = moment.duration(
-      this.props.end * 1000 - moment().utc() - this.props.delta,
-      'milliseconds'
-    );
-
-    const pad = (num) => (num < 10 ? "0" : "") + num;
-
-    const s = pad(remaining.seconds());
-    const m = pad(remaining.minutes());
-    const h = pad(remaining.asHours() | 0);
-
-    return <span> { h + ":" + m + ":" + s } </span>
+    const remaining = this.props.end.diff(DateTime.local().plus(this.props.delta));
+    return <span> { remaining.toFormat("hh:mm:ss") } </span>
   }
 }
 

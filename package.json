@@ -12,7 +12,7 @@
     "i18next-browser-languagedetector": "2.0.0",
     "i18next-xhr-backend": "1.4.2",
     "katex-all": "^0.6.0-pre",
-    "moment": "^2.18.1",
+    "luxon": "^0.4.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-fontawesome": "^1.6.1",

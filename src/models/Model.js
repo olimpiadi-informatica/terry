@@ -1,9 +1,9 @@
-import moment from 'moment';
 import client from '../TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import UserTaskState from './UserTaskState';
 import Contest from './Contest';
+import { DateTime, Duration } from 'luxon';
 
 export default class Model extends Observable {
   static cookieName = "userToken";
@@ -27,7 +27,10 @@ export default class Model extends Observable {
   }
 
   loadUser(token) {
-    return client.api.get('/user/' + token);
+    return client.api.get('/user/' + token).then((response) => {
+      this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
+      return response;
+    });
   }
 
   isLoggedIn() {
@@ -57,7 +60,6 @@ export default class Model extends Observable {
       .then(response => {
         delete this.userLoadingPromise;
         this.user = response.data;
-        this.timeDelta = moment().utc() - moment(response.headers['date']).utc();
         this.fireUpdate();
       })
       .catch(response => {

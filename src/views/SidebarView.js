@@ -1,7 +1,7 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import React, { Component } from 'react';
 import {translateComponent} from "../utils";
-import Countdown from './CountdownView';
+import CountdownView from './CountdownView';
 import NavbarItemView from './NavbarItemView';
 import TotalScoreView from './TotalScoreView';
 
@@ -26,7 +26,9 @@ class SidebarView extends Component {
           <li className="nav-item title">
             <h3>{t("navbar.remaining time")}</h3>
             <div style={{'font-size': 'larger', 'text-align': 'right', 'margin-right': '1em'}}>
-              <Countdown delta={this.model.timeDelta} end={this.model.user.end_time}/>
+              <CountdownView delta={this.model.timeDelta} end={
+                DateTime.fromMillis(this.model.user.end_time * 1000)
+              }/>
             </div>
           </li>
 

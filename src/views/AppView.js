@@ -4,15 +4,10 @@ import LoginView from './LoginView';
 import Model from '../models/Model';
 import {translateComponent} from "../utils";
 import LoadingView from "./LoadingView";
-import moment from 'moment';
-
-require('moment/locale/it');
 
 class AppView extends Component {
   constructor(props) {
     super(props);
-
-    moment.locale(props.i18n.language)
 
     this.model = new Model();
   }
