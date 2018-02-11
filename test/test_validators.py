@@ -5,10 +5,12 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
-import datetime
 import unittest
+from unittest.mock import patch
 
-from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden
+from werkzeug.wrappers import Request
+from werkzeug.test import EnvironBuilder
 
 from src.config import Config
 from src.database import Database
@@ -23,7 +25,7 @@ class TestValidators(unittest.TestCase):
         Database.set_meta("admin_token", "admin token")
 
         self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001 # disable the logs
+        Logger.LOG_LEVEL = 9001  # disable the logs
 
     @Validators.during_contest
     def only_during_contest(self, token=None):
@@ -62,7 +64,8 @@ class TestValidators(unittest.TestCase):
         return task
 
     @Validators.register_user_ip
-    def register_ip(self, token=None, input_id=None, output_id=None, source_id=None, submission_id=None):
+    def register_ip(self, token=None, input_id=None, output_id=None,
+                    source_id=None, submission_id=None):
         pass
 
     def test_during_contest_not_started(self):
@@ -87,7 +90,7 @@ class TestValidators(unittest.TestCase):
         self.admin_only(admin_token="admin token", _ip="1.1.1.1")
 
     def test_validate_file(self):
-        self.file(file={"content":"foobar".encode(),"name":"file.txt"})
+        self.file(file={"content": "foobar".encode(), "name": "file.txt"})
 
     def test_valid_input_id_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -122,18 +125,63 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_submission_id(self):
         self._insert_data()
-        Database.add_submission("submissionid", "inputid", "outputid", "sourceid", 42)
+        Database.add_submission("submissionid", "inputid", "outputid",
+                                "sourceid", 42)
         submission = self.valid_submission_id(submission_id="submissionid")
         self.assertEqual("submissionid", submission["id"])
 
-    def test_valid_token_invalid_id(self):
+    def test_wrong_token_no_jwt(self):
+        Config.jwt_secret = None
         with self.assertRaises(Forbidden):
-            self.valid_token(token="foobar")
+            self.valid_token(token="nope")
 
-    def test_valid_token(self):
+    @patch("src.validators.Validators._get_user_from_sso", return_value=42)
+    def test_wrong_token_jwt_sso(self, sso):
+        Config.jwt_secret = "jwt_token"
+        builder = EnvironBuilder(headers=[("Cookie", "token=cookie")])
+        request = Request(builder.get_environ())
+        user = self.valid_token(token="lallabalalla", _request=request)
+        self.assertEqual(42, user)
+        sso.assert_called_once_with("cookie", "lallabalalla")
+
+    def test_wrong_token_jwt_no_sso(self):
+        Config.jwt_secret = "jwt_token"
+        builder = EnvironBuilder()
+        request = Request(builder.get_environ())
+        with self.assertRaises(Forbidden):
+            self.valid_token(token="lallabalalla", _request=request)
+
+    def test_ok_token_no_jwt_disabled(self):
+        Config.jwt_secret = None
         self._insert_data()
+        Database.c.execute("UPDATE users SET sso_user = 0")
         user = self.valid_token(token="token")
         self.assertEqual("token", user["token"])
+
+    def test_ok_token_no_jwt_enabled(self):
+        Config.jwt_secret = None
+        self._insert_data()
+        Database.c.execute("UPDATE users SET sso_user = 1")
+        with self.assertRaises(Forbidden):
+            self.valid_token(token="token")
+
+    def test_ok_token_jwt_disabled(self):
+        Config.jwt_secret = "jwt_token"
+        self._insert_data()
+        Database.c.execute("UPDATE users SET sso_user = 0")
+        user = self.valid_token(token="token")
+        self.assertEqual("token", user["token"])
+
+    @patch("src.validators.Validators._get_user_from_sso", return_value=42)
+    def test_ok_token_jwt_enabled(self, sso):
+        Config.jwt_secret = "jwt_token"
+        builder = EnvironBuilder(headers=[("Cookie", "token=token")])
+        request = Request(builder.get_environ())
+        self._insert_data()
+        Database.c.execute("UPDATE users SET sso_user = 1")
+        user = self.valid_token(token="token", _request=request)
+        self.assertEqual(42, user)
+        sso.assert_called_once_with("token", "token")
 
     def test_valid_task_invalid_id(self):
         with self.assertRaises(Forbidden):
@@ -170,7 +218,8 @@ class TestValidators(unittest.TestCase):
 
     def test_register_ip_submission(self):
         self._insert_data()
-        Database.add_submission("submissionid", "inputid", "outputid", "sourceid", 42)
+        Database.add_submission("submissionid", "inputid", "outputid",
+                                "sourceid", 42)
         self.register_ip(submission_id="submissionid", _ip="1.1.1.1")
         users = Database.get_users()
         self.assertEqual("1.1.1.1", users[0]["ip"][0]["ip"])
@@ -182,7 +231,8 @@ class TestValidators(unittest.TestCase):
         with self.assertRaises(Forbidden) as ex:
             Validators._validate_admin_token('wrong token', '1.2.3.4')
 
-        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token",
+                      ex.exception.response.data.decode())
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
         row = Logger.c.fetchone()
