@@ -8,6 +8,7 @@
 import unittest
 from unittest.mock import patch
 
+import jwt
 from werkzeug.exceptions import Forbidden
 from werkzeug.wrappers import Request
 from werkzeug.test import EnvironBuilder
@@ -227,6 +228,14 @@ class TestValidators(unittest.TestCase):
     def test_validate_token(self):
         Validators._validate_admin_token('admin token', '1.2.3.4')
 
+    @patch("src.contest_manager.ContestManager.extract_contest")
+    @patch("src.contest_manager.ContestManager.read_from_disk")
+    def test_validate_token_no_token(self, read, extract):
+        Database.del_meta("admin_token")
+        Validators._validate_admin_token("admin token", '1.2.3.4')
+        extract.assert_called_once_with("admin token")
+        read.assert_called_once_with()
+
     def test_validate_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
             Validators._validate_admin_token('wrong token', '1.2.3.4')
@@ -246,6 +255,37 @@ class TestValidators(unittest.TestCase):
         row = Logger.c.fetchone()
         self.assertIn("new ip", row[3])
         self.assertIn("1.2.3.4", row[3])
+
+    def test_sso_invalid_jwt(self):
+        Config.jwt_secret = "lalla"
+        self._insert_data()
+        with self.assertRaises(Forbidden):
+            Validators._get_user_from_sso("uhuhu", "token")
+
+    def test_sso_different_username(self):
+        Config.jwt_secret = "lalla"
+        payload = {"username": "koh", "firstName": "koh"}
+        token = jwt.encode(payload, Config.jwt_secret)
+        self._insert_data()
+        with self.assertRaises(Forbidden):
+            Validators._get_user_from_sso(token, "token")
+
+    def test_sso_new_user(self):
+        Config.jwt_secret = "lalla"
+        self._insert_data()
+        payload = {"username": "koh", "firstName": "koh"}
+        token = jwt.encode(payload, Config.jwt_secret)
+        user = Validators._get_user_from_sso(token, "koh")
+        self.assertEqual("koh", user["token"])
+        self.assertEqual("koh", Database.get_user("koh")["token"])
+
+    def test_sso_existing_user(self):
+        Config.jwt_secret = "lalla"
+        self._insert_data()
+        payload = {"username": "token", "firstName": "koh"}
+        token = jwt.encode(payload, Config.jwt_secret)
+        user = Validators._get_user_from_sso(token, "token")
+        self.assertEqual("token", user["token"])
 
     def _insert_data(self):
         Database.add_user("token", "", "")

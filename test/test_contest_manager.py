@@ -13,7 +13,7 @@ from unittest.mock import patch, call
 
 import gevent
 from gevent import queue
-from werkzeug.exceptions import Forbidden, NotFound
+from werkzeug.exceptions import Forbidden, NotFound, InternalServerError
 
 from src.config import Config
 from src.contest_manager import ContestManager
@@ -73,7 +73,14 @@ class TestContestManager(unittest.TestCase):
 
     def test_extract_contest(self):
         self._setup_encrypted_file()
+        # see test/assets/README.md
         ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+
+    def test_extract_no_priv(self):
+        self._setup_encrypted_file()
+        os.chmod(Config.encrypted_file, 0o000)
+        with self.assertRaises(InternalServerError):
+            ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
 
     def test_import_contest(self):
         path = Utils.new_tmp_dir()

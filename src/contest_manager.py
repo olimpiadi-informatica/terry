@@ -19,7 +19,7 @@ import gevent.queue
 import gevent.subprocess
 import nacl.exceptions
 import yaml
-from werkzeug.exceptions import NotFound, Forbidden
+from werkzeug.exceptions import NotFound, Forbidden, InternalServerError
 
 from src.handlers.base_handler import BaseHandler
 from .config import Config
@@ -68,10 +68,8 @@ class ContestManager:
         except nacl.exceptions.CryptoError:
             BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
                                   "The provided password is wrong")
-        except RuntimeError as ex:
-            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
-        except PermissionError as ex:
-            BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
+        except OSError as ex:
+            BaseHandler.raise_exc(InternalServerError, "FAILED", str(ex))
 
         zip_abs_path = os.path.realpath(Config.decrypted_file)
         wd = os.getcwd()
