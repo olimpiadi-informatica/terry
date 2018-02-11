@@ -9,6 +9,7 @@
 import os
 import platform
 import shutil
+import time
 import traceback
 import zipfile
 from hashlib import sha256
@@ -232,9 +233,15 @@ class ContestManager:
                     os.O_WRONLY | os.O_CREAT, 0o644)
 
                 try:
+                    start_time = time.monotonic()
                     # generate the input and store the stdout into a file
                     retcode = gevent.subprocess.call(
                         [task["generator"], str(seed), "0"], stdout=stdout)
+                    if time.monotonic() > start_time + 1:
+                        Logger.warning(
+                            "TASK",
+                            "Generation of input %s for task %s took %f seconds"
+                            % (seed, task_name, time.monotonic() - start_time))
                 finally:
                     os.close(stdout)
 
@@ -253,9 +260,16 @@ class ContestManager:
                     stdin = os.open(
                         StorageManager.get_absolute_path(path), os.O_RDONLY)
                     try:
+                        start_time = time.monotonic()
                         # execute the validator piping the input file to stdin
                         retcode = gevent.subprocess.call(
                             [task["validator"], "0"], stdin=stdin)
+                        if time.monotonic() > start_time + 1:
+                            Logger.warning(
+                                "TASK",
+                                "Validation of input %s for task %s took %f seconds"
+                                % (seed, task_name,
+                                   time.monotonic() - start_time))
                     finally:
                         os.close(stdin)
 
@@ -317,11 +331,17 @@ class ContestManager:
         """
         try:
             # call the checker and store the output
+            start_time = time.monotonic()
             output = gevent.subprocess.check_output([
                 ContestManager.tasks[task_name]["checker"],
                 StorageManager.get_absolute_path(input_path),
                 StorageManager.get_absolute_path(output_path)
             ])
+            if time.monotonic() > start_time + 1:
+                Logger.warning("TASK", "Evaluation of output %s "
+                               "for task %s, with input %s, took %f seconds" %
+                               (output_path, task_name, input_path,
+                                time.monotonic() - start_time))
         except:
             # TODO log the stdout and stderr of the checker
             Logger.error("TASK", "Error while evaluating output %s "
