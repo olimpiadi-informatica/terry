@@ -6,16 +6,19 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
 import platform
+import shutil
+import tempfile
 import unittest
-
 from unittest.mock import patch, call
 
 import gevent
 from gevent import queue
+from werkzeug.exceptions import Forbidden, NotFound
 
 from src.config import Config
 from src.contest_manager import ContestManager
 from src.database import Database
+from src.logger import Logger
 from test.utils import Utils
 
 
@@ -23,6 +26,22 @@ class TestContestManager(unittest.TestCase):
 
     def setUp(self):
         Utils.prepare_test()
+
+        self.log_backup = Logger.LOG_LEVEL
+        Logger.LOG_LEVEL = 9001  # disable the logs
+        self.tempdir = None
+
+    def tearDown(self):
+        Logger.LOG_LEVEL = self.log_backup
+
+    def _setup_encrypted_file(self):
+        self.tempdir = tempfile.TemporaryDirectory()
+        enc_path = os.path.join(self.tempdir.name, "pack.zip.enc")
+        dec_path = os.path.join(self.tempdir.name, "pack.zip")
+        shutil.copy(os.path.join(os.path.dirname(__file__),
+                                 "./assets/pack.zip.enc"), enc_path)
+        Config.encrypted_file = enc_path
+        Config.decrypted_file = dec_path
 
     def test_system_extension(self):
         sys_ext = ContestManager.system_extension()
@@ -33,6 +52,29 @@ class TestContestManager(unittest.TestCase):
         self.assertTrue(sys_ext.find(system) >= 0)
         self.assertTrue(sys_ext.find(machine) >= 0)
 
+    def test_extract_contest_malformed_token(self):
+        with self.assertRaises(Forbidden):
+            ContestManager.extract_contest("without dashes")
+
+    def test_extract_contest_not_uploaded(self):
+        Config.encrypted_file = "/not/exists"
+        with self.assertRaises(NotFound):
+            ContestManager.extract_contest("EDOOOO-XXXX-XXXX-XXXX-XXXX")
+
+    def test_extract_contest_wrong_password(self):
+        self._setup_encrypted_file()
+        with self.assertRaises(Forbidden):
+            ContestManager.extract_contest("EDOOOO-XXXX-XXXX-XXXX-XXXX")
+
+    def test_extract_contest_unknown_username(self):
+        self._setup_encrypted_file()
+        with self.assertRaises(Forbidden):
+            ContestManager.extract_contest("FOOBAR-ZVXJ-2IIH-LX5B-ZIGJ")
+
+    def test_extract_contest(self):
+        self._setup_encrypted_file()
+        ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+
     def test_import_contest(self):
         path = Utils.new_tmp_dir()
         self._prepare_contest_dir(path)
@@ -40,7 +82,8 @@ class TestContestManager(unittest.TestCase):
         os.makedirs(os.path.join(Config.statementdir, "poldo"))
 
         contest = ContestManager.import_contest(path)
-        self.assertTrue(os.path.isfile(os.path.join(Config.statementdir, "poldo", "statement.md")))
+        self.assertTrue(os.path.isfile(
+            os.path.join(Config.statementdir, "poldo", "statement.md")))
 
         self.assertEqual(18000, contest["duration"])
         self.assertEqual(1, len(contest["tasks"]))
@@ -48,13 +91,18 @@ class TestContestManager(unittest.TestCase):
         self.assertEqual("poldo", task["name"])
         self.assertEqual("Poldo", task["description"])
         self.assertEqual(42, task["max_score"])
-        checker = os.path.join(path, "poldo", "managers", "checker.linux.x86_64")
-        validator = os.path.join(path, "poldo", "managers", "validator.linux.x86_64")
-        generator = os.path.join(path, "poldo", "managers", "generator.linux.x86_64")
+        checker = os.path.join(path, "poldo", "managers",
+                               "checker.linux.x86_64")
+        validator = os.path.join(path, "poldo", "managers",
+                                 "validator.linux.x86_64")
+        generator = os.path.join(path, "poldo", "managers",
+                                 "generator.linux.x86_64")
         self.assertEqual(checker, task["checker"])
         self.assertEqual(validator, task["validator"])
         self.assertEqual(generator, task["generator"])
-        self.assertEqual(os.path.join(Config.web_statementdir, "poldo", "statement.md"), task["statement_path"])
+        self.assertEqual(
+            os.path.join(Config.web_statementdir, "poldo", "statement.md"),
+            task["statement_path"])
         self.assertEqual(0o755, os.stat(checker).st_mode & 0o777)
         self.assertEqual(0o755, os.stat(validator).st_mode & 0o777)
         self.assertEqual(0o755, os.stat(generator).st_mode & 0o777)
@@ -71,11 +119,14 @@ class TestContestManager(unittest.TestCase):
         Config.statementdir = Utils.new_tmp_dir()
         self._write_file(Config.statementdir, "poldo", "foobar")
 
-        self.assertTrue(os.path.isfile(os.path.join(Config.statementdir, "poldo")))
+        self.assertTrue(
+            os.path.isfile(os.path.join(Config.statementdir, "poldo")))
         ContestManager.import_contest(path)
-        self.assertTrue(os.path.isdir(os.path.join(Config.statementdir, "poldo")))
+        self.assertTrue(
+            os.path.isdir(os.path.join(Config.statementdir, "poldo")))
 
     def test_read_from_disk_missing_dir(self):
+        Logger.LOG_LEVEL = self.log_backup
         with Utils.nostderr() as stderr:
             Config.contest_path = "/not/existing/path"
             ContestManager.read_from_disk()
@@ -130,20 +181,26 @@ class TestContestManager(unittest.TestCase):
     @patch("src.database.Database.gen_id", return_value="inputid")
     def test_worker(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._valid_subprocess_call
-        ContestManager.tasks["poldo"] = { "generator": "/gen", "validator": "/val" }
+        ContestManager.tasks["poldo"] = {"generator": "/gen",
+                                         "validator": "/val"}
 
-        with patch("src.logger.Logger.error", side_effect=TestContestManager._stop_worker_loop):
-            with patch("gevent.queue.Queue.put", side_effect=NotImplementedError("Stop loop")):
+        with patch("src.logger.Logger.error",
+                   side_effect=TestContestManager._stop_worker_loop):
+            with patch("gevent.queue.Queue.put",
+                       side_effect=NotImplementedError("Stop loop")):
                 with self.assertRaises(NotImplementedError) as ex:
                     ContestManager.worker("poldo")
 
     @patch("gevent.subprocess.call", return_value=42)
     @patch("src.database.Database.gen_id", return_value="inputid")
     def test_worker_generator_fails(self, gen_id_mock, call_mock):
-        ContestManager.tasks["poldo"] = { "generator": "/gen", "validator": "/val" }
+        ContestManager.tasks["poldo"] = {"generator": "/gen",
+                                         "validator": "/val"}
 
-        with patch("src.logger.Logger.error", side_effect=TestContestManager._stop_worker_loop):
-            with patch("gevent.queue.Queue.put", side_effect=NotImplementedError("Stop loop")):
+        with patch("src.logger.Logger.error",
+                   side_effect=TestContestManager._stop_worker_loop):
+            with patch("gevent.queue.Queue.put",
+                       side_effect=NotImplementedError("Stop loop")):
                 with self.assertRaises(Exception) as ex:
                     ContestManager.worker("poldo")
                 self.assertIn("Error 42 generating input", ex.exception.args[0])
@@ -152,31 +209,37 @@ class TestContestManager(unittest.TestCase):
     @patch("src.database.Database.gen_id", return_value="inputid")
     def test_worker_validator_fails(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._broken_val_subprocess_call
-        ContestManager.tasks["poldo"] = { "generator": "/gen", "validator": "/val" }
+        ContestManager.tasks["poldo"] = {"generator": "/gen",
+                                         "validator": "/val"}
 
-        with patch("src.logger.Logger.error", side_effect=TestContestManager._stop_worker_loop):
-            with patch("gevent.queue.Queue.put", side_effect=NotImplementedError("Stop loop")):
+        with patch("src.logger.Logger.error",
+                   side_effect=TestContestManager._stop_worker_loop):
+            with patch("gevent.queue.Queue.put",
+                       side_effect=NotImplementedError("Stop loop")):
                 with self.assertRaises(Exception) as ex:
                     ContestManager.worker("poldo")
                 self.assertIn("Error 42 validating input", ex.exception.args[0])
 
     def test_start(self):
-        ContestManager.tasks = { "task1": "1!!", "task2": "2!!!" }
+        ContestManager.tasks = {"task1": "1!!", "task2": "2!!!"}
         with patch("gevent.spawn") as mock:
             ContestManager.start()
-            mock.assert_has_calls([call(ContestManager.worker, "task1"), call(ContestManager.worker, "task2")],
+            mock.assert_has_calls([call(ContestManager.worker, "task1"),
+                                   call(ContestManager.worker, "task2")],
                                   any_order=True)
 
     def test_get_input(self):
         input_path = Utils.new_tmp_file()
         ContestManager.input_queue["poldo"] = gevent.queue.Queue(1)
-        ContestManager.input_queue["poldo"].put({"id":"inputid", "path": input_path})
+        ContestManager.input_queue["poldo"].put(
+            {"id": "inputid", "path": input_path})
 
         input = ContestManager.get_input("poldo", 42)
         self.assertEqual("inputid", input[0])
         self.assertIn("poldo_input_42.txt", input[1])
 
-    @patch("src.logger.Logger.warning", side_effect=lambda *args: exec("raise NotImplementedError(*args)"))
+    @patch("src.logger.Logger.warning",
+           side_effect=lambda *args: exec("raise NotImplementedError(*args)"))
     def test_get_input_queue_underrun(self, warning_mock):
         ContestManager.input_queue["poldo"] = gevent.queue.Queue(1)
         with self.assertRaises(NotImplementedError) as ex:
@@ -185,14 +248,16 @@ class TestContestManager(unittest.TestCase):
 
     @patch("gevent.subprocess.check_output", return_value="yee")
     def test_evaluate_output(self, check_mock):
-        ContestManager.tasks["poldo"] = { "checker": "/gen" }
+        ContestManager.tasks["poldo"] = {"checker": "/gen"}
         output = ContestManager.evaluate_output("poldo", "/input", "/output")
         self.assertEqual("yee", output)
 
-    @patch("gevent.subprocess.check_output", side_effect=NotImplementedError("ops ;)"))
+    @patch("gevent.subprocess.check_output",
+           side_effect=NotImplementedError("ops ;)"))
     def test_evaluate_output_failed(self, check_mock):
-        ContestManager.tasks["poldo"] = { "checker": "/gen" }
+        ContestManager.tasks["poldo"] = {"checker": "/gen"}
 
+        Logger.LOG_LEVEL = self.log_backup
         with self.assertRaises(NotImplementedError) as ex:
             with Utils.nostderr() as stderr:
                 ContestManager.evaluate_output("poldo", "/input", "/output")
@@ -245,7 +310,8 @@ class TestContestManager(unittest.TestCase):
                          "exit 0\n")
         self._write_file(path, "poldo/managers/checker.linux.x86_64",
                          "#!/usr/bin/bash\n"
-                         "echo '{\"validation\":{},\"feedback\":{},\"score\":0.5}'")
+                         "echo '{\"validation\":{},\"feedback\":{},"
+                         "\"score\":0.5}'")
 
     def _write_file(self, prefix, filename, content):
         path = os.path.join(prefix, filename)

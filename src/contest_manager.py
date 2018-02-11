@@ -23,8 +23,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 
 from src.handlers.base_handler import BaseHandler
 from .config import Config
-from .crypto import decode_data, recover_file_password, decode, SECRET_LEN, \
-    combine_username_password
+from .crypto import decode_data, recover_file_password, decode, SECRET_LEN
 from .database import Database
 from .logger import Logger
 from .storage_manager import StorageManager
@@ -51,7 +50,7 @@ class ContestManager:
 
         if "-" not in token:
             BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
-                                  "The provided password is wrong")
+                                  "The provided password is malformed")
 
         username, password = token.split("-", 1)
         secret, scrambled_password = decode_data(password, SECRET_LEN)
@@ -83,7 +82,8 @@ class ContestManager:
                 f.extractall()
             real_yaml = os.path.join('__users__', username + '.yaml')
             if not os.path.exists(real_yaml):
-                raise ValueError('Invalid username for the given pack')
+                BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
+                                      "Invalid username for the given pack")
             os.symlink(real_yaml, 'contest.yaml')
             Logger.info("CONTEST", "Contest extracted")
         except zipfile.BadZipFile as ex:
@@ -226,7 +226,7 @@ class ContestManager:
             try:
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
@@ -267,7 +267,8 @@ class ContestManager:
                         if time.monotonic() > start_time + 1:
                             Logger.warning(
                                 "TASK",
-                                "Validation of input %s for task %s took %f seconds"
+                                "Validation of input %s for task %s took %f "
+                                "seconds"
                                 % (seed, task_name,
                                    time.monotonic() - start_time))
                     finally:
@@ -339,13 +340,14 @@ class ContestManager:
             ])
             if time.monotonic() > start_time + 1:
                 Logger.warning("TASK", "Evaluation of output %s "
-                               "for task %s, with input %s, took %f seconds" %
+                                       "for task %s, with input %s, took %f "
+                                       "seconds" %
                                (output_path, task_name, input_path,
                                 time.monotonic() - start_time))
         except:
             # TODO log the stdout and stderr of the checker
             Logger.error("TASK", "Error while evaluating output %s "
-                         "for task %s, with input %s: %s" %
+                                 "for task %s, with input %s: %s" %
                          (output_path, task_name, input_path,
                           traceback.format_exc()))
             raise
