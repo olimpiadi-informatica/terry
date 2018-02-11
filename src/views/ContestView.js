@@ -21,8 +21,10 @@ class ContestView extends Component {
   render_index() {
     const { t } = this.props;
     // start and end are rounded to minutes
-    const start = moment(this.model.contest.data.start_time).seconds(0);
-    const end = moment().add(this.model.user.remaining_time, 'seconds').seconds(0);
+    let start = moment(this.model.contest.data.start_time).seconds(0);
+    let end = moment()
+    end.add(this.model.user.remaining_time, 'seconds')
+    end = end.seconds(0);
     const seconds = end.unix() - start.unix();
     const length = formatTimeSpan(seconds, t);
 
@@ -46,9 +48,9 @@ class ContestView extends Component {
       <nav className="terry-navbar">
         <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
         <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
-        <button className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+        <span role="button" className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
           <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-        </button>
+        </span>
       </nav>
 
       <div className="terry-body">

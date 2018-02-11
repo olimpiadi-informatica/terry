@@ -49,6 +49,10 @@ table.sample-case {
   white-space: pre;
 }
 
+table.submissions-table {
+  margin: 0;
+}
+
 table.submissions-table td {
   vertical-align: middle;
 }

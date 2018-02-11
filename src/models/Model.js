@@ -1,3 +1,4 @@
+import moment from 'moment';
 import client from '../TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
@@ -56,6 +57,7 @@ export default class Model extends Observable {
       .then(response => {
         delete this.userLoadingPromise;
         this.user = response.data;
+        this.timeDelta = moment().utc() - moment(response.headers['date']).utc();
         this.fireUpdate();
       })
       .catch(response => {

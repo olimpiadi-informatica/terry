@@ -56,9 +56,9 @@ class SubmissionView extends Component {
         <div key="present" className="card card-outline-primary">
           <div className="card-header terry-submission-object-card">
             <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
-            <button key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.submission.resetSource() }>
+            <span role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.submission.resetSource() }>
               <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change source")}
-            </button>
+            </span>
           </div>
           <div className="card-block">
             <FileView file={source.file} />
@@ -96,9 +96,9 @@ class SubmissionView extends Component {
       <div key="present" className="card card-outline-primary">
         <div className="card-header terry-submission-object-card">
           <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
-          <button key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>
+          <span role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>
             <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change output")}
-          </button>
+          </span>
         </div>
         <div className="card-block">
           <FileView file={output.file} />
@@ -132,7 +132,7 @@ class SubmissionView extends Component {
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
             <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
           </Link>
-          <button className="btn btn-success"
+          <span role="button" className="btn btn-success"
                   disabled={ !this.submission.canSubmit() }
                   onClick={() => { this.submission.submit().then(() => {
                     const taskName = this.submission.data.task;
@@ -140,7 +140,7 @@ class SubmissionView extends Component {
                     this.props.history.push("/" + taskName + "/submission/" + id);
                   })}}>
             <span aria-hidden="true" className="fa fa-paper-plane" /> {t("submission.submit.submit")}
-          </button>
+          </span>
         </div>
       </React.Fragment>
     );

@@ -29,14 +29,15 @@ class AdminView extends Component {
 
   getNavBar() {
     const { t } = this.props;
-    const countdown = this.session.status.start_time ? <Countdown remaining={this.session.status.remaining_time}/> : "";
+    // FIXME: delta=0 ????
+    const countdown = this.session.status.start_time ? <Countdown delta={0} end={this.session.status.end_time}/> : "";
 
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
       {countdown}
-      <button className="terry-admin-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
+      <span role="button" className="terry-admin-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
         <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-      </button>
+      </span>
     </nav>
   }
 

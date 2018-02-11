@@ -80,15 +80,15 @@ class TaskView extends Component {
     } else {
       if (this.getTaskState().isGeneratingInput()) {
         return (
-          <button disabled={true} className="btn btn-success">
+          <span disabled={true} className="btn btn-success">
             <span aria-hidden="true" className="fa fa-plus" /> {t("task.requesting")}
-          </button>
+          </span>
         );
       } else {
         return (
-          <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+          <span role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
             <span aria-hidden="true" className="fa fa-plus" /> {t("task.request input")}
-          </button>
+          </span>
         );
       }
     }
@@ -117,7 +117,7 @@ class TaskView extends Component {
     const { t } = this.props;
     const list = this.getSubmissionList();
     let last_submission;
-    if (list.isLoading()) last_submission = <em>{t("loading")}</em>;
+    if (list.isLoading()) return <React.Fragment />;
     else if(!list.isLoaded()) last_submission = <em>{t("submission.list.load failed")}</em>;
     else {
       const items = list.data.items;

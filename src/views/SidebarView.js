@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component } from 'react';
 import {translateComponent} from "../utils";
 import Countdown from './CountdownView';
@@ -12,6 +13,7 @@ class SidebarView extends Component {
 
   render() {
     const { t } = this.props;
+
     return (
       <nav className="bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
@@ -22,7 +24,7 @@ class SidebarView extends Component {
           <li className="divider-vertical" />
 
           <li className="nav-item title">
-            {t("navbar.remaining time")} <Countdown remaining={this.model.user.remaining_time}/>
+            {t("navbar.remaining time")} <Countdown delta={this.model.timeDelta} end={this.model.user.end_time}/>
           </li>
 
           <li className="nav-item title">
