@@ -1,5 +1,4 @@
 import moment from 'moment';
-import countdown from 'countdown';
 import React, { Component } from 'react';
 import { translateComponent } from '../utils';
 
@@ -16,14 +15,14 @@ class CountdownView extends Component {
   componentDidMount() {
     this.timer = setInterval(() => this.tick(), this.tickrate);
   }
-  
+
   componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
       delete this.timer;
     }
   }
-  
+
   tick() {
     this.forceUpdate();
   }
