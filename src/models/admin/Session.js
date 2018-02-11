@@ -24,24 +24,22 @@ export default class Session extends Observable {
     return this.loadingStatus !== undefined;
   }
 
-  loadStatus(adminToken) {
-    return client.adminApi(adminToken, "/status");
-  }
-
-  tryLogin() {
-    if (!this.isLoggedIn()) {
-      this.attemptLogin(this.adminToken());
+  onAppStart() {
+    if(this.isLoggedIn()) {
+      this.updateStatus();
     }
   }
 
-  attemptLogin(token) {
-    delete this.status;
+  isLoaded() {
+    return this.status !== undefined;
+  }
+
+  updateStatus() {
     this.fireUpdate();
 
-    return this.loadingStatus = this.loadStatus(token)
+    return this.loadingStatus = client.adminApi(this.adminToken(), "/status")
         .then((response) => {
           this.status = response.data;
-          this.cookies.set(Session.cookieName, token);
           delete this.loadingStatus;
           delete this.error;
           this.fireUpdate();
@@ -55,6 +53,13 @@ export default class Session extends Observable {
         });
   }
 
+  login(token) {
+    if(this.isLoggedIn()) throw Error();
+    this.cookies.set(Session.cookieName, token);
+    this.fireUpdate();
+    return this.updateStatus();
+  }
+
   logout() {
     if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
     this.cookies.remove(Session.cookieName);
@@ -62,23 +67,8 @@ export default class Session extends Observable {
     this.fireUpdate();
   }
 
-  updateStatus() {
-    this.loadingStatus = this.loadStatus(this.adminToken())
-        .then(response => {
-          this.status = response.data;
-          delete this.loadingStatus;
-          delete this.error;
-          this.fireUpdate();
-          this.updateLogs();
-        })
-        .catch(response => {
-          console.error(response);
-          this.fireUpdate();
-        });
-  }
-
   startContest() {
-    if (!this.isLoggedIn()) throw Error("You have to be logged in to start the contest");
+    if (!this.isLoaded()) throw Error();
     return client.adminApi(this.adminToken(), "/start")
         .then(response => {
           this.updateStatus();
@@ -90,7 +80,7 @@ export default class Session extends Observable {
   }
 
   setExtraTime(extra_time, token) {
-    if (!this.isLoggedIn()) throw Error("You have to be logged in to set the extra time");
+    if (!this.isLoaded()) throw Error();
     const options = { extra_time: extra_time };
     if (token) options.token = token;
     return client.adminApi(this.adminToken(), "/set_extra_time", options)

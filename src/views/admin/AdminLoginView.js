@@ -17,7 +17,7 @@ class AdminLoginView extends Component {
   }
 
   login() {
-    this.session.attemptLogin(this.refs.form.token.value);
+    this.session.login(this.refs.form.token.value);
   }
 
   renderLoginError() {

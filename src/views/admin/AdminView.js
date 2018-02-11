@@ -12,7 +12,10 @@ class AdminView extends Component {
   constructor(props) {
     super(props);
     this.session = new Session();
-    this.session.tryLogin();
+  }
+
+  componentWillMount() {
+    this.session.onAppStart();
   }
 
   componentDidMount() {
@@ -35,7 +38,7 @@ class AdminView extends Component {
 
   render() {
     if (this.session.isLoading()) return <LoadingView />;
-    if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} />;
+    if (!this.session.isLoaded()) return <AdminLoginView session={this.session} />;
 
     return <React.Fragment>
       { this.getNavBar() }
