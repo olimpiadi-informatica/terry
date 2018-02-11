@@ -2,7 +2,8 @@ import i18n from 'i18next';
 import Backend from 'i18next-xhr-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { reactI18nextModule } from 'react-i18next';
-import moment from "moment";
+
+require("moment/locale/it");
 
 i18n
     .use(Backend)
@@ -24,8 +25,7 @@ i18n
       react: {
         wait: true
       }
-    })
-    .on("languageChanged", (lang) => moment.locale(lang));
+    });
 
 
 export default i18n;

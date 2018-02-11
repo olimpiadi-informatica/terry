@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Link, Route} from 'react-router-dom';
 import TaskView from './TaskView';
 import ReactMarkdown from 'react-markdown';
-import moment from 'moment';
+import { DateTime, Duration } from 'luxon';
 import { Trans } from 'react-i18next';
 import {formatTimeSpan, translateComponent} from "../utils";
 import SidebarView from './SidebarView';
@@ -20,13 +20,6 @@ class ContestView extends Component {
 
   render_index() {
     const { t } = this.props;
-    // start and end are rounded to minutes
-    let start = moment(this.model.contest.data.start_time).seconds(0);
-    let end = moment()
-    end.add(this.model.user.remaining_time, 'seconds')
-    end = end.seconds(0);
-    const seconds = end.unix() - start.unix();
-    const length = formatTimeSpan(seconds, t);
 
     return <React.Fragment>
       <h1>{this.model.contest.data.name}</h1>
@@ -38,7 +31,7 @@ class ContestView extends Component {
         You can submit <em>as many times as you want</em>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <em>remember to submit</em> them by clicking the green button!
       </Trans>
       <p>{t("homepage.guide.part3")}</p>
-      <p>{t("homepage.guide.part4", {length: length})}</p>
+      <p>{t("homepage.guide.part4", {length: "TODO: contest duration"})}</p>
     </React.Fragment>
   }
 
@@ -48,9 +41,9 @@ class ContestView extends Component {
       <nav className="terry-navbar">
         <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
         <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
-        <span role="button" className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+        <button role="button" className="terry-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
           <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-        </span>
+        </button>
       </nav>
 
       <div className="terry-body">

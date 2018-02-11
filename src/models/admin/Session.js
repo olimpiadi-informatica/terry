@@ -89,19 +89,6 @@ export default class Session extends Observable {
         });
   }
 
-  extractContest(filename, password) {
-    if (!this.isLoggedIn()) throw Error("You have to be logged in to extract the contest");
-    return client.adminApi(this.adminToken(), "/extract", {filename: filename, password: password})
-        .then(response => {
-          this.updateStatus();
-        }).catch(response => {
-          console.error(response);
-          this.error = response.response.data.message;
-          this.fireUpdate();
-          return Promise.reject(response);
-        });
-  }
-
   setExtraTime(extra_time, token) {
     if (!this.isLoggedIn()) throw Error("You have to be logged in to set the extra time");
     const options = { extra_time: extra_time };

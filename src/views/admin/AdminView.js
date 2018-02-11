@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {translateComponent} from "../../utils";
 import {Link} from "react-router-dom";
-import Countdown from '../CountdownView';
 import Session from "../../models/admin/Session";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "../LoadingView";
@@ -29,15 +28,11 @@ class AdminView extends Component {
 
   getNavBar() {
     const { t } = this.props;
-    // FIXME: delta=0 ????
-    const countdown = this.session.status.start_time ? <Countdown delta={0} end={this.session.status.end_time}/> : "";
-
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
-      {countdown}
-      <span role="button" className="terry-admin-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
+      <button role="button" className="terry-admin-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
         <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
-      </span>
+      </button>
     </nav>
   }
 

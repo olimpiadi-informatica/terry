@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
+import Countdown from '../CountdownView';
+import { DateTime } from 'luxon';
 
 class ContestView extends Component {
   constructor(props) {
@@ -14,36 +16,6 @@ class ContestView extends Component {
 
   componentWillUnmount() {
     this.session.popObserver(this);
-  }
-
-  extractContest() {
-    const form = this.refs.form;
-    const filename = form[0].value;
-    const password = form[1].value;
-    this.session.extractContest(filename, password);
-  }
-
-  renderNotLoaded() {
-    const { t } = this.props;
-    return <React.Fragment>
-      <p>{t("contest.need to extract.part1")}</p>
-      <p>{t("contest.need to extract.part2")}</p>
-      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.extractContest(); }}>
-        {this.renderError()}
-        <div className="form-group">
-          <label htmlFor="filename">{t("contest.archive")}</label>
-          <input className="form-control" id="filename" placeholder={t("contest.enter zip")} required />
-          <small className="form-text text-muted">{t("contest.include extension")}</small>
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">{t("contest.password")}</label>
-          <input type="password" className="form-control" id="password" placeholder={t("contest.password")} />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          <span className="fa fa-file-archive-o" aria-hidden="true" /> {t("contest.extract")}
-        </button>
-      </form>
-    </React.Fragment>;
   }
 
   renderNotStarted() {
@@ -71,8 +43,15 @@ class ContestView extends Component {
 
   renderStarted() {
     const { t } = this.props;
+    // FIXME: delta=0 ????
+    const countdown = this.session.status.start_time ? <Countdown delta={0} end={
+      DateTime.fromISO(this.session.status.end_time)
+    }/> : "";
     return <React.Fragment>
-      <p>{t("contest.started at")} <em>{new Date(this.session.status.start_time).toLocaleString()}</em>.</p>
+      <p>{t("contest.started at")} <em>{
+        new Date(this.session.status.start_time).toLocaleString()
+      }</em>.</p>
+      <p>{t("contest.remaining time")} {countdown}</p>
       <Trans i18nKey="contest.extratime disclamer" parent="p">
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>
@@ -113,8 +92,7 @@ class ContestView extends Component {
     const status = this.session.status;
 
     let body = "";
-    if (!status.loaded) body = this.renderNotLoaded();
-    else if (!status.start_time) body = this.renderNotStarted();
+    if (!status.start_time) body = this.renderNotStarted();
     else body = this.renderStarted();
 
     return <React.Fragment>

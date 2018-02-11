@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
+import { DateTime, Duration } from "luxon";
 import moment from "moment";
+import { translateComponent } from "../utils";
 
-export default class DateView extends Component {
+class DateView extends Component {
   render() {
+    const { i18n } = this.props;
     return (
-      <abbr title={ moment(this.props.date).format('LLLL') }>
-        { moment(this.props.date).fromNow() }
+      <abbr title={
+        this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)
+      }>
+        { moment(this.props.date.toISO()).locale(i18n.language).fromNow() }
       </abbr>
     );
   }
 }
+
+export default translateComponent(DateView);

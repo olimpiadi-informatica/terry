@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import DateView from './DateView';
+import { DateTime } from 'luxon';
 import client from '../TerryClient';
 import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
@@ -42,7 +43,7 @@ class SubmissionListView extends Component {
       submissionList.push(
         <tr key={ submission.id }>
           <td>
-            <DateView date={ submission.output.date }/>
+            <DateView date={ DateTime.fromISO(submission.date) }/>
             <br/>
             <Link to={ "/" + submission.task + "/submission/" + submission.id }>
               {t("submission.list.view details")}

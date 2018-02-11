@@ -86,10 +86,6 @@ h5.modal-subtitle {
   /* for some reason, !important is required */
 }
 
-.file-view dd {
-  margin-bottom: 0px;
-}
-
 .sidebar {
   padding: 16px 0px 0px;
   order: -1;
