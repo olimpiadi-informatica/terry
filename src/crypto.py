@@ -49,6 +49,7 @@ def decode_data(b32data: str, secret_len: int):
 
 def gen_user_password(user: str, secret: bytes, file_password: bytes):
     digest = nacl.hash.sha512(user_to_bytes(user) + secret)
+    digest = base64.b16decode(digest, casefold=True)
     if len(file_password) > len(digest):
         raise ValueError("File password is too long")
     scrambled_password = bytes(
@@ -58,6 +59,7 @@ def gen_user_password(user: str, secret: bytes, file_password: bytes):
 
 def recover_file_password(user: str, secret: bytes, scrambled_password: bytes):
     digest = nacl.hash.sha512(user_to_bytes(user) + secret)
+    digest = base64.b16decode(digest, casefold=True)
     if len(scrambled_password) > len(digest):
         raise ValueError("Scrambled password is too long")
     file_password = bytes(

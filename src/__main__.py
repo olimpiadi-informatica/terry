@@ -6,17 +6,19 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
-from .server import Server
-from .config import Config
-from .logger import Logger
-from .database import Database
-from .contest_manager import ContestManager
-
 import argparse
+
+from .config import Config
+from .contest_manager import ContestManager
+from .database import Database
+from .logger import Logger
+from .server import Server
+
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", help="Path to the config file", default="config/config.yaml")
+    parser.add_argument("-c", "--config", help="Path to the config file",
+                        default="config/config.yaml")
     args = parser.parse_args()
 
     Config.set_config_file(args.config)
@@ -28,6 +30,7 @@ def main():
     ContestManager.start()
     server = Server()
     server.run()
+
 
 if __name__ == '__main__':
     main()
