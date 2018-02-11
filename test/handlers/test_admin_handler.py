@@ -248,8 +248,8 @@ class TestAdminHandler(unittest.TestCase):
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
 
-    def test_pack_uploaded(self):
-        self.admin_handler.pack_uploaded()
+    def test_pack_status(self):
+        self.admin_handler.pack_status()
 
     def test_download_pack(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
