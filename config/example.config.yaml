@@ -30,3 +30,6 @@ log_level: INFO
 jwt_secret: ~
 # URL to show where to login with SSO
 sso_url: ~
+
+# Secret for appending logs
+append_log_secret: secret

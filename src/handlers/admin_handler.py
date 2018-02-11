@@ -22,7 +22,6 @@ from ..validators import Validators
 
 
 class AdminHandler(BaseHandler):
-
     @Validators.validate_file
     def upload_pack(self, file):
         """
@@ -38,8 +37,41 @@ class AdminHandler(BaseHandler):
         StorageManager.save_file(Config.encrypted_file, file["content"])
         return {}
 
+    def login(self, username: str, password: str, _ip):
+        """
+        POST /admin/login
+        """
+        admin_token = Database.get_meta("admin_token")
+        token = combine_username_password(username, password)
+
+        if not admin_token:
+            ContestManager.extract_contest(username, password)
+            admin_token = token
+
+        if admin_token != token:
+            Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % _ip)
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin "
+                                  "token!")
+        return {}
+
+    def append_log(self, append_log_secret: str, level: str, category: str,
+                   message: str):
+        """
+        POST /admin/append_log
+        """
+        if append_log_secret != Config.append_log_secret:
+            self.raise_exc(Forbidden, "FORBIDDEN", "Invalid append log secret")
+        if level not in Logger.HUMAN_MESSAGES:
+            self.raise_exc(BadRequest, 'INVALID_PARAMETER',
+                           'The level provided is invalid')
+        level = Logger.HUMAN_MESSAGES.index(level)
+        Logger.log(level, category, message)
+
     @Validators.admin_only
-    def log(self, start_date: str, end_date: str, level: str,
+    def log(self,
+            start_date: str,
+            end_date: str,
+            level: str,
             category: str = None):
         """
         POST /admin/log
@@ -50,14 +82,15 @@ class AdminHandler(BaseHandler):
         level = Logger.HUMAN_MESSAGES.index(level)
 
         try:
-            start_date = datetime.datetime.strptime(start_date,
-                                                    "%Y-%m-%dT%H:%M:%S.%f").timestamp()
-            end_date = datetime.datetime.strptime(end_date,
-                                                  "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+            start_date = datetime.datetime.strptime(
+                start_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
+            end_date = datetime.datetime.strptime(
+                end_date, "%Y-%m-%dT%H:%M:%S.%f").timestamp()
         except ValueError as e:
             BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates({
-            "items": Logger.get_logs(level, category, start_date, end_date)
+            "items":
+            Logger.get_logs(level, category, start_date, end_date)
         })
 
     @Validators.admin_only
@@ -74,9 +107,9 @@ class AdminHandler(BaseHandler):
         Database.set_meta("start_time", start_time)
         Logger.info("CONTEST", "Contest started")
         return BaseHandler.format_dates(
-            {"start_time": start_time},
-            fields=["start_time"]
-        )
+            {
+                "start_time": start_time
+            }, fields=["start_time"])
 
     @Validators.admin_only
     @Validators.validate_id("token", "user", Database.get_user, required=False)
@@ -88,8 +121,8 @@ class AdminHandler(BaseHandler):
             Database.set_meta("extra_time", extra_time)
             Logger.info("ADMIN", "Global extra time set to %d" % extra_time)
         else:
-            Logger.info("ADMIN", "Extra time for user %s set to %d" % (
-            user["token"], extra_time))
+            Logger.info("ADMIN", "Extra time for user %s set to %d" %
+                        (user["token"], extra_time))
             Database.set_extra_time(user["token"], extra_time)
         return {}
 
@@ -102,17 +135,21 @@ class AdminHandler(BaseHandler):
         extra_time = Database.get_meta('extra_time', type=int, default=0)
         end_time = BaseHandler.get_end_time(0)
 
-        return BaseHandler.format_dates({
-            "start_time": start_time,
-            "extra_time": extra_time,
-            "end_time": end_time,
-            "loaded": ContestManager.has_contest
-        }, fields=["start_time"])
+        return BaseHandler.format_dates(
+            {
+                "start_time": start_time,
+                "extra_time": extra_time,
+                "end_time": end_time,
+                "loaded": ContestManager.has_contest
+            },
+            fields=["start_time"])
 
     @Validators.admin_only
     def user_list(self):
         """
         POST /admin/user_list
         """
-        return BaseHandler.format_dates({"items": Database.get_users()},
-                                        fields=["first_date"])
+        return BaseHandler.format_dates(
+            {
+                "items": Database.get_users()
+            }, fields=["first_date"])
