@@ -40,6 +40,14 @@ class AdminHandler(BaseHandler):
             os.path.realpath(Config.encrypted_file), file["content"])
         return {}
 
+
+    def pack_uploaded(self):
+        """
+        POST /admin/pack_uploaded
+        """
+        return {"pack_uploaded": os.path.exists(Config.encrypted_file)}
+
+
     @Validators.admin_only
     def download_pack(self):
         """

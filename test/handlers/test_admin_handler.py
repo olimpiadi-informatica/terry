@@ -248,22 +248,32 @@ class TestAdminHandler(unittest.TestCase):
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
 
+    def test_pack_uploaded(self):
+        self.admin_handler.pack_uploaded()
+
     def test_download_pack(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             Config.storedir = tmp_dir
-            with open('db.sqlite3_for_test', 'w') as f:
-                pass
-            zip_location = self.admin_handler.download_pack(
-                admin_token='admin token', _ip='1.2.3.4')['path']
-            with open(os.path.join(Config.storedir, zip_location)) as f:
-                pass
+            os.chdir(tmp_dir)
+            wd = os.getcwd()
+            try:
+                with open('db.sqlite3_for_test', 'w') as f:
+                    pass
+                zip_location = self.admin_handler.download_pack(
+                    admin_token='admin token', _ip='1.2.3.4')['path']
+                with open(os.path.join(Config.storedir, zip_location)) as f:
+                    pass
+            finally:
+                os.chdir(wd)
 
     def test_failed_download_pack(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             Config.storedir = tmp_dir
             wd = os.getcwd()
-            os.chdir(tmp_dir)
-            with self.assertRaises(subprocess.CalledProcessError) as ex:
-                self.admin_handler.download_pack(
-                    admin_token='admin token', _ip='1.2.3.4')
-            os.chdir(wd)
+            try:
+                os.chdir(tmp_dir)
+                with self.assertRaises(subprocess.CalledProcessError) as ex:
+                    self.admin_handler.download_pack(
+                        admin_token='admin token', _ip='1.2.3.4')
+            finally:
+                os.chdir(wd)

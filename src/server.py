@@ -100,6 +100,7 @@ class Server:
                 methods=["POST"],
                 endpoint="admin#set_extra_time"),
             Rule("/admin/status", methods=["POST"], endpoint="admin#status"),
+            Rule("/admin/zip_loaded", methods=["POST"], endpoint="admin#zip_loaded"),
             Rule(
                 "/admin/user_list",
                 methods=["POST"],
