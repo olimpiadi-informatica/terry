@@ -145,7 +145,9 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        self.assertEqual(now + 1080, res["end_time"])
+        end_time = datetime.datetime.fromtimestamp(now + 1080).strftime(
+            '%Y-%m-%dT%H:%M:%S')
+        self.assertEqual(end_time, res["end_time"])
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
         self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
 

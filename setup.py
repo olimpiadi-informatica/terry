@@ -37,7 +37,7 @@ setup(
     entry_points={
         "console_scripts": [
             "terr-server = src.__main__:main",
-            "terr-gen-password = src.crypto:gen_password_main",
-            "terr-crypt-file = src.crypto:crypt_file_main"
+            "terr-gen-password = src.utility:gen_password_main",
+            "terr-crypt-file = src.utility:crypt_file_main"
         ]
     })
