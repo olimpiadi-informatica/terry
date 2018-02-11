@@ -113,7 +113,7 @@ class InfoHandler(BaseHandler):
 
         user["total_score"] = sum(task["score"] for task in tasks)
 
-        return BaseHandler.format_dates(user, fields=["date"])
+        return BaseHandler.format_dates(user, fields=["end_time"])
 
     @Validators.during_contest
     @Validators.register_user_ip
