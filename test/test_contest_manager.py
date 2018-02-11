@@ -35,9 +35,9 @@ class TestContestManager(unittest.TestCase):
         Logger.LOG_LEVEL = self.log_backup
 
     def _setup_encrypted_file(self):
-        self.tempdir = tempfile.TemporaryDirectory()
-        enc_path = os.path.join(self.tempdir.name, "pack.zip.enc")
-        dec_path = os.path.join(self.tempdir.name, "pack.zip")
+        self.tempdir = Utils.new_tmp_dir()
+        enc_path = os.path.join(self.tempdir, "pack.zip.enc")
+        dec_path = os.path.join(self.tempdir, "pack.zip")
         shutil.copy(os.path.join(os.path.dirname(__file__),
                                  "./assets/pack.zip.enc"), enc_path)
         Config.encrypted_file = enc_path

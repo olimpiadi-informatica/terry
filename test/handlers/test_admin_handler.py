@@ -6,14 +6,11 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import datetime
 import os.path
-import shutil
 import subprocess
-import tempfile
 import unittest
-
-import gevent
-from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 from unittest.mock import patch
+
+from werkzeug.exceptions import Forbidden, BadRequest
 
 from src.config import Config
 from src.database import Database
@@ -43,8 +40,7 @@ class TestAdminHandler(unittest.TestCase):
                 file={"content": "foobar".encode(), "name": "pack.zip.enc"})
 
     def test_upload_pack_already_uploaded(self):
-        d = tempfile.TemporaryDirectory()
-        path = os.path.join(d.name, "pack.zip.enc")
+        path = os.path.join(Utils.new_tmp_dir(), "pack.zip.enc")
         with open(path, "wb") as f:
             f.write(b"hola!")
         Config.encrypted_file = path
@@ -54,10 +50,9 @@ class TestAdminHandler(unittest.TestCase):
                 file={"content": "foobar".encode(), "name": "pack.zip.enc"})
 
     def test_upload_pack(self):
-        d = tempfile.TemporaryDirectory()
         upload_path = os.path.join(os.path.dirname(__file__),
                                    "../assets/pack.zip.enc")
-        enc_path = os.path.join(d.name, "pack.zip.enc")
+        enc_path = os.path.join(Utils.new_tmp_dir(), "pack.zip.enc")
         Config.encrypted_file = enc_path
 
         with open(upload_path, "rb") as f:
