@@ -15,8 +15,7 @@
       "title": "Guida",
       "part1": "Nella parte sinistra di questa pagina trovi la lista dei problemi, premi sul nome di un problema per aprirlo.",
       "part2": "Puoi inviare soluzioni <1>quante volte vuoi</1> ma avrai degli input differenti ogni volta. Quando crei una sottoposizione ricorda di inviare il file sorgente corretto e il file di output corrispondente all'ultimo input generato. Quando hai caricato i file <3>ricorda di inviarli</3> premendo sul pulsante verde!",
-      "part3": "Se vuoi inviare più di un file sorgente sei pregato di creare un archivio compresso (zip).",
-      "part4": "Questa gara dura {{length}}."
+      "part3": "Se vuoi inviare più di un file sorgente sei pregato di creare un archivio compresso (zip)."
     },
     "contest ended": "Gara terminata"
   },

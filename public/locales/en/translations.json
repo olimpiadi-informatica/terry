@@ -15,8 +15,7 @@
       "title": "Usage guide",
       "part1": "On the left side of this page you can find the tasks, click on any one to open it.",
       "part2": "You can submit <1>as many times as you want</1>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <3>remember to submit</3> them by clicking the green button!",
-      "part3": "If you want to submit more than one source code file, please create a zip file containing them.",
-      "part4": "This contest is {{length}} long."
+      "part3": "If you want to submit more than one source code file, please create a zip file containing them."
     },
     "contest ended": "Contest ended"
   },
