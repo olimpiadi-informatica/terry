@@ -18,7 +18,7 @@ This is a new project, it's not stable yet! Please note that our licence does no
 This system was designed to run in a virtual machine running Linux, hosted by a Windows server in a high school lab.
 Because schools usually don't have many resources, this software has to be **as light as possible**.
 
-We specifically support **only Linux**, other operating systems could work but we don't offer any guarantee. 
+We specifically support **only Linux**, other operating systems could work but we don't offer any guarantee.
 
 Authentication is very simple: only a token identifies a user. This because the contest that will be run
 in this system is run in a **safe environment**. The administrator of the site (the referent at the school) distributes
@@ -41,8 +41,10 @@ input file.
 
 ## How it works
 
-The virtual machine given to the referents contains a zip file protected by a password. When the contest is about to
-begin the unlock password is communicated to the referents, who will unlock the zips.
+The virtual machine given to the referents contains only the software, the referents have to upload an encrypted zip. When
+the contest makers wants the contest to be ready (short before the contest should start) they distributes some passwords
+to the referents. A password is a string composed by three parts: a `username` (which is unique), a `secret` and a
+`scrambled_password` (the zip password xor-ed with an hash of `username + secret`).
 
 The referent may start the contest using the browser.
 
@@ -78,8 +80,7 @@ file. The easiest way to do that is to copy the provided example
 ```bash
 cp config/example.config.yaml config/config.yaml
 ```
-You may want to customize the configuration in the `config/config.yaml` file, we encourage you to **at least CHANGE THE
-ADMIN TOKEN**. Using the default token is a serious security issue!
+You may want to customize the configuration in the `config/config.yaml` file.
 
 After you have customized the configuration you should be ready to run the server with
 ```bash
