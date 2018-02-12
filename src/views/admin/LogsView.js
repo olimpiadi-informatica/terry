@@ -128,12 +128,9 @@ class LogsView extends Component {
   }
 
   updateLogs() {
-    // TODO lol, dunno how to do that xD
-    const start = new Date(Date.now()-1000000000);
-    const end = new Date();
     const options = {
-      start_date: formatDate(start),
-      end_date: formatDate(end),
+      start_date: "1000-01-01T00:00:00.000",
+      end_date: "2999-01-01T00:00:00.000",
       level: this.state.level
     };
     if (this.state.category)
