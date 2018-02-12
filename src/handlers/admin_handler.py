@@ -156,7 +156,7 @@ class AdminHandler(BaseHandler):
                 "end_time": end_time,
                 "loaded": ContestManager.has_contest
             },
-            fields=["start_time"])
+            fields=["start_time", "end_time"])
 
     @Validators.admin_only
     def user_list(self):
