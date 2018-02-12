@@ -50,10 +50,10 @@ def crypt_file_main():
     args = parser.parse_args()
     input_file = open(args.input_file,
                       'rb') if args.input_file != '-' else sys.stdin.buffer
-    output_file = open(args.output_file,
-                       'wb') if args.output_file != '-' else sys.stdout.buffer
     metadata_file = open(args.metadata,
                          'rb') if args.metadata is not None else None
+    output_file = open(args.output_file,
+                       'wb') if args.output_file != '-' else sys.stdout.buffer
     zip_password = bytes.fromhex(args.zip_password)
     input_data = input_file.read()
     if args.decrypt:
