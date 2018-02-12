@@ -23,6 +23,7 @@ def get_args():
     return parser.parse_args()
 
 if __name__ == "__main__":
+    base_path = $(dirname @(sys.argv[0])).strip()
     check_root()
     args = get_args()
     raw_image = NamedTemporaryFile()
@@ -39,7 +40,7 @@ if __name__ == "__main__":
     rsync -a @(args.rootfs + "/") @(mount_point.name + "/")
     echo "/dev/sda1 / ext4 rw,relatime,data=ordered 0 1" > @(mount_point.name + "/etc/fstab")
     grub-install --target=i386-pc @("--boot-directory=" + mount_point.name + "/boot/") @(loopback)
-    ./do_chroot.sh @(mount_point.name) grub-mkconfig -o /boot/grub/grub.cfg
+    @(base_path + "/do_chroot.sh") @(mount_point.name) grub-mkconfig -o /boot/grub/grub.cfg
     umount @(loopback_partition)
     mount_point.cleanup()
     losetup -d @(loopback)
