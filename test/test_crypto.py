@@ -6,7 +6,6 @@ from src import crypto
 
 
 class TestCrypto(unittest.TestCase):
-
     def test_user_to_bytes(self):
         username = "FOO_BAR01"
         res = crypto.user_to_bytes(username)
@@ -20,8 +19,8 @@ class TestCrypto(unittest.TestCase):
     def test_combine_username(self):
         username = "FOO"
         password = "BAR"
-        self.assertEqual(crypto.combine_username_password(username, password),
-                         "FOO-BAR")
+        self.assertEqual(
+            crypto.combine_username_password(username, password), "FOO-BAR")
 
     def test_encode_data(self):
         username = "FOO"
@@ -50,7 +49,7 @@ class TestCrypto(unittest.TestCase):
     def test_encode_decode(self):
         password = b"fooobarr"
         data = b"#bellavita"
-        encrypted = crypto.encode(password, data)
+        encrypted = crypto.encode(password, data, b"")
         self.assertEqual(data, crypto.decode(password, encrypted))
 
     def test_gen_user_password(self):
@@ -62,8 +61,9 @@ class TestCrypto(unittest.TestCase):
         new_secret, encoded_password = crypto.decode_data(
             token[len(username) + 1:], len(secret))
 
-        self.assertEqual(file_password, crypto.recover_file_password(
-            username, new_secret, encoded_password))
+        self.assertEqual(file_password,
+                         crypto.recover_file_password(username, new_secret,
+                                                      encoded_password))
 
     def test_gen_password_too_long(self):
         username = "FOOO"
