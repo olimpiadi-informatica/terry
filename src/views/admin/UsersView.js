@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {translateComponent} from "../../utils";
 import Users from "../../models/admin/Users";
 import LoadingView from "../LoadingView";
+import ModalView from '../ModalView';
+import { Link } from 'react-router-dom';
 
 class UserExtraTimeView extends Component {
   constructor(props) {
@@ -93,10 +95,24 @@ class UsersView extends Component {
     if (this.users.isLoading()) body = <LoadingView/>;
     else body = this.renderUserList(this.users.data.items);
 
-    return <React.Fragment>
-      <h1 className="mt-4">{t("users.title")}</h1>
-      {body}
-    </React.Fragment>;
+    return <ModalView>
+      <div className="modal-header">
+        <h5 className="modal-title">
+          {t("users.title")}
+        </h5>
+        <Link to={"/admin"} role="button" className="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </Link>
+      </div>
+      <div className="modal-body no-padding">
+        {body}
+      </div>
+      <div className="modal-footer">
+        <Link to={"/admin"} role="button" className="btn btn-danger">
+          <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
+        </Link>
+      </div>
+    </ModalView>;
   }
 }
 

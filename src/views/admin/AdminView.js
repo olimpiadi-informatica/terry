@@ -52,7 +52,9 @@ class AdminView extends Component {
           ({match}) => <ContestExtraTimeView session={this.session} />
         }/>
         <AdminSummaryView session={this.session} />
-        <UsersView session={this.session} />
+        <Route path="/admin/users" render={
+          ({match}) => <UsersView session={this.session} />
+        }/>
       </main>
     </React.Fragment>
   }

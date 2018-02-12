@@ -47,6 +47,7 @@ class AdminSummaryView extends Component {
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>
       <p>{t("contest.extra time")} {this.session.extraTimeMinutes()}<Link to="/admin/extra_time">{t("contest.set extra time")}</Link></p>
+      <p><Link to="/admin/users">Visualizza la lista utenti</Link></p>
     </React.Fragment>
   }
 

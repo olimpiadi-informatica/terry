@@ -53,7 +53,7 @@ table.sample-case {
   white-space: pre;
 }
 
-table.submissions-table {
+div.modal-body.no-padding > table {
   margin: 0;
 }
 
