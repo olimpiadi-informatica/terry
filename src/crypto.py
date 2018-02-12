@@ -6,10 +6,7 @@
 # Copyright 2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 
-import argparse
 import base64
-import os
-import sys
 
 import nacl
 import nacl.hash
@@ -20,6 +17,13 @@ NACL_SALT = bytes.fromhex(
     "5b6a78a780ea0ee560442cf5a528f0fb743d79e45a3a33af68671eba9cde0e17")
 SECRET_LEN = 3
 USERNAME_LEN = 6
+
+HASH_LEN = 32
+VERSION_LEN = 1
+METADATA_LEN = 1024
+VERSION_OFFSET = HASH_LEN
+METADATA_OFFSET = HASH_LEN + VERSION_LEN
+DATA_OFFSET = METADATA_OFFSET + METADATA_LEN
 
 
 def user_to_bytes(user: str):
@@ -37,8 +41,8 @@ def encode_data(user: str, data: bytes):
     if b32data[-1] == ord('='):
         raise ValueError(
             "Invalid secret + password length: %s" % b32data.decode('ascii'))
-    return combine_username_password(user, '-'.join(b32data[i:i + 4].decode(
-        'ascii') for i in range(0, len(b32data), 4)))
+    return combine_username_password(user, '-'.join(
+        b32data[i:i + 4].decode('ascii') for i in range(0, len(b32data), 4)))
 
 
 def decode_data(b32data: str, secret_len: int):
@@ -75,13 +79,28 @@ def password_to_key(password: bytes):
         length, password, NACL_SALT, opslimit=ops, memlimit=mem)
 
 
-def encode(password: bytes, input_data: bytes):
+def encode(password: bytes, input_data: bytes, metadata: bytes):
     key = password_to_key(password)
     box = nacl.secret.SecretBox(key)
-    return box.encrypt(input_data)
+    encrypted = box.encrypt(input_data)
+    if len(metadata) > METADATA_LEN:
+        raise ValueError("Metadata is too long")
+    metadata += '\x00' * (METADATA_LEN - len(metadata))
+    sha = nacl.hash.sha256(b'\x00' + metadata + input_data)
+    return base64.b16decode(
+        sha, casefold=True) + b'\x00' + metadata + encrypted
+
+
+def validate(input_data: bytes):
+    sha = input_data[:VERSION_OFFSET]
+    return sha == nacl.hash.sha256(input_data[VERSION_OFFSET:])
+
+
+def metadata(input_data: bytes):
+    return input_data[METADATA_OFFSET:DATA_OFFSET]
 
 
 def decode(password: bytes, input_data: bytes):
     key = password_to_key(password)
     box = nacl.secret.SecretBox(key)
-    return box.decrypt(input_data)
+    return box.decrypt(input_data[DATA_OFFSET:])

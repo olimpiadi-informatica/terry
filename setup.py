@@ -38,6 +38,7 @@ setup(
         "console_scripts": [
             "terr-server = src.__main__:main",
             "terr-gen-password = src.utility:gen_password_main",
-            "terr-crypt-file = src.utility:crypt_file_main"
+            "terr-crypt-file = src.utility:crypt_file_main",
+            "terr-get-metadata = src.utility:get_metadata_main"
         ]
     })

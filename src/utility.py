@@ -4,7 +4,7 @@ import os
 import sys
 
 from src.crypto import SECRET_LEN, USERNAME_LEN, gen_user_password, encode, \
-    decode
+    decode, validate, metadata
 
 
 def gen_password_main():
@@ -41,22 +41,41 @@ def crypt_file_main():
     parser = argparse.ArgumentParser(
         description='(De)Crypt a file according to a given password')
     parser.add_argument('-d', '--decrypt', action='store_true')
+    parser.add_argument('-m', '--metadata', help='metadata input file')
     parser.add_argument('zip_password', help='hexified zip password')
     parser.add_argument(
-        'input_file',
-        help='input file (stdin by default)',
-        nargs='?',
-        default='-')
+        'input_file', help='input file', nargs='?', default='-')
     parser.add_argument(
-        'output_file',
-        help='output file (stdout by default)',
-        nargs='?',
-        default='-')
+        'output_file', help='output file', nargs='?', default='-')
     args = parser.parse_args()
     input_file = open(args.input_file,
                       'rb') if args.input_file != '-' else sys.stdin.buffer
     output_file = open(args.output_file,
                        'wb') if args.output_file != '-' else sys.stdout.buffer
-    action = decode if args.decrypt else encode
-    output_file.write(
-        action(bytes.fromhex(args.zip_password), input_file.read()))
+    metadata_file = open(args.metadata,
+                         'rb') if args.metadata is not None else None
+    zip_password = bytes.fromhex(args.zip_password)
+    if args.decrypt:
+        input_data = input_file.read()
+        assert validate(input_data)
+        output_file.write(decode(zip_password, input_data))
+    else:
+        metadata_in = metadata_file.read() if metadata is not None else b""
+        output_file.write(encode(zip_password, input_data, metadata_in))
+
+
+def get_metadata_main():
+    parser = argparse.ArgumentParser(
+        description='Validate and get a file metadata')
+    parser.add_argument(
+        'input_file', help='input file', nargs='?', default='-')
+    parser.add_argument(
+        'output_file', help='output file', nargs='?', default='-')
+    args = parser.parse_args()
+    input_file = open(args.input_file,
+                      'rb') if args.input_file != '-' else sys.stdin.buffer
+    output_file = open(args.output_file,
+                       'wb') if args.output_file != '-' else sys.stdout.buffer
+    input_data = input_file.read()
+    assert validate(input_data)
+    output_file.write(metadata(input_data).strip(b'\x00'))
