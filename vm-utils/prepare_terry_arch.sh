@@ -20,20 +20,28 @@ clean_chroot() {
 trap clean_chroot EXIT
 $(dirname $0)/setup_chroot.sh ${OUTDIR}
 
-
+# Install deps
 linux32 chroot ${OUTDIR} pacman --noconfirm -S nginx cronie pypy{,3} python{,2}-pip \
-  python{,2}-sortedcontainers 
+  python{,2}-sortedcontainers python-colorama python-gevent python-pyjwt \
+  python-yaml python-werkzeug python-pynacl python-cffi
 
+# Cleanup pacman
+linux32 chroot ${OUTDIR} pacman -Scc --noconfirm
+
+# Copy data
 mkdir -p ${OUTDIR}/app/territoriali-frontend
 cp -r $(dirname $0)/../territoriali-frontend/build/* ${OUTDIR}/app/territoriali-frontend/
 cp -r $(dirname $0)/../territoriali-backend ${OUTDIR}/app/
 
-cp $(dirname $0)/config.yaml ${OUTDIR}/app/territoriali-backend/config/
+cp $(dirname $0)/config.yaml ${OUTDIR}/app/
 cp $(dirname $0)/nginx.conf ${OUTDIR}/etc/nginx/
 cp $(dirname $0)/territoriali-backend.service ${OUTDIR}/etc/systemd/system
+
+# Install territoriali-backend
+sudo linux32 chroot ${OUTDIR} bash -c "cd /app/territoriali-backend && \
+  python setup.py install"
 
 # Enable services
 linux32 chroot ${OUTDIR} systemctl enable nginx.service 
 linux32 chroot ${OUTDIR} systemctl enable territoriali-backend.service
 linux32 chroot ${OUTDIR} systemctl enable cronie.service
-
