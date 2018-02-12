@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
 import Countdown from '../CountdownView';
 import { DateTime } from 'luxon';
 
-class ContestView extends Component {
+class AdminSummaryView extends Component {
   constructor(props) {
     super(props);
     this.session = props.session;
@@ -31,18 +32,6 @@ class ContestView extends Component {
     </React.Fragment>;
   }
 
-  setExtraTime() {
-    if (!window.confirm('Are you sure?')) return;
-
-    const minutes = this.refs.extraTimeForm.minutes.value
-    this.session.setExtraTime(minutes * 60);
-    this.forceUpdate();
-  }
-
-  extraTimeMinutes() {
-    return Math.round(this.session.status.extra_time / 60)
-  }
-
   renderStarted() {
     const { t } = this.props;
     // FIXME: delta=0 ????
@@ -57,36 +46,8 @@ class ContestView extends Component {
       <Trans i18nKey="contest.extratime disclamer" parent="p">
         You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
       </Trans>
-
-      <form ref="extraTimeForm" onSubmit={(e) => { e.preventDefault(); this.setExtraTime() }}>
-        {this.renderError()}
-        <div className="form-group">
-          <label htmlFor="minutes">{t("contest.extra time")}</label>
-          <input
-            id="minutes"
-            name="minutes"
-            type="number"
-            className="form-control"
-            required
-            defaultValue={this.extraTimeMinutes()}
-          />
-        <small className="form-text text-muted">{t("contest.in minutes")}</small>
-        </div>
-        <button type="submit" className="btn btn-warning">
-          <span className="fa fa-clock-o" aria-hidden="true" /> {t("contest.set extra time")}
-        </button>
-      </form>
+      <p>{t("contest.extra time")} {this.session.extraTimeMinutes()}<Link to="/admin/extra_time">{t("contest.set extra time")}</Link></p>
     </React.Fragment>
-  }
-
-  renderError() {
-    const { t } = this.props;
-    if (!this.session.error) return "";
-    const message = this.session.error;
-
-    return <div className="alert alert-danger" role="alert">
-      <strong>{t("error")}</strong> {message}
-    </div>
   }
 
   render() {
@@ -104,4 +65,4 @@ class ContestView extends Component {
   }
 }
 
-export default translateComponent(ContestView, "admin");
+export default translateComponent(AdminSummaryView, "admin");

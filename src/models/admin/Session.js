@@ -84,13 +84,18 @@ export default class Session extends Observable {
     const options = { extra_time: extra_time };
     if (token) options.token = token;
     return client.adminApi(this.adminToken(), "/set_extra_time", options)
-        .then(response => {
-          this.updateStatus();
-        }).catch(response => {
-          console.error(response);
-          this.error = response.response.data.message;
-          this.fireUpdate();
-        });
+      .then(response => {
+        return this.updateStatus();
+      }).catch(response => {
+        console.error(response);
+        this.error = response.response.data.message;
+        this.fireUpdate();
+      });
+  }
+
+  extraTimeMinutes() {
+    if (!this.isLoaded()) throw Error();
+    return Math.round(this.status.extra_time / 60)
   }
 
 }

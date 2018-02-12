@@ -5,9 +5,10 @@ import Session from "../../models/admin/Session";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "../LoadingView";
 import LogsView from "./LogsView";
-import ContestView from "./ContestView";
+import AdminSummaryView from "./AdminSummaryView";
 import UsersView from "./UsersView";
 import UploadPackView from "./UploadPackView";
+import ContestExtraTimeView from "./ContestExtraTimeView";
 
 class AdminView extends Component {
   constructor(props) {
@@ -47,7 +48,10 @@ class AdminView extends Component {
         <Route path="/admin/logs" render={
           ({match}) => <LogsView session={this.session} />
         }/>
-        <ContestView session={this.session} />
+        <Route path="/admin/extra_time" render={
+          ({match}) => <ContestExtraTimeView session={this.session} />
+        }/>
+        <AdminSummaryView session={this.session} />
         <UsersView session={this.session} />
       </main>
     </React.Fragment>
