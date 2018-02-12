@@ -5,6 +5,7 @@ import {Trans} from "react-i18next";
 import CountdownView from '../CountdownView';
 import { DateTime, Duration } from 'luxon';
 import Logs from '../../models/admin/Logs';
+import Users from '../../models/admin/Users';
 
 class AdminSummaryView extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class AdminSummaryView extends Component {
       end_date: "2999-01-01T00:00:00.000",
       level: "WARNING",
     });
+    this.session.users.load();
   }
 
   componentDidMount() {
@@ -91,8 +93,23 @@ class AdminSummaryView extends Component {
 
   renderUserExtraTimeSummary() {
     const { t } = this.props;
-    // TODO: show if some users have extra time set
-    return <p><Link to="/admin/users">{t("contest.show user list")}</Link></p>;
+    const users = this.session.users;
+    if(users.isLoading()) return <p>{t("loading")}</p>;
+
+    const numExtraTimeUsers = users.data.items.filter((user) => user.extra_time !== 0).length;
+    if(numExtraTimeUsers > 0) {
+      return (
+        <p>{
+          t("contest.users have extra time", {count: numExtraTimeUsers})
+        } <Link to="/admin/users">{t("contest.manage users")}</Link></p>
+      );
+    } else {
+      return (
+        <p>{
+          t("contest.no user has extra time")
+        } <Link to="/admin/users">{t("contest.manage users")}</Link></p>
+      );
+    }
   }
 
   render() {

@@ -1,7 +1,7 @@
 import client from '../../TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from '../Observable';
-
+import Users from './Users';
 
 export default class Session extends Observable {
   static cookieName = "adminToken";
@@ -10,6 +10,9 @@ export default class Session extends Observable {
     super();
 
     this.cookies = new Cookies();
+    this.users = new Users(this);
+
+    this.users.pushObserver(this);
   }
 
   adminToken() {
@@ -81,12 +84,16 @@ export default class Session extends Observable {
 
   setExtraTime(extra_time, token) {
     if (!this.isLoaded()) throw Error();
-    const options = { extra_time: extra_time };
+    const options = { extra_time };
     if (token) options.token = token;
     return client.adminApi(this.adminToken(), "/set_extra_time", options)
       .then(response => {
         return this.updateStatus();
-      }).catch(response => {
+      })
+      .then(() => {
+        return this.users.load();
+      })
+      .catch(response => {
         console.error(response);
         this.error = response.response.data.message;
         this.fireUpdate();
