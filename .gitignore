@@ -1,1 +1,6 @@
 .idea/
+config.yaml
+nginx.conf
+.*.swo
+.*.swp
+*.img

@@ -17,3 +17,5 @@ mount -t tmpfs none ${OUTDIR}/tmp
 mkdir -p ${OUTDIR}/dev
 mount -t devtmpfs none ${OUTDIR}/dev
 mount -t devpts none ${OUTDIR}/dev/pts
+
+cp -L /etc/resolv.conf ${OUTDIR}/etc

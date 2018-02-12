@@ -36,7 +36,6 @@ cat > ${TMP}/pacman.conf << EOF
 [options]
 Architecture = i686
 Color
-CheckSpace
 SigLevel = Never
 
 [core]
@@ -83,5 +82,10 @@ linux32 chroot ${OUTDIR} mkinitcpio -p linux
 linux32 chroot ${OUTDIR} systemctl enable NetworkManager.service
 linux32 chroot ${OUTDIR} systemctl enable sshd.service
 
-# Cleanup pacman
+# Cleanup pacman and config
+cp ${TMP}/mirrorlist ${OUTDIR}/etc/pacman.d
+sed s_${TMP}_/etc/pacman.d/_g ${TMP}/pacman.conf > ${OUTDIR}/etc/pacman.conf
 linux32 chroot ${OUTDIR} pacman -Scc --noconfirm
+
+# mtab
+ln -sf /proc/self/mounts ${OUTDIR}/etc/mtab
