@@ -52,6 +52,12 @@ class TestCrypto(unittest.TestCase):
         encrypted = crypto.encode(password, data, b"")
         self.assertEqual(data, crypto.decode(password, encrypted))
 
+    def test_encode_metadata_too_long(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        with self.assertRaises(ValueError):
+            crypto.encode(password, data, b"A" * 1025)
+
     def test_gen_user_password(self):
         username = "FOOO"
         secret = b"SECRETT"
@@ -87,3 +93,23 @@ class TestCrypto(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             crypto.recover_file_password(username, secret, scrambled_password)
+
+    def test_validate(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        encrypted = crypto.encode(password, data, b"metadata")
+        self.assertTrue(crypto.validate(encrypted))
+
+    def test_validate_invalid(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        encrypted = crypto.encode(password, data, b"metadata")
+        encrypted += b'('
+        self.assertFalse(crypto.validate(encrypted))
+
+    def test_metadata(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        encrypted = crypto.encode(password, data, b"metadata")
+        metadata = crypto.metadata(encrypted)
+        self.assertEqual(metadata.strip(b"\x00"), b"metadata")

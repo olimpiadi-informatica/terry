@@ -26,6 +26,14 @@ METADATA_OFFSET = HASH_LEN + VERSION_LEN
 DATA_OFFSET = METADATA_OFFSET + METADATA_LEN
 
 
+def _sha256(data: bytes):
+    return bytes.fromhex(nacl.hash.sha256(data).decode())
+
+
+def _sha512(data: bytes):
+    return bytes.fromhex(nacl.hash.sha512(data).decode())
+
+
 def user_to_bytes(user: str):
     if not all('A' <= x <= 'Z' or '0' <= x <= '9' or x == '_' for x in user):
         raise ValueError("Invalid username")
@@ -52,8 +60,7 @@ def decode_data(b32data: str, secret_len: int):
 
 
 def gen_user_password(user: str, secret: bytes, file_password: bytes):
-    digest = nacl.hash.sha512(user_to_bytes(user) + secret)
-    digest = base64.b16decode(digest, casefold=True)
+    digest = _sha512(user_to_bytes(user) + secret)
     if len(file_password) > len(digest):
         raise ValueError("File password is too long")
     scrambled_password = bytes(
@@ -62,8 +69,7 @@ def gen_user_password(user: str, secret: bytes, file_password: bytes):
 
 
 def recover_file_password(user: str, secret: bytes, scrambled_password: bytes):
-    digest = nacl.hash.sha512(user_to_bytes(user) + secret)
-    digest = base64.b16decode(digest, casefold=True)
+    digest = _sha512(user_to_bytes(user) + secret)
     if len(scrambled_password) > len(digest):
         raise ValueError("Scrambled password is too long")
     file_password = bytes(
@@ -86,14 +92,13 @@ def encode(password: bytes, input_data: bytes, metadata: bytes):
     if len(metadata) > METADATA_LEN:
         raise ValueError("Metadata is too long")
     metadata += b"\x00" * (METADATA_LEN - len(metadata))
-    sha = nacl.hash.sha256(b'\x00' + metadata + input_data)
-    return base64.b16decode(
-        sha, casefold=True) + b'\x00' + metadata + encrypted
+    sha = _sha256(b'\x00' + metadata + encrypted)
+    return sha + b'\x00' + metadata + encrypted
 
 
 def validate(input_data: bytes):
     sha = input_data[:VERSION_OFFSET]
-    return sha == nacl.hash.sha256(input_data[VERSION_OFFSET:])
+    return sha == _sha256(input_data[VERSION_OFFSET:])
 
 
 def metadata(input_data: bytes):

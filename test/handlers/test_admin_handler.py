@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden, BadRequest
 
+from src import crypto
 from src.config import Config
 from src.database import Database
 from src.handlers.admin_handler import AdminHandler
@@ -247,6 +248,16 @@ class TestAdminHandler(unittest.TestCase):
         Config.encrypted_file = "/cake/is/a/lie"
         status = self.admin_handler.pack_status()
         self.assertFalse(status["uploaded"])
+
+    def test_pack_status(self):
+        pack = Utils.new_tmp_file()
+        Config.encrypted_file = pack
+        encrypted = crypto.encode(b"fooobarr", b"#bellavita", b"foo: bar")
+        with open(pack, "wb") as f:
+            f.write(encrypted)
+        status = self.admin_handler.pack_status()
+        self.assertTrue(status["uploaded"])
+        self.assertEqual(status["foo"], "bar")
 
     def test_download_results(self):
         Config.storedir = Utils.new_tmp_dir()

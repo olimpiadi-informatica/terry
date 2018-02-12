@@ -50,7 +50,7 @@ class AdminHandler(BaseHandler):
             return {"uploaded": False}
         with open(Config.encrypted_file, "rb") as f:
             raw_meta = crypto.metadata(f.read(crypto.DATA_OFFSET))
-        metadata = yaml.load(raw_meta.strip("\x00"))
+        metadata = yaml.load(raw_meta.strip(b"\x00"))
         metadata["uploaded"] = True
         return metadata
 
@@ -69,7 +69,7 @@ class AdminHandler(BaseHandler):
                                            "files/source"
 
         try:
-            output = gevent.subprocess.check_output(
+            gevent.subprocess.check_output(
                 command, shell=True, stderr=subprocess.STDOUT)
         except gevent.subprocess.CalledProcessError as e:
             Logger.error("ADMIN", "Zip error: %s" % e.output)
