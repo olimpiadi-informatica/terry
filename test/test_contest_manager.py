@@ -6,8 +6,6 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
 import platform
-import shutil
-import tempfile
 import unittest
 from unittest.mock import patch, call
 
@@ -35,15 +33,6 @@ class TestContestManager(unittest.TestCase):
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
 
-    def _setup_encrypted_file(self):
-        self.tempdir = Utils.new_tmp_dir()
-        enc_path = os.path.join(self.tempdir, "pack.zip.enc")
-        dec_path = os.path.join(self.tempdir, "pack.zip")
-        shutil.copy(os.path.join(os.path.dirname(__file__),
-                                 "./assets/pack.zip.enc"), enc_path)
-        Config.encrypted_file = enc_path
-        Config.decrypted_file = dec_path
-
     def test_system_extension(self):
         sys_ext = ContestManager.system_extension()
         system = platform.system().lower()
@@ -63,22 +52,22 @@ class TestContestManager(unittest.TestCase):
             ContestManager.extract_contest("EDOOOO-XXXX-XXXX-XXXX-XXXX")
 
     def test_extract_contest_wrong_password(self):
-        self._setup_encrypted_file()
+        Utils.setup_encrypted_file()
         with self.assertRaises(Forbidden):
             ContestManager.extract_contest("EDOOOO-XXXX-XXXX-XXXX-XXXX")
 
     def test_extract_contest_unknown_username(self):
-        self._setup_encrypted_file()
+        Utils.setup_encrypted_file()
         with self.assertRaises(Forbidden):
             ContestManager.extract_contest("FOOBAR-ZVXJ-2IIH-LX5B-ZIGJ")
 
     def test_extract_contest(self):
-        self._setup_encrypted_file()
+        Utils.setup_encrypted_file()
         # see test/assets/README.md
         ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
 
     def test_extract_no_priv(self):
-        self._setup_encrypted_file()
+        Utils.setup_encrypted_file()
         os.chmod(Config.encrypted_file, 0o000)
         with self.assertRaises(InternalServerError):
             ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")

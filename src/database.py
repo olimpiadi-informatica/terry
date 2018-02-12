@@ -48,6 +48,11 @@ class Database:
             Database.conn.commit()
 
     @staticmethod
+    def disconnect_database():
+        Database.conn.close()
+        Database.connected = False
+
+    @staticmethod
     def dictify(all=False):
         c = Database.c
         if all is False:

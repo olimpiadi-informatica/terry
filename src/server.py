@@ -104,7 +104,11 @@ class Server:
             Rule(
                 "/admin/user_list",
                 methods=["POST"],
-                endpoint="admin#user_list")
+                endpoint="admin#user_list"),
+            Rule(
+                "/admin/drop_contest",
+                methods=["POST"],
+                endpoint="admin#drop_contest")
         ])
 
     @responder

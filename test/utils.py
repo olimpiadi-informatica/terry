@@ -4,16 +4,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-import os
-import string
-import tempfile
 import contextlib
-import sys
-
 import datetime
-
+import os
 import random
+import shutil
+import string
+import sys
+import tempfile
 
+from src import crypto
 from src.config import Config
 from src.database import Database
 from src.logger import Logger
@@ -23,7 +23,8 @@ class Utils:
     prefix = None
 
     @staticmethod
-    def prepare_test(load_config=True, connect_database=True, connect_logger=True):
+    def prepare_test(load_config=True, connect_database=True,
+                     connect_logger=True):
         config_file_name = Utils.new_tmp_file()
         log_file_name = Utils.new_tmp_file()
         db_file_name = Utils.new_tmp_file()
@@ -34,7 +35,8 @@ class Utils:
                        "db: %s\n"
                        "storedir: %s\n"
                        "contest_path: %s\n" % (log_file_name, db_file_name,
-                                               Utils.new_tmp_dir(), contest_dir))
+                                               Utils.new_tmp_dir(),
+                                               contest_dir))
 
         if load_config:
             Config.loaded = False
@@ -55,10 +57,14 @@ class Utils:
         http://stackoverflow.com/a/1810086
         """
         savestderr = sys.stderr
+
         class Devnull(object):
             def __init__(self): self.buffer = ""
+
             def write(self, data): self.buffer += data
+
             def flush(self): pass
+
         sys.stderr = Devnull()
         try:
             yield sys.stderr
@@ -68,8 +74,10 @@ class Utils:
     @staticmethod
     def get_tmp_dir():
         if Utils.prefix is None:
-            Utils.prefix = os.path.join(tempfile.gettempdir(), "territoriali-backend-tests",
-                                        datetime.datetime.now().strftime("temp-%Y-%m-%d_%H-%M-%S"))
+            Utils.prefix = os.path.join(tempfile.gettempdir(),
+                                        "territoriali-backend-tests",
+                                        datetime.datetime.now().strftime(
+                                            "temp-%Y-%m-%d_%H-%M-%S"))
             os.makedirs(Utils.prefix, exist_ok=True)
         return Utils.prefix
 
@@ -88,10 +96,32 @@ class Utils:
         return path
 
     @staticmethod
-    def random_string(length=8, chars=string.ascii_uppercase+string.ascii_lowercase+string.digits):
+    def random_string(length=8,
+                      chars=string.ascii_uppercase + string.ascii_lowercase +
+                            string.digits):
         return ''.join(random.choice(chars) for _ in range(length))
 
     @staticmethod
     def start_contest(since=5, duration=100):
-        Database.set_meta("start_time", int(datetime.datetime.now().timestamp()) - since)
+        Database.set_meta("start_time",
+                          int(datetime.datetime.now().timestamp()) - since)
         Database.set_meta("contest_duration", duration)
+
+    @staticmethod
+    def setup_encrypted_file(tempdir=None):
+        if not tempdir:
+            tempdir = Utils.new_tmp_dir()
+        enc_path = os.path.join(tempdir, "pack.zip.enc")
+        dec_path = os.path.join(tempdir, "pack.zip")
+        shutil.copy(os.path.join(os.path.dirname(__file__),
+                                 "./assets/pack.zip.enc"), enc_path)
+        Config.encrypted_file = enc_path
+        Config.decrypted_file = dec_path
+
+    @staticmethod
+    def build_pack(metadata):
+        asset = os.path.join(os.path.dirname(__file__), "./assets/pack.zip.enc")
+        with open(asset, "rb") as f:
+            zip = crypto.decode(bytes.fromhex("ed7ab1008ae6ca"), f.read())
+        password = bytes.fromhex("ed7ab1008ae6ca")
+        return crypto.encode(password, zip, metadata.encode())

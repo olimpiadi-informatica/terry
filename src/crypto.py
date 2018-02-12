@@ -60,6 +60,9 @@ def decode_data(b32data: str, secret_len: int):
 
 
 def gen_user_password(user: str, secret: bytes, file_password: bytes):
+    if len(secret) != SECRET_LEN:
+        raise ValueError("The len of the secret is wrong (%d should be %d)" %
+                         (len(secret), SECRET_LEN))
     digest = _sha512(user_to_bytes(user) + secret)
     if len(file_password) > len(digest):
         raise ValueError("File password is too long")
@@ -75,6 +78,12 @@ def recover_file_password(user: str, secret: bytes, scrambled_password: bytes):
     file_password = bytes(
         [v ^ digest[i] for i, v in enumerate(scrambled_password)])
     return file_password
+
+
+def recover_file_password_from_token(token):
+    username, password = token.split("-", 1)
+    secret, scrambled_password = decode_data(password, SECRET_LEN)
+    return recover_file_password(username, secret, scrambled_password)
 
 
 def password_to_key(password: bytes):

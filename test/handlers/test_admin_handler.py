@@ -10,7 +10,8 @@ import subprocess
 import unittest
 from unittest.mock import patch
 
-from werkzeug.exceptions import Forbidden, BadRequest
+import yaml
+from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 from src import crypto
 from src.config import Config
@@ -51,10 +52,10 @@ class TestAdminHandler(unittest.TestCase):
                 file={"content": "foobar".encode(), "name": "pack.zip.enc"})
 
     def test_upload_pack(self):
+        Utils.setup_encrypted_file()
         upload_path = os.path.join(os.path.dirname(__file__),
                                    "../assets/pack.zip.enc")
-        enc_path = os.path.join(Utils.new_tmp_dir(), "pack.zip.enc")
-        Config.encrypted_file = enc_path
+        os.remove(Config.encrypted_file)
 
         with open(upload_path, "rb") as f:
             content = f.read()
@@ -62,7 +63,7 @@ class TestAdminHandler(unittest.TestCase):
 
         self.admin_handler.upload_pack(
             file={"content": content, "name": "pack.zip.enc"})
-        self.assertTrue(os.path.exists(enc_path))
+        self.assertTrue(os.path.exists(Config.encrypted_file))
 
     def test_upload_invalid_pack(self):
         enc_path = os.path.join(Utils.new_tmp_dir(), "pack.zip.enc")
@@ -293,3 +294,41 @@ class TestAdminHandler(unittest.TestCase):
                     admin_token='admin token', _ip='1.2.3.4')
         finally:
             os.chdir(wd)
+
+    def test_drop_contest_no_pack(self):
+        Config.encrypted_file = "/not/exists"
+        with self.assertRaises(NotFound):
+            self.admin_handler.drop_contest("LALLA-BALALLA")
+
+    def test_drop_contest_loaded_wrong_token(self):
+        Utils.setup_encrypted_file()
+        Database.set_meta("admin_token", "UHUHU-HUHU")
+        with self.assertRaises(Forbidden):
+            self.admin_handler.drop_contest("LALLA-BALALLA")
+
+    def test_drop_contest_not_loaded_wrong_token(self):
+        Utils.setup_encrypted_file()
+        Database.del_meta("admin_token")
+        with self.assertRaises(Forbidden):
+            self.admin_handler.drop_contest("AAAAAA-CZKW-CCJS")
+
+    def test_drop_contest_not_deletable(self):
+        Utils.setup_encrypted_file()
+        Database.del_meta("admin_token")
+        with open(Config.encrypted_file, "wb") as f:
+            f.write(Utils.build_pack(yaml.dump({"deletable": False})))
+        with self.assertRaises(Forbidden):
+            self.admin_handler.drop_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+
+    def test_drop_contest(self):
+        Utils.setup_encrypted_file()
+        Database.del_meta("admin_token")
+        with open(Config.encrypted_file, "wb") as f:
+            f.write(Utils.build_pack(yaml.dump({"deletable": True})))
+        self.admin_handler.drop_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+        self.assertFalse(os.path.exists(Config.storedir))
+        self.assertFalse(os.path.exists(Config.statementdir))
+        self.assertFalse(os.path.exists(Config.contest_path))
+        self.assertFalse(os.path.exists(Config.encrypted_file))
+        self.assertFalse(os.path.exists(Config.decrypted_file))
+        self.assertTrue(os.path.exists(Config.db))

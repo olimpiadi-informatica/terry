@@ -36,6 +36,11 @@ class TestDatabase(unittest.TestCase):
             Database.connect_to_database()
         self.assertEqual("Database already loaded", ex.exception.args[0])
 
+    def test_disconnect_database(self):
+        Database.connected = True
+        Database.disconnect_database()
+        self.assertFalse(Database.connected)
+
     def test_invalid_database_path(self):
         Config.db = '/path/that/not/exists'
         Database.connected = False

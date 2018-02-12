@@ -7,13 +7,16 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
 import datetime
+import glob
 import os.path
+import shutil
 import subprocess
 import tempfile
 
 import gevent
 import yaml
-from werkzeug.exceptions import Forbidden, BadRequest
+import nacl.exceptions
+from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 from src import crypto
 from .base_handler import BaseHandler
@@ -178,3 +181,46 @@ class AdminHandler(BaseHandler):
             {
                 "items": Database.get_users()
             }, fields=["first_date"])
+
+    def drop_contest(self, admin_token):
+        """
+        POST /admin/drop_contest
+        """
+        if not os.path.exists(Config.encrypted_file):
+            self.raise_exc(NotFound, "NOT_FOUND", "No packs found")
+        Logger.warning("DROP_CONTEST", "Started dropping contest")
+        with open(Config.encrypted_file, "rb") as f:
+            pack = f.read()
+
+        db_token = Database.get_meta("admin_token")
+        # contest has been extracted but the token is wrong
+        if db_token is not None and db_token != admin_token:
+            self.raise_exc(Forbidden, "FORBIDDEN", "Wrong token")
+        # contest has not been extracted
+        if db_token is None:
+            try:
+                password = crypto.recover_file_password_from_token(admin_token)
+                crypto.decode(password, pack)
+            except nacl.exceptions.CryptoError:
+                # pack password is wrong
+                self.raise_exc(Forbidden, "FORBIDDEN", "Wrong pack token")
+
+        metadata = yaml.load(crypto.metadata(pack).strip(b"\x00"))
+        if not metadata.get("deletable"):
+            self.raise_exc(Forbidden, "FORBIDDEN", "Contest not deletable")
+
+        shutil.rmtree(Config.storedir, ignore_errors=True)
+        shutil.rmtree(Config.statementdir, ignore_errors=True)
+        shutil.rmtree(Config.contest_path, ignore_errors=True)
+        for f in (Config.encrypted_file, Config.decrypted_file):
+            try:
+                os.remove(f)
+            except FileNotFoundError:
+                pass
+
+        Database.disconnect_database()
+        for f in glob.glob(Config.db + "*"):
+            os.remove(f)
+        Database.connect_to_database()
+        Logger.warning("DROP_CONTEST", "Contest dropped")
+        return {}

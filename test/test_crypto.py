@@ -60,8 +60,8 @@ class TestCrypto(unittest.TestCase):
 
     def test_gen_user_password(self):
         username = "FOOO"
-        secret = b"SECRETT"
-        file_password = b"PASSWORD"
+        secret = b"SEC"
+        file_password = b"PASSWOR"
 
         token = crypto.gen_user_password(username, secret, file_password)
         new_secret, encoded_password = crypto.decode_data(
@@ -73,26 +73,43 @@ class TestCrypto(unittest.TestCase):
 
     def test_gen_password_too_long(self):
         username = "FOOO"
-        secret = b"FFFFF"
-        file_password = b"A" * 65
+        secret = b"FFF"
+        file_password = b"A" * 67
 
         with self.assertRaises(ValueError):
             crypto.gen_user_password(username, secret, file_password)
 
     def test_gen_password_max_len(self):
         username = "FOOO"
-        secret = b"F"
-        file_password = b"A" * 64
+        secret = b"FFF"
+        file_password = b"A" * 62
 
         crypto.gen_user_password(username, secret, file_password)
 
-    def test_recover_file_password_too_long(self):
+    def test_gen_user_password_invalid_secret_len(self):
         username = "FOOO"
         secret = b"FFFFF"
-        scrambled_password = b"A" * 65
+        scrambled_password = b"A" * 5
 
         with self.assertRaises(ValueError):
+            crypto.gen_user_password(username, secret, scrambled_password)
+
+
+    def test_recover_file_password_too_long(self):
+        username = "FOOO"
+        secret = b"FFF"
+        scrambled_password = b"A" * 65
+
+        with self.assertRaises(ValueError) as e:
             crypto.recover_file_password(username, secret, scrambled_password)
+
+    def test_recover_file_password_from_token(self):
+        username = "FOOO"
+        secret = b"FFF"
+        file_password = b"A" * 7
+        token = crypto.gen_user_password(username, secret, file_password)
+        self.assertEqual(crypto.recover_file_password_from_token(token),
+                         file_password)
 
     def test_validate(self):
         password = b"fooobarr"
