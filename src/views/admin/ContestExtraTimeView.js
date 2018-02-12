@@ -79,7 +79,7 @@ class ContestExtraTimeView extends Component {
           </div>
           <div className="modal-footer">
             <button type="submit" className="btn btn-warning">
-              <span className="fa fa-clock-o" aria-hidden="true" /> {t("contest.set extra time")}
+              <span className="fa fa-clock-o" aria-hidden="true" /> {t("contest.Set extra time")}
             </button>
           </div>
         </form>
