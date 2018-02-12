@@ -27,16 +27,27 @@ class AdminSummaryView extends Component {
   componentDidMount() {
     this.session.pushObserver(this);
     this.logs.pushObserver(this);
+
+    const tickrate = 1000;
+    this.timer = setInterval(() => this.forceUpdate(), tickrate);
   }
 
   componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      delete this.timer;
+    }
+
     this.session.popObserver(this);
     this.logs.popObserver(this);
   }
 
-  renderStartStatus() {
-    if (!this.session.status.start_time) return this.renderStartButton();
-    else return this.renderStarted();
+  renderContestStatus() {
+    if (!this.session.status.start_time)
+      return this.renderNotStarted();
+
+    // WIP
+    return this.renderStartButton();
   }
 
   renderStarted() {
@@ -67,9 +78,10 @@ class AdminSummaryView extends Component {
     </React.Fragment>;
   }
 
-  renderCountdown() {
-    const { t } = this.props;
-    if (!this.session.status.start_time) return null;
+  renderOfficialCountdown() {
+    const { t, i18n } = this.props;
+    const officialEndTime = DateTime.fromISO(this.session.status.end_time);
+    
     // FIXME: delta=0 ????
     return <React.Fragment>
       <dt>
@@ -83,6 +95,48 @@ class AdminSummaryView extends Component {
         }/>
       </dd>
     </React.Fragment>;
+    
+    if(officialEndTime < DateTime.local()) {
+      return (
+        <p>{t("contest.ended at")} {officialEndTime.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}</p>
+      );
+    } else {
+
+      return (
+        <p>{t("contest.remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={officialEndTime}/></p>
+      );
+    }
+  }
+
+  renderAllUsersCountdown() {
+    const { t, i18n } = this.props;
+    const users = this.session.users;
+    const maxExtraTime = Math.max(users.data.items.map((user) => user.extra_time));
+    const actualEndTime = DateTime.fromISO(this.session.status.end_time).plus({seconds: maxExtraTime});
+
+    if(actualEndTime < DateTime.local()) {
+      return (
+        <p>{t("contest.ended for users at")} {actualEndTime.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}</p>
+      );
+    } else {
+      return (
+        <p>{t("contest.users remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={actualEndTime}/></p>
+      );
+    }
+  }
+
+  renderCountdown() {
+    const { t, i18n } = this.props;
+
+    if (!this.session.status.start_time) return null;
+    if (this.session.users.isLoading()) return <p>{t("loading")}</p>;
+
+    const hasExtraTime = (this.countUsersWithExtraTime() > 0)
+
+    return <React.Fragment>
+      { hasExtraTime ? this.renderAllUsersCountdown() : null }
+      <dt>{t("contest.remaining time")}</dt><dd>{ this.renderOfficialCountdown() }</dd>
+    </React.Fragment>
   }
 
   renderLogSummary() {
@@ -129,12 +183,16 @@ class AdminSummaryView extends Component {
     }
   }
 
+  countUsersWithExtraTime() {
+    return this.session.users.data.items.filter((user) => user.extra_time !== 0).length;
+  }
+
   renderUserExtraTimeSummary() {
     const { t } = this.props;
     const users = this.session.users;
     if(users.isLoading()) return <p>{t("loading")}</p>;
 
-    const numExtraTimeUsers = users.data.items.filter((user) => user.extra_time !== 0).length;
+    const numExtraTimeUsers = this.countUsersWithExtraTime();
     if(numExtraTimeUsers > 0) {
       return (
         <p>{
@@ -157,8 +215,8 @@ class AdminSummaryView extends Component {
     return <React.Fragment>
       <h3 className="mt-4">{t("contest.title")}</h3>
       <dl>
-        { this.renderStartStatus() }
-        { this.renderCountdown() }
+        <dt>{t("contest status")}</dt>
+        <dd>{ this.renderContestStatus() }</dd>
         <dt>{t("system status")}</dt>
         <dd>{ this.renderLogSummary() }</dd>
         <dt>{t("contest.extra time")}</dt>
