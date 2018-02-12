@@ -7,6 +7,7 @@ import sys
 
 IMAGE_TYPE = ["vdi", "vmdk", "vhd", "raw", "ovf"]
 DEFAULT_IMAGE_SIZE = 16 << 10
+DEFAULT_MEMORY_SIZE = 2 << 10
 
 def check_root():
     if int($(id -u)) != 0:
@@ -21,7 +22,7 @@ def get_args():
     parser.add_argument("-t", "--image-type", help="Image type", type=str, choices=IMAGE_TYPE, required=True)
     parser.add_argument("-u", "--chown-user", help="Change ownership of the output to this user", type=str, default="root")
     parser.add_argument("-n", "--name", help="Virtual Machine image name", type=str, default="default")
-    parser.add_argument("-m", "--memory", help="Virtual Machine memory (MB)", type=int, default=2048)
+    parser.add_argument("-m", "--memory", help="Virtual Machine memory (MB)", type=int, default=DEFAULT_MEMORY_SIZE)
     parser.add_argument("-p", "--port-forwarding", help="Virtual Machine port forwarding (format -> protocol:port_host:port_guest) (example: tcp:2222:22)", type=str, default=[], nargs='+')
     return parser.parse_args()
 
