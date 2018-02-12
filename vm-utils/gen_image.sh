@@ -5,7 +5,7 @@ import os
 from tempfile import TemporaryDirectory, NamedTemporaryFile
 import sys
 
-IMAGE_TYPE = ["vdi", "vmdk", "vhd", "raw"]
+IMAGE_TYPE = ["vdi", "vmdk", "vhd", "raw", "ovf"]
 DEFAULT_IMAGE_SIZE = 16 << 10
 
 def check_root():
@@ -20,6 +20,9 @@ def get_args():
     parser.add_argument("-o", "--output-file", help="Output filename", type=str, required=True)
     parser.add_argument("-t", "--image-type", help="Image type", type=str, choices=IMAGE_TYPE, required=True)
     parser.add_argument("-u", "--chown-user", help="Change ownership of the output to this user", type=str, default="root")
+    parser.add_argument("-n", "--name", help="Virtual Machine image name", type=str, default="default")
+    parser.add_argument("-m", "--memory", help="Virtual Machine memory (MB)", type=int, default=2048)
+    parser.add_argument("-p", "--port-forwarding", help="Virtual Machine port forwarding (format -> protocol:port_host:port_guest) (example: tcp:2222:22)", type=str, default=[], nargs='+')
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -44,9 +47,26 @@ if __name__ == "__main__":
     umount @(loopback_partition)
     mount_point.cleanup()
     losetup -d @(loopback)
+    rm -f @(args.output_file)
     if args.image_type == "raw":
         cp @(raw_image.name) @(args.output_file)
+    elif args.image_type == "ovf":
+        ivm = NamedTemporaryFile()
+        ivmc = TemporaryDirectory()
+        vboxmanage convertfromraw @(raw_image.name) @(ivm.name + ".vmdk") --format VMDK --variant Standard
+        vboxmanage createvm --ostype Linux --basefolder @(ivmc.name) --name @(args.name) --register
+        vboxmanage modifyvm @(args.name) --memory @(args.memory)
+        VBoxManage modifyvm @(args.name) --nataliasmode1 proxyonly
+        for i, port in enumerate(args.port_forwarding):
+            protocol, port_host, port_guest = [x for x in port.split(":")]
+            vboxmanage modifyvm @(args.name) --natpf1 @("%s,%s,,%s,,%s" % ("rule" + str(i + 1), protocol, port_host, port_guest))
+        vboxmanage storagectl @(args.name) --name "SATA Controller" --add sata --controller IntelAHCI
+        vboxmanage storageattach @(args.name) --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium @(ivm.name + ".vmdk")
+        vboxmanage export @(args.name) --ovf20 -o @(args.output_file)
+        vboxmanage unregistervm @(args.name) --delete
+        ivm.close()
+        ivmc.cleanup()
     else:
-        print("UNIMPLEMENTED!", file=sys.stderr)
+        vboxmanage convertfromraw @(raw_image.name) @(args.output_file) --format @(args.image_type.upper()) --variant Standard
     raw_image.close()
     chown @(args.chown_user + ":" + args.chown_user) @(args.output_file)
