@@ -32,6 +32,8 @@ class ContestView extends Component {
   }
 
   setExtraTime() {
+    if (!window.confirm('Are you sure?')) return;
+
     const minutes = this.refs.extraTimeForm.minutes.value
     this.session.setExtraTime(minutes * 60);
     this.forceUpdate();

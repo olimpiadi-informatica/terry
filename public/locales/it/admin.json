@@ -1,6 +1,8 @@
 {
   "loading": "Caricamento...",
   "error": "Errore",
+  "remaining time": "Tempo rimanente",
+  "started at": "Gara iniziata il",
   "navbar": {
     "title": "Admin",
     "logout": "Esci"

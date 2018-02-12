@@ -12,6 +12,8 @@ class UserExtraTimeView extends Component {
   }
 
   setExtraTime() {
+    if (!window.confirm('Are you sure?')) return;
+
     const minutes = this.refs.form.minutes.value
     this.session.setExtraTime(minutes * 60, this.user.token);
   }

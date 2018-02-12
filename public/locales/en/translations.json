@@ -4,9 +4,10 @@
   "reload": "Please reload the page",
   "close": "Close",
   "cancel": "Cancel",
+  "remaining time": "Remaining time",
+  "started at": "Contest started at",
   "navbar": {
     "task list": "Task list",
-    "remaining time": "Remaining time",
     "total score": "Your score",
     "logout": "Logout"
   },

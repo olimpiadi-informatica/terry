@@ -19,14 +19,14 @@ class SidebarView extends Component {
       <nav className="bg-faded sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
-            <h3>{t("navbar.total score")}</h3>
+            <h3>{t("total score")}</h3>
             <TotalScoreView model={this.model} />
           </li>
 
           <li className="divider-vertical" />
 
           <li className="nav-item title">
-            <h3>{t("navbar.remaining time")}</h3>
+            <h3>{t("remaining time")}</h3>
             <p className="terry-remaining-time">
               <CountdownView delta={this.model.timeDelta} end={
                 DateTime.fromISO(this.model.user.end_time)
