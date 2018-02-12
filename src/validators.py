@@ -273,8 +273,8 @@ class Validators:
                                   "Invalid admin token!")
         else:
             if Database.register_admin_ip(ip):
-                Logger.warning("LOGIN_ADMIN",
-                               "An admin has connected from a new ip: %s" % ip)
+                Logger.info("LOGIN_ADMIN",
+                            "An admin has connected from a new ip: %s" % ip)
 
     @staticmethod
     def _get_user_from_sso(jwt_token, token):
