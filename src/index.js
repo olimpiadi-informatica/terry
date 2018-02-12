@@ -20,9 +20,7 @@ i18n.on("languageChanged", lang => document.getElementsByTagName("html")[0].setA
 
 // handle errors in promises
 window.addEventListener('unhandledrejection', event => {
-  if(window.terryAlertShown) return;
   window.alert('An error occurred. Please reload the page. (' + (event.reason||'<no reason>') + ')');
-  window.terryAlertShown = true;
 });
 
 ReactDOM.render(

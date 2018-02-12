@@ -2,6 +2,8 @@
   "loading": "Caricamento...",
   "error": "Errore",
   "started at": "Gara iniziata il",
+  "system status": "Stato del sistema",
+  "minutes": "minuti",
   "navbar": {
     "title": "Admin",
     "logout": "Esci"
@@ -40,7 +42,11 @@
     "extratime disclamer": "Puoi impostare del tempo extra per tutti i partecipanti nel caso di problemi che hanno afflitto tutti. Questa azione <1>viene registrata</1> e deve essere giustificata al comitato.",
     "extra time": "Tempo extra",
     "in minutes": "Espresso in minuti.",
-    "set extra time": "Imposta tempo extra"
+    "set extra time": "imposta tempo extra",
+    "errors recorded": "Errori rilevati",
+    "show log": "mostra il registro",
+    "error recorded at": "Ultimo problema rilevato",
+    "no error recorded": "Nessun problema rilevato"
   },
   "users": {
     "title": "Partecipanti",

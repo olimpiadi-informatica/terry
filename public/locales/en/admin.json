@@ -2,6 +2,8 @@
   "loading": "Loading...",
   "error": "Error",
   "started at": "Contest started at",
+  "system status": "System status",
+  "minutes": "minutes",
   "navbar": {
     "title": "Admin",
     "logout": "Logout"
@@ -45,7 +47,10 @@
     "extratime disclamer": "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <1>is logged</1> and must be justified to the committee.",
     "extra time": "Extra time",
     "in minutes": "Expressed in minutes.",
-    "set extra time": "Set extra time"
+    "set extra time": "set extra time",
+    "show log": "show log",
+    "error recorded at": "Issue last detected",
+    "no error recorded": "No issue detected"
   },
   "users": {
     "title": "Contestants",

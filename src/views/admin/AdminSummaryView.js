@@ -4,6 +4,7 @@ import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
 import CountdownView from '../CountdownView';
 import { DateTime, Duration } from 'luxon';
+import DateView from '../DateView';
 import Logs from '../../models/admin/Logs';
 import Users from '../../models/admin/Users';
 
@@ -40,11 +41,18 @@ class AdminSummaryView extends Component {
 
   renderStarted() {
     const { t, i18n } = this.props;
-    return <p>{t("contest.started at")} <em>{
-      DateTime.fromISO(this.session.status.start_time).setLocale(i18n.language).toLocaleString(
-        DateTime.DATETIME_SHORT
-      )
-    }</em>.</p>;
+    return <React.Fragment>
+      <dt>
+        <span className="fa fa-clock-o" aria-hidden="true" />
+        {' '}
+        {t("contest.started at")}
+      </dt>
+      <dd>{
+        DateTime.fromISO(this.session.status.start_time).setLocale(i18n.language).toLocaleString(
+          DateTime.DATETIME_SHORT
+        )
+      }</dd>
+    </React.Fragment>;
   }
 
   renderStartButton() {
@@ -63,31 +71,61 @@ class AdminSummaryView extends Component {
     const { t } = this.props;
     if (!this.session.status.start_time) return null;
     // FIXME: delta=0 ????
-    return <p>{t("contest.remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={
-      DateTime.fromISO(this.session.status.end_time)
-    }/></p>
+    return <React.Fragment>
+      <dt>
+        <span className="fa fa-clock-o" aria-hidden="true" />
+        {' '}
+        {t("contest.remaining time")}
+      </dt>
+      <dd>
+        <CountdownView delta={Duration.fromMillis(0)} end={
+          DateTime.fromISO(this.session.status.end_time)
+        }/>
+      </dd>
+    </React.Fragment>;
   }
 
   renderLogSummary() {
-    const { t } = this.props;
+    const { t, i18n } = this.props;
 
-    if(this.logs.isLoading()) return <p>{t("loading")}</p>
-    if(!this.logs.data.items) return <p>
-      {t("contest.no errors recorded")} (<Link to="/admin/logs">{t("contest.show log")}</Link>)
-    </p>
-    return <p><strong>{t("contest.errors recorded")}</strong> (<Link to="/admin/logs">{t("contest.show log")}</Link>)</p>;
+    if (this.logs.isLoading())
+      return <React.Fragment>{t("loading")}</React.Fragment>;
+    
+    const items = this.logs.data.items;
+
+    if (!items)
+      return <React.Fragment>
+        {t("contest.no error recorded")}
+        {' '}
+        (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+      </React.Fragment>;
+
+    const lastError = DateTime.fromISO(items[0].date);
+
+    return <React.Fragment>
+      {t("contest.error recorded at")}
+      {' '}
+      <DateView date={lastError} />
+      {' '}
+      (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+    </React.Fragment>;
   }
 
   renderExtraTimeSummary() {
     const { t } = this.props;
+    
     if(this.session.extraTimeMinutes() === 0) {
-      return (
-        <p>{t("contest.no extra time set")} (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)</p>
-      );
+      return <dd>
+        {t("contest.no extra time set")}
+        {' '}
+        (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+      </dd>;
     } else {
-      return (
-        <p>{t("contest.extra time")} {this.session.extraTimeMinutes()} (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)</p>
-      );
+      return <dd>
+        {this.session.extraTimeMinutes() + " " + t('minutes')}
+        {' '}
+        (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+      </dd>;
     }
   }
 
@@ -117,12 +155,16 @@ class AdminSummaryView extends Component {
     const status = this.session.status;
 
     return <React.Fragment>
-      <h1 className="mt-4">{t("contest.title")}</h1>
-      { this.renderStartStatus() }
-      { this.renderCountdown() }
-      { this.renderLogSummary() }
-      { this.renderExtraTimeSummary() }
+      <h3 className="mt-4">{t("contest.title")}</h3>
+      <dl>
+        { this.renderStartStatus() }
+        { this.renderCountdown() }
+        <dt>{t("system status")}</dt>
+        <dd>{ this.renderLogSummary() }</dd>
+        <dt>{t("contest.extra time")}</dt>
+        <dd>{ this.renderExtraTimeSummary() }</dd>
       { this.renderUserExtraTimeSummary() }
+      </dl>
     </React.Fragment>
   }
 }
