@@ -61,6 +61,9 @@ class ContestExtraTimeView extends Component {
           </div>
           <div className="modal-body">
             {this.renderError()}
+            <Trans i18nKey="contest.extratime disclamer" parent="p">
+              You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
+            </Trans>
             <div className="form-group">
               <label htmlFor="minutes">{t("contest.extra time")}</label>
               <input

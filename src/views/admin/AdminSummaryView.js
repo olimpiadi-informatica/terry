@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
-import Countdown from '../CountdownView';
-import { DateTime } from 'luxon';
+import CountdownView from '../CountdownView';
+import { DateTime, Duration } from 'luxon';
 
 class AdminSummaryView extends Component {
   constructor(props) {
@@ -32,22 +32,50 @@ class AdminSummaryView extends Component {
     </React.Fragment>;
   }
 
-  renderStarted() {
+  renderCountdown() {
     const { t } = this.props;
+    if (!this.session.status.start_time) return null;
     // FIXME: delta=0 ????
-    const countdown = this.session.status.start_time ? <Countdown delta={0} end={
+    return <p>{t("contest.remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={
       DateTime.fromISO(this.session.status.end_time)
-    }/> : "";
+    }/></p>
+  }
+
+  renderLogSummary() {
+    const { t } = this.props;
+    // TODO: show if there are errors
+    return <p>{t("contest.no errors recorded")} (<Link to="/admin/logs">{t("contest.show log")}</Link>)</p>
+  }
+
+  renderExtraTimeSummary() {
+    const { t } = this.props;
+    if(this.session.extraTimeMinutes() === 0) {
+      return (
+        <p>{t("contest.no extra time set")} (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)</p>
+      );
+    } else {
+      return (
+        <p>{t("contest.extra time")} {this.session.extraTimeMinutes()} (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)</p>
+      );
+    }
+  }
+
+  renderUserExtraTimeSummary() {
+    const { t } = this.props;
+    // TODO: show if some users have extra time set
+    return <p><Link to="/admin/users">{t("contest.show user list")}</Link></p>;
+  }
+
+  renderStarted() {
+    const { t, i18n } = this.props;
     return <React.Fragment>
       <p>{t("contest.started at")} <em>{
-        new Date(this.session.status.start_time).toLocaleString()
+        DateTime.fromISO(this.session.status.start_time).setLocale(i18n.language).toLocaleString()
       }</em>.</p>
-      <p>{t("contest.remaining time")} {countdown}</p>
-      <Trans i18nKey="contest.extratime disclamer" parent="p">
-        You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
-      </Trans>
-      <p>{t("contest.extra time")} {this.session.extraTimeMinutes()}<Link to="/admin/extra_time">{t("contest.set extra time")}</Link></p>
-      <p><Link to="/admin/users">Visualizza la lista utenti</Link></p>
+      { this.renderCountdown() }
+      { this.renderLogSummary() }
+      { this.renderExtraTimeSummary() }
+      { this.renderUserExtraTimeSummary() }
     </React.Fragment>
   }
 

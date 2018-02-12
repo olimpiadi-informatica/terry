@@ -1,7 +1,6 @@
 {
   "loading": "Loading...",
   "error": "Error",
-  "remaining time": "Remaining time",
   "started at": "Contest started at",
   "navbar": {
     "title": "Admin",
@@ -39,11 +38,7 @@
       "part1": "The contest is not ready to start! You need to extract it.",
       "part2": "This action will not start the contest, it will prepare the server. It's suggested to extract the contest as soon as possible to discover early eventual problems."
     },
-    "archive": "Contest archive",
-    "enter zip": "Enter zip name",
-    "include extension": "It should include the file extension.",
-    "password": "Archive password",
-    "extract": "Extract",
+    "remaining time": "Remaining time",
     "not started": "The contest has not started yet!",
     "start": "Start",
     "started at": "Contest started at",

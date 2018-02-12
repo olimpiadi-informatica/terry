@@ -1,7 +1,6 @@
 {
   "loading": "Caricamento...",
   "error": "Errore",
-  "remaining time": "Tempo rimanente",
   "started at": "Gara iniziata il",
   "navbar": {
     "title": "Admin",
@@ -34,11 +33,7 @@
       "part1": "La gara non è pronta! È necessario estrarre l'archivio.",
       "part2": "Quest'azione non avvierà la gara, preparerà il server. Si suggerisce di estrarre l'archivio il prima possibile per poter correggere eventuali problemi."
     },
-    "archive": "Archivio della gara",
-    "enter zip": "Inserisi il nome dell'archivio",
-    "include extension": "Deve includere anche l'estensione del file.",
-    "password": "Password dell'archivio",
-    "extract": "Estrai",
+    "remaining time": "Tempo rimanente",
     "not started": "La gara non è ancora iniziata!",
     "start": "Avvia",
     "started at": "La gara è iniziata il",
