@@ -64,6 +64,16 @@ class TestAdminHandler(unittest.TestCase):
             file={"content": content, "name": "pack.zip.enc"})
         self.assertTrue(os.path.exists(enc_path))
 
+    def test_upload_invalid_pack(self):
+        enc_path = os.path.join(Utils.new_tmp_dir(), "pack.zip.enc")
+        Config.encrypted_file = enc_path
+
+        Database.del_meta("admin_token")
+        with self.assertRaises(Forbidden):
+            self.admin_handler.upload_pack(
+                file={"content": b"totally not a pack", "name": "pack.zip.enc"})
+        self.assertFalse(os.path.exists(enc_path))
+
     def test_append_log_invalid_secret(self):
         Config.append_log_secret = "yep"
         with self.assertRaises(Forbidden):

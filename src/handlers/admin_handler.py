@@ -37,7 +37,9 @@ class AdminHandler(BaseHandler):
         elif os.path.exists(Config.encrypted_file):
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The pack has already been uploaded")
-
+        if not crypto.validate(file["content"]):
+            self.raise_exc(Forbidden, "BAD_FILE", "The uploaded file is "
+                                                  "not valid")
         StorageManager.save_file(
             os.path.realpath(Config.encrypted_file), file["content"])
         return {}
