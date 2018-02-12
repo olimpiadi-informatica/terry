@@ -3,6 +3,7 @@
   "error": "Error",
   "started at": "Contest started at",
   "system status": "System status",
+  "contest status": "Contest status",
   "minutes": "minutes",
   "navbar": {
     "title": "Admin",
@@ -45,13 +46,20 @@
     "start": "Start",
     "started at": "Contest started at",
     "extratime disclamer": "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <1>is logged</1> and must be justified to the committee.",
-    "extra time": "Extra time",
+    "extra time management": "Extra time",
     "in minutes": "Expressed in minutes.",
     "set extra time": "set extra time",
     "Set extra time": "Set extra time",
+    "no extra time set": "No extra time set",
     "show log": "show log",
     "error recorded at": "Issue last detected",
-    "no error recorded": "No issue detected"
+    "no error recorded": "No issue detected",
+    "ended at": "Contest ended at",
+    "ended for everyone at": "Contest ended for everyone at",
+    "no user has extra time": "No user has extra time",
+    "users have extra time": "{{count}} user has extra time",
+    "users have extra time_plural": "{{count}} users have extra time",
+    "manage users": "show users"
   },
   "users": {
     "title": "Contestants",

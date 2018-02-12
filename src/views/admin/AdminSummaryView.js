@@ -111,14 +111,7 @@ class AdminSummaryView extends Component {
   renderStartTime() {
     const { t, i18n } = this.props;
     const startTime = this.getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT);
-    return <React.Fragment>
-      <dt>
-        <span className="fa fa-clock-o" aria-hidden="true" />
-        {' '}
-        {t("contest.started at")}
-      </dt>
-      <dd>{startTime}</dd>
-    </React.Fragment>;
+    return <p>{t("contest.started at")} {startTime}</p>
   }
 
   renderCountdownExtra() {
@@ -160,7 +153,7 @@ class AdminSummaryView extends Component {
 
     const { t, i18n } = this.props;
     return (
-      <p>{t("contest.ended for users at")} {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}</p>
+      <p>{t("contest.ended for everyone at")} {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}</p>
     );
   }
 
@@ -232,13 +225,13 @@ class AdminSummaryView extends Component {
       return (
         <p>{
           t("contest.users have extra time", {count: numExtraTimeUsers})
-        } <Link to="/admin/users">{t("contest.manage users")}</Link></p>
+        } (<Link to="/admin/users">{t("contest.manage users")}</Link>)</p>
       );
     } else {
       return (
         <p>{
           t("contest.no user has extra time")
-        } <Link to="/admin/users">{t("contest.manage users")}</Link></p>
+        } (<Link to="/admin/users">{t("contest.manage users")}</Link>)</p>
       );
     }
   }
@@ -254,7 +247,7 @@ class AdminSummaryView extends Component {
         <dd>{ this.renderContestStatus() }</dd>
         <dt>{t("system status")}</dt>
         <dd>{ this.renderLogSummary() }</dd>
-        <dt>{t("contest.extra time")}</dt>
+        <dt>{t("contest.extra time management")}</dt>
         <dd>{ this.renderExtraTimeSummary() }</dd>
       { this.renderUserExtraTimeSummary() }
       </dl>

@@ -65,7 +65,7 @@ class ContestExtraTimeView extends Component {
               You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
             </Trans>
             <div className="form-group">
-              <label htmlFor="minutes">{t("contest.extra time")}</label>
+              <label htmlFor="minutes">{t("contest.extra time")}:</label>
               <input
                 id="minutes"
                 name="minutes"
