@@ -17,19 +17,19 @@ def check_root():
 def get_args():
     parser = argparse.ArgumentParser(description="Generate an image from a rootfs")
     parser.add_argument("-r", "--rootfs", help="Path to rootfs directory", type=str, required=True)
-    parser.add_argument("-s", "--size", help="Size for the generated image", type=int, default=DEFAULT_IMAGE_SIZE)
+    parser.add_argument("-s", "--size", help="Size for the generated image (MiB)", type=int, default=DEFAULT_IMAGE_SIZE)
     parser.add_argument("-o", "--output-file", help="Output filename", type=str, required=True)
     parser.add_argument("-t", "--image-type", help="Image type", type=str, choices=IMAGE_TYPE, required=True)
     parser.add_argument("-u", "--chown-user", help="Change ownership of the output to this user", type=str, default="root")
     parser.add_argument("-n", "--name", help="Virtual Machine image name", type=str, default="default")
-    parser.add_argument("-m", "--memory", help="Virtual Machine memory (MB)", type=int, default=DEFAULT_MEMORY_SIZE)
+    parser.add_argument("-m", "--memory", help="Virtual Machine memory (MiB)", type=int, default=DEFAULT_MEMORY_SIZE)
     parser.add_argument("-p", "--port-forwarding", help="Virtual Machine port forwarding (format -> protocol:port_host:port_guest) (example: tcp:2222:22)", type=str, default=[], nargs='+')
     return parser.parse_args()
 
 if __name__ == "__main__":
     base_path = $(dirname @(sys.argv[0])).strip()
-    check_root()
     args = get_args()
+    check_root()
     raw_image = NamedTemporaryFile()
     truncate -s @(args.size << 20) @(raw_image.name)
     loopback = $(losetup -f).strip()
