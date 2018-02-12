@@ -49,7 +49,7 @@ class AdminHandler(BaseHandler):
 
 
     @Validators.admin_only
-    def download_pack(self):
+    def download_results(self):
         """
         POST /admin/download_pack
         """
