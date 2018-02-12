@@ -12,8 +12,10 @@ import subprocess
 import tempfile
 
 import gevent
+import yaml
 from werkzeug.exceptions import Forbidden, BadRequest
 
+from src import crypto
 from .base_handler import BaseHandler
 from ..config import Config
 from ..contest_manager import ContestManager
@@ -40,13 +42,17 @@ class AdminHandler(BaseHandler):
             os.path.realpath(Config.encrypted_file), file["content"])
         return {}
 
-
     def pack_status(self):
         """
         POST /admin/pack_status
         """
-        return {"uploaded": os.path.exists(Config.encrypted_file)}
-
+        if not os.path.exists(Config.encrypted_file):
+            return {"uploaded": False}
+        with open(Config.encrypted_file, "rb") as f:
+            raw_meta = crypto.metadata(f.read(crypto.DATA_OFFSET))
+        metadata = yaml.load(raw_meta.strip("\x00"))
+        metadata["uploaded"] = True
+        return metadata
 
     @Validators.admin_only
     def download_results(self):
@@ -58,7 +64,9 @@ class AdminHandler(BaseHandler):
         os.makedirs(zip_directory, exist_ok=True)
         zip_directory = tempfile.mkdtemp(dir=zip_directory)
         zipf_name = os.path.join(zip_directory, "results.zip")
-        command = "zip -r " + zipf_name + " db.sqlite3* log.sqlite3* files/input files/output files/source"
+        command = "zip -r '" + zipf_name + "' db.sqlite3* log.sqlite3* " \
+                                           "files/input files/output " \
+                                           "files/source"
 
         try:
             output = gevent.subprocess.check_output(
@@ -66,7 +74,8 @@ class AdminHandler(BaseHandler):
         except gevent.subprocess.CalledProcessError as e:
             Logger.error("ADMIN", "Zip error: %s" % e.output)
             raise e
-        return {"path": os.path.relpath(zipf_name, Config.storedir)} # pragma: nocover
+        return {"path": os.path.relpath(zipf_name,  # pragma: nocover
+                                        Config.storedir)}
 
     def append_log(self, append_log_secret: str, level: str, category: str,
                    message: str):
@@ -104,7 +113,7 @@ class AdminHandler(BaseHandler):
             BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates({
             "items":
-            Logger.get_logs(level, category, start_date, end_date)
+                Logger.get_logs(level, category, start_date, end_date)
         })
 
     @Validators.admin_only

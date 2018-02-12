@@ -243,8 +243,10 @@ class TestAdminHandler(unittest.TestCase):
         self.assertEqual("token2", user2["token"])
         self.assertEqual(0, len(user2["ip"]))
 
-    def test_pack_status(self):
-        self.admin_handler.pack_status()
+    def test_pack_status_no_pack(self):
+        Config.encrypted_file = "/cake/is/a/lie"
+        status = self.admin_handler.pack_status()
+        self.assertFalse(status["uploaded"])
 
     def test_download_results(self):
         Config.storedir = Utils.new_tmp_dir()

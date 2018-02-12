@@ -85,7 +85,7 @@ def encode(password: bytes, input_data: bytes, metadata: bytes):
     encrypted = box.encrypt(input_data)
     if len(metadata) > METADATA_LEN:
         raise ValueError("Metadata is too long")
-    metadata += '\x00' * (METADATA_LEN - len(metadata))
+    metadata += b"\x00" * (METADATA_LEN - len(metadata))
     sha = nacl.hash.sha256(b'\x00' + metadata + input_data)
     return base64.b16decode(
         sha, casefold=True) + b'\x00' + metadata + encrypted
