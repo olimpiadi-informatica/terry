@@ -55,12 +55,13 @@ def crypt_file_main():
     metadata_file = open(args.metadata,
                          'rb') if args.metadata is not None else None
     zip_password = bytes.fromhex(args.zip_password)
+    input_data = input_file.read()
     if args.decrypt:
-        input_data = input_file.read()
         assert validate(input_data)
         output_file.write(decode(zip_password, input_data))
     else:
-        metadata_in = metadata_file.read() if metadata is not None else b""
+        metadata_in = metadata_file.read(
+        ) if metadata_file is not None else b""
         output_file.write(encode(zip_password, input_data, metadata_in))
 
 
