@@ -15,6 +15,7 @@ import gevent
 from gevent import queue
 from werkzeug.exceptions import Forbidden, NotFound, InternalServerError
 
+from src import crypto
 from src.config import Config
 from src.contest_manager import ContestManager
 from src.database import Database
@@ -81,6 +82,20 @@ class TestContestManager(unittest.TestCase):
         os.chmod(Config.encrypted_file, 0o000)
         with self.assertRaises(InternalServerError):
             ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+
+    def test_extract_bad_zip(self):
+        self.tempdir = Utils.new_tmp_dir()
+        enc_path = os.path.join(self.tempdir, "pack.zip.enc")
+        dec_path = os.path.join(self.tempdir, "pack.zip")
+        Config.encrypted_file = enc_path
+        Config.decrypted_file = dec_path
+        with open(enc_path, "wb") as f:
+            invalid_zip = b"this is not a zip"
+            encrypted = crypto.encode(b"fooobar", invalid_zip, b"metadata")
+            f.write(encrypted)
+            password = crypto.gen_user_password("XXXXXX", b"YYY", b"fooobar")
+        with self.assertRaises(Forbidden) as e:
+            ContestManager.extract_contest(password)
 
     def test_import_contest(self):
         path = Utils.new_tmp_dir()
