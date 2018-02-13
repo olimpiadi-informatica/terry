@@ -57,6 +57,8 @@ class AdminHandler(BaseHandler):
         with open(Config.encrypted_file, "rb") as f:
             raw_meta = crypto.metadata(f.read(crypto.DATA_OFFSET))
         metadata = yaml.load(raw_meta.strip(b"\x00"))
+        if metadata is None:
+            metadata = dict()
         metadata["uploaded"] = True
         return metadata
 
@@ -66,12 +68,12 @@ class AdminHandler(BaseHandler):
         POST /admin/download_pack
         """
         Logger.info("ADMIN", "Creating zip file")
-        zip_directory = os.path.join(Config.storedir, "zips")
+        zip_directory = os.path.join(Config.storedir, "zips",
+                                     Database.gen_id())
         os.makedirs(zip_directory, exist_ok=True)
-        zip_directory = tempfile.mkdtemp(dir=zip_directory)
-        zipf_name = Database.get_meta("admin_token").split(
-            '-', 1)[0] + time.strftime("%Y-%m-%d-%H-%M-%S",
-                                       time.localtime()) + "-results.zip"
+        zipf_name = "results-" + Database.get_meta("admin_token").split(
+            '-', 1)[0] + "-" + time.strftime("%Y-%m-%d-%H-%M-%S",
+                                             time.localtime()) + ".zip"
         zipf_name = os.path.join(zip_directory, zipf_name)
         command = "zip -r '" + zipf_name + "' db.sqlite3* log.sqlite3* " \
                                            "files/input files/output " \
