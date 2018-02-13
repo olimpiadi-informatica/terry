@@ -6,7 +6,10 @@
   "started at": "Contest started at",
   "system status": "System status",
   "contest status": "Contest status",
-  "minutes": "minutes",
+  "minutes": "{{count}} minute",
+  "minutes_plural": "{{count}} minutes",
+  "minutes more for some users": "plus {{count}} extra minute for some user",
+  "minutes more for some users_plural": "plus {{count}} extra minutes for some user",
   "navbar": {
     "title": "Admin",
     "logout": "Logout"

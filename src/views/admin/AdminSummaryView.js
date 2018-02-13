@@ -66,14 +66,14 @@ class AdminSummaryView extends Component {
   }
 
   renderRunning() {
-    return <ul className="terry-block">
+    return <ul className="mb-0">
       <li>{ this.renderStartTime() }</li>
       <li>{ this.renderCountdown() }</li>
     </ul>;
   }
 
   renderRunningExtraTime() {
-    return <ul className="terry-block">
+    return <ul className="mb-0">
       <li>{ this.renderStartTime() }</li>
       <li>{ this.renderEndTime() }</li>
       <li>{ this.renderExtraTimeCountdown() }</li>
@@ -84,10 +84,10 @@ class AdminSummaryView extends Component {
     const { t } = this.props;
 
     return <React.Fragment>
-      <ul className="terry-block">
+      <ul>
         <li>{ this.renderStartTime() }</li>
         <li>{ this.renderEndTime() }</li>
-        <li>{ this.renderExtraTimeEndTime() }</li>
+        { this.renderExtraTimeEndTime() }
       </ul>
 
       <form ref="form" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
@@ -156,14 +156,14 @@ class AdminSummaryView extends Component {
   }
 
   renderExtraTimeEndTime() {
-    if(this.countUsersWithExtraTime() === 0) return;
+    if(this.countUsersWithExtraTime() === 0) return null;
 
     const { t, i18n } = this.props;
-    return <React.Fragment>
+    return <li>
       {t("contest.ended for everyone at")}
       {' '}
       {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-    </React.Fragment>;
+    </li>;
   }
 
   renderExtraTimeCountdown() {
@@ -217,7 +217,7 @@ class AdminSummaryView extends Component {
       </React.Fragment>;
     } else {
       return <React.Fragment>
-        {this.session.extraTimeMinutes() + " " + t('minutes')}
+        {t('minutes', {count: this.session.extraTimeMinutes()})}
         {' '}
         (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
       </React.Fragment>;
@@ -250,23 +250,27 @@ class AdminSummaryView extends Component {
     const status = this.session.status;
 
     return <div className="container">
-      <div className="card terry-block">
+      <div className="card mb-3">
         <div className="card-body">
           <h3>{t("contest status")}</h3>
           { this.renderContestStatus() }
         </div>
       </div>
-      <div className="card terry-block">
+      <div className="card mb-3">
         <div className="card-body">
           <h3>{t("system status")}</h3>
-          <p>{ this.renderLogSummary() }</p>
+          <ul class="mb-0">
+            <li>{ this.renderLogSummary() }</li>
+          </ul>
         </div>
       </div>
-      <div className="card terry-block">
+      <div className="card mb-3">
         <div className="card-body">
           <h3>{t("contest.extra time management")}</h3>
-          <p>{ this.renderExtraTimeSummary() }</p>
-          <p>{ this.renderUserExtraTimeSummary() }</p>
+          <ul class="mb-0">
+            <li>{ this.renderExtraTimeSummary() }</li>
+            <li>{ this.renderUserExtraTimeSummary() }</li>
+          </ul>
         </div>
       </div>
     </div>
