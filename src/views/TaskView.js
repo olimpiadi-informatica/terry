@@ -126,7 +126,7 @@ class TaskView extends Component {
         return (<React.Fragment />);
       else {
         const submission = items[items.length-1];
-        last_submission = <DateView date={ DateTime.fromISO(submission.date)}/>
+        last_submission = <DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
       }
     }
     return (

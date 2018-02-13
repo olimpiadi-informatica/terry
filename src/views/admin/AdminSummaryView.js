@@ -135,7 +135,7 @@ class AdminSummaryView extends Component {
   renderCountdown() {
     const { t, i18n } = this.props;
     return <React.Fragment>
-      {t("contest.remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={this.getEndTime()}/>
+      {t("contest.remaining time")} <CountdownView delta={this.session.timeDelta} end={this.getEndTime()}/>
       { this.renderCountdownExtra() }
     </React.Fragment>;
   }
@@ -169,7 +169,7 @@ class AdminSummaryView extends Component {
       <React.Fragment>
         {t("contest.users remaining time")}
         {' '}
-        <CountdownView delta={Duration.fromMillis(0)} end={endTime}/>
+        <CountdownView delta={this.session.timeDelta} end={endTime}/>
       </React.Fragment>
     );
   }
@@ -194,7 +194,7 @@ class AdminSummaryView extends Component {
     return <React.Fragment>
       {t("contest.error recorded at")}
       {' '}
-      <DateView date={lastError} />
+      <DateView delta={this.timeDelta} date={lastError} />
       {' '}
       (<Link to="/admin/logs">{t("contest.show log")}</Link>)
     </React.Fragment>;
