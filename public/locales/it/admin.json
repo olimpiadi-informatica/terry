@@ -6,8 +6,8 @@
   "started at": "Gara iniziata il",
   "system status": "Stato del sistema",
   "contest status": "Stato della gara",
-  "minutes": "{{count}} minuto",
-  "minutes_plural": "{{count}} minuti",
+  "minutes": "La durata della gara è estesa di {{count}} minuto",
+  "minutes_plural": "La durata della gara è estesa di {{count}} minuti",
   "minutes more for some users": "più {{count}} minuto per qualche utente",
   "minutes more for some users_plural": "più {{count}} minuti per qualche utente",
   "navbar": {
@@ -62,7 +62,8 @@
     "users have extra time": "{{count}} utente ha del tempo aggiuntivo",
     "users have extra time_plural": "{{count}} utenti hanno del tempo aggiuntivo",
     "manage users": "mostra gli utenti",
-    "download": "Scarica"
+    "download results": "Scarica i risultati della gara",
+    "download results description": "La gara è terminata, devi adesso scaricare l'archivio zip contenente tutti i dati della gara. Questo zip dovrà essere poi spedito al comitato."
   },
   "users": {
     "title": "Partecipanti",

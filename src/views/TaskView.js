@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faPlus from '@fortawesome/fontawesome-free-solid/faPlus'
+import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
+import faUpload from '@fortawesome/fontawesome-free-solid/faUpload'
 import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
@@ -70,11 +74,11 @@ class TaskView extends Component {
       return (
         <React.Fragment>
           <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
-            <span aria-hidden="true" className="fa fa-download" /> {t("task.download input")}
+          <FontAwesomeIcon icon={faDownload}/> {t("task.download input")}
           </a>
           {' '}
           <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
-            <span aria-hidden="true" className="fa fa-upload" /> {t("task.upload solution")}
+            <FontAwesomeIcon icon={faUpload}/> {t("task.upload solution")}
           </Link>
         </React.Fragment>
       )
@@ -82,13 +86,13 @@ class TaskView extends Component {
       if (this.getTaskState().isGeneratingInput()) {
         return (
           <span disabled={true} className="btn btn-success">
-            <span aria-hidden="true" className="fa fa-plus" /> {t("task.requesting")}
+            <FontAwesomeIcon icon={faPlus}/> {t("task.requesting")}
           </span>
         );
       } else {
         return (
           <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-            <span aria-hidden="true" className="fa fa-plus" /> {t("task.request input")}
+            <FontAwesomeIcon icon={faPlus}/> {t("task.request input")}
           </button>
         );
       }

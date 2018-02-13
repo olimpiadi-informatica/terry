@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import faTrophy from '@fortawesome/fontawesome-free-solid/faTrophy'
 import ModalView from '../ModalView';
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
@@ -35,14 +38,18 @@ class DownloadResultsView extends Component {
       });
   }
 
-  renderBody() {
+  renderDownloadButton() {
     const { t } = this.props;
 
     if (this.loadPromise !== undefined)
       return <p>{t("loading")}</p>;
 
-    return <a role="button" className="btn btn-primary" href={client.filesBaseURI + this.data.path} download>
+    return <a role="button" className="btn btn-success btn-lg btn-block" href={client.filesBaseURI + this.data.path} download>
+      <FontAwesomeIcon icon={faTrophy}/>
+      {' '}
       {t("contest.download results")}
+      {' '}
+      <FontAwesomeIcon icon={faTrophy}/>
     </a>;
   }
 
@@ -60,12 +67,10 @@ class DownloadResultsView extends Component {
           </Link>
         </div>
         <div className="modal-body">
-          { this.renderBody() }
-        </div>
-        <div className="modal-footer">
-          <Link to={"/admin"} role="button" className="btn btn-primary">
-            <span aria-hidden="true" className="fa fa-times" /> {t("close")}
-          </Link>
+          <div class="mb-3">
+            { t("contest.download results description") }
+          </div>
+          { this.renderDownloadButton() }
         </div>
       </ModalView>
     );

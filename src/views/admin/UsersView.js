@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import faHourglassStart from '@fortawesome/fontawesome-free-solid/faHourglassStart'
 import {translateComponent} from "../../utils";
 import Users from "../../models/admin/Users";
 import LoadingView from "../LoadingView";
@@ -31,7 +33,7 @@ class UserExtraTimeView extends Component {
     return <form ref="form" className="form-inline" onSubmit={e => { e.preventDefault(); this.setExtraTime() } }>
       <input name="minutes" type="number" className="form-control mr-sm-2" defaultValue={this.extraTimeMinutes()} />
       <button type="submit" className="btn btn-warning">
-        <span className="fa fa-clock-o" aria-hidden="true" /> {t("users.set")}
+        <FontAwesomeIcon icon={faHourglassStart}/> {t("users.set")}
       </button>
     </form>;
   }
@@ -78,7 +80,7 @@ class UsersView extends Component {
         <tr>
           <th>{t("users.name")}</th>
           <th>{t("users.surname")}</th>
-          <th><FontAwesomeIcon icon="clock"/> {t("users.token")}</th>
+          <th>{t("users.token")}</th>
           <th>{t("users.ips")}</th>
           <th>{t("users.extra time")} <small>{t("users.in minutes")}</small></th>
         </tr>
@@ -110,7 +112,7 @@ class UsersView extends Component {
       </div>
       <div className="modal-footer">
         <Link to={"/admin"} role="button" className="btn btn-primary">
-          <span aria-hidden="true" className="fa fa-times" /> {t("close")}
+          <FontAwesomeIcon icon={faTimes}/>  {t("close")}
         </Link>
       </div>
     </ModalView>;

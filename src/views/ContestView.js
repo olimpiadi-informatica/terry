@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {Link, Route} from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import TaskView from './TaskView';
 import ReactMarkdown from 'react-markdown';
 import { DateTime, Duration } from 'luxon';
@@ -41,7 +43,7 @@ class ContestView extends Component {
         <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
         <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
         <button role="button" className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
-          <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
+          <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}
         </button>
       </nav>
 

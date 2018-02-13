@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import faHourglassStart from '@fortawesome/fontawesome-free-solid/faHourglassStart'
 import ModalView from '../ModalView';
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
@@ -28,6 +31,7 @@ class ContestExtraTimeView extends Component {
     this.session.setExtraTime(minutes * 60).then(() => {
       // FIXME: i18n? :)
       window.alert("Extra time updated.");
+      window.location.href = '/admin';
     })
     this.forceUpdate();
   }
@@ -64,7 +68,7 @@ class ContestExtraTimeView extends Component {
             <Trans i18nKey="contest.extratime disclamer" parent="p">
               You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
             </Trans>
-            <div className="form-group">
+            <div className="form-group mb-0">
               <label htmlFor="minutes">{t("contest.extra time")}:</label>
               <input
                 id="minutes"
@@ -74,12 +78,15 @@ class ContestExtraTimeView extends Component {
                 required
                 defaultValue={this.extraTimeMinutes()}
               />
-            <small className="form-text text-muted">{t("contest.in minutes")}</small>
+              <small className="form-text text-muted">{t("contest.in minutes")}</small>
             </div>
           </div>
           <div className="modal-footer">
+            <Link to={"/admin"} role="button" className="btn btn-primary">
+              <FontAwesomeIcon icon={faTimes}/> {t("close")}
+            </Link>
             <button type="submit" className="btn btn-warning">
-              <span className="fa fa-clock-o" aria-hidden="true" /> {t("contest.Set extra time")}
+              <FontAwesomeIcon icon={faHourglassStart}/> {t("contest.Set extra time")}
             </button>
           </div>
         </form>

@@ -6,8 +6,8 @@
   "started at": "Contest started at",
   "system status": "System status",
   "contest status": "Contest status",
-  "minutes": "{{count}} minute",
-  "minutes_plural": "{{count}} minutes",
+  "minutes": "Contest duration was extended by {{count}} minute",
+  "minutes_plural": "Contest duration was extended by {{count}} minutes",
   "minutes more for some users": "plus {{count}} extra minute for some user",
   "minutes more for some users_plural": "plus {{count}} extra minutes for some user",
   "navbar": {
@@ -64,7 +64,9 @@
     "no user has extra time": "No user has extra time",
     "users have extra time": "{{count}} user has extra time",
     "users have extra time_plural": "{{count}} users have extra time",
-    "manage users": "show users"
+    "manage users": "show users",
+    "download results": "Download contest results",
+    "download results description": "The contest is finished, you must now download the zip containing all the contest data. This zip must then be sent to the committee."
   },
   "users": {
     "title": "Contestants",

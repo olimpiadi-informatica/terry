@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import {translateComponent} from "../../utils";
 import Session from "../../models/admin/Session";
 import AdminLoginView from "./AdminLoginView";
@@ -34,7 +36,7 @@ class AdminView extends Component {
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
       <button role="button" className="terry-admin-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
-        <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
+        <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}
       </button>
     </nav>
   }

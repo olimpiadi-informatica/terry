@@ -11,6 +11,16 @@ html, body, #terry-container {
   flex-direction: column;
 }
 
+.striped-background {
+  background: repeating-linear-gradient(
+    45deg,
+    #eeeeee,
+    #eeeeee 10px,
+    #fefefe 10px,
+    #fefefe 20px
+  );
+}
+
 .custom-file {
   width: 3em;
 }

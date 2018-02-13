@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faPlay from '@fortawesome/fontawesome-free-solid/faPlay'
 import {translateComponent} from "../../utils";
 import {Trans} from "react-i18next";
 import CountdownView from '../CountdownView';
@@ -60,7 +62,7 @@ class AdminSummaryView extends Component {
       <p>{t("contest.not started")}</p>
       <form ref="form" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
         <button type="submit" className="btn btn-primary">
-          <span className="fa fa-play" aria-hidden="true" /> {t("contest.start")}
+          <FontAwesomeIcon icon={faPlay}/> {t("contest.start")}
         </button>
       </form>
     </React.Fragment>;
@@ -115,6 +117,10 @@ class AdminSummaryView extends Component {
 
   getExtraTimeEndTime() {
     return this.getEndTime().plus({seconds: this.getUsersExtraTime()});
+  }
+
+  isDeletable() {
+    this.session.status.deletable;
   }
 
   renderStartTime() {
@@ -270,9 +276,10 @@ class AdminSummaryView extends Component {
           </ul>
         </div>
       </div>
-      <div className="card terry-block">
+      <div className="card mb-3 striped-background">
         <div className="card-body">
-          <button className="btn btn-danger" onClick={() => this.resetContest()}>RESET</button>
+          <h3>Danger zone</h3>
+          <button disabled={!this.isDeletable()} className="btn btn-danger" onClick={() => this.resetContest()}>RESET</button>
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@ class SidebarView extends Component {
       <nav className="bg-light sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
-            <h3>{t("total score")}</h3>
+            <h3>{t("navbar.total score")}</h3>
             <TotalScoreView model={this.model} />
           </li>
 
