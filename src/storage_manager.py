@@ -122,7 +122,8 @@ class StorageManager:
         :return: the sanitized file name
         """
         filename = re.sub(r'(?u)[^-\w.]', '', filename.strip().replace(' ', '_'))
-
+        # TODO check if the filename is empty
+        # TODO check if the filename is a valid name for a file
         name, ext = os.path.splitext(filename)
         # if the extension is too long
         if len(ext) > StorageManager.MAX_LENGTH-1:
