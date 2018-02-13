@@ -7,6 +7,7 @@ import { DateTime, Duration } from 'luxon';
 import DateView from '../DateView';
 import Logs from '../../models/admin/Logs';
 import Users from '../../models/admin/Users';
+import client from '../../TerryClient';
 
 class AdminSummaryView extends Component {
   constructor(props) {
@@ -269,7 +270,18 @@ class AdminSummaryView extends Component {
           <p>{ this.renderUserExtraTimeSummary() }</p>
         </div>
       </div>
+      <div className="card terry-block">
+        <div className="card-body">
+          <button className="btn btn-danger" onClick={() => this.resetContest()}>RESET</button>
+        </div>
+      </div>
     </div>
+  }
+
+  resetContest() {
+    const { t } = this.props;
+    client.adminApi(this.session.adminToken(), "/drop_contest", {});
+    window.alert(t("reload"));
   }
 }
 
