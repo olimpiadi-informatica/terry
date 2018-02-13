@@ -110,7 +110,7 @@ class AdminSummaryView extends Component {
   }
 
   getUsersExtraTime() {
-    return Math.max(this.session.users.data.items.map((user) => user.extra_time))
+    return Math.max.apply(null, this.session.users.data.items.map((user) => user.extra_time))
   }
 
   getExtraTimeEndTime() {
@@ -129,10 +129,7 @@ class AdminSummaryView extends Component {
     if(this.countUsersWithExtraTime() === 0) return;
 
     const { t, i18n } = this.props;
-    const extra = Duration.fromObject({
-      seconds: this.getUsersExtraTime()
-    });
-    return <span>({t("minutes more for some users", {count: extra.as('minutes')})})</span>;
+    return <span>({t("minutes more for some users", {count: this.getUsersExtraTime() / 60})})</span>;
   }
 
   renderCountdown() {

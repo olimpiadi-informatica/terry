@@ -47,6 +47,7 @@
       "part2": "This action will not start the contest, it will prepare the server. It's suggested to extract the contest as soon as possible to discover early eventual problems."
     },
     "remaining time": "Remaining time",
+    "users remaining time": "Remaining time for some participant",
     "not started": "The contest has not started yet!",
     "start": "Start",
     "started at": "Contest started at",
