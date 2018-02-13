@@ -45,6 +45,7 @@ export default class Session extends Observable {
         .then((response) => {
           this.status = response.data;
           this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
+          console.log("Time delta: ", this.timeDelta);
           delete this.loadingStatus;
           delete this.error;
           this.fireUpdate();
