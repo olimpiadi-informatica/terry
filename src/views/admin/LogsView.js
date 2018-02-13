@@ -31,7 +31,7 @@ class LogsTable extends Component {
   formatLog(log, i) {
     const { t } = this.props;
     const levelToClass = (level) =>
-        level === "DEBUG" ? "light" :
+        level === "DEBUG" ? "secondary" :
         level === "INFO" ? "info" :
         level === "WARNING" ? "warning" :
         level === "ERROR" ? "danger" : "light";
@@ -69,8 +69,8 @@ class LogsTable extends Component {
   render() {
     const { t } = this.props;
 
-    return <div className="terry-log-table">
-      <table className="table table-bordered">
+    return <div className="terry-log-table no-padding">
+      <table className="table">
         <thead>
         <tr>
           <th>{t("logs.date")}</th>

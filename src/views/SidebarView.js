@@ -16,7 +16,7 @@ class SidebarView extends Component {
     const { t } = this.props;
 
     return (
-      <nav className="bg-faded sidebar">
+      <nav className="bg-light sidebar">
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
             <h3>{t("total score")}</h3>

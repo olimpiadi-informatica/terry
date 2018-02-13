@@ -72,7 +72,7 @@ class UsersView extends Component {
 
   renderUserList(users) {
     const { t } = this.props;
-    return <table className="table table-bordered">
+    return <table className="table terry-table">
       <thead>
         <tr>
           <th>{t("users.name")}</th>
@@ -95,7 +95,7 @@ class UsersView extends Component {
     if (this.users.isLoading()) body = <LoadingView/>;
     else body = this.renderUserList(this.users.data.items);
 
-    return <ModalView>
+    return <ModalView contentLabel={t("users.title")} returnUrl={"/admin"}>
       <div className="modal-header">
         <h5 className="modal-title">
           {t("users.title")}

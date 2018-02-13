@@ -61,7 +61,7 @@ class SubmissionListView extends Component {
             </ReactTooltip>
 
             <div className="btn-group" role="group" aria-label="Download submission data">
-              <a role="button" className="btn btn-secondary"
+              <a role="button" className="btn btn-light"
                                aria-label={submission.input.basename}
                                href={client.filesBaseURI + submission.input.path}
                                download
@@ -72,7 +72,7 @@ class SubmissionListView extends Component {
                 <span className="hidden-md-down">{t("submission.list.input")}</span>
               </a>
 
-              <a role="button" className="btn btn-secondary"
+              <a role="button" className="btn btn-light"
                                aria-label={submission.source.basename}
                                href={client.filesBaseURI + submission.source.path}
                                download
@@ -83,7 +83,7 @@ class SubmissionListView extends Component {
                 <span className="hidden-md-down">{t("submission.list.source")}</span>
               </a>
 
-              <a role="button" className="btn btn-secondary"
+              <a role="button" className="btn btn-light"
                                aria-label={submission.output.basename}
                                href={client.filesBaseURI + submission.output.path}
                                download
@@ -115,7 +115,7 @@ class SubmissionListView extends Component {
 
     return (
       <div className="modal-body no-padding">
-        <table className="table submissions-table">
+        <table className="table terry-table">
           <thead>
             <tr>
               <th>{t("submission.list.date")}</th>

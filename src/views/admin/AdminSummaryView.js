@@ -66,25 +66,37 @@ class AdminSummaryView extends Component {
   }
 
   renderRunning() {
-    return <React.Fragment>
-      { this.renderStartTime() }
-      { this.renderCountdown() }
-    </React.Fragment>;
+    return <ul className="terry-block">
+      <li>{ this.renderStartTime() }</li>
+      <li>{ this.renderCountdown() }</li>
+    </ul>;
   }
 
   renderRunningExtraTime() {
-    return <React.Fragment>
-      { this.renderStartTime() }
-      { this.renderEndTime() }
-      { this.renderExtraTimeCountdown() }
-    </React.Fragment>;
+    return <ul className="terry-block">
+      <li>{ this.renderStartTime() }</li>
+      <li>{ this.renderEndTime() }</li>
+      <li>{ this.renderExtraTimeCountdown() }</li>
+    </ul>;
   }
 
   renderFinished() {
+    const { t } = this.props;
+
     return <React.Fragment>
-      { this.renderStartTime() }
-      { this.renderEndTime() }
-      { this.renderExtraTimeEndTime() }
+      <ul className="terry-block">
+        <li>{ this.renderStartTime() }</li>
+        <li>{ this.renderEndTime() }</li>
+        <li>{ this.renderExtraTimeEndTime() }</li>
+      </ul>
+
+      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
+        <button type="submit" className="btn btn-primary">
+          <span className="fa fa-play" aria-hidden="true" />
+          <i className="fa fa-user"></i>
+           {t("contest.download")}
+        </button>
+      </form>
     </React.Fragment>;
   }
 
@@ -111,7 +123,9 @@ class AdminSummaryView extends Component {
   renderStartTime() {
     const { t, i18n } = this.props;
     const startTime = this.getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT);
-    return <p>{t("contest.started at")} {startTime}</p>
+    return <React.Fragment>
+      {t("contest.started at")} {startTime}
+    </React.Fragment>
   }
 
   renderCountdownExtra() {
@@ -121,40 +135,35 @@ class AdminSummaryView extends Component {
     const extra = Duration.fromObject({
       seconds: this.getUsersExtraTime()
     });
-    return <span>+{extra.toFormat("mm:ss")}</span>;
+    return <span>({t("minutes more for some users", {count: extra.as('minutes')})})</span>;
   }
 
   renderCountdown() {
     const { t, i18n } = this.props;
     return <React.Fragment>
-      <dt>
-        <span className="fa fa-clock-o" aria-hidden="true" />
-        {' '}
-        {t("contest.remaining time")}
-      </dt>
-      <dd>
-        <CountdownView delta={Duration.fromMillis(0)} end={this.getEndTime()}/>
-        { this.renderCountdownExtra() }
-      </dd>
+      {t("contest.remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={this.getEndTime()}/>
+      { this.renderCountdownExtra() }
     </React.Fragment>;
   }
 
   renderEndTime() {
     const { t, i18n } = this.props;
-    return <p>
+    return <React.Fragment>
       {t("contest.ended at")}
       {' '}
       {this.getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-    </p>;
+    </React.Fragment>;
   }
 
   renderExtraTimeEndTime() {
     if(this.countUsersWithExtraTime() === 0) return;
 
     const { t, i18n } = this.props;
-    return (
-      <p>{t("contest.ended for everyone at")} {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}</p>
-    );
+    return <React.Fragment>
+      {t("contest.ended for everyone at")}
+      {' '}
+      {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+    </React.Fragment>;
   }
 
   renderExtraTimeCountdown() {
@@ -163,11 +172,11 @@ class AdminSummaryView extends Component {
     const endTime = this.getExtraTimeEndTime();
 
     return (
-      <p>
+      <React.Fragment>
         {t("contest.users remaining time")}
         {' '}
         <CountdownView delta={Duration.fromMillis(0)} end={endTime}/>
-      </p>
+      </React.Fragment>
     );
   }
 
@@ -179,7 +188,7 @@ class AdminSummaryView extends Component {
 
     const items = this.logs.data.items;
 
-    if (!items)
+    if (items.length === 0)
       return <React.Fragment>
         {t("contest.no error recorded")}
         {' '}
@@ -201,38 +210,38 @@ class AdminSummaryView extends Component {
     const { t } = this.props;
 
     if(this.session.extraTimeMinutes() === 0) {
-      return <dd>
+      return <React.Fragment>
         {t("contest.no extra time set")}
         {' '}
         (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
-      </dd>;
+      </React.Fragment>;
     } else {
-      return <dd>
+      return <React.Fragment>
         {this.session.extraTimeMinutes() + " " + t('minutes')}
         {' '}
         (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
-      </dd>;
+      </React.Fragment>;
     }
   }
 
   renderUserExtraTimeSummary() {
     const { t } = this.props;
     const users = this.session.users;
-    if(users.isLoading()) return <p>{t("loading")}</p>;
+    if(users.isLoading()) return <React.Fragment>{t("loading")}</React.Fragment>;
 
     const numExtraTimeUsers = this.countUsersWithExtraTime();
     if(numExtraTimeUsers > 0) {
-      return (
-        <p>{
-          t("contest.users have extra time", {count: numExtraTimeUsers})
-        } (<Link to="/admin/users">{t("contest.manage users")}</Link>)</p>
-      );
+      return <React.Fragment>
+        {t("contest.users have extra time", {count: numExtraTimeUsers})}
+        {' '}
+        (<Link to="/admin/users">{t("contest.manage users")}</Link>)
+      </React.Fragment>;
     } else {
-      return (
-        <p>{
-          t("contest.no user has extra time")
-        } (<Link to="/admin/users">{t("contest.manage users")}</Link>)</p>
-      );
+      return <React.Fragment>
+        {t("contest.no user has extra time")}
+        {' '}
+        (<Link to="/admin/users">{t("contest.manage users")}</Link>)
+      </React.Fragment>;
     }
   }
 
@@ -240,18 +249,27 @@ class AdminSummaryView extends Component {
     const { t, i18n } = this.props;
     const status = this.session.status;
 
-    return <React.Fragment>
-      <h3 className="mt-4">{t("contest.title")}</h3>
-      <dl>
-        <dt>{t("contest status")}</dt>
-        <dd>{ this.renderContestStatus() }</dd>
-        <dt>{t("system status")}</dt>
-        <dd>{ this.renderLogSummary() }</dd>
-        <dt>{t("contest.extra time management")}</dt>
-        <dd>{ this.renderExtraTimeSummary() }</dd>
-      { this.renderUserExtraTimeSummary() }
-      </dl>
-    </React.Fragment>
+    return <div className="container">
+      <div className="card terry-block">
+        <div className="card-body">
+          <h3>{t("contest status")}</h3>
+          { this.renderContestStatus() }
+        </div>
+      </div>
+      <div className="card terry-block">
+        <div className="card-body">
+          <h3>{t("system status")}</h3>
+          <p>{ this.renderLogSummary() }</p>
+        </div>
+      </div>
+      <div className="card terry-block">
+        <div className="card-body">
+          <h3>{t("contest.extra time management")}</h3>
+          <p>{ this.renderExtraTimeSummary() }</p>
+          <p>{ this.renderUserExtraTimeSummary() }</p>
+        </div>
+      </div>
+    </div>
   }
 }
 

@@ -11,6 +11,10 @@ html, body, #terry-container {
   flex-direction: column;
 }
 
+.custom-file {
+  width: 3em;
+}
+
 .terry-body {
   flex-direction: row;
 }
@@ -53,11 +57,11 @@ table.sample-case {
   white-space: pre;
 }
 
-div.modal-body.no-padding > table {
+table.terry-table {
   margin: 0;
 }
 
-table.submissions-table td {
+table.terry-table td {
   vertical-align: middle;
 }
 

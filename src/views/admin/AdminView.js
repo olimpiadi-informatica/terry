@@ -32,7 +32,7 @@ class AdminView extends Component {
     const { t } = this.props;
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
-      <button role="button" className="terry-admin-logout-button btn btn-sm btn-secondary" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
+      <button role="button" className="terry-admin-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
         <span aria-hidden="true" className="fa fa-sign-out" /> {t("navbar.logout")}
       </button>
     </nav>

@@ -1,9 +1,13 @@
 {
   "loading": "Caricamento...",
   "error": "Errore",
+  "close": "Chiudi",
+  "cancel": "Annulla",
   "started at": "Gara iniziata il",
   "system status": "Stato del sistema",
   "contest status": "Stato della gara",
+  "minutes more for some users": "più {{count}} minuto per qualche utente",
+  "minutes more for some users_plural": "più {{count}} minuti per qualche utente",
   "navbar": {
     "title": "Admin",
     "logout": "Esci"
@@ -44,18 +48,19 @@
     "in minutes": "Espresso in minuti.",
     "set extra time": "imposta tempo extra",
     "Set extra time": "Imposta tempo extra",
-    "no extra time set": "Nessuna estensione impostata",
+    "no extra time set": "Non è impostata alcuna estensione di gara",
     "errors recorded": "Errori rilevati",
     "show log": "mostra il registro",
-    "error recorded at": "Ultimo problema rilevato",
-    "no error recorded": "Nessun problema rilevato",
+    "error recorded at": "Ultima problematica rilevata",
+    "no error recorded": "Nessuna problematica rilevata",
     "ended at": "La gara è finita il",
     "extra time": "Minuti di estensione gara",
     "ended for everyone at": "La gara è finita per tutti il",
     "no user has extra time": "A nessun utente è assegnato tempo aggiuntivo",
     "users have extra time": "{{count}} utente ha del tempo aggiuntivo",
     "users have extra time_plural": "{{count}} utenti hanno del tempo aggiuntivo",
-    "manage users": "mostra gli utenti"
+    "manage users": "mostra gli utenti",
+    "download": "Scarica"
   },
   "users": {
     "title": "Partecipanti",

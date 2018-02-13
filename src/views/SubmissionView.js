@@ -45,10 +45,10 @@ class SubmissionView extends Component {
     const { t } = this.props;
     if(!this.submission.hasSource()) {
       return (
-        <label className="custom-file">
-          <input key="absent" ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.submission.setSource(this.refs.source.files[0]) } />
-          <span className="custom-file-control" id="source-file-span" />
-        </label>
+        <div key="absent" className="custom-file mb-3 col-4">
+          <input ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.submission.setSource(this.refs.source.files[0]) } />
+          <label className="custom-file-label" htmlFor="source-file">File sorgente...</label>
+        </div>
       );
     } else {
       const source = this.submission.getSource();
@@ -60,7 +60,7 @@ class SubmissionView extends Component {
               <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change source")}
             </button>
           </div>
-          <div className="card-block">
+          <div className="card-body">
             <FileView file={source.file} />
             { this.renderSourceStatus(source) }
           </div>
@@ -71,10 +71,10 @@ class SubmissionView extends Component {
 
   renderOutputUploadForm() {
     return (
-      <label className="custom-file">
-        <input key="absent" ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.submission.setOutput(this.refs.output.files[0])} />
-        <span className="custom-file-control" id="output-file-span" />
-      </label>
+      <div key="absent" className="custom-file col-4">
+        <input ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.submission.setOutput(this.refs.output.files[0])} />
+        <label className="custom-file-label" htmlFor="output-file">File di output...</label>
+      </div>
     );
   }
 
@@ -100,7 +100,7 @@ class SubmissionView extends Component {
             <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change output")}
           </button>
         </div>
-        <div className="card-block">
+        <div className="card-body">
           <FileView file={output.file} />
           { this.renderOutputValidation(output) }
         </div>
@@ -128,8 +128,8 @@ class SubmissionView extends Component {
       <React.Fragment>
         <div className="modal-body">
           <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault() }}>
-            <div className="form-group">{ this.renderSourceSelector() }</div>
-            <div className="form-group">{ this.renderOutputSelector() }</div>
+            <div className="input-group">{ this.renderSourceSelector() }</div>
+            <div className="input-group">{ this.renderOutputSelector() }</div>
           </form>
         </div>
         <div className="modal-footer">
