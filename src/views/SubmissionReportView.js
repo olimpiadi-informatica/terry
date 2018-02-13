@@ -41,7 +41,7 @@ class SubmissionReportView extends Component {
       <React.Fragment>
         <div className="modal-body">
           <dt>{t("submission.feedback.date")}:</dt>
-          <dd><DateView date={ DateTime.fromISO(submission.date) }/></dd>
+          <dd><DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
           <dt>{t("submission.feedback.score")}:</dt>
           <dd><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
           <FeedbackView model={this.model} result={submission.feedback} />

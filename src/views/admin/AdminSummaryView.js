@@ -112,7 +112,7 @@ class AdminSummaryView extends Component {
   }
 
   getUsersExtraTime() {
-    return Math.max(this.session.users.data.items.map((user) => user.extra_time))
+    return Math.max.apply(null, this.session.users.data.items.map((user) => user.extra_time))
   }
 
   getExtraTimeEndTime() {
@@ -135,16 +135,13 @@ class AdminSummaryView extends Component {
     if(this.countUsersWithExtraTime() === 0) return;
 
     const { t, i18n } = this.props;
-    const extra = Duration.fromObject({
-      seconds: this.getUsersExtraTime()
-    });
-    return <span>({t("minutes more for some users", {count: extra.as('minutes')})})</span>;
+    return <span>({t("minutes more for some users", {count: this.getUsersExtraTime() / 60})})</span>;
   }
 
   renderCountdown() {
     const { t, i18n } = this.props;
     return <React.Fragment>
-      {t("contest.remaining time")} <CountdownView delta={Duration.fromMillis(0)} end={this.getEndTime()}/>
+      {t("contest.remaining time")} <CountdownView delta={this.session.timeDelta} end={this.getEndTime()}/>
       { this.renderCountdownExtra() }
     </React.Fragment>;
   }
@@ -178,7 +175,7 @@ class AdminSummaryView extends Component {
       <React.Fragment>
         {t("contest.users remaining time")}
         {' '}
-        <CountdownView delta={Duration.fromMillis(0)} end={endTime}/>
+        <CountdownView delta={this.session.timeDelta} end={endTime}/>
       </React.Fragment>
     );
   }
@@ -203,7 +200,7 @@ class AdminSummaryView extends Component {
     return <React.Fragment>
       {t("contest.error recorded at")}
       {' '}
-      <DateView date={lastError} />
+      <DateView delta={this.timeDelta} date={lastError} />
       {' '}
       (<Link to="/admin/logs">{t("contest.show log")}</Link>)
     </React.Fragment>;

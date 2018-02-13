@@ -2,6 +2,7 @@ import client from '../../TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from '../Observable';
 import Users from './Users';
+import { DateTime } from "luxon";
 
 export default class Session extends Observable {
   static cookieName = "adminToken";
@@ -43,6 +44,7 @@ export default class Session extends Observable {
     return this.loadingStatus = client.adminApi(this.adminToken(), "/status")
         .then((response) => {
           this.status = response.data;
+          this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
           delete this.loadingStatus;
           delete this.error;
           this.fireUpdate();
