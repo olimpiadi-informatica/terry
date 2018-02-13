@@ -41,15 +41,8 @@ class SubmissionReportView extends Component {
     const color = colorFromScore(score, max_score);
     return (
       <React.Fragment>
-        <div className="modal-body">
-          <dl className="terry-file-view">
-            <dt>{t("submission.feedback.date")}:</dt>
-            <dd><DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
-            <dt>{t("submission.feedback.score")}:</dt>
-            <dd><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
-            <dt>Dettagli:</dt><dd><FeedbackView model={this.model} result={submission.feedback} /></dd>
-          </dl>
-        </div>
+        <FeedbackView model={this.model} result={submission.feedback} submissionId={this.submissionId} />
+
         <div className="modal-footer">
           <Link to={"/" + submission.task} role="button" className="btn btn-primary">
             <FontAwesomeIcon icon={faTimes}/> {t("close")}

@@ -15,7 +15,7 @@ class ResultView extends Component {
   renderAlert(a) {
     return (
       <div className={ "alert alert-" + a.severity } role="alert">
-        <samp>{a.code}</samp> {a.severity}: {a.message}
+        <samp>{a.code}</samp> <strong>{a.severity.toUpperCase()}</strong>: {a.message}
       </div>
     )
   }
@@ -26,9 +26,14 @@ class ResultView extends Component {
         <ul className="list-unstyled">
           { this.result.alerts.map((a, i) => <li key={i}>{ this.renderAlert(a) }</li>) }
         </ul>
-        <ul className="list-inline">
-          { this.result.cases.map((c, i) => <li className="list-inline-item" key={i}>{ this.renderCaseSummary(c, i+1) }</li>) }
-        </ul>
+        <dl className="terry-file-view">
+          <dt>Dettagli:</dt>
+          <dd>
+            <ul className="list-inline mb-0">
+              { this.result.cases.map((c, i) => <li className="list-inline-item" key={i}>{ this.renderCaseSummary(c, i+1) }</li>) }
+            </ul>
+          </dd>
+        </dl>
         <div className="result-detail">
           <ul className="list-group">
             { this.result.cases.map((c, i) => this.renderCase(c, i+1)) }

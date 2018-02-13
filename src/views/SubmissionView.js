@@ -97,7 +97,7 @@ class SubmissionView extends Component {
     const output = this.submission.getOutput();
 
     return (
-      <div key="present" className="card card-outline-primary w-100 mb-3">
+      <div key="present" className="card card-outline-primary w-100">
         <div className="card-header terry-submission-object-card">
           <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
           <button role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>

@@ -10,6 +10,7 @@ import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
 import {colorFromScore, translateComponent} from "../utils";
 import "./SubmissionListView.css";
+import ScoreView from './ScoreView';
 
 class SubmissionListView extends Component {
   constructor(props) {
@@ -99,7 +100,7 @@ class SubmissionListView extends Component {
             </div>
           </td>
           <td className={"alert-" + colorFromScore(submission.score, this.task.data.max_score)}>
-            <span className="terry-submission-score">{ submission.score }</span> / {this.task.data.max_score}
+            <ScoreView score={submission.score} max={this.task.data.max_score} size={1} />
           </td>
         </tr>
       );

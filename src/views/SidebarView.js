@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {translateComponent} from "../utils";
 import CountdownView from './CountdownView';
 import NavbarItemView from './NavbarItemView';
-import TotalScoreView from './TotalScoreView';
+import ScoreView from './ScoreView';
 import "./SidebarView.css";
 
 class SidebarView extends Component {
@@ -20,7 +20,7 @@ class SidebarView extends Component {
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
             <h3>{t("navbar.total score")}</h3>
-            <TotalScoreView model={this.model} />
+            <ScoreView style={{'text-align': 'right', 'margin-right': '1rem'}} score={this.model.user.total_score} max={this.model.contest.data.max_total_score} size={2} />
           </li>
 
           <li className="divider-vertical" />
