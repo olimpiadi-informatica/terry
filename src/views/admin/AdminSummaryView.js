@@ -46,7 +46,7 @@ class AdminSummaryView extends Component {
   }
 
   serverTime() {
-    return DateTime.local().plus(this.session.timeDelta);
+    return DateTime.local().minus(this.session.timeDelta);
   }
 
   renderContestStatus() {
