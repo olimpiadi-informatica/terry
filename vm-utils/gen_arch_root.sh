@@ -79,7 +79,8 @@ sed -i 's/^HOOKS=.*$/HOOKS="base udev block filesystems"/' ${OUTDIR}/etc/mkinitc
 linux32 chroot ${OUTDIR} mkinitcpio -p linux
 
 # Grub config
-sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=1/g' ${OUTDIR}/etc/default/grub
+sed -i 's/#GRUB_HIDDEN_TIMEOUT=.*/GRUB_HIDDEN_TIMEOUT=3/g' ${OUTDIR}/etc/default/grub
+sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/g' ${OUTDIR}/etc/default/grub
 
 # Services
 linux32 chroot ${OUTDIR} systemctl enable NetworkManager.service
