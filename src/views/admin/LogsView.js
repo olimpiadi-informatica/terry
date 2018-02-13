@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import {translateComponent, formatDate} from "../../utils";
 import Logs from "../../models/admin/Logs";
 import LoadingView from "../LoadingView";
@@ -208,7 +210,7 @@ class LogsView extends Component {
         </div>
         <div className="modal-footer">
           <Link to={"/admin"} role="button" className="btn btn-primary">
-            <span aria-hidden="true" className="fa fa-times"></span> {t("close")}
+            <FontAwesomeIcon icon={faTimes}/> {t("close")}
           </Link>
         </div>
       </ModalView>

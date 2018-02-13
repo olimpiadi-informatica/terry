@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import DateView from './DateView';
 import { DateTime } from 'luxon';
 import client from '../TerryClient';
@@ -60,14 +63,14 @@ class SubmissionListView extends Component {
               { submission.output.basename }
             </ReactTooltip>
 
-            <div className="btn-group" role="group" aria-label="Download submission data">
+            <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
               <a role="button" className="btn btn-light"
                                aria-label={submission.input.basename}
                                href={client.filesBaseURI + submission.input.path}
                                download
                                data-tip
                                data-for={"input-" + submission.id}>
-                <span aria-hidden="true" className="fa fa-download" />
+                <FontAwesomeIcon icon={faDownload}/>
                 {' '}
                 <span className="hidden-md-down">{t("submission.list.input")}</span>
               </a>
@@ -78,7 +81,7 @@ class SubmissionListView extends Component {
                                download
                                data-tip
                                data-for={"source-" + submission.id}>
-                <span aria-hidden="true" className="fa fa-download" />
+                <FontAwesomeIcon icon={faDownload}/>
                 {' '}
                 <span className="hidden-md-down">{t("submission.list.source")}</span>
               </a>
@@ -89,7 +92,7 @@ class SubmissionListView extends Component {
                                download
                                data-tip
                                data-for={"output-" + submission.id}>
-                <span aria-hidden="true" className="fa fa-download" />
+                <FontAwesomeIcon icon={faDownload}/>
                 {' '}
                 <span className="hidden-md-down">{t("submission.list.output")}</span>
               </a>
@@ -147,7 +150,7 @@ class SubmissionListView extends Component {
         { this.renderBody() }
         <div className="modal-footer">
           <Link to={"/" + this.taskName} role="button" className="btn btn-primary">
-            <span aria-hidden="true" className="fa fa-times"></span> {t("close")}
+            <FontAwesomeIcon icon={faTimes}/> {t("close")}
           </Link>
         </div>
       </ModalView>

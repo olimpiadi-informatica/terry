@@ -120,7 +120,9 @@ class AdminSummaryView extends Component {
   }
 
   isDeletable() {
-    this.session.status.deletable;
+    return true;
+
+    // ... this.session.status.deletable
   }
 
   renderStartTime() {
@@ -283,6 +285,8 @@ class AdminSummaryView extends Component {
   }
 
   resetContest() {
+    if (!window.confirm("Are you sure?")) return;
+
     const { t } = this.props;
     client.adminApi(this.session.adminToken(), "/drop_contest", {});
     window.alert(t("reload"));

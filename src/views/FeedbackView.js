@@ -21,11 +21,9 @@ class FeedbackView extends Component {
 
   renderCase(c, id) {
     const { t } = this.props;
-    return (
-        <li id={"case-" + id} key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
-          <span>Case #<samp>{id}</samp>: <b>{c.correct ? t("submission.correct") : t("submission.wrong")}</b><br/><em>{c.message}</em></span>
-        </li>
-    )
+    return <li id={"case-" + id} key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
+      <span>Case #<samp>{id}</samp>: <b>{c.correct ? t("submission.correct") : t("submission.wrong")}</b><br/><em>{c.message}</em></span>
+    </li>;
   }
 }
 

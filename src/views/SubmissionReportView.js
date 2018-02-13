@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import ModalView from './ModalView';
 import DateView from './DateView';
 import { DateTime } from 'luxon';
 import FeedbackView from './FeedbackView';
-import { Link } from 'react-router-dom';
 import {colorFromScore, translateComponent} from "../utils";
 
 class SubmissionReportView extends Component {
@@ -40,15 +42,17 @@ class SubmissionReportView extends Component {
     return (
       <React.Fragment>
         <div className="modal-body">
-          <dt>{t("submission.feedback.date")}:</dt>
-          <dd><DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
-          <dt>{t("submission.feedback.score")}:</dt>
-          <dd><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
-          <FeedbackView model={this.model} result={submission.feedback} />
+          <dl className="terry-file-view">
+            <dt>{t("submission.feedback.date")}:</dt>
+            <dd><DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
+            <dt>{t("submission.feedback.score")}:</dt>
+            <dd><span className={"badge badge-" + color}>{score}/{max_score}</span></dd>
+            <dt>Dettagli:</dt><dd><FeedbackView model={this.model} result={submission.feedback} /></dd>
+          </dl>
         </div>
         <div className="modal-footer">
           <Link to={"/" + submission.task} role="button" className="btn btn-primary">
-            <span aria-hidden="true" className="fa fa-times" /> {t("close")}
+            <FontAwesomeIcon icon={faTimes}/> {t("close")}
           </Link>
         </div>
       </React.Fragment>

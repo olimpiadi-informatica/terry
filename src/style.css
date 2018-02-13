@@ -21,6 +21,10 @@ html, body, #terry-container {
   );
 }
 
+.bordered-group > a.btn {
+  border-color: #dee2e6;
+}
+
 .custom-file {
   width: 3em;
 }

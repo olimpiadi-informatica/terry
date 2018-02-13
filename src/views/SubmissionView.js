@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
+import faTrash from '@fortawesome/fontawesome-free-solid/faTrash'
+import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane'
 import ValidationView from './ValidationView';
 import FileView from './FileView';
-import { Link } from 'react-router-dom';
 import ModalView from './ModalView';
 import {translateComponent} from "../utils";
 import "./SubmissionView.css";
@@ -53,11 +57,11 @@ class SubmissionView extends Component {
     } else {
       const source = this.submission.getSource();
       return (
-        <div key="present" className="card card-outline-primary">
+        <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
             <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
             <button role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.submission.resetSource() }>
-              <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change source")}
+              <FontAwesomeIcon icon={faTrash}/> {t("submission.submit.change source")}
             </button>
           </div>
           <div className="card-body">
@@ -93,11 +97,11 @@ class SubmissionView extends Component {
     const output = this.submission.getOutput();
 
     return (
-      <div key="present" className="card card-outline-primary">
+      <div key="present" className="card card-outline-primary w-100 mb-3">
         <div className="card-header terry-submission-object-card">
           <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
           <button role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>
-            <span aria-hidden="true" className="fa fa-trash" /> {t("submission.submit.change output")}
+            <FontAwesomeIcon icon={faTrash}/> {t("submission.submit.change output")}
           </button>
         </div>
         <div className="card-body">
@@ -134,7 +138,7 @@ class SubmissionView extends Component {
         </div>
         <div className="modal-footer">
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
-            <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
+            <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
           </Link>
           <button role="button" className="btn btn-success"
                   disabled={ !this.submission.canSubmit() }
@@ -143,7 +147,7 @@ class SubmissionView extends Component {
                     const id = this.submission.data.id;
                     this.props.history.push("/" + taskName + "/submission/" + id);
                   })}}>
-            <span aria-hidden="true" className="fa fa-paper-plane" /> {t("submission.submit.submit")}
+            <FontAwesomeIcon icon={faPaperPlane}/> {t("submission.submit.submit")}
           </button>
         </div>
       </React.Fragment>
