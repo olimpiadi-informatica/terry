@@ -23,7 +23,7 @@ $(dirname $0)/setup_chroot.sh ${OUTDIR}
 # Install deps
 linux32 chroot ${OUTDIR} pacman --noconfirm -S nginx cronie pypy{,3} python{,2}-pip \
   python{,2}-sortedcontainers python-colorama python-gevent python-pyjwt \
-  python-yaml python-werkzeug python-pynacl python-cffi python{,2}-numpy
+  python-yaml python-werkzeug python-pynacl python-cffi python{,2}-numpy zip
 
 # Cleanup pacman
 linux32 chroot ${OUTDIR} pacman -Scc --noconfirm

@@ -30,7 +30,7 @@ yarn
 yarn build
 popd
 
-sudo bash <<EOF
+sudo bash -e <<EOF
 chmod o+rx ${TMP}
 $(dirname $0)/vm-utils/gen_arch_root.sh ${TMP} ${ROOT_PASSWORD}
 $(dirname $0)/vm-utils/prepare_terry_arch.sh ${TMP}
