@@ -90,13 +90,9 @@ class AdminSummaryView extends Component {
         { this.renderExtraTimeEndTime() }
       </ul>
 
-      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
-        <button type="submit" className="btn btn-primary">
-          <span className="fa fa-play" aria-hidden="true" />
-          <i className="fa fa-user"></i>
-           {t("contest.download")}
-        </button>
-      </form>
+      <Link to={'/admin/download_results'} className="btn btn-primary">
+        {t("contest.download")}
+      </Link>
     </React.Fragment>;
   }
 

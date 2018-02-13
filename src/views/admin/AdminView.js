@@ -9,6 +9,7 @@ import AdminSummaryView from "./AdminSummaryView";
 import UsersView from "./UsersView";
 import UploadPackView from "./UploadPackView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
+import DownloadResultsView from "./DownloadResultsView";
 
 class AdminView extends Component {
   constructor(props) {
@@ -45,15 +46,22 @@ class AdminView extends Component {
     return <React.Fragment>
       { this.renderNavBar() }
       <main>
+        <AdminSummaryView session={this.session} />
+
         <Route path="/admin/logs" render={
           ({match}) => <LogsView session={this.session} />
         }/>
+
         <Route path="/admin/extra_time" render={
           ({match}) => <ContestExtraTimeView session={this.session} />
         }/>
-        <AdminSummaryView session={this.session} />
+
         <Route path="/admin/users" render={
           ({match}) => <UsersView session={this.session} />
+        }/>
+
+        <Route path="/admin/download_results" render={
+          ({match}) => <DownloadResultsView session={this.session} />
         }/>
       </main>
     </React.Fragment>

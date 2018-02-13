@@ -108,8 +108,8 @@ class UsersView extends Component {
         {body}
       </div>
       <div className="modal-footer">
-        <Link to={"/admin"} role="button" className="btn btn-danger">
-          <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
+        <Link to={"/admin"} role="button" className="btn btn-primary">
+          <span aria-hidden="true" className="fa fa-times" /> {t("close")}
         </Link>
       </div>
     </ModalView>;
