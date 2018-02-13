@@ -6,6 +6,8 @@
   "started at": "Gara iniziata il",
   "system status": "Stato del sistema",
   "contest status": "Stato della gara",
+  "minutes": "{{count}} minuto",
+  "minutes_plural": "{{count}} minuti",
   "minutes more for some users": "più {{count}} minuto per qualche utente",
   "minutes more for some users_plural": "più {{count}} minuti per qualche utente",
   "navbar": {

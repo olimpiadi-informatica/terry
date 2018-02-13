@@ -15,15 +15,15 @@ export default class Logs extends Observable {
       this.fireUpdate();
 
       return this.loadPromise = client.adminApi(this.session.adminToken(), "/log", options)
-          .then((response) => {
-            this.data = response.data;
-            delete this.loadPromise;
-            this.fireUpdate();
-          }, (response) => {
-            delete this.loadPromise;
-            this.fireUpdate();
-            return Promise.reject(response);
-          });
+        .then((response) => {
+          this.data = response.data;
+          delete this.loadPromise;
+          this.fireUpdate();
+        }, (response) => {
+          delete this.loadPromise;
+          this.fireUpdate();
+          return Promise.reject(response);
+        });
     }
 
     isLoading() {

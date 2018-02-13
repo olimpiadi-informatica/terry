@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import {translateComponent} from "../../utils";
 import Users from "../../models/admin/Users";
 import LoadingView from "../LoadingView";
@@ -77,7 +78,7 @@ class UsersView extends Component {
         <tr>
           <th>{t("users.name")}</th>
           <th>{t("users.surname")}</th>
-          <th>{t("users.title")}</th>
+          <th><FontAwesomeIcon icon="clock"/> {t("users.token")}</th>
           <th>{t("users.ips")}</th>
           <th>{t("users.extra time")} <small>{t("users.in minutes")}</small></th>
         </tr>
@@ -108,8 +109,8 @@ class UsersView extends Component {
         {body}
       </div>
       <div className="modal-footer">
-        <Link to={"/admin"} role="button" className="btn btn-danger">
-          <span aria-hidden="true" className="fa fa-times" /> {t("cancel")}
+        <Link to={"/admin"} role="button" className="btn btn-primary">
+          <span aria-hidden="true" className="fa fa-times" /> {t("close")}
         </Link>
       </div>
     </ModalView>;
