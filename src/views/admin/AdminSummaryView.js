@@ -17,8 +17,8 @@ class AdminSummaryView extends Component {
 
   componentWillMount() {
     this.logs.load({
-      start_date: "1000-01-01T00:00:00.000",
-      end_date: "2999-01-01T00:00:00.000",
+      start_date: "2000-01-01T00:00:00.000",
+      end_date: "2030-01-01T00:00:00.000",
       level: "WARNING",
     });
     this.session.users.load();
