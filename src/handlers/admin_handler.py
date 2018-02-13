@@ -12,6 +12,7 @@ import os.path
 import shutil
 import subprocess
 import tempfile
+import time
 
 import gevent
 import yaml
@@ -42,7 +43,7 @@ class AdminHandler(BaseHandler):
                                   "The pack has already been uploaded")
         if not crypto.validate(file["content"]):
             self.raise_exc(Forbidden, "BAD_FILE", "The uploaded file is "
-                                                  "not valid")
+                           "not valid")
         StorageManager.save_file(
             os.path.realpath(Config.encrypted_file), file["content"])
         return {}
@@ -68,7 +69,10 @@ class AdminHandler(BaseHandler):
         zip_directory = os.path.join(Config.storedir, "zips")
         os.makedirs(zip_directory, exist_ok=True)
         zip_directory = tempfile.mkdtemp(dir=zip_directory)
-        zipf_name = os.path.join(zip_directory, "results.zip")
+        zipf_name = Database.get_meta("admin_token").split(
+            '-', 1)[0] + time.strftime("%Y-%m-%d-%H-%M-%S",
+                                       time.localtime()) + "-results.zip"
+        zipf_name = os.path.join(zip_directory, zipf_name)
         command = "zip -r '" + zipf_name + "' db.sqlite3* log.sqlite3* " \
                                            "files/input files/output " \
                                            "files/source"
@@ -76,11 +80,14 @@ class AdminHandler(BaseHandler):
         try:
             gevent.subprocess.check_output(
                 command, shell=True, stderr=subprocess.STDOUT)
-        except gevent.subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError as e:
             Logger.error("ADMIN", "Zip error: %s" % e.output)
             raise e
-        return {"path": os.path.relpath(zipf_name,  # pragma: nocover
-                                        Config.storedir)}
+        return {
+            "path": os.path.relpath(
+                zipf_name,  # pragma: nocover
+                Config.storedir)
+        }
 
     def append_log(self, append_log_secret: str, level: str, category: str,
                    message: str):
@@ -118,7 +125,7 @@ class AdminHandler(BaseHandler):
             BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates({
             "items":
-                Logger.get_logs(level, category, start_date, end_date)
+            Logger.get_logs(level, category, start_date, end_date)
         })
 
     @Validators.admin_only

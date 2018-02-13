@@ -108,9 +108,13 @@ ENV/
 files/
 statement/
 
-# Config file
-config/config.yaml
-
 # Sample contest
 contest/
 zips/
+
+# Test temporary files
+db.sqlite3_for_test
+
+# vim
+.*.swp
+.*.swo

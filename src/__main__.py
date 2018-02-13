@@ -17,11 +17,15 @@ from .server import Server
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", help="Path to the config file",
-                        default="config/config.yaml")
+    parser.add_argument(
+        "-c",
+        "--config",
+        help="Path to the config file",
+        default="config/config.yaml")
     args = parser.parse_args()
 
-    Config.set_config_file(args.config)
+    if args.config:
+        Config.set_config_file(args.config)
 
     Logger.set_log_level(Config.log_level)
     Logger.connect_to_database()

@@ -44,18 +44,6 @@ class TestConfig(unittest.TestCase):
         with self.assertRaises(yaml.parser.ParserError):
             Config.set_config_file(self.configFilePath)
 
-    def test_default_file_missing(self):
-        wd = os.getcwd()
-        os.chdir(Utils.get_tmp_dir())
-        try:
-            with Utils.nostderr() as stderr:
-                with self.assertRaises(SystemExit) as ex:
-                    Config.set_config_file("config/config.yaml")
-            self.assertEqual(1, ex.exception.code)
-            self.assertIn("You need to (at least) copy and paste", stderr.buffer)
-        finally:
-            os.chdir(wd)
-
     def _write_config(self, config):
         with open(self.configFilePath, 'w') as file:
             file.write(config)

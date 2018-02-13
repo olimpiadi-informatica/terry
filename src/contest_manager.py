@@ -153,8 +153,7 @@ class ContestManager:
         try:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
-            Logger.info("CONTEST",
-                        "Contest not found, you probably need to "
+            Logger.info("CONTEST", "Contest not found, you probably need to "
                         "unzip it. Missing file %s" % ex.filename)
             return
 
@@ -224,7 +223,7 @@ class ContestManager:
             try:
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
@@ -266,9 +265,8 @@ class ContestManager:
                             Logger.warning(
                                 "TASK",
                                 "Validation of input %s for task %s took %f "
-                                "seconds"
-                                % (seed, task_name,
-                                   time.monotonic() - start_time))
+                                "seconds" % (seed, task_name,
+                                             time.monotonic() - start_time))
                     finally:
                         os.close(stdin)
 
@@ -338,14 +336,13 @@ class ContestManager:
             ])
             if time.monotonic() > start_time + 1:
                 Logger.warning("TASK", "Evaluation of output %s "
-                                       "for task %s, with input %s, took %f "
-                                       "seconds" %
-                               (output_path, task_name, input_path,
-                                time.monotonic() - start_time))
+                               "for task %s, with input %s, took %f "
+                               "seconds" % (output_path, task_name, input_path,
+                                            time.monotonic() - start_time))
         except:
             # TODO log the stdout and stderr of the checker
             Logger.error("TASK", "Error while evaluating output %s "
-                                 "for task %s, with input %s: %s" %
+                         "for task %s, with input %s: %s" %
                          (output_path, task_name, input_path,
                           traceback.format_exc()))
             raise

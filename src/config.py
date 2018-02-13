@@ -33,7 +33,7 @@ class Config:
     @staticmethod
     def set_config_file(config_file):
         """
-        Set the config file globally. This method MUST be called once and only once
+        Set the config file globally. This method should be called at most once
         :param config_file: The path to the log file
         """
         if Config.loaded is True:
@@ -44,11 +44,6 @@ class Config:
                 cfg = yaml.load(f)
         except FileNotFoundError:
             print("Config file %s not found" % config_file, file=sys.stderr)
-            if config_file == 'config/config.yaml':
-                print(
-                    "You need to (at least) copy and paste config/example.config.yaml to config/config.yaml",
-                    file=sys.stderr)
-                sys.exit(1)
             raise
         # if the config file is empty
         if cfg is None:

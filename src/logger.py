@@ -27,7 +27,10 @@ class Logger:
     ERROR = 3
     HUMAN_MESSAGES = ["DEBUG", "INFO", "WARNING", "ERROR"]
     LOG_LEVEL = INFO
-    COLOR = [Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.YELLOW + Style.BRIGHT, Fore.RED + Style.BRIGHT]
+    COLOR = [
+        Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.YELLOW + Style.BRIGHT,
+        Fore.RED + Style.BRIGHT
+    ]
     FMT = "%% %ds" % max(map(len, HUMAN_MESSAGES))
 
     @staticmethod
@@ -42,8 +45,7 @@ class Logger:
             Config.logfile,
             check_same_thread=False,
             isolation_level=None,
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
+            detect_types=sqlite3.PARSE_DECLTYPES)
         Logger.c = Logger.conn.cursor()
         Logger.c.executescript("""
             PRAGMA JOURNAL_MODE = WAL;
@@ -60,15 +62,16 @@ class Logger:
     @staticmethod
     def set_log_level(lvl):
         """
-        Set the minimum level of the messages to be printed on console. Note that every messege is alway stored in the
-        db.
+        Set the minimum level of the messages to be printed on console. Note that every
+        message is alway stored in the db.
         :param lvl: Minimum level, can be an int or a str with the log level name
         """
         if isinstance(lvl, int):
             Logger.LOG_LEVEL = lvl
         else:
             if lvl not in Logger.HUMAN_MESSAGES:
-                Logger.log_console(Logger.ERROR, "LOGGER", "Invalid log level: %s" % lvl)
+                Logger.log_console(Logger.ERROR, "LOGGER",
+                                   "Invalid log level: %s" % lvl)
             else:
                 Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index(lvl)
 
@@ -86,7 +89,11 @@ class Logger:
         c.execute("""
             INSERT INTO logs (level, category, message)
             VALUES (:level, :category, :message)
-        """, {"level": level, "category": category, "message": str(message)})
+        """, {
+            "level": level,
+            "category": category,
+            "message": str(message)
+        })
         Logger.conn.commit()
 
     @staticmethod
@@ -97,8 +104,7 @@ class Logger:
         print(
             Logger.COLOR[level] + tag + Style.RESET_ALL,
             "%s %s" % (cat, message),
-            file=sys.stderr
-        )
+            file=sys.stderr)
 
     @staticmethod
     def debug(*args, **kwargs):
@@ -134,18 +140,28 @@ class Logger:
                 WHERE level >= :level AND date >= :begin AND date <= :end
                 ORDER BY date DESC
                 LIMIT 50
-            """, {"level": level, "begin": begin, "end": end})
+            """, {
+                "level": level,
+                "begin": begin,
+                "end": end
+            })
         else:
             c.execute("""
                 SELECT date, category, level, message FROM logs
                 WHERE level >= :level AND date >= :begin AND date <= :end AND category = :category
                 ORDER BY date DESC
                 LIMIT 50
-            """, {"level": level, "category": category, "begin": begin, "end": end})
+            """, {
+                "level": level,
+                "category": category,
+                "begin": begin,
+                "end": end
+            })
         for row in c.fetchall():
             ret.append({
                 "date": row[0],
                 "category": row[1],
                 "level": Logger.HUMAN_MESSAGES[row[2]],
-                "message": row[3]})
+                "message": row[3]
+            })
         return ret
