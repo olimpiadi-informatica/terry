@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import {translateComponent} from "../../utils";
 import Users from "../../models/admin/Users";
 import LoadingView from "../LoadingView";
@@ -77,7 +78,7 @@ class UsersView extends Component {
         <tr>
           <th>{t("users.name")}</th>
           <th>{t("users.surname")}</th>
-          <th>{t("users.title")}</th>
+          <th><FontAwesomeIcon icon="clock"/> {t("users.token")}</th>
           <th>{t("users.ips")}</th>
           <th>{t("users.extra time")} <small>{t("users.in minutes")}</small></th>
         </tr>

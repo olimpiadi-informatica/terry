@@ -255,7 +255,7 @@ class AdminSummaryView extends Component {
       <div className="card mb-3">
         <div className="card-body">
           <h3>{t("system status")}</h3>
-          <ul class="mb-0">
+          <ul className="mb-0">
             <li>{ this.renderLogSummary() }</li>
           </ul>
         </div>
@@ -263,7 +263,7 @@ class AdminSummaryView extends Component {
       <div className="card mb-3">
         <div className="card-body">
           <h3>{t("contest.extra time management")}</h3>
-          <ul class="mb-0">
+          <ul className="mb-0">
             <li>{ this.renderExtraTimeSummary() }</li>
             <li>{ this.renderUserExtraTimeSummary() }</li>
           </ul>
