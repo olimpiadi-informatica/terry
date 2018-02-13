@@ -45,14 +45,18 @@ class AdminSummaryView extends Component {
     this.logs.popObserver(this);
   }
 
+  serverTime() {
+    return DateTime.local().minus(this.session.timeDelta);
+  }
+
   renderContestStatus() {
     const { t, i18n } = this.props;
 
     if(this.session.users.isLoading()) return <p>{t("loading")}</p>;
 
     if(!this.session.status.start_time) return this.renderNotStarted();
-    if(DateTime.local() < this.getEndTime()) return this.renderRunning();
-    if(DateTime.local() < this.getExtraTimeEndTime()) return this.renderRunningExtraTime();
+    if(this.serverTime() < this.getEndTime()) return this.renderRunning();
+    if(this.serverTime() < this.getExtraTimeEndTime()) return this.renderRunningExtraTime();
     return this.renderFinished();
   }
 

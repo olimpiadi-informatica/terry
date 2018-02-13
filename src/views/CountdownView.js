@@ -16,7 +16,7 @@ class CountdownView extends Component {
   }
 
   render() {
-    const remaining = this.props.end.diff(DateTime.local().plus(this.props.delta));
+    const remaining = this.props.end.diff(DateTime.local().minus(this.props.delta));
     return <span> { remaining.toFormat("hh:mm:ss") } </span>
   }
 }

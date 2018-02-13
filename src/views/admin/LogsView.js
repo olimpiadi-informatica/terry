@@ -58,12 +58,12 @@ class LogsTable extends Component {
     const { t } = this.props;
 
     if (this.logs.isLoading())
-      return <tr><td colspan="4">{t("loading")}</td></tr>;
+      return <tr><td colSpan="4">{t("loading")}</td></tr>;
 
     const items = this.logs.data.items.filter((l) => this.filter(l));
 
     if (items.length === 0)
-      return <tr><td colspan="4">{t("no messages yet")}</td></tr>;
+      return <tr><td colSpan="4">{t("no messages yet")}</td></tr>;
 
     return items.map((l, i) => this.formatLog(l, i));
   }
