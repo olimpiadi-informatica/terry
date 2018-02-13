@@ -5,7 +5,7 @@
 #
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
-import datetime
+import time
 
 import jwt
 from werkzeug.exceptions import Forbidden, BadRequest
@@ -247,8 +247,7 @@ class Validators:
         if Database.get_meta("start_time") is None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The contest has not started yet")
-        if BaseHandler.get_end_time(
-                extra_time) < datetime.datetime.now().timestamp():
+        if BaseHandler.get_end_time(extra_time) < time.time():
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The contest has ended")
 

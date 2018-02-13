@@ -138,7 +138,7 @@ class AdminHandler(BaseHandler):
                                   "Contest has already been started!")
 
         ContestManager.start()
-        start_time = int(datetime.datetime.now().timestamp())
+        start_time = int(time.time())
         Database.set_meta("start_time", start_time)
         Logger.info("CONTEST", "Contest started")
         return BaseHandler.format_dates(
