@@ -7,7 +7,7 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, BadRequest
 
 from .base_handler import BaseHandler
 from .info_handler import InfoHandler
@@ -30,8 +30,11 @@ class UploadHandler(BaseHandler):
         POST /upload_output
         """
         output_id = Database.gen_id()
-        path = StorageManager.new_output_file(output_id, file["name"])
-
+        try:
+            path = StorageManager.new_output_file(output_id, file["name"])
+        except ValueError:
+            BaseHandler.raise_exc(BadRequest, "INVALID_FILENAME",
+                                  "The provided file has an invalid name")
         StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
 
@@ -71,7 +74,11 @@ class UploadHandler(BaseHandler):
             })
 
         source_id = Database.gen_id()
-        path = StorageManager.new_source_file(source_id, file["name"])
+        try:
+            path = StorageManager.new_source_file(source_id, file["name"])
+        except ValueError:
+            BaseHandler.raise_exc(BadRequest, "INVALID_FILENAME",
+                                  "The provided file has an invalid name")
 
         StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
