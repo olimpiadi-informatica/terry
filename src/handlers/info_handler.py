@@ -17,13 +17,13 @@ from datetime import datetime
 
 
 class InfoHandler(BaseHandler):
-
     def get_contest(self):
         """
         GET /contest
         """
         start_timestamp = Database.get_meta("start_time", type=int)
-        start_datetime = datetime.fromtimestamp(start_timestamp) if start_timestamp is not None else None
+        start_datetime = datetime.fromtimestamp(
+            start_timestamp) if start_timestamp is not None else None
         now = datetime.now()
 
         if not start_timestamp or now < start_datetime:
@@ -79,7 +79,6 @@ class InfoHandler(BaseHandler):
         """
         return InfoHandler.patch_submission(submission)
 
-    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_token
     def get_user(self, user):
@@ -87,6 +86,12 @@ class InfoHandler(BaseHandler):
         GET /user/<token>
         """
         token = user["token"]
+
+        user["contest"] = self.get_contest()
+
+        if not user["contest"]["has_started"]:
+            del user["extra_time"]
+            return
 
         user["end_time"] = InfoHandler.get_end_time(user["extra_time"])
         del user["extra_time"]
@@ -100,8 +105,7 @@ class InfoHandler(BaseHandler):
                 current_input = Database.get_input(
                     token=token,
                     task=task_name,
-                    attempt=task["current_attempt"]
-                )
+                    attempt=task["current_attempt"])
             else:
                 current_input = None
 
@@ -126,7 +130,7 @@ class InfoHandler(BaseHandler):
         submissions = []
         for sub in Database.get_submissions(user["token"], task["name"]):
             submissions.append(InfoHandler.patch_submission(sub))
-        return { "items": submissions }
+        return {"items": submissions}
 
     @staticmethod
     def patch_submission(submission):
@@ -145,7 +149,8 @@ class InfoHandler(BaseHandler):
             else:
                 result[k] = v
 
-        result["feedback"] = json.loads(result["output"]["result"].decode())["feedback"]
+        result["feedback"] = json.loads(
+            result["output"]["result"].decode())["feedback"]
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]
