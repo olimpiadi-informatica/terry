@@ -122,3 +122,18 @@ class TestStorageManager(unittest.TestCase):
         filename = ".hidden"
         sanitized = StorageManager._sanitize(filename)
         self.assertEqual(".hidden", sanitized)
+
+    def test_sanitize_invalid_filename_1(self):
+        filename = "/"
+        with self.assertRaises(ValueError):
+            StorageManager._sanitize(filename)
+
+    def test_sanitize_invalid_filename_2(self):
+        filename = "."
+        with self.assertRaises(ValueError):
+            StorageManager._sanitize(filename)
+
+    def test_sanitize_invalid_filename_3(self):
+        filename = ".."
+        with self.assertRaises(ValueError):
+            StorageManager._sanitize(filename)
