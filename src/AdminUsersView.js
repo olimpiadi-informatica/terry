@@ -40,7 +40,7 @@ class UserExtraTimeView extends Component {
 
 UserExtraTimeView = translateComponent(UserExtraTimeView, "admin");
 
-class UsersView extends Component {
+class AdminUsersView extends Component {
   constructor(props) {
     super(props);
     this.session = props.session;
@@ -104,4 +104,4 @@ class UsersView extends Component {
   }
 }
 
-export default translateComponent(UsersView, "admin");
+export default translateComponent(AdminUsersView, "admin");

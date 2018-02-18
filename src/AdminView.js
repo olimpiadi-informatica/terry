@@ -6,9 +6,9 @@ import {translateComponent} from "./utils";
 import Session from "./Session";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "./LoadingView";
-import LogsView from "./LogsView";
+import AdminLogsView from "./AdminLogsView";
 import AdminSummaryView from "./AdminSummaryView";
-import UsersView from "./UsersView";
+import AdminUsersView from "./AdminUsersView";
 import UploadPackView from "./UploadPackView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
@@ -54,7 +54,7 @@ class AdminView extends Component {
             <AdminSummaryView session={this.session} users={users} />
 
             <Route path="/admin/logs" render={
-              ({match}) => <LogsView session={this.session} />
+              ({match}) => <AdminLogsView session={this.session} />
             }/>
 
             <Route path="/admin/extra_time" render={
@@ -62,7 +62,7 @@ class AdminView extends Component {
             }/>
 
             <Route path="/admin/users" render={
-              ({match}) => <UsersView session={this.session} users={users} />
+              ({match}) => <AdminUsersView session={this.session} users={users} />
             }/>
 
             <Route path="/admin/download_results" render={

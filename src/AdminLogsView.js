@@ -5,10 +5,10 @@ import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import {translateComponent, formatDate} from "./utils";
 import LoadingView from "./LoadingView";
 import ModalView from './ModalView';
-import "./LogsView.css";
+import "./AdminLogsView.css";
 import PromiseView from './PromiseView';
 
-class LogsView extends Component {
+class AdminLogsView extends Component {
   constructor(props) {
     super(props);
 
@@ -180,4 +180,4 @@ class LogsView extends Component {
   }
 }
 
-export default translateComponent(LogsView, "admin");
+export default translateComponent(AdminLogsView, "admin");
