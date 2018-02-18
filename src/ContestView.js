@@ -6,7 +6,7 @@ import TaskView from './TaskView';
 import ReactMarkdown from 'react-markdown';
 import { DateTime, Duration } from 'luxon';
 import { Trans } from 'react-i18next';
-import {formatTimeSpan, translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import SidebarView from './SidebarView';
 import IndexView from './IndexView';
 
