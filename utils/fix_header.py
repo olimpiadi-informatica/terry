@@ -19,6 +19,12 @@ STATIC_HEADER = """#!/usr/bin/env python3
 OLD_COPYRIGHTS = "# Copyright"
 
 
+def get_git_author():
+    name = subprocess.check_output(["git", "config", "user.name"]).decode().strip()
+    mail = subprocess.check_output(["git", "config", "user.email"]).decode().strip()
+    return "%s <%s>" % (name, mail)
+
+
 def get_authors(path: str) -> List[Tuple[str, datetime]]:
     authors = subprocess.check_output(["git", "log", "--follow", "-M",
                                        "--pretty=format:%an <%ae>#%at", path])
@@ -28,7 +34,8 @@ def get_authors(path: str) -> List[Tuple[str, datetime]]:
     result = []
     for author in authors:
         result.append((author[0], datetime.fromtimestamp(int(author[1]))))
-    # TODO append dirty files from working dir
+    if subprocess.check_output(["git", "ls-files", "-m", path]):
+        result.append((get_git_author(), datetime.now()))
     return result
 
 
