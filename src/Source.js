@@ -10,8 +10,4 @@ export default class Source extends SubmissionUploadable {
 
     return client.api.post("/upload_source", data)
   }
-
-  isValidForSubmit() {
-    return this.isUploaded()
-  }
 }

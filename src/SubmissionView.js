@@ -9,6 +9,7 @@ import FileView from './FileView';
 import ModalView from './ModalView';
 import {translateComponent} from "./utils";
 import "./SubmissionView.css";
+import PromiseView from './PromiseView';
 
 class SubmissionView extends Component {
   constructor(props) {
@@ -34,17 +35,6 @@ class SubmissionView extends Component {
     );
   }
 
-  renderSourceStatus(output) {
-    const { t } = this.props;
-    if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
-
-    return (
-      <React.Fragment>
-        { output.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
-      </React.Fragment>
-    );
-  }
-
   renderSourceSelector() {
     const { t } = this.props;
     if(!this.submission.hasSource()) {
@@ -66,7 +56,13 @@ class SubmissionView extends Component {
           </div>
           <div className="card-body">
             <FileView file={source.file} />
-            { this.renderSourceStatus(source) }
+            <PromiseView promise={this.submission.getSource().uploadPromise}
+              renderFulfilled={(uploadedSource) => <React.Fragment>
+                { uploadedSource.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
+              </React.Fragment>}
+              renderRejected={(error) => <p>{error}</p>}
+              renderPending={() => <p>{t("submission.submit.processing")}</p>}
+            />
           </div>
         </div>
       );
@@ -79,16 +75,6 @@ class SubmissionView extends Component {
         <input ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.submission.setOutput(this.refs.output.files[0])} />
         <label className="custom-file-label" htmlFor="output-file">File di output...</label>
       </div>
-    );
-  }
-
-  renderOutputValidation(output) {
-    const { t } = this.props;
-    if(output.hasErrored()) return <p>{output.error}</p>;
-    if(!output.isUploaded()) return <p>{t("submission.submit.processing")}</p>;
-
-    return (
-      <ValidationView model={this.model} result={output.data.validation} />
     );
   }
 
@@ -106,7 +92,11 @@ class SubmissionView extends Component {
         </div>
         <div className="card-body">
           <FileView file={output.file} />
-          { this.renderOutputValidation(output) }
+          <PromiseView promise={this.submission.getOutput().uploadPromise}
+            renderFulfilled={(uploadedOutput) => <ValidationView model={this.model} result={uploadedOutput.data.validation} />}
+            renderRejected={(error) => <p>{error}</p>}
+            renderPending={() => <p>{t("submission.submit.processing")}</p>}
+          />
         </div>
       </div>
     );
@@ -118,6 +108,14 @@ class SubmissionView extends Component {
     } else {
       return this.renderOutputInfo();
     }
+  }
+
+  submit() {
+    return this.submission.submit().then(() => {
+      const taskName = this.submission.data.task;
+      const id = this.submission.data.id;
+      this.props.history.push("/" + taskName + "/submission/" + id);
+    });
   }
 
   renderSubmissionForm() {
@@ -140,13 +138,11 @@ class SubmissionView extends Component {
           <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
             <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
           </Link>
-          <button role="button" className="btn btn-success"
-                  disabled={ !this.submission.canSubmit() }
-                  onClick={() => { this.submission.submit().then(() => {
-                    const taskName = this.submission.data.task;
-                    const id = this.submission.data.id;
-                    this.props.history.push("/" + taskName + "/submission/" + id);
-                  })}}>
+          <button 
+            role="button" className="btn btn-success"
+            disabled={ !this.submission.canSubmit() }
+            onClick={() => this.submit() }
+          >
             <FontAwesomeIcon icon={faPaperPlane}/> {t("submission.submit.submit")}
           </button>
         </div>

@@ -17,8 +17,6 @@ export default class Submission extends Observable {
     if(this.hasSource()) throw Error("setSource called when hasSource is true")
 
     this.source = new Source(file, this);
-    this.source.upload();
-
     this.source.pushObserver(this);
 
     this.fireUpdate();
@@ -42,8 +40,6 @@ export default class Submission extends Observable {
     if(this.hasOutput()) throw Error("setOutput called when hasOutput is true")
 
     this.output = new Output(file, this);
-    this.output.upload();
-
     this.output.pushObserver(this);
 
     this.fireUpdate();
@@ -80,8 +76,8 @@ export default class Submission extends Observable {
     const data = new FormData();
 
     data.append("input_id", this.input.id);
-    data.append("source_id", this.getSource().data.id);
-    data.append("output_id", this.getOutput().data.id);
+    data.append("source_id", this.getSource().uploadPromise.value.data.id);
+    data.append("output_id", this.getOutput().uploadPromise.value.data.id);
 
     this.fireUpdate();
 

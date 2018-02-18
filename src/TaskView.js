@@ -32,7 +32,6 @@ class TaskView extends Component {
 
   componentWillMount() {
     this.task.loadStatement();
-    this.submissionListPromise = this.getTaskState().submissionListPromise;
   }
 
   componentDidMount() {
@@ -132,7 +131,7 @@ class TaskView extends Component {
   renderSubmissionListButton() {
     const { t } = this.props;
     return <PromiseView
-      promise={this.submissionListPromise}
+      promise={this.getTaskState().submissionListPromise}
       renderPending={() => null}
       renderFulfilled={(list) => this.returnLastSubmissionInfo(list)}
       renderRejected={(error) => <em>{t("submission.list.load failed")}</em>}

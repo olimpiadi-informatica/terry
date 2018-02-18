@@ -76,6 +76,7 @@ export default class UserTaskState extends Observable {
 
   refreshSubmissionList() {
     this.submissionListPromise = new ObservablePromise(this.loadSubmissionList());
+    this.fireUpdate();
   }
 
 }

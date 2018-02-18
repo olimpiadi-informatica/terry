@@ -1,4 +1,5 @@
 import Observable from './Observable';
+import ObservablePromise from './ObservablePromise';
 
 export default class SubmissionUploadable extends Observable {
   constructor(file, submission) {
@@ -8,39 +9,16 @@ export default class SubmissionUploadable extends Observable {
     this.submission = submission;
 
     this.model = submission.model;
-  }
 
-  upload() {
-    this.fireUpdate();
-    this.uploadPromise = this.doUpload().then((response) => {
-      this.data = response.data;
-      this.fireUpdate();
-      delete this.uploadPromise;
-    }).catch((error) => {
-      this.error = error;
-      this.fireUpdate();
-      delete this.uploadPromise;
-      return Promise.reject(error);
-    });
+    this.uploadPromise = new ObservablePromise(this.doUpload());
+    this.uploadPromise.pushObserver(this);
   }
 
   doUpload() {
     throw Error("not implemented");
   }
 
-  isUploading() {
-    return this.uploadPromise !== undefined;
-  }
-
-  isUploaded() {
-    return this.data !== undefined;
-  }
-
-  hasErrored() {
-    return this.error !== undefined;
-  }
-
   isValidForSubmit() {
-    return this.isUploaded()
+    return this.uploadPromise.isFulfilled();
   }
 }
