@@ -25,7 +25,7 @@ setup(
     license="MPL-2.0",
     keywords="informatics contests",
     url="https://github.com/algorithm-ninja/territoriali-backend",
-    packages=find_packages(include="terry"),
+    packages=find_packages(exclude="test"),
     long_description=read("README.md"),
     classifiers=[
         "Development Status :: 3 - Alpha", "Environment :: Console",
