@@ -5,6 +5,7 @@
 #
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
+# Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
 
 import os
 import os.path

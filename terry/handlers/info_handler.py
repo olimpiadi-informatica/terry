@@ -4,8 +4,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-# Copyright 2017 - Luca Versari <veluca93@gmail.com>
-# Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
+# Copyright 2017-2018 - Luca Versari <veluca93@gmail.com>
+# Copyright 2017-2018 - Massimo Cairo <cairomassimo@gmail.com>
+# Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 
 import json
 from datetime import datetime
