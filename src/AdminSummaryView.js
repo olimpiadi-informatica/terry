@@ -7,7 +7,6 @@ import {Trans} from "react-i18next";
 import CountdownView from './CountdownView';
 import { DateTime, Duration } from 'luxon';
 import DateView from './DateView';
-import Logs from './Logs';
 import client from './TerryClient';
 import PromiseView from './PromiseView';
 
@@ -15,11 +14,7 @@ class AdminSummaryView extends Component {
   constructor(props) {
     super(props);
     this.session = props.session;
-    this.logs = new Logs(this.session);
-  }
-
-  componentWillMount() {
-    this.logs.load({
+    this.logsPromise = this.session.loadLogs({
       start_date: "2000-01-01T00:00:00.000",
       end_date: "2030-01-01T00:00:00.000",
       level: "WARNING",
@@ -28,7 +23,6 @@ class AdminSummaryView extends Component {
 
   componentDidMount() {
     this.session.pushObserver(this);
-    this.logs.pushObserver(this);
 
     const tickrate = 1000;
     this.timer = setInterval(() => this.forceUpdate(), tickrate);
@@ -41,7 +35,6 @@ class AdminSummaryView extends Component {
     }
 
     this.session.popObserver(this);
-    this.logs.popObserver(this);
   }
 
   serverTime() {
@@ -183,13 +176,10 @@ class AdminSummaryView extends Component {
     );
   }
 
-  renderLogSummary() {
+  renderLogSummary(logs) {
     const { t, i18n } = this.props;
 
-    if (this.logs.isLoading())
-      return <React.Fragment>{t("loading")}</React.Fragment>;
-
-    const items = this.logs.data.items;
+    const items = logs.items;
 
     if (items.length === 0)
       return <React.Fragment>
@@ -262,7 +252,7 @@ class AdminSummaryView extends Component {
         <div className="card-body">
           <h3>{t("system status")}</h3>
           <ul className="mb-0">
-            <li>{ this.renderLogSummary() }</li>
+            <li><PromiseView promise={this.logsPromise} renderFulfilled={(logs) => this.renderLogSummary(logs)}/></li>
           </ul>
         </div>
       </div>
