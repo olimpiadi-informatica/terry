@@ -17,6 +17,7 @@ import ReactMarkdown from 'react-markdown';
 import 'katex-all/dist/katex.min.css';
 import katex from 'katex-all/dist/katex.min.js';
 import renderMathInElement from 'katex-all/dist/contrib/auto-render.min.js';
+import PromiseView from './PromiseView';
 
 window.katex = katex
 
@@ -36,6 +37,7 @@ class TaskView extends Component {
   componentWillMount() {
     this.task.loadStatement();
     this.getSubmissionList().load();
+    this.submissionListPromise = this.getTaskState().loadSubmissionList()
   }
 
   componentDidMount() {
@@ -119,28 +121,31 @@ class TaskView extends Component {
     </div>
   }
 
+  returnLastSubmissionInfo(list) {
+    const { t } = this.props;
+    const items = list.items;
+    if (items.length === 0) {
+      return null;
+    } else {
+      const submission = items[items.length-1];
+      return <div className="terry-submission-list-button">
+        <strong>{t("task.last submission")}</strong> <DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
+        {' '}
+        (<Link to={"/" + this.task.name + "/submissions"}>{t("task.view all")}</Link>)
+      </div>
+    }
+}
+
   renderSubmissionListButton() {
     const { t } = this.props;
     const list = this.getSubmissionList();
     let last_submission;
-    if (list.isLoading()) return <React.Fragment />;
-    else if(!list.isLoaded()) last_submission = <em>{t("submission.list.load failed")}</em>;
-    else {
-      const items = list.data.items;
-      if (items.length === 0)
-        return (<React.Fragment />);
-      else {
-        const submission = items[items.length-1];
-        last_submission = <DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
-      }
-    }
-    return (
-      <div className="terry-submission-list-button">
-        <strong>{t("task.last submission")}</strong> {last_submission}
-        {' '}
-        (<Link to={"/" + this.task.name + "/submissions"}>{t("task.view all")}</Link>)
-      </div>
-    );
+    return <PromiseView
+      promise={this.submissionListPromise}
+      renderPending={() => null}
+      renderFulfilled={(list) => this.returnLastSubmissionInfo(list)}
+      renderRejected={(error) => <em>{t("submission.list.load failed")}</em>}
+    />
   }
 
   render() {

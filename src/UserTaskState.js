@@ -67,6 +67,12 @@ export default class UserTaskState extends Observable {
     return new Submission(input, this);
   }
 
+  loadSubmissionList() {
+    return client.api.get("/user/" + this.getUser().token + "/submissions/" + this.task.name).then((response) => {
+      return response.data;
+    });
+  }
+
   getSubmissionList() {
     return this.submissionList;
   }
