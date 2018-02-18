@@ -104,4 +104,8 @@ export default class Session extends Observable {
     return Math.round(this.status.extra_time / 60)
   }
 
+  loadLogs(options) {
+    return new ObservablePromise(client.adminApi(this.adminToken(), "/log", options).then((response) => response.data));
+  }
+
 }

@@ -20,7 +20,9 @@ i18n.on("languageChanged", lang => document.getElementsByTagName("html")[0].setA
 
 // handle errors in promises
 window.addEventListener('unhandledrejection', event => {
-  window.alert('An error occurred. Please reload the page. (' + (event.reason||'<no reason>') + ')');
+  // FIXME: dirty trick to avoid alerts in development
+  if(!window.location.origin.endsWith(":5050"))
+    window.alert('An error occurred. Please reload the page. (' + (event.reason||'<no reason>') + ')');
 });
 
 ReactDOM.render(

@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
+import ObservablePromise from './ObservablePromise';
 
 class PromiseView extends Component {
+  constructor(props) {
+    super(props);
+
+    if(!(props.promise instanceof ObservablePromise))
+      throw new Error("invalid promise given to PromiseView");
+  }
+
   static defaultProps = {
     renderRejected: (error) => {
       // by default the promise is not expected to ever fail

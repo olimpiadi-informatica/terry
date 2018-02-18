@@ -3,29 +3,80 @@ import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import {translateComponent, formatDate} from "./utils";
-import Logs from "./Logs";
 import LoadingView from "./LoadingView";
 import ModalView from './ModalView';
 import "./LogsView.css";
+import PromiseView from './PromiseView';
 
-class LogsTable extends Component {
+class LogsView extends Component {
   constructor(props) {
     super(props);
-    this.logs = props.logs;
-    this.changeLevel = props.changeLevel;
-    this.changeCategory = props.changeCategory;
+
+    this.session = props.session;
+    this.state = {
+      level: "INFO",
+      category: "",
+      filter: "",
+    };
+
+    this.LOG_LEVELS = {
+      DEBUG: {
+        color: 'secondary',
+      },
+      INFO: {
+        color: 'info',
+      },
+      WARNING: {
+        color: 'warning',
+      },
+      ERROR: {
+        color: 'danger',
+      },
+    };
+
+    this.loadLogs();
   }
 
   componentDidMount() {
-    this.logs.pushObserver(this);
+    this.interval = setInterval(() => this.loadLogs(), 5000);
   }
 
   componentWillUnmount() {
-    this.logs.popObserver(this);
+    clearInterval(this.interval);
+  }
+
+  loadLogs() {
+    const options = {
+      start_date: "2000-01-01T00:00:00.000",
+      end_date: "2030-01-01T00:00:00.000",
+      level: this.state.level
+    };
+    if (this.state.category) {
+      options.category = this.state.category;
+    }
+    this.logsPromise = this.session.loadLogs(options);
+    this.forceUpdate();
+  }
+
+  componentDidUpdate(props, state) {
+    if (state.level !== this.state.level || state.category !== this.state.category)
+      this.loadLogs();
+  }
+
+  changeLevel(level) {
+    this.setState({level: level});
+  }
+
+  changeCategory(cat) {
+    this.setState({category: cat});
+  }
+
+  changeFilter(filter) {
+    this.setState({filter: filter});
   }
 
   filter(log) {
-    const filter = this.props.filter.toLowerCase();
+    const filter = this.state.filter.toLowerCase();
     if (!filter) return true;
     return log.message.toLowerCase().indexOf(filter) !== -1;
   }
@@ -57,115 +108,13 @@ class LogsTable extends Component {
   renderTableBody() {
     const { t } = this.props;
 
-    if (this.logs.isLoading())
-      return <tr><td colSpan="4">{t("loading")}</td></tr>;
-
-    const items = this.logs.data.items.filter((l) => this.filter(l));
-
-    if (items.length === 0)
-      return <tr><td colSpan="4">{t("no messages yet")}</td></tr>;
-
-    return items.map((l, i) => this.formatLog(l, i));
-  }
-
-  render() {
-    const { t } = this.props;
-
-    return <div className="terry-log-table no-padding">
-      <table className="table">
-        <thead>
-        <tr>
-          <th>{t("logs.date")}</th>
-          <th>{t("logs.category")}</th>
-          <th>{t("logs.level")}</th>
-          <th>{t("logs.message")}</th>
-        </tr>
-        </thead>
-        <tbody>
-          {this.renderTableBody()}
-        </tbody>
-      </table>
-    </div>
-  }
-}
-
-LogsTable = translateComponent(LogsTable, "admin");
-
-class LogsView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.session = props.session;
-    this.session.updateLogs = this.updateLogs.bind(this);
-    this.logs = new Logs(this.session);
-    this.state = {
-      level: "INFO",
-      category: "",
-      filter: ""
-    };
-
-    this.LOG_LEVELS = {
-      DEBUG: {
-        color: 'secondary',
-      },
-      INFO: {
-        color: 'info',
-      },
-      WARNING: {
-        color: 'warning',
-      },
-      ERROR: {
-        color: 'danger',
-      },
-    };
-  }
-
-  componentWillMount() {
-    this.updateLogs();
-    this.setInterval();
-  }
-
-  componentWillUnmount() {
-    this.clearInterval();
-  }
-
-  updateLogs() {
-    const options = {
-      start_date: "2000-01-01T00:00:00.000",
-      end_date: "2030-01-01T00:00:00.000",
-      level: this.state.level
-    };
-    if (this.state.category)
-      options.category = this.state.category;
-    this.logs.load(options);
-  }
-
-  setInterval() {
-    this.interval = setInterval(this.updateLogs.bind(this), 5000);
-  }
-  clearInterval() {
-    clearInterval(this.interval);
-  }
-
-  componentDidUpdate(props, state) {
-    if (state.level !== this.state.level || state.category !== this.state.category)
-      this.updateLogs();
-  }
-
-  changeLevel(level) {
-    this.setState({level: level});
-    this.clearInterval();
-    this.setInterval();
-  }
-
-  changeCategory(cat) {
-    this.setState({category: cat});
-    this.clearInterval();
-    this.setInterval();
-  }
-
-  changeFilter(filter) {
-    this.setState({filter: filter});
+    return <PromiseView promise={this.logsPromise}
+      renderFulfilled={(logs) => {
+        const items = logs.items.filter((l) => this.filter(l));
+        if (items.length === 0) return <tr><td colSpan="4">{t("no messages yet")}</td></tr>;
+        return items.map((l, i) => this.formatLog(l, i));
+      }}
+    />;
   }
 
   render() {
@@ -205,8 +154,21 @@ class LogsView extends Component {
             <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
                   onChange={(e) => this.changeFilter(e.target.value)}/>
           </div>
-          <LogsTable logs={this.logs} filter={this.state.filter}
-                    changeCategory={this.changeCategory.bind(this)} changeLevel={this.changeLevel.bind(this)} />
+          <div className="terry-log-table no-padding">
+            <table className="table">
+              <thead>
+              <tr>
+                <th>{t("logs.date")}</th>
+                <th>{t("logs.category")}</th>
+                <th>{t("logs.level")}</th>
+                <th>{t("logs.message")}</th>
+              </tr>
+              </thead>
+              <tbody>
+                {this.renderTableBody()}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="modal-footer">
           <Link to={"/admin"} role="button" className="btn btn-primary">
