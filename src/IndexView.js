@@ -5,11 +5,6 @@ import { Trans } from 'react-i18next';
 import {translateComponent} from "./utils";
 
 class IndexView extends Component {
-  constructor(props) {
-    super(props);
-    this.model = props.model;
-  }
-
   render() {
     const { t } = this.props;
     return <React.Fragment>

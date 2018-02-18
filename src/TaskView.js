@@ -13,52 +13,36 @@ import DateView from './DateView';
 import { DateTime } from 'luxon';
 import {translateComponent} from "./utils";
 
-import ReactMarkdown from 'react-markdown';
-import 'katex-all/dist/katex.min.css';
-import katex from 'katex-all/dist/katex.min.js';
-import renderMathInElement from 'katex-all/dist/contrib/auto-render.min.js';
 import PromiseView from './PromiseView';
-
-window.katex = katex
+import TaskStatementView from './TaskStatementView';
 
 class TaskView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.model = props.model;
-    this.task = this.props.userState.getTask(props.taskName);
-  }
-
-  componentWillMount() {
-    this.task.loadStatement();
-  }
-
-  componentDidMount() {
-    this.model.pushObserver(this);
-    this.getTaskState().pushObserver(this);
-    this.task.pushObserver(this);
-  }
-
-  componentWillUnmount() {
-    this.model.popObserver(this);
-    this.getTaskState().popObserver(this);
-    this.task.popObserver(this);
-  }
-
-  componentDidUpdate() {
-    if(this.task.isLoadedStatement()) {
-      renderMathInElement(this.refs.statement_md, {
-        delimiters: [
-          {left: "$", right: "$", display: false},
-          {left: "$$", right: "$$", display: true},
-          {left: "\\[", right: "\\]", display: true},
-        ]
-      });
-    }
+  getTask() {
+    return this.props.userState.getTask(this.props.taskName);
   }
 
   getTaskState() {
-    return this.props.userState.getTaskState(this.task.name);
+    return this.props.userState.getTaskState(this.props.taskName);
+  }
+
+  componentDidMount() {
+    this.props.model.pushObserver(this);
+    this.componentDidUpdate();
+  }
+
+  componentDidUpdate() {
+    this.getTaskState().pushObserver(this);
+    this.getTask().pushObserver(this);
+  }
+
+  componentWillUpdate() {
+    this.getTaskState().popObserver(this);
+    this.getTask().popObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.componentWillUpdate();
+    this.props.model.popObserver(this);
   }
 
   renderCommands() {
@@ -71,7 +55,7 @@ class TaskView extends Component {
           <FontAwesomeIcon icon={faDownload}/> {t("task.download input")}
           </a>
           {' '}
-          <Link to={"/" + this.task.name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
+          <Link to={"/" + this.getTask().name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
             <FontAwesomeIcon icon={faUpload}/> {t("task.upload solution")}
           </Link>
         </React.Fragment>
@@ -93,23 +77,13 @@ class TaskView extends Component {
     }
   }
 
-  transformUri(url) {
-    const taskBaseUri = this.task.data.statement_path.match(/.*\//)[0];
-    return client.statementsBaseURI + taskBaseUri + url;
-  }
-
   renderTaskStatement() {
     const { t } = this.props;
-    if(this.task.isLoadingStatement()) return <p>{t("loading")}</p>;
-    if(!this.task.isLoadedStatement()) return <p>{t("task.statement fail")}</p>;
-
-    return <div ref="statement_md">
-      <ReactMarkdown
-        source={this.task.getStatement()}
-        transformImageUri={this.transformUri.bind(this)}
-        transformLinkUri={this.transformUri.bind(this)}
-      />
-    </div>
+    return <PromiseView promise={this.getTask().statementPromise}
+      renderFulfilled={(statement) => <TaskStatementView task={this.getTask()} source={statement} />}
+      renderPending={() => <p>{t("loading")}</p>}
+      renderRejected={() => <p>{t("task.statement fail")}</p>}
+    />;
   }
 
   returnLastSubmissionInfo(list) {
@@ -120,9 +94,9 @@ class TaskView extends Component {
     } else {
       const submission = items[items.length-1];
       return <div className="terry-submission-list-button">
-        <strong>{t("task.last submission")}</strong> <DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
+        <strong>{t("task.last submission")}</strong> <DateView delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
         {' '}
-        (<Link to={"/" + this.task.name + "/submissions"}>{t("task.view all")}</Link>)
+        (<Link to={"/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
       </div>
     }
 }
@@ -140,18 +114,18 @@ class TaskView extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1>{this.task.data.title}</h1>
+        <h1>{this.getTask().data.title}</h1>
         { this.renderCommands() }
 
         <Route path="/:taskName/submit/:inputId" render={
-          ({match}) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={this.task.name}/>
+          ({match}) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={this.getTask().name}/>
         }>
         </Route>
         <Route path="/:taskName/submissions" render={
-          ({match}) => <SubmissionListView {...this.props} taskName={this.task.name}/>
+          ({match}) => <SubmissionListView {...this.props} taskName={this.getTask().name}/>
         }/>
         <Route path="/:taskName/submission/:submissionId" render={
-          ({match}) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={this.task.name}/>
+          ({match}) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={this.getTask().name}/>
         }/>
 
         { this.renderSubmissionListButton() }

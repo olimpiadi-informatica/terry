@@ -3,27 +3,21 @@ import ReactMarkdown from 'react-markdown';
 import {translateComponent} from "./utils";
 
 class LoginView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.model = props.model;
-  }
-
   componentDidMount() {
-    this.model.pushObserver(this);
+    this.props.model.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.model.popObserver(this);
+    this.props.model.popObserver(this);
   }
 
   login() {
-    this.model.attemptLogin(this.refs.form.token.value);
+    this.props.model.attemptLogin(this.refs.form.token.value);
   }
 
   getLoginError() {
     const { t } = this.props;
-    const attempt = this.model.loginAttempt;
+    const attempt = this.props.model.loginAttempt;
     if (attempt && attempt.error) {
       const message = attempt.error.response.data.message;
       return (<div className="alert alert-danger" role="alert">

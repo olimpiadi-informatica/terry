@@ -6,11 +6,8 @@ import {colorFromScore, translateComponent} from "./utils";
 import ScoreView from './ScoreView';
 
 class FeedbackView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.model = props.model;
-    this.submission = this.model.getSubmission(props.submissionId);
+  getSubmission() {
+    return this.props.model.getSubmission(this.props.submissionId);
   }
 
   render() {
@@ -21,7 +18,7 @@ class FeedbackView extends Component {
       renderCaseSummary: (c, id) => this.renderCaseSummary(c, id),
     };
 
-    const submission = this.submission.data;
+    const submission = this.getSubmission().data;
     const score = submission.score;
     const max_score = this.props.userState.getTask(submission.task).data.max_score;
     const color = colorFromScore(score, max_score);
@@ -29,7 +26,7 @@ class FeedbackView extends Component {
     return <div className="modal-body">
       <dl className="terry-file-view">
         <dt>{t("submission.feedback.date")}:</dt>
-        <dd><DateView delta={this.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
+        <dd><DateView delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
         <dt style={{'margin-top': '0.75rem'}}>{t("submission.feedback.score")}:</dt>
         <dd>
           <ScoreView score={score} max={max_score} size={1} />

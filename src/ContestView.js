@@ -11,11 +11,6 @@ import SidebarView from './SidebarView';
 import IndexView from './IndexView';
 
 class ContestView extends Component {
-  constructor(props) {
-    super(props);
-    this.model = props.model;
-  }
-
   render_index() {
     const { t } = this.props;
 
@@ -38,7 +33,7 @@ class ContestView extends Component {
       <nav className="terry-navbar">
         <Link to="/" className="navbar-brand">{this.props.userState.data.contest.name}</Link>
         <span className="terry-user-name">{this.props.userState.data.name} {this.props.userState.data.surname}</span>
-        <button role="button" className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
+        <button role="button" className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.props.model.logout()}}>
           <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}
         </button>
       </nav>

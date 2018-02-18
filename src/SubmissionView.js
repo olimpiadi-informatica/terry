@@ -12,19 +12,12 @@ import "./SubmissionView.css";
 import PromiseView from './PromiseView';
 
 class SubmissionView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.model = props.model;
-    this.submission = props.submission;
-  }
-
   componentDidMount() {
-    this.submission.pushObserver(this);
+    this.props.submission.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.submission.popObserver(this);
+    this.props.submission.popObserver(this);
   }
 
   renderSourceAlert(alert, i) {
@@ -37,26 +30,26 @@ class SubmissionView extends Component {
 
   renderSourceSelector() {
     const { t } = this.props;
-    if(!this.submission.hasSource()) {
+    if(!this.props.submission.hasSource()) {
       return (
         <div key="absent" className="custom-file mb-3 col-4">
-          <input ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.submission.setSource(this.refs.source.files[0]) } />
+          <input ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.props.submission.setSource(this.refs.source.files[0]) } />
           <label className="custom-file-label" htmlFor="source-file">File sorgente...</label>
         </div>
       );
     } else {
-      const source = this.submission.getSource();
+      const source = this.props.submission.getSource();
       return (
         <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
             <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
-            <button role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.submission.resetSource() }>
+            <button role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.props.submission.resetSource() }>
               <FontAwesomeIcon icon={faTrash}/> {t("submission.submit.change source")}
             </button>
           </div>
           <div className="card-body">
             <FileView file={source.file} />
-            <PromiseView promise={this.submission.getSource().uploadPromise}
+            <PromiseView promise={this.props.submission.getSource().uploadPromise}
               renderFulfilled={(uploadedSource) => <React.Fragment>
                 { uploadedSource.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
               </React.Fragment>}
@@ -72,7 +65,7 @@ class SubmissionView extends Component {
   renderOutputUploadForm() {
     return (
       <div key="absent" className="custom-file col-4">
-        <input ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.submission.setOutput(this.refs.output.files[0])} />
+        <input ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.props.submission.setOutput(this.refs.output.files[0])} />
         <label className="custom-file-label" htmlFor="output-file">File di output...</label>
       </div>
     );
@@ -80,19 +73,19 @@ class SubmissionView extends Component {
 
   renderOutputInfo() {
     const { t } = this.props;
-    const output = this.submission.getOutput();
+    const output = this.props.submission.getOutput();
 
     return (
       <div key="present" className="card card-outline-primary w-100">
         <div className="card-header terry-submission-object-card">
           <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
-          <button role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.submission.resetOutput() }>
+          <button role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.props.submission.resetOutput() }>
             <FontAwesomeIcon icon={faTrash}/> {t("submission.submit.change output")}
           </button>
         </div>
         <div className="card-body">
           <FileView file={output.file} />
-          <PromiseView promise={this.submission.getOutput().uploadPromise}
+          <PromiseView promise={this.props.submission.getOutput().uploadPromise}
             renderFulfilled={(uploadedOutput) => <ValidationView {...this.props} result={uploadedOutput.data.validation} />}
             renderRejected={(error) => <p>{error}</p>}
             renderPending={() => <p>{t("submission.submit.processing")}</p>}
@@ -103,7 +96,7 @@ class SubmissionView extends Component {
   }
 
   renderOutputSelector() {
-    if(!this.submission.hasOutput()) {
+    if(!this.props.submission.hasOutput()) {
       return this.renderOutputUploadForm();
     } else {
       return this.renderOutputInfo();
@@ -111,16 +104,16 @@ class SubmissionView extends Component {
   }
 
   submit() {
-    return this.submission.submit().then(() => {
-      const taskName = this.submission.data.task;
-      const id = this.submission.data.id;
+    return this.props.submission.submit().then(() => {
+      const taskName = this.props.submission.data.task;
+      const id = this.props.submission.data.id;
       this.props.history.push("/" + taskName + "/submission/" + id);
     });
   }
 
   renderSubmissionForm() {
     const { t } = this.props;
-    if(this.submission.isSubmitting()) return (
+    if(this.props.submission.isSubmitting()) return (
       <div className="modal-body">
         {t("submission.submit.processing")}
       </div>
@@ -135,12 +128,12 @@ class SubmissionView extends Component {
           </form>
         </div>
         <div className="modal-footer">
-          <Link to={"/" + this.submission.input.task} role="button" className="btn btn-danger">
+          <Link to={"/" + this.props.submission.input.task} role="button" className="btn btn-danger">
             <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
           </Link>
           <button 
             role="button" className="btn btn-success"
-            disabled={ !this.submission.canSubmit() }
+            disabled={ !this.props.submission.canSubmit() }
             onClick={() => this.submit() }
           >
             <FontAwesomeIcon icon={faPaperPlane}/> {t("submission.submit.submit")}
@@ -151,7 +144,7 @@ class SubmissionView extends Component {
   }
 
   renderDialog() {
-    if(!this.submission.isSubmitted()) {
+    if(!this.props.submission.isSubmitted()) {
       return this.renderSubmissionForm();
     }
   }
@@ -159,12 +152,12 @@ class SubmissionView extends Component {
   render() {
     const { t } = this.props;
     return (
-      <ModalView contentLabel="Submission creation" returnUrl={"/" + this.submission.input.task}>
+      <ModalView contentLabel="Submission creation" returnUrl={"/" + this.props.submission.input.task}>
         <div className="modal-header">
           <h5 className="modal-title">
-            {t("submission.submit.title")} <strong>{ this.submission.input.id.slice(0, 6) }</strong>
+            {t("submission.submit.title")} <strong>{ this.props.submission.input.id.slice(0, 6) }</strong>
           </h5>
-          <Link to={"/" + this.submission.input.task} role="button" className="close" aria-label="Close">
+          <Link to={"/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>

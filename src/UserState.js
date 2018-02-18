@@ -16,15 +16,13 @@ export default class UserState extends Observable {
       const state = new UserTaskState(this.model, this, task);
       this.userTaskState[task.name] = state;
     }
-  }
 
-  getTasks() {
-    return this.data.contest.tasks.map((d) => new Task(this, d.name, d));
+    this.tasks = this.data.contest.tasks.map((d) => new Task(this, d.name, d));
   }
 
   getTask(taskName) {
     const byName = {};
-    for(let task of this.getTasks()) {
+    for(let task of this.tasks) {
       byName[task.name] = task;
     }
     return byName[taskName];

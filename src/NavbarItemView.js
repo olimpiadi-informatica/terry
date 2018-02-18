@@ -3,31 +3,28 @@ import { NavLink } from 'react-router-dom';
 import { colorFromScore } from './utils';
 
 export default class NavbarItemView extends Component {
-  constructor(props) {
-    super(props);
-    this.model = props.model;
-    this.taskName = props.taskName;
-    this.max_score = this.props.userState.getTask(this.taskName).data.max_score;
+  getMaxScore() {
+    return this.props.userState.getTask(this.props.taskName).data.max_score;
   }
 
   componentDidMount() {
-    this.model.pushObserver(this);
+    this.props.model.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.model.popObserver(this);
+    this.props.model.popObserver(this);
   }
 
   render() {
-    const score = this.props.userState.data.tasks[this.taskName].score;
-    const color = colorFromScore(score, this.max_score);
+    const score = this.props.userState.data.tasks[this.props.taskName].score;
+    const color = colorFromScore(score, this.getMaxScore());
     return (
         <li className="nav-item">
-          <NavLink to={ "/" + this.taskName } className="nav-link tasklist-item" activeClassName="active">
+          <NavLink to={ "/" + this.props.taskName } className="nav-link tasklist-item" activeClassName="active">
             <div className={"task-score-badge badge badge-pill badge-" + color}>
-              {score}/{this.max_score}
+              {score}/{this.getMaxScore()}
             </div>
-            <div className="task-list-item">{ this.taskName }</div>
+            <div className="task-list-item">{ this.props.taskName }</div>
           </NavLink>
         </li>
     );

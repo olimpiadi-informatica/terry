@@ -8,8 +8,6 @@ export default class SubmissionUploadable extends Observable {
     this.file = file;
     this.submission = submission;
 
-    this.model = submission.model;
-
     this.uploadPromise = new ObservablePromise(this.doUpload());
     this.uploadPromise.pushObserver(this);
   }

@@ -26,15 +26,15 @@ export default class Model extends Observable {
   }
 
   loadUser(token) {
-    return client.api.get('/user/' + token).then((response) => {
-      this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
-      return response;
-    });
+    return ;
+  }
+
+  userToken() {
+    return this.cookies.get(Model.cookieName);
   }
 
   isLoggedIn() {
-    const userToken = this.cookies.get(Model.cookieName);
-    return userToken !== undefined;
+    return this.userToken() !== undefined;
   }
 
   refreshUser() {
@@ -43,13 +43,14 @@ export default class Model extends Observable {
 
     this.fireUpdate();
     return this.userStatePromise = new ObservablePromise(
-      this.loadUser(userToken)
-        .then(response => {
+      client.api.get('/user/' + this.userToken())
+        .then((response) => {
+          this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
           this.fireUpdate();
           return new UserState(this, response.data);
         })
         .catch(error => {
-          console.log("Forced logout because: ", error);
+          console.error("Forced logout because: ", error);
           this.logout();
           return Promise.reject(error);
         })
