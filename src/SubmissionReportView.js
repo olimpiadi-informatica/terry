@@ -15,7 +15,7 @@ class SubmissionReportView extends Component {
     this.model = props.model;
     this.taskName = props.taskName;
     this.submissionId = props.submissionId;
-    this.submission = this.model.contest.getSubmission(this.submissionId);
+    this.submission = this.model.getSubmission(this.submissionId);
   }
 
   componentWillMount() {
@@ -37,7 +37,7 @@ class SubmissionReportView extends Component {
 
     const submission = this.submission.data;
     const score = submission.score;
-    const max_score = this.model.contest.getTask(submission.task).data.max_score;
+    const max_score = this.model.getTask(submission.task).data.max_score;
     const color = colorFromScore(score, max_score);
     return (
       <React.Fragment>

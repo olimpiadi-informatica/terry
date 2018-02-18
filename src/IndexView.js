@@ -13,8 +13,8 @@ class IndexView extends Component {
   render() {
     const { t } = this.props;
     return <React.Fragment>
-      <h1>{this.model.contest.data.name}</h1>
-      <ReactMarkdown source={this.model.contest.data.description}/>
+      <h1>{this.model.user.contest.name}</h1>
+      <ReactMarkdown source={this.model.user.contest.description}/>
       <hr />
       <h2>{t("homepage.guide.title")}</h2>
       <p>{t("homepage.guide.part1")}</p>

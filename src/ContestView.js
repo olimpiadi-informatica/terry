@@ -24,8 +24,8 @@ class ContestView extends Component {
     const { t } = this.props;
 
     return <React.Fragment>
-      <h1>{this.model.contest.data.name}</h1>
-      <ReactMarkdown source={this.model.contest.data.description}/>
+      <h1>{this.model.user.contest.name}</h1>
+      <ReactMarkdown source={this.model.user.contest.description}/>
       <hr />
       <h2>{t("homepage.guide.title")}</h2>
       <p>{t("homepage.guide.part1")}</p>
@@ -40,7 +40,7 @@ class ContestView extends Component {
     const { t } = this.props;
     return <React.Fragment>
       <nav className="terry-navbar">
-        <Link to="/" className="navbar-brand">{this.model.contest.data.name}</Link>
+        <Link to="/" className="navbar-brand">{this.model.user.contest.name}</Link>
         <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
         <button role="button" className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
           <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}

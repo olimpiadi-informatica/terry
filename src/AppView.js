@@ -18,12 +18,10 @@ class AppView extends Component {
 
   componentDidMount() {
     this.model.pushObserver(this);
-    this.model.getContest().pushObserver(this);
   }
 
   componentWillUnmount() {
     this.model.popObserver(this);
-    this.model.getContest().popObserver(this);
   }
 
   renderError() {
@@ -35,9 +33,6 @@ class AppView extends Component {
   }
 
   render() {
-    if (this.model.getContest().isLoading()) return <LoadingView />;
-    if (!this.model.getContest().isLoaded()) return this.renderError();
-
     if (this.model.isUserLoading()) return <LoadingView />;
     if (!this.model.isLoggedIn()) return <LoginView model={this.model}/>;
     if (!this.model.isUserLoaded()) return this.renderError();

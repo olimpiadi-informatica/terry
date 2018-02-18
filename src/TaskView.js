@@ -26,7 +26,7 @@ class TaskView extends Component {
 
     this.model = props.model;
     this.contest = props.model.getContest();
-    this.task = this.contest.getTask(props.taskName);
+    this.task = this.model.getTask(props.taskName);
   }
 
   getSubmissionList() {

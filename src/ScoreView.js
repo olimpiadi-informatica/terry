@@ -13,8 +13,6 @@ class ScoreView extends Component {
   }
 
   render() {
-    console.log(this.max_score)
-
     return <div className="terry-score" style={{'font-size': this.css_size + 'rem', ...this.additional_style}}>
       <span className="terry-score-value" style={{'font-size': 2 * this.css_size + 'rem'}}>{this.score}</span> / {this.max_score}
     </div>

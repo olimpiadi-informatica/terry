@@ -2,8 +2,9 @@ import client from './TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import UserTaskState from './UserTaskState';
-import Contest from './Contest';
 import { DateTime, Duration } from 'luxon';
+import Task from './Task';
+import SubmissionResult from './SubmissionResult';
 
 export default class Model extends Observable {
   static cookieName = "userToken";
@@ -13,16 +14,16 @@ export default class Model extends Observable {
 
     this.cookies = new Cookies();
     this.inputGenerationPromise = {};
-
-    this.contest = new Contest();
+    this.submissions = {};
   }
 
   getContest() {
-    return this.contest;
+    return {
+      data: this.user.contest,
+    };
   }
 
   onAppStart() {
-    this.getContest().load();
     this.maybeLoadUser();
   }
 
@@ -60,6 +61,7 @@ export default class Model extends Observable {
       .then(response => {
         delete this.userLoadingPromise;
         this.user = response.data;
+        this.enterContest();
         this.fireUpdate();
       })
       .catch(response => {
@@ -82,12 +84,14 @@ export default class Model extends Observable {
         this.cookies.set(Model.cookieName, this.user.token);
         // if the login is valid the contest must be reloaded, in fact most of the useful properties are not present yet
         // like the tasks and the start time. contest.load() will fire all the required updates
-        this.contest.load();
+        this.enterContest();
+        this.fireUpdate();
       })
       .catch((response) => {
         console.error(response);
         this.loginAttempt.error = response;
         this.fireUpdate();
+        return Promise.reject(response);                
       });
   }
 
@@ -102,18 +106,33 @@ export default class Model extends Observable {
   // function to be called when both user and contest are loaded
   enterContest() {
     this.userTaskState = {};
-    for(const task of this.getContest().getTasks()) {
+    for(const task of this.user.contest.tasks) {
       const state = new UserTaskState(this, task);
       this.userTaskState[task.name] = state;
     }
   }
 
-  hasEnteredContest() {
-    return this.userTaskState !== undefined;
+  getTaskState(taskName) {
+    return this.userTaskState[taskName];
   }
 
-  getTaskState(taskName) {
-    if(!this.hasEnteredContest()) throw new Error();
-    return this.userTaskState[taskName];
+  getTasks() {
+    if(!this.isUserLoaded()) throw new Error();
+
+    return this.user.contest.tasks.map((d) => new Task(this, d.name, d));
+  }
+
+  getTask(taskName) {
+    const byName = {};
+    for(let task of this.getTasks()) {
+      byName[task.name] = task;
+    }
+    return byName[taskName];
+  }
+
+  getSubmission(id) {
+    if (this.submissions[id] !== undefined) return this.submissions[id];
+
+    return this.submissions[id] = new SubmissionResult(this, id);
   }
 }
