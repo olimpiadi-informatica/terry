@@ -23,7 +23,7 @@ class FeedbackView extends Component {
 
     const submission = this.submission.data;
     const score = submission.score;
-    const max_score = this.model.getTask(submission.task).data.max_score;
+    const max_score = this.props.userState.getTask(submission.task).data.max_score;
     const color = colorFromScore(score, max_score);
 
     return <div className="modal-body">

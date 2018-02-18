@@ -4,22 +4,18 @@ import Observable from './Observable';
 import ObservablePromise from './ObservablePromise';
 
 export default class UserTaskState extends Observable {
-  constructor(model, task) {
+  constructor(model, user, task) {
     super();
 
     this.model = model;
+    this.user = user;
     this.task = task;
 
     this.refreshSubmissionList();
   }
 
-  getUser() {
-    return this.model.user;
-  }
-  
-
   doGetCurrentInput() {
-    return this.getUser().tasks[this.task.name].current_input;
+    return this.user.data.tasks[this.task.name].current_input;
   }
 
   hasCurrentInput() {
@@ -40,7 +36,7 @@ export default class UserTaskState extends Observable {
 
     const data = new FormData();
 
-    data.append("token", this.getUser().token);
+    data.append("token", this.user.data.token);
     data.append("task", this.task.name);
 
     this.fireUpdate();
@@ -69,7 +65,7 @@ export default class UserTaskState extends Observable {
   }
 
   loadSubmissionList() {
-    return client.api.get("/user/" + this.getUser().token + "/submissions/" + this.task.name).then((response) => {
+    return client.api.get("/user/" + this.user.data.token + "/submissions/" + this.task.name).then((response) => {
       return response.data;
     });
   }

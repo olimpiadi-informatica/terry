@@ -20,8 +20,8 @@ class ContestView extends Component {
     const { t } = this.props;
 
     return <React.Fragment>
-      <h1>{this.model.user.contest.name}</h1>
-      <ReactMarkdown source={this.model.user.contest.description}/>
+      <h1>{this.props.userState.data.contest.name}</h1>
+      <ReactMarkdown source={this.props.userState.data.contest.description}/>
       <hr />
       <h2>{t("homepage.guide.title")}</h2>
       <p>{t("homepage.guide.part1")}</p>
@@ -36,22 +36,22 @@ class ContestView extends Component {
     const { t } = this.props;
     return <React.Fragment>
       <nav className="terry-navbar">
-        <Link to="/" className="navbar-brand">{this.model.user.contest.name}</Link>
-        <span className="terry-user-name">{this.model.user.name} {this.model.user.surname}</span>
+        <Link to="/" className="navbar-brand">{this.props.userState.data.contest.name}</Link>
+        <span className="terry-user-name">{this.props.userState.data.name} {this.props.userState.data.surname}</span>
         <button role="button" className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.model.logout()}}>
           <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}
         </button>
       </nav>
 
       <div className="terry-body">
-        <SidebarView model={this.model} />
+        <SidebarView {...this.props} />
 
         <main>
           <Route path={'/:taskName'} render={ ({match}) =>
-            <TaskView key={match.params.taskName} model={this.model} taskName={match.params.taskName} />
+            <TaskView key={match.params.taskName} {...this.props} taskName={match.params.taskName} />
           }/>
           <Route exact path={'/'} render={ ({match}) =>
-            <IndexView model={this.model}/>
+            <IndexView {...this.props}/>
           }/>
         </main>
       </div>

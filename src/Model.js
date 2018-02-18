@@ -5,6 +5,8 @@ import UserTaskState from './UserTaskState';
 import { DateTime, Duration } from 'luxon';
 import Task from './Task';
 import SubmissionResult from './SubmissionResult';
+import UserState from './UserState';
+import ObservablePromise from './ObservablePromise';
 
 export default class Model extends Observable {
   static cookieName = "userToken";
@@ -17,14 +19,10 @@ export default class Model extends Observable {
     this.submissions = {};
   }
 
-  getContest() {
-    return {
-      data: this.user.contest,
-    };
-  }
-
   onAppStart() {
-    this.maybeLoadUser();
+    if(this.isLoggedIn()) {
+      this.refreshUser();
+    }
   }
 
   loadUser(token) {
@@ -39,54 +37,33 @@ export default class Model extends Observable {
     return userToken !== undefined;
   }
 
-  isUserLoaded() {
-    return this.user !== undefined;
-  }
-
-  isUserLoading() {
-    return this.userLoadingPromise !== undefined;
-  }
-
-  maybeLoadUser() {
-    if(this.isLoggedIn()) {
-      this.refreshUser();
-    }
-  }
-
   refreshUser() {
     if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
     const userToken = this.cookies.get(Model.cookieName);
 
-    return this.userLoadingPromise = this.loadUser(userToken)
-      .then(response => {
-        delete this.userLoadingPromise;
-        this.user = response.data;
-        this.ensureTaskState();
-        this.fireUpdate();
-      })
-      .catch(response => {
-        delete this.userLoadingPromise;
-        console.log("Forced logout because: ", response);
-        this.logout();
-        return Promise.reject(response);
-      });
+    this.fireUpdate();
+    return this.userStatePromise = new ObservablePromise(
+      this.loadUser(userToken)
+        .then(response => {
+          this.fireUpdate();
+          return new UserState(this, response.data);
+        })
+        .catch(error => {
+          console.log("Forced logout because: ", error);
+          this.logout();
+          return Promise.reject(error);
+        })
+    );
   }
 
   attemptLogin(token) {
-    delete this.user;
     this.loginAttempt = {};
 
     this.fireUpdate();
 
-    return this.loadUser(token)
-      .then((response) => {
-        this.user = response.data;
-        this.cookies.set(Model.cookieName, this.user.token);
-        // if the login is valid the contest must be reloaded, in fact most of the useful properties are not present yet
-        // like the tasks and the start time. contest.load() will fire all the required updates
-        this.ensureTaskState();
-        this.fireUpdate();
-      })
+    this.cookies.set(Model.cookieName, token);
+    
+    return this.refreshUser()
       .catch((response) => {
         console.error(response);
         this.loginAttempt.error = response;
@@ -98,37 +75,9 @@ export default class Model extends Observable {
   logout() {
     if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
     this.cookies.remove(Model.cookieName);
-    delete this.user;
+    delete this.userStatePromise;
     // TODO redirect to /
     this.fireUpdate();
-  }
-
-  ensureTaskState() {
-    if(this.userTaskState) return;
-
-    this.userTaskState = {};
-    for(const task of this.user.contest.tasks) {
-      const state = new UserTaskState(this, task);
-      this.userTaskState[task.name] = state;
-    }
-  }
-
-  getTaskState(taskName) {
-    return this.userTaskState[taskName];
-  }
-
-  getTasks() {
-    if(!this.isUserLoaded()) throw new Error();
-
-    return this.user.contest.tasks.map((d) => new Task(this, d.name, d));
-  }
-
-  getTask(taskName) {
-    const byName = {};
-    for(let task of this.getTasks()) {
-      byName[task.name] = task;
-    }
-    return byName[taskName];
   }
 
   getSubmission(id) {
@@ -136,4 +85,5 @@ export default class Model extends Observable {
 
     return this.submissions[id] = new SubmissionResult(this, id);
   }
+
 }

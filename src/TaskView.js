@@ -26,8 +26,7 @@ class TaskView extends Component {
     super(props);
 
     this.model = props.model;
-    this.contest = props.model.getContest();
-    this.task = this.model.getTask(props.taskName);
+    this.task = this.props.userState.getTask(props.taskName);
   }
 
   componentWillMount() {
@@ -59,7 +58,7 @@ class TaskView extends Component {
   }
 
   getTaskState() {
-    return this.model.getTaskState(this.task.name);
+    return this.props.userState.getTaskState(this.task.name);
   }
 
   renderCommands() {
@@ -145,14 +144,14 @@ class TaskView extends Component {
         { this.renderCommands() }
 
         <Route path="/:taskName/submit/:inputId" render={
-          ({match}) => <CreateSubmissionView model={this.model} inputId={match.params.inputId} taskName={this.task.name}/>
+          ({match}) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={this.task.name}/>
         }>
         </Route>
         <Route path="/:taskName/submissions" render={
-          ({match}) => <SubmissionListView model={this.model} taskName={this.task.name}/>
+          ({match}) => <SubmissionListView {...this.props} taskName={this.task.name}/>
         }/>
         <Route path="/:taskName/submission/:submissionId" render={
-          ({match}) => <SubmissionReportView model={this.model} submissionId={match.params.submissionId} taskName={this.task.name}/>
+          ({match}) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={this.task.name}/>
         }/>
 
         { this.renderSubmissionListButton() }

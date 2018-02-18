@@ -4,15 +4,13 @@ import LoginView from './LoginView';
 import Model from './Model';
 import {translateComponent} from "./utils";
 import LoadingView from "./LoadingView";
+import PromiseView from './PromiseView';
 
 class AppView extends Component {
   constructor(props) {
     super(props);
 
     this.model = new Model();
-  }
-
-  componentWillMount() {
     this.model.onAppStart();
   }
 
@@ -23,21 +21,19 @@ class AppView extends Component {
   componentWillUnmount() {
     this.model.popObserver(this);
   }
-
-  renderError() {
-    const { t } = this.props;
-    return <div className="alert alert-danger" role="alert">
-      <h4 className="alert-heading">{t("error")}</h4>
-      <p>{t("reload")}</p>
-    </div>
-  }
-
+  
   render() {
-    if (this.model.isUserLoading()) return <LoadingView />;
+    const { t } = this.props;
     if (!this.model.isLoggedIn()) return <LoginView model={this.model}/>;
-    if (!this.model.isUserLoaded()) return this.renderError();
 
-    return <ContestView model={this.model}/>;
+    return <PromiseView promise={this.model.userStatePromise}
+      renderPending={() => <LoadingView />}
+      renderFulfilled={(userState) => <ContestView model={this.model} userState={userState}/>}
+      renderError={(error) => <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">{t("error")}</h4>
+        <p>{t("reload")}</p>
+      </div>}
+    />;
   }
 }
 

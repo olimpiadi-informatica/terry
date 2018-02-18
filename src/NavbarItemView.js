@@ -7,7 +7,7 @@ export default class NavbarItemView extends Component {
     super(props);
     this.model = props.model;
     this.taskName = props.taskName;
-    this.max_score = this.model.getTask(this.taskName).data.max_score;
+    this.max_score = this.props.userState.getTask(this.taskName).data.max_score;
   }
 
   componentDidMount() {
@@ -19,7 +19,7 @@ export default class NavbarItemView extends Component {
   }
 
   render() {
-    const score = this.model.user.tasks[this.taskName].score;
+    const score = this.props.userState.data.tasks[this.taskName].score;
     const color = colorFromScore(score, this.max_score);
     return (
         <li className="nav-item">

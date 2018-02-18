@@ -37,11 +37,11 @@ class SubmissionReportView extends Component {
 
     const submission = this.submission.data;
     const score = submission.score;
-    const max_score = this.model.getTask(submission.task).data.max_score;
+    const max_score = this.props.userState.getTask(submission.task).data.max_score;
     const color = colorFromScore(score, max_score);
     return (
       <React.Fragment>
-        <FeedbackView model={this.model} result={submission.feedback} submissionId={this.submissionId} />
+        <FeedbackView {...this.props} result={submission.feedback} submissionId={this.submissionId} />
 
         <div className="modal-footer">
           <Link to={"/" + submission.task} role="button" className="btn btn-primary">

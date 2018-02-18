@@ -93,7 +93,7 @@ class SubmissionView extends Component {
         <div className="card-body">
           <FileView file={output.file} />
           <PromiseView promise={this.submission.getOutput().uploadPromise}
-            renderFulfilled={(uploadedOutput) => <ValidationView model={this.model} result={uploadedOutput.data.validation} />}
+            renderFulfilled={(uploadedOutput) => <ValidationView {...this.props} result={uploadedOutput.data.validation} />}
             renderRejected={(error) => <p>{error}</p>}
             renderPending={() => <p>{t("submission.submit.processing")}</p>}
           />

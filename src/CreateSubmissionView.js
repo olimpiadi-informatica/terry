@@ -16,13 +16,13 @@ class CreateSubmissionView extends Component {
   }
 
   getTaskState() {
-    return this.model.getTaskState(this.taskName);
+    return this.props.userState.getTaskState(this.taskName);
   }
 
   render() {
     const { t } = this.props;
     if(this.submission === undefined) return <p>{t("submission.cannot submit")}</p>;
-    return <SubmissionView model={this.model} submission={this.submission} />;
+    return <SubmissionView {...this.props} submission={this.submission} />;
   }
 }
 

@@ -7,11 +7,6 @@ import ScoreView from './ScoreView';
 import "./SidebarView.css";
 
 class SidebarView extends Component {
-  constructor(props) {
-    super(props);
-    this.model = props.model;
-  }
-
   render() {
     const { t } = this.props;
 
@@ -20,7 +15,7 @@ class SidebarView extends Component {
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
             <h3>{t("navbar.total score")}</h3>
-            <ScoreView style={{'text-align': 'right', 'margin-right': '1rem'}} score={this.model.user.total_score} max={this.model.user.contest.max_total_score} size={2} />
+            <ScoreView style={{'text-align': 'right', 'margin-right': '1rem'}} score={this.props.userState.data.total_score} max={this.props.userState.data.contest.max_total_score} size={2} />
           </li>
 
           <li className="divider-vertical" />
@@ -28,8 +23,8 @@ class SidebarView extends Component {
           <li className="nav-item title">
             <h3>{t("remaining time")}</h3>
             <p className="terry-remaining-time">
-              <CountdownView delta={this.model.timeDelta} end={
-                DateTime.fromISO(this.model.user.end_time)
+              <CountdownView delta={this.props.model.timeDelta} end={
+                DateTime.fromISO(this.props.userState.data.end_time)
               }/>
             </p>
           </li>
@@ -41,7 +36,7 @@ class SidebarView extends Component {
           </li>
           <li className="divider-vertical" />
 
-          { this.model.getContest().data.tasks.map((task,i) => <NavbarItemView key={i} taskName={task.name} model={this.model} />)}
+          { this.props.userState.data.contest.tasks.map((task,i) => <NavbarItemView key={i} taskName={task.name} {...this.props} />)}
         </ul>
       </nav>
     );

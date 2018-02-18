@@ -15,10 +15,6 @@ export default class Output extends SubmissionUploadable {
         return client.api.post("/upload_output", data).then((response) => {
           id = response.data.id;
           delete this.error;
-        }).catch(error => {
-          this.error = error.response.data.message;
-          this.fireUpdate();
-          return Promise.reject();
         });
       })
       .then(() => {
