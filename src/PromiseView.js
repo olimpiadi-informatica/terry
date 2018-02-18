@@ -18,6 +18,13 @@ class PromiseView extends Component {
     this.props.promise.popObserver(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    if(newProps.promise !== this.props.promise) {
+      this.props.promise.popObserver(this);
+      newProps.promise.pushObserver(this);
+    }
+  }
+
   render() {
     if(this.props.promise.isPending()) return this.props.renderPending();
     if(this.props.promise.isFulfilled()) return this.props.renderFulfilled(this.props.promise.value);

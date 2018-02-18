@@ -28,12 +28,7 @@ class ContestExtraTimeView extends Component {
 
     const minutes = this.refs.extraTimeForm.minutes.value
 
-    this.session.setExtraTime(minutes * 60).then(() => {
-      // FIXME: i18n? :)
-      window.alert("Extra time updated.");
-      window.location.href = '/admin';
-    })
-    this.forceUpdate();
+    this.session.setExtraTime(minutes * 60);
   }
 
   extraTimeMinutes() {

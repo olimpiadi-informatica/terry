@@ -6,6 +6,7 @@ export default class Observable {
   pushObserver(o) {
     if(this.observers.has(o)) throw new Error();
     this.observers.add(o);
+    o.forceUpdate();
   }
 
   popObserver(o) {

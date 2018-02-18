@@ -1,7 +1,7 @@
 import client from './TerryClient';
 import Observable from './Observable';
 
-export default class Logs extends Observable {
+export default class Users extends Observable {
     constructor(session) {
       super();
 

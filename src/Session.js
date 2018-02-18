@@ -1,8 +1,8 @@
 import client from './TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
-import Users from './Users';
 import { DateTime } from "luxon";
+import ObservablePromise from './ObservablePromise';
 
 export default class Session extends Observable {
   static cookieName = "adminToken";
@@ -11,9 +11,6 @@ export default class Session extends Observable {
     super();
 
     this.cookies = new Cookies();
-    this.users = new Users(this);
-
-    this.users.pushObserver(this);
   }
 
   adminToken() {
@@ -41,21 +38,26 @@ export default class Session extends Observable {
   updateStatus() {
     this.fireUpdate();
 
-    return this.loadingStatus = client.adminApi(this.adminToken(), "/status")
-        .then((response) => {
-          this.status = response.data;
-          this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
-          delete this.loadingStatus;
-          delete this.error;
-          this.fireUpdate();
-        })
-        .catch((response) => {
-          console.error(response);
-          this.error = response;
-          delete this.loadingStatus;
-          if (this.isLoggedIn()) this.logout();
-          this.fireUpdate();
-        });
+    this.loadingStatus = client.adminApi(this.adminToken(), "/status")
+      .then((response) => {
+        this.status = response.data;
+        this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
+        delete this.loadingStatus;
+        delete this.error;
+        this.fireUpdate();
+      })
+      .catch((response) => {
+        console.error(response);
+        this.error = response;
+        delete this.loadingStatus;
+        if (this.isLoggedIn()) this.logout();
+        this.fireUpdate();
+        return Promise.reject(response);
+      });
+
+    return this.usersPromise = new ObservablePromise(
+      this.loadingStatus.then(() => client.adminApi(this.adminToken(), "/user_list"))
+    );
   }
 
   login(token) {
@@ -75,30 +77,25 @@ export default class Session extends Observable {
   startContest() {
     if (!this.isLoaded()) throw Error();
     return client.adminApi(this.adminToken(), "/start")
-        .then(response => {
-          this.updateStatus();
-        }).catch(response => {
-          console.error(response);
-          this.error = response.response.data.message;
-          this.fireUpdate();
-        });
-  }
-
-  setExtraTime(extra_time, token) {
-    if (!this.isLoaded()) throw Error();
-    const options = { extra_time };
-    if (token) options.token = token;
-    return client.adminApi(this.adminToken(), "/set_extra_time", options)
-      .then(response => {
-        return this.updateStatus();
-      })
-      .then(() => {
-        return this.users.load();
-      })
+      .then(response => this.updateStatus())
       .catch(response => {
         console.error(response);
         this.error = response.response.data.message;
         this.fireUpdate();
+      });
+  }
+
+  setExtraTime(extraTime, token) {
+    if (!this.isLoaded()) throw Error();
+    const options = { extra_time: extraTime };
+    if (token) options.token = token;
+    return client.adminApi(this.adminToken(), "/set_extra_time", options)
+      .then(response => this.updateStatus())
+      .catch(response => {
+        console.error(response);
+        this.error = response.response.data.message;
+        this.fireUpdate();
+        return Promise.reject(response);
       });
   }
 

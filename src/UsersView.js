@@ -45,7 +45,7 @@ class UsersView extends Component {
   constructor(props) {
     super(props);
     this.session = props.session;
-    this.users = this.session.users;
+    this.users = new Users(this.session);
   }
 
   componentWillMount() {

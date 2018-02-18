@@ -8,8 +8,8 @@ import CountdownView from './CountdownView';
 import { DateTime, Duration } from 'luxon';
 import DateView from './DateView';
 import Logs from './Logs';
-import Users from './Users';
 import client from './TerryClient';
+import PromiseView from './PromiseView';
 
 class AdminSummaryView extends Component {
   constructor(props) {
@@ -24,7 +24,6 @@ class AdminSummaryView extends Component {
       end_date: "2030-01-01T00:00:00.000",
       level: "WARNING",
     });
-    this.session.users.load();
   }
 
   componentDidMount() {
@@ -51,8 +50,6 @@ class AdminSummaryView extends Component {
 
   renderContestStatus() {
     const { t, i18n } = this.props;
-
-    if(this.session.users.isLoading()) return <p>{t("loading")}</p>;
 
     if(!this.session.status.start_time) return this.renderNotStarted();
     if(this.serverTime() < this.getEndTime()) return this.renderRunning();
@@ -104,7 +101,7 @@ class AdminSummaryView extends Component {
   }
 
   countUsersWithExtraTime() {
-    return this.session.users.data.items.filter((user) => user.extra_time !== 0).length;
+    return this.props.users.data.items.filter((user) => user.extra_time !== 0).length;
   }
 
   getStartTime() {
@@ -116,7 +113,7 @@ class AdminSummaryView extends Component {
   }
 
   getUsersExtraTime() {
-    return Math.max.apply(null, this.session.users.data.items.map((user) => user.extra_time))
+    return Math.max.apply(null, this.props.users.data.items.map((user) => user.extra_time))
   }
 
   getExtraTimeEndTime() {
@@ -174,7 +171,7 @@ class AdminSummaryView extends Component {
 
   renderExtraTimeCountdown() {
     const { t, i18n } = this.props;
-    const users = this.session.users;
+    const users = this.props.users;
     const endTime = this.getExtraTimeEndTime();
 
     return (
@@ -232,8 +229,7 @@ class AdminSummaryView extends Component {
 
   renderUserExtraTimeSummary() {
     const { t } = this.props;
-    const users = this.session.users;
-    if(users.isLoading()) return <React.Fragment>{t("loading")}</React.Fragment>;
+    const users = this.props.users;
 
     const numExtraTimeUsers = this.countUsersWithExtraTime();
     if(numExtraTimeUsers > 0) {

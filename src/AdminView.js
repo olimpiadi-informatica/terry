@@ -12,6 +12,7 @@ import UsersView from "./UsersView";
 import UploadPackView from "./UploadPackView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
+import PromiseView from './PromiseView';
 
 class AdminView extends Component {
   constructor(props) {
@@ -48,23 +49,30 @@ class AdminView extends Component {
     return <React.Fragment>
       { this.renderNavBar() }
       <main>
-        <AdminSummaryView session={this.session} />
+        <PromiseView promise={this.session.usersPromise}
+          renderFulfilled={(users) => <React.Fragment>
+            <AdminSummaryView session={this.session} users={users} />
 
-        <Route path="/admin/logs" render={
-          ({match}) => <LogsView session={this.session} />
-        }/>
+            <Route path="/admin/logs" render={
+              ({match}) => <LogsView session={this.session} />
+            }/>
 
-        <Route path="/admin/extra_time" render={
-          ({match}) => <ContestExtraTimeView session={this.session} />
-        }/>
+            <Route path="/admin/extra_time" render={
+              ({match}) => <ContestExtraTimeView session={this.session} />
+            }/>
 
-        <Route path="/admin/users" render={
-          ({match}) => <UsersView session={this.session} />
-        }/>
+            <Route path="/admin/users" render={
+              ({match}) => <UsersView session={this.session} />
+            }/>
 
-        <Route path="/admin/download_results" render={
-          ({match}) => <DownloadResultsView session={this.session} />
-        }/>
+            <Route path="/admin/download_results" render={
+              ({match}) => <DownloadResultsView session={this.session} />
+            }/>
+          </React.Fragment>}
+          renderRejected={(error) => <React.Fragment>
+            Error while loading users.
+          </React.Fragment>}
+        />
       </main>
     </React.Fragment>
   }
