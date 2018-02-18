@@ -2,31 +2,26 @@ import React, { Component } from 'react';
 
 class PromiseView extends Component {
   static defaultProps = {
-    renderRejected: (error) => <p>An error occurred.</p>,
+    renderRejected: (error) => {
+      // by default the promise is not expected to ever fail
+      // consider a rejection as a bug in the code
+      throw Error(error);
+    },
     renderPending: (error) => <p>Pending...</p>,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      value: null,
-      error: null,
-    };
+  componentDidMount() {
+    this.props.promise.pushObserver(this);
   }
 
-  componentDidMount() {
-    this.promise = this.props.promise.then((value) => {
-      this.setState({value: value, error: null});
-    }).catch((error) => {
-      this.setState({value: null, error: error});
-    })
+  componentWillUnmount() {
+    this.props.promise.popObserver(this);
   }
 
   render() {
-    if(this.state.error) return this.props.renderRejected(this.state.error);
-    if(!this.state.value) return this.props.renderPending();
-    return this.props.renderFulfilled(this.state.value);
+    if(this.props.promise.isPending()) return this.props.renderPending();
+    if(this.props.promise.isFulfilled()) return this.props.renderFulfilled(this.props.promise.value);
+    if(this.props.promise.isRejected()) return this.props.renderRejected(this.props.promise.error);
   }
 }
 

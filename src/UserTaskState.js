@@ -1,6 +1,7 @@
 import client from './TerryClient';
 import Submission from './Submission';
 import Observable from './Observable';
+import ObservablePromise from './ObservablePromise';
 
 export default class UserTaskState extends Observable {
   constructor(model, task) {
@@ -74,7 +75,7 @@ export default class UserTaskState extends Observable {
   }
 
   refreshSubmissionList() {
-    this.submissionListPromise = this.loadSubmissionList();
+    this.submissionListPromise = new ObservablePromise(this.loadSubmissionList());
   }
 
 }
