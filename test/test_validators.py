@@ -10,13 +10,13 @@ from unittest.mock import patch
 
 import jwt
 from werkzeug.exceptions import Forbidden
-from werkzeug.wrappers import Request
 from werkzeug.test import EnvironBuilder
+from werkzeug.wrappers import Request
 
-from src.config import Config
-from src.database import Database
-from src.logger import Logger
-from src.validators import Validators
+from terry.config import Config
+from terry.database import Database
+from terry.logger import Logger
+from terry.validators import Validators
 from test.utils import Utils
 
 
@@ -136,7 +136,7 @@ class TestValidators(unittest.TestCase):
         with self.assertRaises(Forbidden):
             self.valid_token(token="nope")
 
-    @patch("src.validators.Validators._get_user_from_sso", return_value=42)
+    @patch("terry.validators.Validators._get_user_from_sso", return_value=42)
     def test_wrong_token_jwt_sso(self, sso):
         Config.jwt_secret = "jwt_token"
         builder = EnvironBuilder(headers=[("Cookie", "token=cookie")])
@@ -173,7 +173,7 @@ class TestValidators(unittest.TestCase):
         user = self.valid_token(token="token")
         self.assertEqual("token", user["token"])
 
-    @patch("src.validators.Validators._get_user_from_sso", return_value=42)
+    @patch("terry.validators.Validators._get_user_from_sso", return_value=42)
     def test_ok_token_jwt_enabled(self, sso):
         Config.jwt_secret = "jwt_token"
         builder = EnvironBuilder(headers=[("Cookie", "token=token")])
@@ -228,8 +228,8 @@ class TestValidators(unittest.TestCase):
     def test_validate_token(self):
         Validators._validate_admin_token('admin token', '1.2.3.4')
 
-    @patch("src.contest_manager.ContestManager.extract_contest")
-    @patch("src.contest_manager.ContestManager.read_from_disk")
+    @patch("terry.contest_manager.ContestManager.extract_contest")
+    @patch("terry.contest_manager.ContestManager.read_from_disk")
     def test_validate_token_no_token(self, read, extract):
         Database.del_meta("admin_token")
         Validators._validate_admin_token("admin token", '1.2.3.4')

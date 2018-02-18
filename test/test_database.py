@@ -6,12 +6,11 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import os
 import unittest
-
 from unittest.mock import patch
 
-from src.config import Config
-from src.database import Database
-from src.schema import Schema
+from terry.config import Config
+from terry.database import Database
+from terry.schema import Schema
 from test.utils import Utils
 
 
@@ -57,7 +56,8 @@ class TestDatabase(unittest.TestCase):
     def test_database_upgrade(self):
         backup = Schema.UPDATERS
         Schema.UPDATERS = [
-            'CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT);', # this table is needed
+            'CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT);',
+            # this table is needed
             'CREATE TABLE dummy_test (foo INTEGER);',
             'INSERT INTO dummy_test VALUES(42);'
         ]
@@ -67,10 +67,11 @@ class TestDatabase(unittest.TestCase):
         Database.c.execute("SELECT * FROM dummy_test")
         row = Database.c.fetchone()
         self.assertEqual(42, row[0])
-        Database.c.execute("SELECT * FROM metadata WHERE key = 'schema_version'")
+        Database.c.execute(
+            "SELECT * FROM metadata WHERE key = 'schema_version'")
         row = Database.c.fetchone()
 
-        self.assertEqual(len(Schema.UPDATERS)-1, int(row[1]))
+        self.assertEqual(len(Schema.UPDATERS) - 1, int(row[1]))
 
         Schema.UPDATERS = backup
 
@@ -79,13 +80,14 @@ class TestDatabase(unittest.TestCase):
         Database.connect_to_database()
 
         schema_version = int(Database.get_meta('schema_version'))
-        self.assertEqual(len(Schema.UPDATERS)-1, schema_version)
+        self.assertEqual(len(Schema.UPDATERS) - 1, schema_version)
 
     def test_get_meta_default(self):
         Database.connected = False
         Database.connect_to_database()
 
-        meta = Database.get_meta('this_key_doesnt_exist', 'default_value_is_cool')
+        meta = Database.get_meta('this_key_doesnt_exist',
+                                 'default_value_is_cool')
         self.assertEqual('default_value_is_cool', meta)
 
     def test_get_meta_default_not_used(self):
@@ -93,7 +95,8 @@ class TestDatabase(unittest.TestCase):
         Database.connect_to_database()
 
         Database.set_meta('this_key_doesnt_exist', 'cool_value')
-        meta = Database.get_meta('this_key_doesnt_exist', 'default_value_is_not_cool')
+        meta = Database.get_meta('this_key_doesnt_exist',
+                                 'default_value_is_not_cool')
         self.assertEqual('cool_value', meta)
 
     def test_get_meta_type(self):
@@ -182,7 +185,8 @@ class TestDatabase(unittest.TestCase):
         Database.set_meta('random_foobar', 123, autocommit=False)
         Database.rollback()
 
-        self.assertEqual(42, Database.get_meta('random_foobar', default=42, type=int))
+        self.assertEqual(42, Database.get_meta('random_foobar', default=42,
+                                               type=int))
 
     def test_dictify(self):
         Database.connected = False
@@ -192,15 +196,18 @@ class TestDatabase(unittest.TestCase):
         Database.c.execute("SELECT * FROM metadata WHERE key = 'random_key'")
         dct = Database.dictify(all=False)
 
-        self.assertDictEqual({ 'key': 'random_key', 'value': 'random_value' }, dct)
+        self.assertDictEqual({'key': 'random_key', 'value': 'random_value'},
+                             dct)
 
     def test_dictify_all(self):
         Database.connected = False
         Database.connect_to_database()
 
         Database.c.execute("DELETE FROM metadata")
-        Database.c.execute("INSERT INTO metadata (key, value) VALUES ('foo1', 'bar')")
-        Database.c.execute("INSERT INTO metadata (key, value) VALUES ('foo2', 'bar')")
+        Database.c.execute(
+            "INSERT INTO metadata (key, value) VALUES ('foo1', 'bar')")
+        Database.c.execute(
+            "INSERT INTO metadata (key, value) VALUES ('foo2', 'bar')")
         Database.c.execute("SELECT * FROM metadata")
         lst = Database.dictify(all=True)
 
@@ -214,17 +221,19 @@ class TestDatabase(unittest.TestCase):
         with self.assertRaises(ValueError) as ex:
             Database.get_input()
 
-        self.assertEqual("Invalid parameters to get_input", ex.exception.args[0])
+        self.assertEqual("Invalid parameters to get_input",
+                         ex.exception.args[0])
 
     def test_do_write_rollback(self):
         Database.connected = False
         Database.connect_to_database()
 
-        with patch("src.database.Database.commit", side_effect=ValueError("Ops...")):
-            with self.assertRaises(ValueError) as ex:
-                Database.do_write(True, "INSERT INTO metadata (key, value) VALUES (:key, :value)", {
-                    "key": "ciao",
-                    "value": "mondo"
-                })
+        with patch("terry.database.Database.commit",
+                   side_effect=ValueError("Ops...")):
+            with self.assertRaises(ValueError):
+                Database.do_write(True, """
+                    INSERT INTO metadata (key, value) 
+                    VALUES (:key, :value)
+                """, {"key": "ciao", "value": "mondo"})
 
         self.assertIsNone(Database.get_meta("ciao"))

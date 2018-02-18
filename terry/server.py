@@ -10,21 +10,19 @@ import sys
 import traceback
 
 import gevent.wsgi
-
 from gevent import monkey
-from werkzeug.exceptions import (HTTPException, InternalServerError, NotFound)
-from werkzeug.routing import Map, Rule, RequestRedirect
+from werkzeug.exceptions import HTTPException, InternalServerError, NotFound
+from werkzeug.routing import Map, Rule
 from werkzeug.wrappers import Request
 from werkzeug.wsgi import responder
 
-from src.handlers.base_handler import BaseHandler
-from .config import Config
-from .logger import Logger
-
-from .handlers.contest_handler import ContestHandler
-from .handlers.info_handler import InfoHandler
-from .handlers.upload_handler import UploadHandler
-from .handlers.admin_handler import AdminHandler
+from terry.config import Config
+from terry.handlers.admin_handler import AdminHandler
+from terry.handlers.base_handler import BaseHandler
+from terry.handlers.contest_handler import ContestHandler
+from terry.handlers.info_handler import InfoHandler
+from terry.handlers.upload_handler import UploadHandler
+from terry.logger import Logger
 
 monkey.patch_all()
 
@@ -40,9 +38,11 @@ class Server:
             "admin": AdminHandler()
         }
 
-        # The router tries to match the rules, the endpoint MUST be a string with this format
+        # The router tries to match the rules, the endpoint MUST be a string
+        # with this format
         #     CONTROLLER#ACTION
-        # Where CONTROLLER is an handler registered in self.handlers and ACTION is a valid
+        # Where CONTROLLER is an handler registered in self.handlers and
+        # ACTION is a valid
         # method of that handler
         self.router = Map([
             Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
@@ -100,7 +100,8 @@ class Server:
                 methods=["POST"],
                 endpoint="admin#set_extra_time"),
             Rule("/admin/status", methods=["POST"], endpoint="admin#status"),
-            Rule("/admin/pack_status", methods=["GET"], endpoint="admin#pack_status"),
+            Rule("/admin/pack_status", methods=["GET"],
+                 endpoint="admin#pack_status"),
             Rule(
                 "/admin/user_list",
                 methods=["POST"],
@@ -148,7 +149,7 @@ class Server:
                          (Config.address, Config.port))
             sys.exit(1)
         greenlet = gevent.spawn(server.serve_forever)
+        port = "" if Config.port == 80 else ":" + str(Config.port)
         Logger.info("SERVER_STATUS", "Server started at http://%s%s/" %
-                    (str(Config.address), ""
-                     if Config.port == 80 else ":" + str(Config.port)))
+                    (str(Config.address), port))
         greenlet.join()

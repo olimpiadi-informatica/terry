@@ -8,11 +8,11 @@
 
 import argparse
 
-from .config import Config
-from .contest_manager import ContestManager
-from .database import Database
-from .logger import Logger
-from .server import Server
+from terry.config import Config
+from terry.contest_manager import ContestManager
+from terry.database import Database
+from terry.logger import Logger
+from terry.server import Server
 
 
 def main():

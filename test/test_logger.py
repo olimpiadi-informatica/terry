@@ -5,17 +5,16 @@
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 
+import datetime
 import unittest
 
-import datetime
-
-from src.config import Config
-from src.logger import Logger
+from terry.config import Config
+from terry.logger import Logger
 from test.utils import Utils
 
 
 class TestLogger(unittest.TestCase):
-    VERY_FAR_IN_TIME = 2524608000 # Gen 1st, 2050
+    VERY_FAR_IN_TIME = 2524608000  # Gen 1st, 2050
 
     def setUp(self):
         Utils.prepare_test(connect_logger=False)
@@ -114,7 +113,12 @@ class TestLogger(unittest.TestCase):
         ]
         Logger.c.execute("DELETE FROM logs")
         for log in logs:
-            Logger.c.execute("INSERT INTO logs (level, category, message) VALUES (%d, '%s', '%s')" % log)
+            Logger.c.execute(
+                "INSERT INTO logs (level, category, message) VALUES (%d, "
+                "'%s', '%s')" % log)
 
-        Logger.c.execute("INSERT INTO logs (date, level, category, message) VALUES (%d, %d, '%s', '%s')" %
-                         (TestLogger.VERY_FAR_IN_TIME, Logger.INFO, 'FUTURE', 'This message comes from the future'))
+        Logger.c.execute(
+            "INSERT INTO logs (date, level, category, message) VALUES (%d, "
+            "%d, '%s', '%s')" %
+            (TestLogger.VERY_FAR_IN_TIME, Logger.INFO, 'FUTURE',
+             'This message comes from the future'))

@@ -13,11 +13,11 @@ from unittest.mock import patch
 import yaml
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
-from src import crypto
-from src.config import Config
-from src.database import Database
-from src.handlers.admin_handler import AdminHandler
-from src.logger import Logger
+from terry import crypto
+from terry.config import Config
+from terry.database import Database
+from terry.handlers.admin_handler import AdminHandler
+from terry.logger import Logger
 from test.test_logger import TestLogger
 from test.utils import Utils
 
@@ -195,7 +195,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertIn("Contest has already been started",
                       ex.exception.response.data.decode())
 
-    @patch('src.contest_manager.ContestManager.start')
+    @patch('terry.contest_manager.ContestManager.start')
     def test_start_ok(self, start_mock):
         out = self.admin_handler.start(
             admin_token='admin token', _ip='1.2.3.4')
@@ -353,14 +353,14 @@ class TestAdminHandler(unittest.TestCase):
         with open(Config.encrypted_file, "wb") as f:
             f.write(Utils.build_pack(yaml.dump({"deletable": False})))
         with self.assertRaises(Forbidden):
-            self.admin_handler.drop_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+            self.admin_handler.drop_contest(Utils.ZIP_TOKEN)
 
     def test_drop_contest(self):
         Utils.setup_encrypted_file()
         Database.del_meta("admin_token")
         with open(Config.encrypted_file, "wb") as f:
             f.write(Utils.build_pack(yaml.dump({"deletable": True})))
-        self.admin_handler.drop_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+        self.admin_handler.drop_contest(Utils.ZIP_TOKEN)
         self.assertFalse(os.path.exists(Config.storedir))
         self.assertFalse(os.path.exists(Config.statementdir))
         self.assertFalse(os.path.exists(Config.contest_path))

@@ -25,7 +25,7 @@ setup(
     license="MPL-2.0",
     keywords="informatics contests",
     url="https://github.com/algorithm-ninja/territoriali-backend",
-    packages=find_packages(),
+    packages=find_packages(include="terry"),
     long_description=read("README.md"),
     classifiers=[
         "Development Status :: 3 - Alpha", "Environment :: Console",
@@ -36,9 +36,9 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "terr-server = src.__main__:main",
-            "terr-gen-password = src.utility:gen_password_main",
-            "terr-crypt-file = src.utility:crypt_file_main",
-            "terr-get-metadata = src.utility:get_metadata_main"
+            "terr-server = terry.__main__:main",
+            "terr-gen-password = terry.utility:gen_password_main",
+            "terr-crypt-file = terry.utility:crypt_file_main",
+            "terr-get-metadata = terry.utility:get_metadata_main"
         ]
     })

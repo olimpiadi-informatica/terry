@@ -6,14 +6,13 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import json
 import unittest
-
 from unittest.mock import patch
 
 from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
-from src.logger import Logger
-from src.server import Server
+from terry.logger import Logger
+from terry.server import Server
 from test.utils import Utils
 
 
@@ -23,23 +22,25 @@ class TestServer(unittest.TestCase):
         Utils.prepare_test()
         self.server = Server()
 
-    @patch("src.server.Server.wsgi_app", side_effect=Exception())
+    @patch("terry.server.Server.wsgi_app", side_effect=Exception())
     def test_call_with_error(self, mock):
         with Utils.nostderr() as stderr:
-            res = self.server({"REQUEST_METHOD":"GET"}, lambda *args: 42)
+            res = self.server({"REQUEST_METHOD": "GET"}, lambda *args: 42)
         # this is a garbage way to check the output of the method...
         self.assertEqual(500, res._callbacks[1].__self__._status_code)
         self.assertIn("UNCAUGHT_EXCEPTION", stderr.buffer)
 
     def test_wsgi_app(self):
-        res = self.server.wsgi_app(EnvironBuilder('/contest').get_environ(), None)
+        res = self.server.wsgi_app(EnvironBuilder('/contest').get_environ(),
+                                   None)
         data = json.loads(res.data.decode())
 
         self.assertFalse(data["has_started"])
 
     def test_wsgi_app_404(self):
         Logger.set_log_level("ERROR")
-        res = self.server.wsgi_app(EnvironBuilder('/not_found').get_environ(), None)
+        res = self.server.wsgi_app(EnvironBuilder('/not_found').get_environ(),
+                                   None)
         self.assertIsInstance(res, NotFound)
 
     @patch("gevent.wsgi.WSGIServer.init_socket", side_effect=OSError())

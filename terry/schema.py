@@ -6,6 +6,7 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
+
 class Schema:
     INIT = """
         PRAGMA FOREIGN_KEYS = ON;
@@ -96,7 +97,8 @@ class Schema:
                 source TEXT NOT NULL,
                 score REAL NOT NULL,
                 date INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
-                FOREIGN KEY (input, token, task) REFERENCES inputs(id, token, task),
+                FOREIGN KEY (input, token, task) REFERENCES inputs(id, token, 
+                task),
                 FOREIGN KEY (output, input) REFERENCES outputs(id, input),
                 FOREIGN KEY (source, input) REFERENCES sources(id, input),
                 CHECK (score >= 0)
@@ -110,7 +112,8 @@ class Schema:
                 PRIMARY KEY (token, task),
                 FOREIGN KEY (token) REFERENCES users(token),
                 FOREIGN KEY (task) REFERENCES tasks(name),
-                FOREIGN KEY (token, task, current_attempt) REFERENCES inputs(token, task, attempt),
+                FOREIGN KEY (token, task, current_attempt) REFERENCES inputs(
+                token, task, attempt),
                 CHECK (score >= 0)
             );
 
@@ -124,7 +127,8 @@ class Schema:
 
             CREATE TRIGGER check_output_dates BEFORE INSERT ON outputs
             BEGIN
-                SELECT RAISE(FAIL, "The output date is lower than the input one")
+                SELECT RAISE(FAIL, "The output date is lower than the input 
+                one")
                 FROM inputs
                 WHERE inputs.id = NEW.input
                   AND inputs.date > NEW.date;
@@ -132,7 +136,8 @@ class Schema:
 
             CREATE TRIGGER check_source_dates BEFORE INSERT ON sources
             BEGIN
-                SELECT RAISE(FAIL, "The source date is lower than the input one")
+                SELECT RAISE(FAIL, "The source date is lower than the input 
+                one")
                 FROM inputs
                 WHERE inputs.id = NEW.input
                   AND inputs.date > NEW.date;
@@ -140,12 +145,14 @@ class Schema:
 
             CREATE TRIGGER check_submission_dates BEFORE INSERT ON submissions
             BEGIN
-                SELECT RAISE(FAIL, "The submission date is lower than the output one")
+                SELECT RAISE(FAIL, "The submission date is lower than the 
+                output one")
                 FROM outputs
                 WHERE outputs.id = NEW.output
                   AND outputs.date > NEW.date;
 
-                SELECT RAISE(FAIL, "The submission date is lower than the source one")
+                SELECT RAISE(FAIL, "The submission date is lower than the 
+                source one")
                 FROM sources
                 WHERE sources.id = NEW.source
                   AND sources.date > NEW.date;

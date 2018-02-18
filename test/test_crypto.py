@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 import base64
 import unittest
 
-from src import crypto
+from terry import crypto
 
 
 class TestCrypto(unittest.TestCase):
@@ -93,7 +98,6 @@ class TestCrypto(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             crypto.gen_user_password(username, secret, scrambled_password)
-
 
     def test_recover_file_password_too_long(self):
         username = "FOOO"

@@ -3,7 +3,7 @@ import argparse
 import os
 import sys
 
-from src.crypto import SECRET_LEN, USERNAME_LEN, gen_user_password, encode, \
+from terry.crypto import SECRET_LEN, USERNAME_LEN, gen_user_password, encode, \
     decode, validate, metadata
 
 

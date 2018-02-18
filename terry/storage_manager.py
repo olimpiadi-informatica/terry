@@ -14,7 +14,6 @@ from .config import Config
 
 
 class StorageManager:
-
     """
     Maximum length of a file name (including the extension)
     """
@@ -29,7 +28,8 @@ class StorageManager:
         :return: A path relative to the Config.storedir where save that file
         """
         filename = StorageManager._sanitize(filename)
-        return os.path.join("source", source_id[:2], source_id[2:4], source_id, filename)
+        return os.path.join("source", source_id[:2], source_id[2:4], source_id,
+                            filename)
 
     @staticmethod
     def new_output_file(output_id, filename):
@@ -40,7 +40,8 @@ class StorageManager:
         :return: A path relative to the Config.storedir where save that file
         """
         filename = StorageManager._sanitize(filename)
-        return os.path.join("output", output_id[:2], output_id[2:4], output_id, filename)
+        return os.path.join("output", output_id[:2], output_id[2:4], output_id,
+                            filename)
 
     @staticmethod
     def new_input_file(input_id, task_name, attempt):
@@ -115,18 +116,21 @@ class StorageManager:
     @staticmethod
     def _sanitize(filename):
         """
-        Sanitize a filename, convert all the spaces to underscores and remove all invalid characters.
-        The result string can only contain chars in [a-zA-Z_-.]. The filename is also truncated if it has more than
+        Sanitize a filename, convert all the spaces to underscores and remove
+        all invalid characters.
+        The result string can only contain chars in [a-zA-Z_-.]. The filename
+        is also truncated if it has more than
         MAX_LENGTH chars (it tries to truncate the name and keep the extension)
         :param filename: filename to sanitize
         :return: the sanitized file name
         """
-        filename = re.sub(r'(?u)[^-\w.]', '', filename.strip().replace(' ', '_'))
+        filename = re.sub(r'(?u)[^-\w.]', '',
+                          filename.strip().replace(' ', '_'))
         if filename == "" or filename == "." or filename == "..":
             raise ValueError("Invalid file name")
         name, ext = os.path.splitext(filename)
         # if the extension is too long
-        if len(ext) > StorageManager.MAX_LENGTH-1:
+        if len(ext) > StorageManager.MAX_LENGTH - 1:
             return filename[0:StorageManager.MAX_LENGTH]
         name_len = min(len(name), StorageManager.MAX_LENGTH - len(ext))
         return name[0:name_len] + ext

@@ -10,12 +10,12 @@ import time
 import jwt
 from werkzeug.exceptions import Forbidden, BadRequest
 
-from src.config import Config
-from src.contest_manager import ContestManager
-from src.database import Database
-from src.handler_params import HandlerParams
-from src.logger import Logger
-from .handlers.base_handler import BaseHandler
+from terry.config import Config
+from terry.contest_manager import ContestManager
+from terry.database import Database
+from terry.handler_params import HandlerParams
+from terry.handlers.base_handler import BaseHandler
+from terry.logger import Logger
 
 
 class Validators:
@@ -86,8 +86,7 @@ class Validators:
                 if Database.register_ip(token, ip):
                     Logger.info("LOGIN",
                                 "User %s logged in from %s for the first "
-                                "time" % (
-                                token, ip))
+                                "time" % (token, ip))
             del kwargs["_ip"]
             return handler(*args, **kwargs)
 

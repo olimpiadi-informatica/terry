@@ -13,14 +13,16 @@ import string
 import sys
 import tempfile
 
-from src import crypto
-from src.config import Config
-from src.database import Database
-from src.logger import Logger
+from terry import crypto
+from terry.config import Config
+from terry.database import Database
+from terry.logger import Logger
 
 
 class Utils:
     prefix = None
+    ZIP_PASSWORD = "ed7ab1008ae6ca"
+    ZIP_TOKEN = "EDOOOO-HGKU-2VPK-LBXL-B6NA"
 
     @staticmethod
     def prepare_test(load_config=True, connect_database=True,
@@ -122,6 +124,6 @@ class Utils:
     def build_pack(metadata):
         asset = os.path.join(os.path.dirname(__file__), "./assets/pack.zip.enc")
         with open(asset, "rb") as f:
-            zip = crypto.decode(bytes.fromhex("ed7ab1008ae6ca"), f.read())
-        password = bytes.fromhex("ed7ab1008ae6ca")
+            zip = crypto.decode(bytes.fromhex(Utils.ZIP_PASSWORD), f.read())
+        password = bytes.fromhex(Utils.ZIP_PASSWORD)
         return crypto.encode(password, zip, metadata.encode())

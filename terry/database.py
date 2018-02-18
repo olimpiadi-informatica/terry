@@ -7,19 +7,21 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 
-from .schema import Schema
-from .config import Config
-from .logger import Logger
-
 import sqlite3
-from gevent.lock import BoundedSemaphore
 import uuid
+
+from gevent.lock import BoundedSemaphore
+
+from terry.config import Config
+from terry.logger import Logger
+from terry.schema import Schema
 
 
 class Database:
     connected = False
-
     connection_sem = BoundedSemaphore()
+    c = None
+    conn = None
 
     @staticmethod
     def gen_id():
@@ -41,7 +43,7 @@ class Database:
         version = Database.get_meta("schema_version", -1, int)
         if version == -1:
             Logger.info("DB_OPERATION", "Creating database")
-        for upd in range(version+1, len(Schema.UPDATERS)):
+        for upd in range(version + 1, len(Schema.UPDATERS)):
             Logger.info("DB_OPERATION", "Applying updater %d" % upd)
             Database.c.executescript(Schema.UPDATERS[upd])
             Database.set_meta("schema_version", upd)
@@ -66,31 +68,31 @@ class Database:
 
     @staticmethod
     def get_tasks():
-        Database.c.execute("""SELECT * FROM tasks ORDER BY num ASC""")
+        Database.c.execute("SELECT * FROM tasks ORDER BY num ASC")
         return Database.dictify(all=True)
 
     @staticmethod
     def get_task(task):
-        Database.c.execute("""
-            SELECT * FROM tasks WHERE name = :task
-        """, {"task": task})
+        Database.c.execute("SELECT * FROM tasks WHERE name = :task",
+                           {"task": task})
         return Database.dictify()
 
     @staticmethod
     def get_user(token):
-        Database.c.execute("""
-            SELECT * FROM users WHERE token=:token
-        """, {"token": token})
+        Database.c.execute("SELECT * FROM users WHERE token=:token",
+                           {"token": token})
         return Database.dictify()
 
     @staticmethod
     def get_users():
         Database.c.execute("""
             SELECT
-                users.token AS users_token, users.name AS users_name,
+                users.token AS users_token,
+                users.name AS users_name,
                 users.surname AS users_surname,
                 ips.first_date AS ips_first_date,
-                users.extra_time AS users_extra_time, ips.ip AS ips_ip
+                users.extra_time AS users_extra_time,
+                ips.ip AS ips_ip
             FROM users
             LEFT JOIN ips ON users.token = ips.token
         """)
@@ -100,7 +102,7 @@ class Database:
         for user in users:
             token = user["users_token"]
             if token not in users_dict:
-                users_dict[token] = { 'ip': [] }
+                users_dict[token] = {'ip': []}
             ip = {}
             for k, v in user.items():
                 if k.startswith("users_"): users_dict[token][k[6:]] = v
@@ -116,7 +118,7 @@ class Database:
             raise ValueError("Invalid parameters to get_input")
         c = Database.c
         if id is not None:
-            c.execute("""SELECT * FROM inputs WHERE id=:id""", {"id": id})
+            c.execute("SELECT * FROM inputs WHERE id=:id", {"id": id})
         else:
             c.execute("""
                 SELECT * FROM inputs
@@ -126,29 +128,36 @@ class Database:
 
     @staticmethod
     def get_source(id):
-        Database.c.execute("""
-            SELECT * FROM sources WHERE id=:id
-        """, {"id": id})
+        Database.c.execute("SELECT * FROM sources WHERE id=:id", {"id": id})
         return Database.dictify()
 
     @staticmethod
     def get_output(id):
-        Database.c.execute("""
-            SELECT * FROM outputs WHERE id=:id
-        """, {"id": id})
+        Database.c.execute("SELECT * FROM outputs WHERE id=:id", {"id": id})
         return Database.dictify()
 
     @staticmethod
     def get_submission(id):
         Database.c.execute("""
             SELECT
-                submissions.id AS id, submissions.token AS token, submissions.task AS task,
-                submissions.score AS score, submissions.date AS date,
-                inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
-                inputs.path AS input_path, inputs.size AS input_size,
-                outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
-                outputs.size AS output_size, outputs.result AS output_result,
-                sources.id AS source_id, sources.date AS source_date, sources.path AS source_path,
+                submissions.id AS id,
+                submissions.token AS token, 
+                submissions.task AS task,
+                submissions.score AS score,
+                submissions.date AS date,
+                inputs.id AS input_id,
+                inputs.attempt AS input_attempt, 
+                inputs.date AS input_date,
+                inputs.path AS input_path,
+                inputs.size AS input_size,
+                outputs.id AS output_id,
+                outputs.date AS output_date, 
+                outputs.path AS output_path,
+                outputs.size AS output_size,
+                outputs.result AS output_result,
+                sources.id AS source_id,
+                sources.date AS source_date, 
+                sources.path AS source_path,
                 sources.size AS source_size
             FROM submissions
             JOIN inputs ON submissions.input = inputs.id
@@ -162,13 +171,24 @@ class Database:
     def get_submissions(token, task):
         Database.c.execute("""
             SELECT
-                submissions.id AS id, submissions.token AS token, submissions.task AS task,
-                submissions.score AS score, submissions.date AS date,
-                inputs.id AS input_id, inputs.attempt AS input_attempt, inputs.date AS input_date,
-                inputs.path AS input_path, inputs.size AS input_size,
-                outputs.id AS output_id, outputs.date AS output_date, outputs.path AS output_path,
-                outputs.size AS output_size, outputs.result AS output_result,
-                sources.id AS source_id, sources.date AS source_date, sources.path AS source_path,
+                submissions.id AS id,
+                submissions.token AS token, 
+                submissions.task AS task,
+                submissions.score AS score,
+                submissions.date AS date,
+                inputs.id AS input_id,
+                inputs.attempt AS input_attempt, 
+                inputs.date AS input_date,
+                inputs.path AS input_path,
+                inputs.size AS input_size,
+                outputs.id AS output_id,
+                outputs.date AS output_date, 
+                outputs.path AS output_path,
+                outputs.size AS output_size,
+                outputs.result AS output_result,
+                sources.id AS source_id,
+                sources.date AS source_date, 
+                sources.path AS source_path,
                 sources.size AS source_size
             FROM submissions
             JOIN inputs ON submissions.input = inputs.id
@@ -183,25 +203,14 @@ class Database:
     def get_user_task(token, task=None):
         c = Database.c
         if task is not None:
-            c.execute("""
-                SELECT * FROM user_tasks
-                WHERE token=:token AND task=:task
-            """, {"token": token, "task": task})
+            c.execute(
+                "SELECT * FROM user_tasks WHERE token=:token AND task=:task",
+                {"token": token, "task": task})
             return Database.dictify()
         else:
-            c.execute("""
-                SELECT * FROM user_tasks
-                WHERE token=:token
-            """, {"token": token})
+            c.execute("SELECT * FROM user_tasks WHERE token=:token",
+                      {"token": token})
             return Database.dictify(all=True)
-
-    # This method is not used yet
-    # @staticmethod
-    # def get_ips(token):
-    #     Database.c.execute("""
-    #         SELECT * FROM ips WHERE token=:token
-    #     """, {"token": token})
-    #     return Database.dictify(all=True)
 
     @staticmethod
     def get_next_attempt(token, task):
@@ -209,13 +218,13 @@ class Database:
             SELECT COUNT(*) FROM inputs
             WHERE token=:token AND task=:task
         """, {"token": token, "task": task})
-        return Database.c.fetchone()[0]+1
+        return Database.c.fetchone()[0] + 1
 
     @staticmethod
     def begin():
         Database.connection_sem.acquire()
         try:
-            Database.c.execute("""BEGIN TRANSACTION;""")
+            Database.c.execute("BEGIN TRANSACTION;")
         except:
             Database.connection_sem.release()
             raise
@@ -223,14 +232,14 @@ class Database:
     @staticmethod
     def commit():
         try:
-            Database.c.execute("""COMMIT;""")
+            Database.c.execute("COMMIT;")
         finally:
             Database.connection_sem.release()
 
     @staticmethod
     def rollback():
         try:
-            Database.c.execute("""ROLLBACK;""")
+            Database.c.execute("ROLLBACK;")
         finally:
             Database.connection_sem.release()
 
@@ -254,9 +263,8 @@ class Database:
     def get_meta(key, default=None, type=None):
         c = Database.conn.cursor()
         try:
-            c.execute("""
-                SELECT value FROM metadata WHERE key = :key
-            """, {"key": key})
+            c.execute("SELECT value FROM metadata WHERE key = :key",
+                      {"key": key})
         except sqlite3.OperationalError:
             return default
         row = c.fetchone()
@@ -277,9 +285,9 @@ class Database:
 
     @staticmethod
     def del_meta(key, autocommit=True):
-        return 1 == Database.do_write(autocommit, """
-            DELETE FROM metadata WHERE key = :key
-        """, {"key": key})
+        return 1 == Database.do_write(autocommit,
+                                      "DELETE FROM metadata WHERE key = :key",
+                                      {"key": key})
 
     @staticmethod
     def add_user(token, name, surname, sso_user=False, autocommit=True):
@@ -302,22 +310,19 @@ class Database:
     @staticmethod
     def add_user_task(token, task, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT INTO user_tasks (token, task)
-            VALUES (:token, :task)
+            INSERT INTO user_tasks (token, task) VALUES (:token, :task)
         """, {"token": token, "task": task})
 
     @staticmethod
     def register_ip(token, ip, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT OR IGNORE INTO ips (token, ip)
-            VALUES (:token, :ip)
+            INSERT OR IGNORE INTO ips (token, ip) VALUES (:token, :ip)
         """, {"token": token, "ip": ip})
 
     @staticmethod
     def register_admin_ip(ip, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT OR IGNORE INTO admin_ips (ip)
-            VALUES (:ip)
+            INSERT OR IGNORE INTO admin_ips (ip) VALUES (:ip)
         """, {"ip": ip})
 
     @staticmethod
@@ -348,7 +353,8 @@ class Database:
     @staticmethod
     def add_submission(id, input, output, source, score, autocommit=True):
         return 1 == Database.do_write(autocommit, """
-            INSERT INTO submissions (id, token, task, input, output, source, score)
+            INSERT INTO submissions (id, token, task, input, output, source, 
+            score)
             SELECT :id, token, task, :input, :output, :source, :score
             FROM inputs
             WHERE id = :input

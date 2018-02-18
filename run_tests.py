@@ -8,7 +8,7 @@
 import sys
 import unittest
 # these rows are magic, they change the path from where the modules are loaded
-# the test suite should use "import src.stuff"
+# the test suite should use "import terry.stuff"
 from os import path
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))

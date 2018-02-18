@@ -7,15 +7,14 @@
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import os
 import unittest
-
 from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden, BadRequest, InternalServerError
 
-from src.config import Config
-from src.database import Database
-from src.handlers.upload_handler import UploadHandler
-from src.logger import Logger
+from terry.config import Config
+from terry.database import Database
+from terry.handlers.upload_handler import UploadHandler
+from terry.logger import Logger
 from test.utils import Utils
 
 
@@ -31,14 +30,16 @@ class TestInfoHandler(unittest.TestCase):
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
 
-    @patch("src.contest_manager.ContestManager.evaluate_output", return_value=b'{"validation":42}')
-    @patch("src.database.Database.gen_id", return_value="outputid")
+    @patch("terry.contest_manager.ContestManager.evaluate_output",
+           return_value=b'{"validation":42}')
+    @patch("terry.database.Database.gen_id", return_value="outputid")
     def test_upload_output(self, gen_mock, eval_mock):
         Utils.start_contest()
         self._insert_data()
 
         res = self.handler.upload_output(input_id="inputid", _ip="1.1.1.1",
-                                         file={"content":"foobar".encode(),"name":"output.txt"})
+                                         file={"content": "foobar".encode(),
+                                               "name": "output.txt"})
         self.assertEqual("outputid", res["id"])
         self.assertIn("output.txt", res["path"])
         self.assertEqual(42, res["validation"])
@@ -51,11 +52,12 @@ class TestInfoHandler(unittest.TestCase):
     def test_upload_output_invalid_input(self):
         Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.upload_output(input_id="invalid input", _ip="1.1.1.1", _file_content="foo", _file_name="bar")
+            self.handler.upload_output(input_id="invalid input", _ip="1.1.1.1",
+                                       _file_content="foo", _file_name="bar")
 
         self.assertIn("No such input", ex.exception.response.data.decode())
 
-    @patch("src.database.Database.gen_id")
+    @patch("terry.database.Database.gen_id")
     def test_upload_output_invalid_file_name(self, gen_mock):
         Utils.start_contest()
         self._insert_data()
@@ -65,8 +67,9 @@ class TestInfoHandler(unittest.TestCase):
                                        file={"content": "foobar".encode(),
                                              "name": ".."})
 
-    @patch("src.contest_manager.ContestManager.evaluate_output", side_effect=RuntimeError())
-    @patch("src.database.Database.gen_id", return_value="outputid")
+    @patch("terry.contest_manager.ContestManager.evaluate_output",
+           side_effect=RuntimeError())
+    @patch("terry.database.Database.gen_id", return_value="outputid")
     def test_upload_output_check_failed(self, gen_mock, eval_mock):
         Utils.start_contest()
         self._insert_data()
@@ -76,13 +79,14 @@ class TestInfoHandler(unittest.TestCase):
                                        file={"content": "foobar".encode(),
                                              "name": "output.txt"})
 
-    @patch("src.database.Database.gen_id", return_value="sourceid")
+    @patch("terry.database.Database.gen_id", return_value="sourceid")
     def test_upload_source(self, gen_mock):
         Utils.start_contest()
         self._insert_data()
 
         res = self.handler.upload_source(input_id="inputid", _ip="1.1.1.1",
-                                         file={"content":"foobar".encode(),"name":"source.txt"})
+                                         file={"content": "foobar".encode(),
+                                               "name": "source.txt"})
         self.assertEqual("sourceid", res["id"])
         self.assertIn("source.txt", res["path"])
         self.assertEqual("inputid", res["input"])
@@ -96,7 +100,7 @@ class TestInfoHandler(unittest.TestCase):
         with open(path, "r") as file:
             self.assertEqual("foobar", file.read())
 
-    @patch("src.database.Database.gen_id", return_value="sourceid")
+    @patch("terry.database.Database.gen_id", return_value="sourceid")
     def test_upload_source_with_exe(self, gen_mock):
         Utils.start_contest()
         self._insert_data()
@@ -113,11 +117,12 @@ class TestInfoHandler(unittest.TestCase):
     def test_upload_source_invalid_input(self):
         Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.upload_source(input_id="invalid input", _ip="1.1.1.1", _file_content="foo", _file_name="bar")
+            self.handler.upload_source(input_id="invalid input", _ip="1.1.1.1",
+                                       _file_content="foo", _file_name="bar")
 
         self.assertIn("No such input", ex.exception.response.data.decode())
 
-    @patch("src.database.Database.gen_id")
+    @patch("terry.database.Database.gen_id")
     def test_upload_source_invalid_file_name(self, gen_mock):
         Utils.start_contest()
         self._insert_data()

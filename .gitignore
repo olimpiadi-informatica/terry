@@ -118,3 +118,6 @@ db.sqlite3_for_test
 # vim
 .*.swp
 .*.swo
+
+# config files
+config/config.yaml

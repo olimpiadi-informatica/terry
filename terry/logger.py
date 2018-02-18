@@ -6,13 +6,13 @@
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
-from .config import Config
-
-import sqlite3
-
 import datetime
+import sqlite3
 import sys
+
 from colorama import Fore, Style
+
+from terry.config import Config
 
 
 class Logger:
@@ -20,6 +20,8 @@ class Logger:
 
     connected = False
     num_logs = 0
+    c = None
+    conn = None
 
     DEBUG = 0
     INFO = 1
@@ -28,7 +30,9 @@ class Logger:
     HUMAN_MESSAGES = ["DEBUG", "INFO", "WARNING", "ERROR"]
     LOG_LEVEL = INFO
     COLOR = [
-        Style.BRIGHT, Fore.BLUE + Style.BRIGHT, Fore.YELLOW + Style.BRIGHT,
+        Style.BRIGHT,
+        Fore.BLUE + Style.BRIGHT,
+        Fore.YELLOW + Style.BRIGHT,
         Fore.RED + Style.BRIGHT
     ]
     FMT = "%% %ds" % max(map(len, HUMAN_MESSAGES))
@@ -36,7 +40,8 @@ class Logger:
     @staticmethod
     def connect_to_database():
         """
-        Connect to the log database, create the schema if needed. This method MUST be called once and only once.
+        Connect to the log database, create the schema if needed. This method
+        MUST be called once and only once.
         """
         if Logger.connected is True:
             raise RuntimeError("Database already loaded")
@@ -62,9 +67,11 @@ class Logger:
     @staticmethod
     def set_log_level(lvl):
         """
-        Set the minimum level of the messages to be printed on console. Note that every
+        Set the minimum level of the messages to be printed on console. Note
+        that every
         message is alway stored in the db.
-        :param lvl: Minimum level, can be an int or a str with the log level name
+        :param lvl: Minimum level, can be an int or a str with the log level
+        name
         """
         if isinstance(lvl, int):
             Logger.LOG_LEVEL = lvl
@@ -79,9 +86,11 @@ class Logger:
     def log(level, category, message):
         """
         Add an entry to the log database and print it to the console
-        :param level: Level of the message, like Logger.DEBUG, Logger.INFO, Logger.WARNING
+        :param level: Level of the message, like Logger.DEBUG, Logger.INFO,
+        Logger.WARNING
         :param category: A string with the category of the event
-        :param message: What really happened, it is converted to string using str()
+        :param message: What really happened, it is converted to string using
+        str()
         """
         if level >= Logger.LOG_LEVEL:
             Logger.log_console(level, category, message)
@@ -148,7 +157,8 @@ class Logger:
         else:
             c.execute("""
                 SELECT date, category, level, message FROM logs
-                WHERE level >= :level AND date >= :begin AND date <= :end AND category = :category
+                WHERE level >= :level AND date >= :begin AND date <= :end AND 
+                category = :category
                 ORDER BY date DESC
                 LIMIT 50
             """, {

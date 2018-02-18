@@ -9,14 +9,14 @@
 
 from werkzeug.exceptions import InternalServerError, BadRequest
 
-from .base_handler import BaseHandler
-from .info_handler import InfoHandler
-from ..contest_manager import ContestManager
-from ..database import Database
-from ..detect_exe import get_exeflags
-from ..logger import Logger
-from ..storage_manager import StorageManager
-from ..validators import Validators
+from terry.handlers.base_handler import BaseHandler
+from terry.handlers.info_handler import InfoHandler
+from terry.contest_manager import ContestManager
+from terry.database import Database
+from terry.detect_exe import get_exeflags
+from terry.logger import Logger
+from terry.storage_manager import StorageManager
+from terry.validators import Validators
 
 
 class UploadHandler(BaseHandler):
@@ -87,7 +87,5 @@ class UploadHandler(BaseHandler):
         Logger.info("UPLOAD", "User %s has uploaded the source %s" % (
             input["token"], source_id))
         output = BaseHandler.format_dates(Database.get_source(source_id))
-        output["validation"] = dict(
-            alerts=alerts,
-        )
+        output["validation"] = {"alerts": alerts}
         return output

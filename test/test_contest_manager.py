@@ -13,11 +13,11 @@ import gevent
 from gevent import queue
 from werkzeug.exceptions import Forbidden, NotFound, InternalServerError
 
-from src import crypto
-from src.config import Config
-from src.contest_manager import ContestManager
-from src.database import Database
-from src.logger import Logger
+from terry import crypto
+from terry.config import Config
+from terry.contest_manager import ContestManager
+from terry.database import Database
+from terry.logger import Logger
 from test.utils import Utils
 
 
@@ -63,13 +63,13 @@ class TestContestManager(unittest.TestCase):
     def test_extract_contest(self):
         Utils.setup_encrypted_file()
         # see test/assets/README.md
-        ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+        ContestManager.extract_contest(Utils.ZIP_TOKEN)
 
     def test_extract_no_priv(self):
         Utils.setup_encrypted_file()
         os.chmod(Config.encrypted_file, 0o000)
         with self.assertRaises(InternalServerError):
-            ContestManager.extract_contest("EDOOOO-HGKU-2VPK-LBXL-B6NA")
+            ContestManager.extract_contest(Utils.ZIP_TOKEN)
 
     def test_extract_bad_zip(self):
         self.tempdir = Utils.new_tmp_dir()
@@ -178,7 +178,7 @@ class TestContestManager(unittest.TestCase):
         self.assertIn("poldo", ContestManager.tasks)
         self.assertIn("poldo", ContestManager.input_queue)
 
-    @patch("src.database.Database.add_task", side_effect=Exception("ops..."))
+    @patch("terry.database.Database.add_task", side_effect=Exception("ops..."))
     def test_read_from_disk_transaction_failed(self, add_task_mock):
         path = Utils.new_tmp_dir()
         self._prepare_contest_dir(path)
@@ -190,7 +190,7 @@ class TestContestManager(unittest.TestCase):
         self.assertIsNone(Database.get_meta("contest_duration"))
 
     @patch("gevent.subprocess.call")
-    @patch("src.database.Database.gen_id", return_value="inputid")
+    @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._valid_subprocess_call
         ContestManager.tasks["poldo"] = {
@@ -199,7 +199,7 @@ class TestContestManager(unittest.TestCase):
         }
 
         with patch(
-                "src.logger.Logger.error",
+                "terry.logger.Logger.error",
                 side_effect=TestContestManager._stop_worker_loop):
             with patch(
                     "gevent.queue.Queue.put",
@@ -208,7 +208,7 @@ class TestContestManager(unittest.TestCase):
                     ContestManager.worker("poldo")
 
     @patch("gevent.subprocess.call", return_value=42)
-    @patch("src.database.Database.gen_id", return_value="inputid")
+    @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker_generator_fails(self, gen_id_mock, call_mock):
         ContestManager.tasks["poldo"] = {
             "generator": "/gen",
@@ -216,7 +216,7 @@ class TestContestManager(unittest.TestCase):
         }
 
         with patch(
-                "src.logger.Logger.error",
+                "terry.logger.Logger.error",
                 side_effect=TestContestManager._stop_worker_loop):
             with patch(
                     "gevent.queue.Queue.put",
@@ -227,7 +227,7 @@ class TestContestManager(unittest.TestCase):
                               ex.exception.args[0])
 
     @patch("gevent.subprocess.call")
-    @patch("src.database.Database.gen_id", return_value="inputid")
+    @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker_validator_fails(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._broken_val_subprocess_call
         ContestManager.tasks["poldo"] = {
@@ -236,7 +236,7 @@ class TestContestManager(unittest.TestCase):
         }
 
         with patch(
-                "src.logger.Logger.error",
+                "terry.logger.Logger.error",
                 side_effect=TestContestManager._stop_worker_loop):
             with patch(
                     "gevent.queue.Queue.put",
@@ -270,7 +270,7 @@ class TestContestManager(unittest.TestCase):
         self.assertIn("poldo_input_42.txt", input[1])
 
     @patch(
-        "src.logger.Logger.warning",
+        "terry.logger.Logger.warning",
         side_effect=lambda *args: exec("raise NotImplementedError(*args)"))
     def test_get_input_queue_underrun(self, warning_mock):
         ContestManager.input_queue["poldo"] = gevent.queue.Queue(1)
@@ -323,15 +323,15 @@ class TestContestManager(unittest.TestCase):
 
     def _prepare_contest_dir(self, path):
         self._write_file(path, "contest.yaml", "duration: 18000\n"
-                         "tasks:\n"
-                         "    - poldo\n"
-                         "users:\n"
-                         "    - token: token\n"
-                         "      name: Test\n"
-                         "      surname: User\n")
+                                               "tasks:\n"
+                                               "    - poldo\n"
+                                               "users:\n"
+                                               "    - token: token\n"
+                                               "      name: Test\n"
+                                               "      surname: User\n")
         self._write_file(path, "poldo/task.yaml", "name: poldo\n"
-                         "description: Poldo\n"
-                         "max_score: 42")
+                                                  "description: Poldo\n"
+                                                  "max_score: 42")
         self._write_file(path, "poldo/statement/statement.md", "# Poldo")
         self._write_file(path, "poldo/managers/generator.linux.x86_64",
                          "#!/usr/bin/bash\n"

@@ -4,16 +4,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-import unittest
-
 import datetime
-
+import unittest
 from unittest.mock import patch
+
 from werkzeug.exceptions import Forbidden
 
-from src.database import Database
-from src.handlers.info_handler import InfoHandler
-from src.logger import Logger
+from terry.database import Database
+from terry.handlers.info_handler import InfoHandler
+from terry.logger import Logger
 from test.utils import Utils
 
 
@@ -39,7 +38,8 @@ class TestInfoHandler(unittest.TestCase):
 
         res = self.handler.get_contest()
         self.assertTrue(res["has_started"])
-        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(), res["start_time"])
+        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(),
+                         res["start_time"])
         self.assertEqual(1, len(res["tasks"]))
         self.assertEqual("poldo", res["tasks"][0]["name"])
 
@@ -66,7 +66,8 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
-        Database.add_output("outputid", "inputid", "/path", 42, b'{"validation":42}')
+        Database.add_output("outputid", "inputid", "/path", 42,
+                            b'{"validation":42}')
         Utils.start_contest()
 
         res = self.handler.get_output(output_id="outputid", _ip="1.1.1.1")
@@ -104,7 +105,8 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
-        Database.add_output("outputid", "inputid", "/path", 42, b'{"validation":42,"feedback":42}')
+        Database.add_output("outputid", "inputid", "/path", 42,
+                            b'{"validation":42,"feedback":42}')
         Database.add_source("sourceid", "inputid", "/path", 42)
         Database.add_submission("subid", "inputid", "outputid", "sourceid", 42)
 
@@ -118,7 +120,8 @@ class TestInfoHandler(unittest.TestCase):
     def test_get_submission_invalid_id(self):
         Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_submission(submission_id="invalid submission", _ip="1.1.1.1")
+            self.handler.get_submission(submission_id="invalid submission",
+                                        _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("No such submission", response)
@@ -149,7 +152,8 @@ class TestInfoHandler(unittest.TestCase):
             '%Y-%m-%dT%H:%M:%S')
         self.assertEqual(end_time, res["end_time"])
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
-        self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
+        self.assertEqual("inputid",
+                         res["tasks"]["poldo"]["current_input"]["id"])
 
     def test_get_user_no_current_attempt(self):
         Utils.start_contest(since=100, duration=200)
@@ -165,18 +169,21 @@ class TestInfoHandler(unittest.TestCase):
         Database.add_user("token", "", "")
         Database.add_task("poldo", "", "", 42, 1)
         Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
-        Database.add_output("outputid", "inputid", "/path", 42, b'{"validation":42,"feedback":42}')
+        Database.add_output("outputid", "inputid", "/path", 42,
+                            b'{"validation":42,"feedback":42}')
         Database.add_source("sourceid", "inputid", "/path", 42)
         Database.add_submission("subid", "inputid", "outputid", "sourceid", 42)
 
-        res = self.handler.get_submissions(token="token", task="poldo", _ip="1.1.1.1")
+        res = self.handler.get_submissions(token="token", task="poldo",
+                                           _ip="1.1.1.1")
         self.assertEqual(1, len(res["items"]))
         self.assertEqual("subid", res["items"][0]["id"])
 
     def test_get_submissions_invalid_token(self):
         Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_submissions(token="invalid token", task="poldo", _ip="1.1.1.1")
+            self.handler.get_submissions(token="invalid token", task="poldo",
+                                         _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("No such user", response)
@@ -185,12 +192,14 @@ class TestInfoHandler(unittest.TestCase):
         Utils.start_contest()
         Database.add_user("token", "", "")
         with self.assertRaises(Forbidden) as ex:
-            self.handler.get_submissions(token="token", task="invalid task", _ip="1.1.1.1")
+            self.handler.get_submissions(token="token", task="invalid task",
+                                         _ip="1.1.1.1")
 
         response = ex.exception.response.data.decode()
         self.assertIn("No such task", response)
 
-    @patch("src.handlers.info_handler.InfoHandler.patch_output", return_value={"id":"outputid"})
+    @patch("terry.handlers.info_handler.InfoHandler.patch_output",
+           return_value={"id": "outputid"})
     def test_patch_submission(self, mock):
         Utils.start_contest()
         submission = {
@@ -217,7 +226,8 @@ class TestInfoHandler(unittest.TestCase):
 
         res = InfoHandler.patch_output(output)
         self.assertEqual("outputid", res["id"]),
-        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(), res["date"])
+        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(),
+                         res["date"])
         self.assertEqual("/path", res["path"])
         self.assertEqual(42, res["validation"])
         self.assertEqual(42, res["size"])

@@ -7,8 +7,8 @@
 import os
 import unittest
 
-from src.config import Config
-from src.storage_manager import StorageManager
+from terry.config import Config
+from terry.storage_manager import StorageManager
 from test.utils import Utils
 
 
@@ -103,13 +103,16 @@ class TestStorageManager(unittest.TestCase):
     def test_sanitize_file_too_long(self):
         filename = "file_" + ("a" * 5 * StorageManager.MAX_LENGTH) + ".txt"
         sanitized = StorageManager._sanitize(filename)
-        self.assertEqual("file_" + ("a" * (StorageManager.MAX_LENGTH-9)) + ".txt", sanitized)
+        self.assertEqual(
+            "file_" + ("a" * (StorageManager.MAX_LENGTH - 9)) + ".txt",
+            sanitized)
         self.assertEqual(StorageManager.MAX_LENGTH, len(sanitized))
 
     def test_sanitize_extension_too_long(self):
         filename = "file." + ("x" * 5 * StorageManager.MAX_LENGTH)
         sanitized = StorageManager._sanitize(filename)
-        self.assertEqual("file." + ("x" * (StorageManager.MAX_LENGTH - 5)), sanitized)
+        self.assertEqual("file." + ("x" * (StorageManager.MAX_LENGTH - 5)),
+                         sanitized)
         self.assertEqual(StorageManager.MAX_LENGTH, len(sanitized))
 
     def test_sanitize_no_extension(self):

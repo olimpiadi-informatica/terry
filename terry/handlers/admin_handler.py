@@ -11,22 +11,21 @@ import glob
 import os.path
 import shutil
 import subprocess
-import tempfile
 import time
 
 import gevent
-import yaml
 import nacl.exceptions
+import yaml
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
-from src import crypto
-from .base_handler import BaseHandler
-from ..config import Config
-from ..contest_manager import ContestManager
-from ..database import Database
-from ..logger import Logger
-from ..storage_manager import StorageManager
-from ..validators import Validators
+from terry import crypto
+from terry.config import Config
+from terry.contest_manager import ContestManager
+from terry.database import Database
+from terry.handlers.base_handler import BaseHandler
+from terry.logger import Logger
+from terry.storage_manager import StorageManager
+from terry.validators import Validators
 
 
 class AdminHandler(BaseHandler):
@@ -43,7 +42,7 @@ class AdminHandler(BaseHandler):
                                   "The pack has already been uploaded")
         if not crypto.validate(file["content"]):
             self.raise_exc(Forbidden, "BAD_FILE", "The uploaded file is "
-                           "not valid")
+                                                  "not valid")
         StorageManager.save_file(
             os.path.realpath(Config.encrypted_file), file["content"])
         return {}
@@ -127,7 +126,7 @@ class AdminHandler(BaseHandler):
             BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates({
             "items":
-            Logger.get_logs(level, category, start_date, end_date)
+                Logger.get_logs(level, category, start_date, end_date)
         })
 
     @Validators.admin_only

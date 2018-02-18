@@ -8,16 +8,17 @@ import inspect
 
 
 class HandlerParams:
-
     HANDLER_PARAMS_ATTR = "handler_params"
 
     @staticmethod
     def initialize_handler_params(handle, handler):
         if not hasattr(handle, HandlerParams.HANDLER_PARAMS_ATTR):
             if hasattr(handler, HandlerParams.HANDLER_PARAMS_ATTR):
-                setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR, getattr(handler, HandlerParams.HANDLER_PARAMS_ATTR))
+                setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR,
+                        getattr(handler, HandlerParams.HANDLER_PARAMS_ATTR))
             else:
-                setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR, HandlerParams.get_handler_params(handler))
+                setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR,
+                        HandlerParams.get_handler_params(handler))
         # forward the method name from the handler, useful for logging
         handle.__name__ = handler.__name__
         return handle
@@ -31,7 +32,10 @@ class HandlerParams:
 
         for name in sign:
             if name == "self": continue
-            type = sign[name].annotation if sign[name].annotation is not inspect._empty else None
+            if sign[name].annotation is not inspect._empty:
+                type = sign[name].annotation
+            else:
+                type = None
             req = sign[name].default == inspect._empty
 
             params[name] = {

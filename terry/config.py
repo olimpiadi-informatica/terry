@@ -6,6 +6,7 @@
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 import sys
+
 import yaml
 
 

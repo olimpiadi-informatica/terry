@@ -8,12 +8,11 @@
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 
 import json
-
-from .base_handler import BaseHandler
-from ..validators import Validators
-from ..database import Database
-
 from datetime import datetime
+
+from terry.handlers.base_handler import BaseHandler
+from terry.database import Database
+from terry.validators import Validators
 
 
 class InfoHandler(BaseHandler):
@@ -135,7 +134,8 @@ class InfoHandler(BaseHandler):
     @staticmethod
     def patch_submission(submission):
         """
-        Given a submission from a SQL query with some JOIN create a dict by splitting the keys using _
+        Given a submission from a SQL query with some JOIN create a dict by
+        splitting the keys using _
         :param submission: A dict with the submission
         :return: A dict with some properties nested
         """
@@ -149,8 +149,8 @@ class InfoHandler(BaseHandler):
             else:
                 result[k] = v
 
-        result["feedback"] = json.loads(
-            result["output"]["result"].decode())["feedback"]
+        feedback = json.loads(result["output"]["result"].decode())
+        result["feedback"] = feedback["feedback"]
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]

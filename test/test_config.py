@@ -4,12 +4,11 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # Copyright 2017 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
-import os
 import unittest
 
-import yaml
+import yaml.parser
 
-from src.config import Config
+from terry.config import Config
 from test.utils import Utils
 
 
