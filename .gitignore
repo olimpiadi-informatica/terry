@@ -4,3 +4,4 @@ nginx.conf
 .*.swo
 .*.swp
 *.img
+*.ova
