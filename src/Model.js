@@ -61,7 +61,7 @@ export default class Model extends Observable {
       .then(response => {
         delete this.userLoadingPromise;
         this.user = response.data;
-        this.enterContest();
+        this.ensureTaskState();
         this.fireUpdate();
       })
       .catch(response => {
@@ -84,7 +84,7 @@ export default class Model extends Observable {
         this.cookies.set(Model.cookieName, this.user.token);
         // if the login is valid the contest must be reloaded, in fact most of the useful properties are not present yet
         // like the tasks and the start time. contest.load() will fire all the required updates
-        this.enterContest();
+        this.ensureTaskState();
         this.fireUpdate();
       })
       .catch((response) => {
@@ -103,8 +103,9 @@ export default class Model extends Observable {
     this.fireUpdate();
   }
 
-  // function to be called when both user and contest are loaded
-  enterContest() {
+  ensureTaskState() {
+    if(this.userTaskState) return;
+
     this.userTaskState = {};
     for(const task of this.user.contest.tasks) {
       const state = new UserTaskState(this, task);
