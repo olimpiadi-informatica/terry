@@ -62,7 +62,7 @@ class AdminView extends Component {
             }/>
 
             <Route path="/admin/users" render={
-              ({match}) => <UsersView session={this.session} />
+              ({match}) => <UsersView session={this.session} users={users} />
             }/>
 
             <Route path="/admin/download_results" render={

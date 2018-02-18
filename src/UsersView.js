@@ -3,7 +3,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import faHourglassStart from '@fortawesome/fontawesome-free-solid/faHourglassStart'
 import {translateComponent} from "./utils";
-import Users from "./Users";
 import LoadingView from "./LoadingView";
 import ModalView from './ModalView';
 import { Link } from 'react-router-dom';
@@ -45,19 +44,14 @@ class UsersView extends Component {
   constructor(props) {
     super(props);
     this.session = props.session;
-    this.users = new Users(this.session);
-  }
-
-  componentWillMount() {
-    this.users.load();
   }
 
   componentDidMount() {
-    this.users.pushObserver(this);
+    this.session.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.users.popObserver(this);
+    this.session.popObserver(this);
   }
 
   renderUser(user, i) {
@@ -73,30 +67,8 @@ class UsersView extends Component {
     </tr>
   }
 
-  renderUserList(users) {
-    const { t } = this.props;
-    return <table className="table terry-table">
-      <thead>
-        <tr>
-          <th>{t("users.name")}</th>
-          <th>{t("users.surname")}</th>
-          <th>{t("users.token")}</th>
-          <th>{t("users.ips")}</th>
-          <th>{t("users.extra time")} <small>{t("users.in minutes")}</small></th>
-        </tr>
-      </thead>
-      <tbody>
-      {users.map((user, i) => this.renderUser(user, i))}
-      </tbody>
-    </table>;
-  }
-
   render() {
     const { t } = this.props;
-    let body;
-
-    if (this.users.isLoading()) body = <LoadingView/>;
-    else body = this.renderUserList(this.users.data.items);
 
     return <ModalView contentLabel={t("users.title")} returnUrl={"/admin"}>
       <div className="modal-header">
@@ -108,7 +80,20 @@ class UsersView extends Component {
         </Link>
       </div>
       <div className="modal-body no-padding">
-        {body}
+        <table className="table terry-table">
+          <thead>
+            <tr>
+              <th>{t("users.name")}</th>
+              <th>{t("users.surname")}</th>
+              <th>{t("users.token")}</th>
+              <th>{t("users.ips")}</th>
+              <th>{t("users.extra time")} <small>{t("users.in minutes")}</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            { this.props.users.data.items.map((user, i) => this.renderUser(user, i))}
+          </tbody>
+        </table>
       </div>
       <div className="modal-footer">
         <Link to={"/admin"} role="button" className="btn btn-primary">
