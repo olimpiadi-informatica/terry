@@ -19,11 +19,11 @@ cleanup() {
 trap cleanup EXIT
 
 cat > ${TMP}/mirrorlist << EOF
+Server = https://mirror.archlinux32.org/\$arch/\$repo
 Server = http://arch32.mirrors.simplysam.us/\$arch/\$repo
 Server = http://archlinux32.vollzornbrot.de/\$arch/\$repo
 Server = https://archlinux32.vollzornbrot.de/\$arch/\$repo
 Server = http://mirror.archlinux32.org/\$arch/\$repo
-Server = https://mirror.archlinux32.org/\$arch/\$repo
 Server = https://ind.mirror.archlinux32.org/\$arch/\$repo
 Server = https://jpn.mirror.archlinux32.org/\$arch/\$repo
 Server = https://mex.mirror.archlinux32.org/\$arch/\$repo

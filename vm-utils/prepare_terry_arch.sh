@@ -7,11 +7,11 @@ OUTDIR=$1
 
 [ -f $(dirname $0)/"nginx.conf" ] || echo "No nginx.conf file. Please \
   create one from nginx-example.conf."
-[ -f $(dirname $0)/"nginx.conf" ] || return 2
+[ -f $(dirname $0)/"nginx.conf" ] || exit 2
 
 [ -f $(dirname $0)/"config.yaml" ] || echo "No config.yaml file. Please \
   create one from ../territoriali-backend/config/example.config.yaml."
-[ -f $(dirname $0)/"config.yaml" ] || return 2
+[ -f $(dirname $0)/"config.yaml" ] || exit 2
 
 clean_chroot() {
   $(dirname $0)/unsetup_chroot.sh ${OUTDIR}
