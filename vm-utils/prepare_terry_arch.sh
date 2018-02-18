@@ -23,7 +23,8 @@ $(dirname $0)/setup_chroot.sh ${OUTDIR}
 # Install deps
 linux32 chroot ${OUTDIR} pacman --noconfirm -S nginx cronie pypy{,3} python{,2}-pip \
   python{,2}-sortedcontainers python-colorama python-gevent python-pyjwt \
-  python-yaml python-werkzeug python-pynacl python-cffi python{,2}-numpy zip
+  python-yaml python-werkzeug python-pynacl python-cffi python{,2}-numpy zip \
+  htop vim
 
 # Cleanup pacman
 linux32 chroot ${OUTDIR} pacman -Scc --noconfirm
@@ -36,6 +37,9 @@ cp -r $(dirname $0)/../territoriali-backend ${OUTDIR}/app/
 cp $(dirname $0)/config.yaml ${OUTDIR}/app/
 cp $(dirname $0)/nginx.conf ${OUTDIR}/etc/nginx/
 cp $(dirname $0)/territoriali-backend.service ${OUTDIR}/etc/systemd/system
+cp $(dirname $0)/watchdog.py ${OUTDIR}/root
+mkdir -p ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
+cp $(dirname $0)/override.conf ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
 
 # Install territoriali-backend
 sudo linux32 chroot ${OUTDIR} bash -c "cd /app/territoriali-backend && \
