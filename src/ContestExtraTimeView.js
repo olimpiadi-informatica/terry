@@ -31,10 +31,6 @@ class ContestExtraTimeView extends Component {
     this.session.setExtraTime(minutes * 60);
   }
 
-  extraTimeMinutes() {
-    return Math.round(this.session.status.extra_time / 60)
-  }
-
   renderError() {
     const { t } = this.props;
     if (!this.session.error) return "";
@@ -71,7 +67,7 @@ class ContestExtraTimeView extends Component {
                 type="number"
                 className="form-control"
                 required
-                defaultValue={this.extraTimeMinutes()}
+                defaultValue={this.props.status.extraTimeMinutes()}
               />
               <small className="form-text text-muted">{t("contest.in minutes")}</small>
             </div>

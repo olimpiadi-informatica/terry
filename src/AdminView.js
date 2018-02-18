@@ -3,7 +3,7 @@ import { Link, Route } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import {translateComponent} from "./utils";
-import Session from "./Session";
+import AdminSession from "./AdminSession";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "./LoadingView";
 import AdminLogsView from "./AdminLogsView";
@@ -17,7 +17,7 @@ import PromiseView from './PromiseView';
 class AdminView extends Component {
   constructor(props) {
     super(props);
-    this.session = new Session();
+    this.session = new AdminSession();
   }
 
   componentWillMount() {
@@ -43,35 +43,38 @@ class AdminView extends Component {
   }
 
   render() {
-    if (this.session.isLoading()) return <LoadingView />;
-    if (!this.session.isLoaded()) return <AdminLoginView session={this.session} />;
+    if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} />;
 
     return <React.Fragment>
       { this.renderNavBar() }
       <main>
-        <PromiseView promise={this.session.usersPromise}
-          renderFulfilled={(users) => <React.Fragment>
-            <AdminSummaryView session={this.session} users={users} />
+        <PromiseView promise={this.session.statusPromise}
+          renderFulfilled={(status) =>
+            <PromiseView promise={this.session.usersPromise}
+              renderFulfilled={(users) => <React.Fragment>
+                <AdminSummaryView session={this.session} status={status} users={users} />
 
-            <Route path="/admin/logs" render={
-              ({match}) => <AdminLogsView session={this.session} />
-            }/>
+                <Route path="/admin/logs" render={
+                  ({match}) => <AdminLogsView session={this.session} />
+                }/>
 
-            <Route path="/admin/extra_time" render={
-              ({match}) => <ContestExtraTimeView session={this.session} />
-            }/>
+                <Route path="/admin/extra_time" render={
+                  ({match}) => <ContestExtraTimeView status={status} session={this.session} />
+                }/>
 
-            <Route path="/admin/users" render={
-              ({match}) => <AdminUsersView session={this.session} users={users} />
-            }/>
+                <Route path="/admin/users" render={
+                  ({match}) => <AdminUsersView session={this.session} users={users} />
+                }/>
 
-            <Route path="/admin/download_results" render={
-              ({match}) => <DownloadResultsView session={this.session} />
-            }/>
-          </React.Fragment>}
-          renderRejected={(error) => <React.Fragment>
-            Error while loading users.
-          </React.Fragment>}
+                <Route path="/admin/download_results" render={
+                  ({match}) => <DownloadResultsView session={this.session} />
+                }/>
+              </React.Fragment>}
+              renderRejected={(error) => <React.Fragment>
+                Error while loading users.
+              </React.Fragment>}
+            />
+          }
         />
       </main>
     </React.Fragment>

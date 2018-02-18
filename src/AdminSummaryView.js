@@ -44,7 +44,7 @@ class AdminSummaryView extends Component {
   renderContestStatus() {
     const { t, i18n } = this.props;
 
-    if(!this.session.status.start_time) return this.renderNotStarted();
+    if(!this.props.status.data.start_time) return this.renderNotStarted();
     if(this.serverTime() < this.getEndTime()) return this.renderRunning();
     if(this.serverTime() < this.getExtraTimeEndTime()) return this.renderRunningExtraTime();
     return this.renderFinished();
@@ -98,11 +98,11 @@ class AdminSummaryView extends Component {
   }
 
   getStartTime() {
-    return DateTime.fromISO(this.session.status.start_time);
+    return DateTime.fromISO(this.props.status.data.start_time);
   }
 
   getEndTime() {
-    return DateTime.fromISO(this.session.status.end_time);
+    return DateTime.fromISO(this.props.status.data.end_time);
   }
 
   getUsersExtraTime() {
@@ -116,7 +116,7 @@ class AdminSummaryView extends Component {
   isDeletable() {
     return true;
 
-    // ... this.session.status.deletable
+    // ... this.props.status.data.deletable
   }
 
   renderStartTime() {
@@ -202,7 +202,7 @@ class AdminSummaryView extends Component {
   renderExtraTimeSummary() {
     const { t } = this.props;
 
-    if(this.session.extraTimeMinutes() === 0) {
+    if(this.props.status.extraTimeMinutes() === 0) {
       return <React.Fragment>
         {t("contest.no extra time set")}
         {' '}
@@ -210,7 +210,7 @@ class AdminSummaryView extends Component {
       </React.Fragment>;
     } else {
       return <React.Fragment>
-        {t('minutes', {count: this.session.extraTimeMinutes()})}
+        {t('minutes', {count: this.props.status.extraTimeMinutes()})}
         {' '}
         (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
       </React.Fragment>;
@@ -239,7 +239,7 @@ class AdminSummaryView extends Component {
 
   render() {
     const { t, i18n } = this.props;
-    const status = this.session.status;
+    const status = this.props.status.data;
 
     return <div className="container">
       <div className="card mb-3">

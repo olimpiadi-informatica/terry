@@ -3,8 +3,9 @@ import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import { DateTime } from "luxon";
 import ObservablePromise from './ObservablePromise';
+import AdminStatus from './AdminStatus';
 
-export default class Session extends Observable {
+export default class AdminSession extends Observable {
   static cookieName = "adminToken";
 
   constructor() {
@@ -14,15 +15,11 @@ export default class Session extends Observable {
   }
 
   adminToken() {
-    return this.cookies.get(Session.cookieName);
+    return this.cookies.get(AdminSession.cookieName);
   }
 
   isLoggedIn() {
     return this.adminToken() !== undefined;
-  }
-
-  isLoading() {
-    return this.loadingStatus !== undefined;
   }
 
   onAppStart() {
@@ -31,51 +28,39 @@ export default class Session extends Observable {
     }
   }
 
-  isLoaded() {
-    return this.status !== undefined;
-  }
-
   updateStatus() {
     this.fireUpdate();
-
-    this.loadingStatus = client.adminApi(this.adminToken(), "/status")
+    this.statusPromise = new ObservablePromise(
+      client.adminApi(this.adminToken(), "/status")
       .then((response) => {
-        this.status = response.data;
         this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
-        delete this.loadingStatus;
-        delete this.error;
-        this.fireUpdate();
+        return new AdminStatus(response.data);
       })
       .catch((response) => {
-        console.error(response);
-        this.error = response;
-        delete this.loadingStatus;
-        if (this.isLoggedIn()) this.logout();
-        this.fireUpdate();
+        this.logout();
         return Promise.reject(response);
-      });
+      })
+    );
 
     return this.usersPromise = new ObservablePromise(
-      this.loadingStatus.then(() => client.adminApi(this.adminToken(), "/user_list"))
+      this.statusPromise.then(() => client.adminApi(this.adminToken(), "/user_list"))
     );
   }
 
   login(token) {
     if(this.isLoggedIn()) throw Error();
-    this.cookies.set(Session.cookieName, token);
-    this.fireUpdate();
+    this.cookies.set(AdminSession.cookieName, token);
     return this.updateStatus();
   }
 
   logout() {
     if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
-    this.cookies.remove(Session.cookieName);
-    delete this.status;
+    this.cookies.remove(AdminSession.cookieName);
+    delete this.statusPromise;
     this.fireUpdate();
   }
 
   startContest() {
-    if (!this.isLoaded()) throw Error();
     return client.adminApi(this.adminToken(), "/start")
       .then(response => this.updateStatus())
       .catch(response => {
@@ -86,8 +71,10 @@ export default class Session extends Observable {
   }
 
   setExtraTime(extraTime, token) {
-    if (!this.isLoaded()) throw Error();
-    const options = { extra_time: extraTime };
+    if (!this.isLoggedIn()) throw Error();
+    const options = {
+      extra_time: extraTime,
+    };
     if (token) options.token = token;
     return client.adminApi(this.adminToken(), "/set_extra_time", options)
       .then(response => this.updateStatus())
@@ -96,12 +83,8 @@ export default class Session extends Observable {
         this.error = response.response.data.message;
         this.fireUpdate();
         return Promise.reject(response);
-      });
-  }
-
-  extraTimeMinutes() {
-    if (!this.isLoaded()) throw Error();
-    return Math.round(this.status.extra_time / 60)
+      })
+    ;
   }
 
   loadLogs(options) {
