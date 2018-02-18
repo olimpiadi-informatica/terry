@@ -11,6 +11,7 @@ import ReactTooltip from 'react-tooltip';
 import {colorFromScore, translateComponent} from "./utils";
 import "./SubmissionListView.css";
 import ScoreView from './ScoreView';
+import PromiseView from './PromiseView';
 
 class SubmissionListView extends Component {
   constructor(props) {
@@ -18,27 +19,16 @@ class SubmissionListView extends Component {
 
     this.model = props.model;
     this.taskName = props.taskName;
-    this.task = props.model.getContest().getTask(this.taskName);
-    this.list = this.model.getTaskState(this.taskName).getSubmissionList();
+    this.task = props.model.getTask(this.taskName);
+
+    this.listPromise = this.model.getTaskState(this.taskName).submissionListPromise;
   }
 
-  componentWillMount() {
-    this.list.load();
-  }
-
-  componentDidMount() {
-    this.list.pushObserver(this);
-  }
-
-  componentWillUnmount() {
-    this.list.popObserver(this);
-  }
-
-  renderSubmissionList() {
+  renderSubmissionList(list) {
     const { t } = this.props;
     const submissionList = [];
 
-    for (let submission of this.list.data.items) {
+    for (let submission of list.items) {
       let cut = (s) => s.slice(s.lastIndexOf("/") + 1);
       submission.input.basename = cut(submission.input.path);
       submission.output.basename = cut(submission.output.path);
@@ -109,12 +99,9 @@ class SubmissionListView extends Component {
     return submissionList.reverse();
   }
 
-  renderBody() {
+  renderBody(list) {
     const { t } = this.props;
-    if(this.list.isLoading()) return <div className="modal-body">{t("loading")}</div>;
-    if(!this.list.isLoaded()) return <div className="modal-body">{t("submission.list.load failed")}</div>;
-
-    if (this.list.data.items.length === 0)
+    if (list.items.length === 0)
       return <div className="modal-body"><em>{t("submission.list.no submissions")}</em></div>;
 
     return (
@@ -128,7 +115,7 @@ class SubmissionListView extends Component {
             </tr>
           </thead>
           <tbody>
-            { this.renderSubmissionList() }
+            { this.renderSubmissionList(list) }
           </tbody>
         </table>
       </div>
@@ -148,7 +135,11 @@ class SubmissionListView extends Component {
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
-        { this.renderBody() }
+        <PromiseView
+          promise={this.listPromise}
+          renderPending={() => <div className="modal-body"><em>{t("loading")}</em></div>}
+          renderFulfilled={(list) => this.renderBody(list)}
+        />
         <div className="modal-footer">
           <Link to={"/" + this.taskName} role="button" className="btn btn-primary">
             <FontAwesomeIcon icon={faTimes}/> {t("close")}

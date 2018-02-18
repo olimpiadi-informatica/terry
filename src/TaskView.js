@@ -30,26 +30,19 @@ class TaskView extends Component {
     this.task = this.model.getTask(props.taskName);
   }
 
-  getSubmissionList() {
-    return this.model.getTaskState(this.task.name).getSubmissionList();
-  }
-
   componentWillMount() {
     this.task.loadStatement();
-    this.getSubmissionList().load();
-    this.submissionListPromise = this.getTaskState().loadSubmissionList()
+    this.submissionListPromise = this.getTaskState().submissionListPromise;
   }
 
   componentDidMount() {
     this.model.pushObserver(this);
-    this.getSubmissionList().pushObserver(this);
     this.getTaskState().pushObserver(this);
     this.task.pushObserver(this);
   }
 
   componentWillUnmount() {
     this.model.popObserver(this);
-    this.getSubmissionList().popObserver(this);
     this.getTaskState().popObserver(this);
     this.task.popObserver(this);
   }
@@ -138,8 +131,6 @@ class TaskView extends Component {
 
   renderSubmissionListButton() {
     const { t } = this.props;
-    const list = this.getSubmissionList();
-    let last_submission;
     return <PromiseView
       promise={this.submissionListPromise}
       renderPending={() => null}

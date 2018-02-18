@@ -1,6 +1,5 @@
 import client from './TerryClient';
 import Submission from './Submission';
-import SubmissionList from './SubmissionList';
 import Observable from './Observable';
 
 export default class UserTaskState extends Observable {
@@ -10,12 +9,13 @@ export default class UserTaskState extends Observable {
     this.model = model;
     this.task = task;
 
-    this.submissionList = new SubmissionList(this);
+    this.refreshSubmissionList();
   }
 
   getUser() {
     return this.model.user;
   }
+  
 
   doGetCurrentInput() {
     return this.getUser().tasks[this.task.name].current_input;
@@ -73,7 +73,8 @@ export default class UserTaskState extends Observable {
     });
   }
 
-  getSubmissionList() {
-    return this.submissionList;
+  refreshSubmissionList() {
+    this.submissionListPromise = this.loadSubmissionList();
   }
+
 }

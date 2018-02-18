@@ -16,10 +16,6 @@ class ContestView extends Component {
     this.model = props.model;
   }
 
-  componentWillMount() {
-    this.model.enterContest();
-  }
-
   render_index() {
     const { t } = this.props;
 

@@ -89,7 +89,7 @@ export default class Submission extends Observable {
       this.data = response.data;
       return this.model.refreshUser();
     }).then(() => {
-      return this.taskState.getSubmissionList().load();
+      return this.taskState.refreshSubmissionList();
     }).then(() => {
       delete this.submitPromise;
       this.fireUpdate();
