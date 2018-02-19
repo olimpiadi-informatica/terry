@@ -96,7 +96,7 @@ export class Model extends Observable {
 
 }
 
-export class SubmissionUploadable {
+class SubmissionUploadable {
   constructor(file, submission) {
     this.file = file;
     this.submission = submission;
@@ -113,7 +113,7 @@ export class SubmissionUploadable {
   }
 }
 
-export class Output extends SubmissionUploadable {
+class Output extends SubmissionUploadable {
   doUpload() {
     const data = new FormData();
 
@@ -135,7 +135,7 @@ export class Output extends SubmissionUploadable {
   }
 }
 
-export class Source extends SubmissionUploadable {
+class Source extends SubmissionUploadable {
   doUpload() {
     const data = new FormData();
 
@@ -146,7 +146,7 @@ export class Source extends SubmissionUploadable {
   }
 }
 
-export class UserState extends Observable {
+class UserState extends Observable {
   constructor(model, data) {
     super();
     this.model = model;
@@ -175,7 +175,7 @@ export class UserState extends Observable {
 
 }
 
-export class Task extends Observable {
+class Task extends Observable {
   constructor(contest, name, data) {
     super();
 
@@ -189,7 +189,7 @@ export class Task extends Observable {
   }
 }
 
-export class UserTaskState extends Observable {
+class UserTaskState extends Observable {
   constructor(model, user, task) {
     super();
 
@@ -263,7 +263,7 @@ export class UserTaskState extends Observable {
 
 }
 
-export class Submission extends Observable {
+class Submission extends Observable {
   constructor(input, taskState) {
     super();
 
@@ -354,7 +354,7 @@ export class Submission extends Observable {
   }
 }
 
-export class SubmissionResult extends Observable {
+class SubmissionResult extends Observable {
   constructor(data) {
     super();
     if(!data) throw Error();

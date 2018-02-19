@@ -4,7 +4,7 @@ import LoginView from './LoginView';
 import {translateComponent} from "./utils";
 import LoadingView from "./LoadingView";
 import PromiseView from './PromiseView';
-import { Model } from './user.model';
+import { Model } from './user.models';
 
 class AppView extends Component {
   constructor(props) {
