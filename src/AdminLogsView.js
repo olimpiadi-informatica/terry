@@ -7,7 +7,7 @@ import LoadingView from "./LoadingView";
 import ModalView from './ModalView';
 import "./AdminLogsView.css";
 import PromiseView from './PromiseView';
-import { DateView } from './datetime.views';
+import { AbsoluteDateView } from './datetime.views';
 import { DateTime } from 'luxon';
 
 const LOG_LEVELS = {
@@ -152,7 +152,7 @@ class AdminLogsView extends Component {
                     return items.map((log, i) =>
                       <tr key={i} className={"table-"+LOG_LEVELS[log.level].color}>
                         <td>
-                          <DateView {...this.props} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
+                          <AbsoluteDateView {...this.props} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
                         </td>
                         <td>
                           <button className="btn btn-link" onClick={() => {this.changeCategory(log.category)}}>

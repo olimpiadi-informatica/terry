@@ -4,12 +4,48 @@ import moment from "moment";
 import { translateComponent } from "./utils";
 
 export class DateView extends Component {
+  componentDidMount() {
+    const tickrate = 30000;
+    this.timer = setInterval(() => this.forceUpdate(), tickrate);
+  }
+
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      delete this.timer;
+    }
+  }
+
   render() {
     const { i18n } = this.props;
     const now = this.props.clock();
     return (
       <abbr title={this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}>
         { moment(this.props.date.toISO()).locale(i18n.language).from(moment(now.toISO())) }
+      </abbr>
+    );
+  }
+}
+
+export class AbsoluteDateView extends Component {
+  componentDidMount() {
+    const tickrate = 30000;
+    this.timer = setInterval(() => this.forceUpdate(), tickrate);
+  }
+
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      delete this.timer;
+    }
+  }
+
+  render() {
+    const { i18n } = this.props;
+    const now = this.props.clock();
+    return (
+      <abbr title={moment(this.props.date.toISO()).locale(i18n.language).from(moment(now.toISO()))}>
+        { this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS) }
       </abbr>
     );
   }
