@@ -129,7 +129,7 @@ class AdminSummaryView extends Component {
     if(this.countUsersWithExtraTime() === 0) return;
 
     const { t, i18n } = this.props;
-    return <span>({t("minutes more for some users", {count: this.getUsersExtraTime() / 60})})</span>;
+    return <React.Fragment> (<span>{t("minutes more for some users", {count: this.getUsersExtraTime() / 60})}</span>)</React.Fragment>
   }
 
   renderCountdown() {

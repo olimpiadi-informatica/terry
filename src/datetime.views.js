@@ -3,10 +3,9 @@ import { DateTime, Duration } from "luxon";
 import moment from "moment";
 import { translateComponent } from "./utils";
 
-export class DateView extends Component {
+class AutoRefreshView extends Component {
   componentDidMount() {
-    const tickrate = 30000;
-    this.timer = setInterval(() => this.forceUpdate(), tickrate);
+    this.timer = setInterval(() => this.forceUpdate(), this.props.rate);
   }
 
   componentWillUnmount() {
@@ -17,36 +16,32 @@ export class DateView extends Component {
   }
 
   render() {
+    return this.props.render();
+  }
+}
+
+export class DateView extends Component {
+  render() {
     const { i18n } = this.props;
-    const now = this.props.clock();
     return (
-      <abbr title={this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}>
-        { moment(this.props.date.toISO()).locale(i18n.language).from(moment(now.toISO())) }
-      </abbr>
+      <AutoRefreshView rate={30000} render={() => 
+        <abbr title={this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}>
+          { moment(this.props.date.toISO()).locale(i18n.language).from(moment(this.props.clock().toISO())) }
+        </abbr>
+      }/>
     );
   }
 }
 
 export class AbsoluteDateView extends Component {
-  componentDidMount() {
-    const tickrate = 30000;
-    this.timer = setInterval(() => this.forceUpdate(), tickrate);
-  }
-
-  componentWillUnmount() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      delete this.timer;
-    }
-  }
-
   render() {
     const { i18n } = this.props;
-    const now = this.props.clock();
     return (
-      <abbr title={moment(this.props.date.toISO()).locale(i18n.language).from(moment(now.toISO()))}>
-        { this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS) }
-      </abbr>
+      <AutoRefreshView rate={30000} render={() => 
+        <abbr title={moment(this.props.date.toISO()).locale(i18n.language).from(moment(this.props.clock().toISO()))}>
+          { this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS) }
+        </abbr>
+      }/>
     );
   }
 }
@@ -65,8 +60,8 @@ export class CountdownView extends Component {
   }
 
   render() {
-    const now = this.props.clock();
-    const remaining = this.props.end.diff(now);
-    return <span> { remaining.toFormat("hh:mm:ss") } </span>
+    return <AutoRefreshView rate={30000} render={() =>
+      this.props.end.diff(this.props.clock()).toFormat("hh:mm:ss")
+    }/>
   }
 }

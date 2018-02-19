@@ -20,7 +20,7 @@ class FileView extends Component {
         <dd>{ this.file.name }</dd>
 
         <dt>{t("submission.file.last update")}</dt>
-        <dd><DateView {...this.props} date={ DateTime.fromJSDate(this.file.lastModifiedDate) }/></dd>
+        <dd><DateView {...this.props} clock={() => DateTime.local()} date={ DateTime.fromJSDate(this.file.lastModifiedDate) }/></dd>
 
         <dt>{t("submission.file.size")}</dt>
         <dd>{ filesize(this.file.size, { standard: "iec" }) }</dd>
