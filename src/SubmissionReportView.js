@@ -5,7 +5,7 @@ import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import ModalView from './ModalView';
 import { DateTime } from 'luxon';
 import FeedbackView from './FeedbackView';
-import {colorFromScore, translateComponent} from "./utils";
+import {translateComponent} from "./utils";
 import PromiseView from './PromiseView';
 
 class SubmissionReportView extends Component {
