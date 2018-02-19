@@ -114,6 +114,7 @@ class Logger:
             Logger.COLOR[level] + tag + Style.RESET_ALL,
             "%s %s" % (cat, message),
             file=sys.stderr)
+        sys.stderr.flush()
 
     @staticmethod
     def debug(*args, **kwargs):
