@@ -7,6 +7,23 @@ import LoadingView from "./LoadingView";
 import ModalView from './ModalView';
 import "./AdminLogsView.css";
 import PromiseView from './PromiseView';
+import { DateView } from './datetime.views';
+import { DateTime } from 'luxon';
+
+const LOG_LEVELS = {
+  DEBUG: {
+    color: 'secondary',
+  },
+  INFO: {
+    color: 'info',
+  },
+  WARNING: {
+    color: 'warning',
+  },
+  ERROR: {
+    color: 'danger',
+  },
+}
 
 class AdminLogsView extends Component {
   constructor(props) {
@@ -16,21 +33,6 @@ class AdminLogsView extends Component {
       category: "",
       filter: "",
     };
-  }
-
-  static LOG_LEVELS = {
-    DEBUG: {
-      color: 'secondary',
-    },
-    INFO: {
-      color: 'info',
-    },
-    WARNING: {
-      color: 'warning',
-    },
-    ERROR: {
-      color: 'danger',
-    },
   }
 
   componentWillMount() {
@@ -81,42 +83,6 @@ class AdminLogsView extends Component {
     return log.message.toLowerCase().indexOf(filter) !== -1;
   }
 
-  formatLog(log, i) {
-    const { t } = this.props;
-    const levelToClass = (level) =>
-        level === "DEBUG" ? "secondary" :
-        level === "INFO" ? "info" :
-        level === "WARNING" ? "warning" :
-        level === "ERROR" ? "danger" : "light";
-
-    return <tr key={i} className={"table-"+levelToClass(log.level)}>
-      <td>{new Date(log.date).toLocaleString()}</td>
-      <td>
-        <a href="/admin" onClick={(e) => { e.preventDefault(); this.changeCategory(log.category)}}>
-        {log.category}
-        </a>
-      </td>
-      <td>
-        <a href="/admin" onClick={(e) => { e.preventDefault(); this.changeLevel(log.level)}}>
-        {t("logs.levels."+log.level)}
-        </a>
-      </td>
-      <td><pre>{log.message}</pre></td>
-    </tr>;
-  }
-
-  renderTableBody() {
-    const { t } = this.props;
-
-    return <PromiseView promise={this.logsPromise}
-      renderFulfilled={(logs) => {
-        const items = logs.items.filter((l) => this.filter(l));
-        if (items.length === 0) return <tr><td colSpan="4">{t("no messages yet")}</td></tr>;
-        return items.map((l, i) => this.formatLog(l, i));
-      }}
-    />;
-  }
-
   render() {
     const { t } = this.props;
 
@@ -133,7 +99,7 @@ class AdminLogsView extends Component {
         <div className="modal-body">
           <div className="form-group">
             <div className="btn-group" role="group" aria-label="Choose log level">
-              {Object.entries(AdminLogsView.LOG_LEVELS).map(([level, obj]) => (
+              {Object.entries(LOG_LEVELS).map(([level, obj]) => (
                 <button
                   className={[
                     'btn',
@@ -165,7 +131,30 @@ class AdminLogsView extends Component {
               </tr>
               </thead>
               <tbody>
-                {this.renderTableBody()}
+                <PromiseView promise={this.logsPromise}
+                  renderFulfilled={(logs) => {
+                    const items = logs.items.filter((l) => this.filter(l));
+                    if (items.length === 0) return <tr><td colSpan="4">{t("no messages yet")}</td></tr>;
+                    return items.map((log, i) =>
+                      <tr key={i} className={"table-"+LOG_LEVELS[log.level].color}>
+                        <td>
+                          <DateView {...this.props} delta={this.props.session.timeDelta} date={DateTime.fromISO(log.date)} />
+                        </td>
+                        <td>
+                          <button className="btn btn-link" onClick={() => {this.changeCategory(log.category)}}>
+                            {log.category}
+                          </button>
+                        </td>
+                        <td>
+                          <button className="btn btn-link" onClick={() => {this.changeLevel(log.level)}}>
+                            {t("logs.levels."+log.level)}
+                          </button>
+                        </td>
+                        <td><pre>{log.message}</pre></td>
+                    </tr>
+                    );
+                  }}
+                />
               </tbody>
             </table>
           </div>
