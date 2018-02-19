@@ -40,7 +40,7 @@ class AdminLogsView extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.loadLogs(), 5000);
+    this.interval = setInterval(() => this.refreshLogs(), 5000);
   }
 
   componentWillUnmount() {
@@ -48,6 +48,12 @@ class AdminLogsView extends Component {
   }
 
   loadLogs() {
+    this.refreshLogsPromise = null;
+    this.logsPromise = this.doLoadLogs();
+    this.forceUpdate();
+  }
+
+  doLoadLogs() {
     const options = {
       start_date: "2000-01-01T00:00:00.000",
       end_date: "2030-01-01T00:00:00.000",
@@ -56,8 +62,16 @@ class AdminLogsView extends Component {
     if (this.state.category) {
       options.category = this.state.category;
     }
-    this.logsPromise = this.props.session.loadLogs(options);
-    this.forceUpdate();
+    return this.props.session.loadLogs(options);
+  }
+
+  refreshLogs() {
+    const promise = this.refreshLogsPromise = this.doLoadLogs();
+    this.refreshLogsPromise.then(() => {
+      if(this.refreshLogsPromise !== promise) return;
+      this.logsPromise = promise;
+      this.forceUpdate();
+    })
   }
 
   componentDidUpdate(props, state) {
