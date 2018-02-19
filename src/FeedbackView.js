@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ResultView from './ResultView'
-import DateView from './DateView';
+import { DateView } from './datetime.views';
 import { DateTime } from 'luxon';
 import {colorFromScore, translateComponent} from "./utils";
 import ScoreView from './ScoreView';
@@ -26,7 +26,7 @@ class FeedbackView extends Component {
     return <div className="modal-body">
       <dl className="terry-file-view">
         <dt>{t("submission.feedback.date")}:</dt>
-        <dd><DateView delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
+        <dd><DateView {...this.props} delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date) }/></dd>
         <dt style={{'margin-top': '0.75rem'}}>{t("submission.feedback.score")}:</dt>
         <dd>
           <ScoreView score={score} max={max_score} size={1} />

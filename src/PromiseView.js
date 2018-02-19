@@ -6,7 +6,7 @@ class PromiseView extends Component {
     super(props);
 
     if(!(props.promise instanceof ObservablePromise))
-      throw new Error("invalid promise given to PromiseView");
+      throw new Error("invalid promise given to PromiseView: " + props.promise);
   }
 
   static defaultProps = {

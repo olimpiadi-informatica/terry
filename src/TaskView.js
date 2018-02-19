@@ -9,7 +9,7 @@ import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
 import client from './TerryClient';
-import DateView from './DateView';
+import { DateView } from './datetime.views';
 import { DateTime } from 'luxon';
 import {translateComponent} from "./utils";
 
@@ -94,7 +94,7 @@ class TaskView extends Component {
     } else {
       const submission = items[items.length-1];
       return <div className="terry-submission-list-button">
-        <strong>{t("task.last submission")}</strong> <DateView delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
+        <strong>{t("task.last submission")}</strong> <DateView {...this.props} delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
         {' '}
         (<Link to={"/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
       </div>

@@ -4,9 +4,9 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faPlay from '@fortawesome/fontawesome-free-solid/faPlay'
 import {translateComponent} from "./utils";
 import {Trans} from "react-i18next";
-import CountdownView from './CountdownView';
+import { CountdownView } from './datetime.views';
 import { DateTime, Duration } from 'luxon';
-import DateView from './DateView';
+import { DateView } from './datetime.views';
 import client from './TerryClient';
 import PromiseView from './PromiseView';
 
@@ -135,7 +135,7 @@ class AdminSummaryView extends Component {
   renderCountdown() {
     const { t, i18n } = this.props;
     return <React.Fragment>
-      {t("contest.remaining time")} <CountdownView delta={this.props.session.timeDelta} end={this.getEndTime()}/>
+      {t("contest.remaining time")} <CountdownView {...this.props} delta={this.props.session.timeDelta} end={this.getEndTime()}/>
       { this.renderCountdownExtra() }
     </React.Fragment>;
   }
@@ -169,7 +169,7 @@ class AdminSummaryView extends Component {
       <React.Fragment>
         {t("contest.users remaining time")}
         {' '}
-        <CountdownView delta={this.props.session.timeDelta} end={endTime}/>
+        <CountdownView {...this.props} delta={this.props.session.timeDelta} end={endTime}/>
       </React.Fragment>
     );
   }
@@ -191,7 +191,7 @@ class AdminSummaryView extends Component {
     return <React.Fragment>
       {t("contest.error recorded at")}
       {' '}
-      <DateView delta={this.timeDelta} date={lastError} />
+      <DateView {...this.props} delta={this.props.session.timeDelta} date={lastError} />
       {' '}
       (<Link to="/admin/logs">{t("contest.show log")}</Link>)
     </React.Fragment>;

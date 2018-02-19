@@ -6,10 +6,8 @@ import faTrophy from '@fortawesome/fontawesome-free-solid/faTrophy'
 import ModalView from './ModalView';
 import {translateComponent} from "./utils";
 import {Trans} from "react-i18next";
-import Countdown from './CountdownView';
 import { DateTime } from 'luxon';
 import client from './TerryClient';
-
 
 class DownloadResultsView extends Component {
   componentDidMount() {

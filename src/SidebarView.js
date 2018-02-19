@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import React, { Component } from 'react';
 import {translateComponent} from "./utils";
-import CountdownView from './CountdownView';
+import { CountdownView } from './datetime.views';
 import NavbarItemView from './NavbarItemView';
 import ScoreView from './ScoreView';
 import "./SidebarView.css";
@@ -23,7 +23,7 @@ class SidebarView extends Component {
           <li className="nav-item title">
             <h3>{t("remaining time")}</h3>
             <p className="terry-remaining-time">
-              <CountdownView delta={this.props.model.timeDelta} end={
+              <CountdownView {...this.props} delta={this.props.model.timeDelta} end={
                 DateTime.fromISO(this.props.userState.data.end_time)
               }/>
             </p>

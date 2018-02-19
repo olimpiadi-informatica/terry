@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import ModalView from './ModalView';
-import DateView from './DateView';
 import { DateTime } from 'luxon';
 import FeedbackView from './FeedbackView';
 import {colorFromScore, translateComponent} from "./utils";

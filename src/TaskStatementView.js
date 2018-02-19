@@ -9,7 +9,6 @@ import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
 import SubmissionReportView from './SubmissionReportView';
 import client from './TerryClient';
-import DateView from './DateView';
 import { DateTime } from 'luxon';
 import {translateComponent} from "./utils";
 
