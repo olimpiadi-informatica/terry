@@ -6,11 +6,10 @@ import { translateComponent } from "./utils";
 export class DateView extends Component {
   render() {
     const { i18n } = this.props;
+    const now = this.props.clock();
     return (
-      <abbr title={
-        this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)
-      }>
-        { moment(this.props.date.plus(this.props.delta).toISO()).locale(i18n.language).fromNow() }
+      <abbr title={this.props.date.setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}>
+        { moment(this.props.date.toISO()).locale(i18n.language).from(moment(now.toISO())) }
       </abbr>
     );
   }
@@ -30,7 +29,8 @@ export class CountdownView extends Component {
   }
 
   render() {
-    const remaining = this.props.end.diff(DateTime.local().minus(this.props.delta));
+    const now = this.props.clock();
+    const remaining = this.props.end.diff(now);
     return <span> { remaining.toFormat("hh:mm:ss") } </span>
   }
 }

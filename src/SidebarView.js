@@ -23,7 +23,7 @@ class SidebarView extends Component {
           <li className="nav-item title">
             <h3>{t("remaining time")}</h3>
             <p className="terry-remaining-time">
-              <CountdownView {...this.props} delta={this.props.model.timeDelta} end={
+              <CountdownView {...this.props} clock={() => this.props.model.serverTime()} end={
                 DateTime.fromISO(this.props.userState.data.end_time)
               }/>
             </p>

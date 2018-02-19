@@ -94,7 +94,7 @@ class TaskView extends Component {
     } else {
       const submission = items[items.length-1];
       return <div className="terry-submission-list-button">
-        <strong>{t("task.last submission")}</strong> <DateView {...this.props} delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date)}/>
+        <strong>{t("task.last submission")}</strong> <DateView {...this.props} clock={() => this.props.model.serverTime()} date={ DateTime.fromISO(submission.date)}/>
         {' '}
         (<Link to={"/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
       </div>

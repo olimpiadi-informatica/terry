@@ -152,7 +152,7 @@ class AdminLogsView extends Component {
                     return items.map((log, i) =>
                       <tr key={i} className={"table-"+LOG_LEVELS[log.level].color}>
                         <td>
-                          <DateView {...this.props} delta={this.props.session.timeDelta} date={DateTime.fromISO(log.date)} />
+                          <DateView {...this.props} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
                         </td>
                         <td>
                           <button className="btn btn-link" onClick={() => {this.changeCategory(log.category)}}>

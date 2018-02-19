@@ -35,7 +35,7 @@ class SubmissionListView extends Component {
       submissionList.push(
         <tr key={ submission.id }>
           <td>
-            <DateView {...this.props} delta={this.props.model.timeDelta} date={ DateTime.fromISO(submission.date) }/>
+            <DateView {...this.props} clock={() => this.props.model.serverTime()} date={ DateTime.fromISO(submission.date) }/>
             <br/>
             <Link to={ "/" + submission.task + "/submission/" + submission.id }>
               {t("submission.list.view details")}

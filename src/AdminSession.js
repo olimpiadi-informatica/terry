@@ -28,12 +28,20 @@ export default class AdminSession extends Observable {
     }
   }
 
+  serverTime() {
+    return DateTime.local().minus(this.timeDelta || {});
+  }
+
+  setServerTime(time) {
+    this.timeDelta = DateTime.local().diff(time);
+  }
+
   updateStatus() {
     this.fireUpdate();
     this.statusPromise = new ObservablePromise(
       client.adminApi(this.adminToken(), "/status")
       .then((response) => {
-        this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
+        this.setServerTime(DateTime.fromHTTP(response.headers['date']));
         return new AdminStatus(response.data);
       })
       .catch((response) => {

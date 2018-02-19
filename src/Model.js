@@ -37,6 +37,14 @@ export default class Model extends Observable {
     return this.userToken() !== undefined;
   }
 
+  serverTime() {
+    return DateTime.local().minus(this.timeDelta || {});
+  }
+
+  setServerTime(time) {
+    this.timeDelta = DateTime.local().diff(time);
+  }
+
   refreshUser() {
     if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
     const userToken = this.cookies.get(Model.cookieName);
@@ -45,7 +53,7 @@ export default class Model extends Observable {
     return this.userStatePromise = new ObservablePromise(
       client.api.get('/user/' + this.userToken())
         .then((response) => {
-          this.timeDelta = DateTime.local().diff(DateTime.fromHTTP(response.headers['date']));
+          this.setServerTime(DateTime.fromHTTP(response.headers['date']));
           this.fireUpdate();
           return new UserState(this, response.data);
         })
