@@ -3,7 +3,7 @@ import { Link, Route } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import {translateComponent} from "./utils";
-import AdminSession from "./AdminSession";
+import { AdminSession } from "./admin.models";
 import AdminLoginView from "./AdminLoginView";
 import LoadingView from "./LoadingView";
 import AdminLogsView from "./AdminLogsView";

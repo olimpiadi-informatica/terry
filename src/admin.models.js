@@ -3,9 +3,18 @@ import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import { DateTime } from "luxon";
 import ObservablePromise from './ObservablePromise';
-import AdminStatus from './AdminStatus';
 
-export default class AdminSession extends Observable {
+class AdminStatus {
+  constructor(data) {
+    this.data = data;
+  }
+
+  extraTimeMinutes() {
+    return Math.round(this.data.extra_time / 60)
+  }
+}
+
+export class AdminSession extends Observable {
   static cookieName = "adminToken";
 
   constructor() {
