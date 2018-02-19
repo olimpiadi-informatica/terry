@@ -8,22 +8,15 @@ import ModalView from './ModalView';
 import { Link } from 'react-router-dom';
 
 class UserExtraTimeView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.session = props.session;
-    this.user = props.user;
-  }
-
   setExtraTime() {
     if (!window.confirm('Are you sure?')) return;
 
     const minutes = this.refs.form.minutes.value
-    this.session.setExtraTime(minutes * 60, this.user.token);
+    this.props.session.setExtraTime(minutes * 60, this.props.user.token);
   }
 
   extraTimeMinutes() {
-    return Math.round(this.user.extra_time / 60)
+    return Math.round(this.props.user.extra_time / 60)
   }
 
   render() {
@@ -41,17 +34,12 @@ class UserExtraTimeView extends Component {
 UserExtraTimeView = translateComponent(UserExtraTimeView, "admin");
 
 class AdminUsersView extends Component {
-  constructor(props) {
-    super(props);
-    this.session = props.session;
-  }
-
   componentDidMount() {
-    this.session.pushObserver(this);
+    this.props.session.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.session.popObserver(this);
+    this.props.session.popObserver(this);
   }
 
   renderUser(user, i) {
@@ -63,7 +51,7 @@ class AdminUsersView extends Component {
       <td>{user.surname}</td>
       <td>{user.token}</td>
       <td>{ips}</td>
-      <td><UserExtraTimeView session={this.session} user={user}/></td>
+      <td><UserExtraTimeView {...this.props} user={user}/></td>
     </tr>
   }
 

@@ -12,21 +12,16 @@ import client from './TerryClient';
 
 
 class DownloadResultsView extends Component {
-  constructor(props) {
-    super(props);
-    this.session = props.session;
-  }
-
   componentDidMount() {
-    this.session.pushObserver(this);
+    this.props.session.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.session.popObserver(this);
+    this.props.session.popObserver(this);
   }
 
   componentWillMount() {
-    this.loadPromise = client.adminApi(this.session.adminToken(), "/download_results")
+    this.loadPromise = client.adminApi(this.props.session.adminToken(), "/download_results")
       .then((response) => {
         this.data = response.data;
         delete this.loadPromise;

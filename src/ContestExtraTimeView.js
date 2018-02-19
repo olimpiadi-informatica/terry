@@ -10,17 +10,12 @@ import Countdown from './CountdownView';
 import { DateTime } from 'luxon';
 
 class ContestExtraTimeView extends Component {
-  constructor(props) {
-    super(props);
-    this.session = props.session;
-  }
-
   componentDidMount() {
-    this.session.pushObserver(this);
+    this.props.session.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.session.popObserver(this);
+    this.props.session.popObserver(this);
   }
 
   setExtraTime() {
@@ -28,13 +23,13 @@ class ContestExtraTimeView extends Component {
 
     const minutes = this.refs.extraTimeForm.minutes.value
 
-    this.session.setExtraTime(minutes * 60);
+    this.props.session.setExtraTime(minutes * 60);
   }
 
   renderError() {
     const { t } = this.props;
-    if (!this.session.error) return "";
-    const message = this.session.error;
+    if (!this.props.session.error) return "";
+    const message = this.props.session.error;
 
     return <div className="alert alert-danger" role="alert">
       <strong>{t("error")}</strong> {message}

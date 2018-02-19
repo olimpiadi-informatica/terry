@@ -11,10 +11,8 @@ import client from './TerryClient';
 import PromiseView from './PromiseView';
 
 class AdminSummaryView extends Component {
-  constructor(props) {
-    super(props);
-    this.session = props.session;
-    this.logsPromise = this.session.loadLogs({
+  componentWillMount() {
+    this.logsPromise = this.props.session.loadLogs({
       start_date: "2000-01-01T00:00:00.000",
       end_date: "2030-01-01T00:00:00.000",
       level: "WARNING",
@@ -22,7 +20,7 @@ class AdminSummaryView extends Component {
   }
 
   componentDidMount() {
-    this.session.pushObserver(this);
+    this.props.session.pushObserver(this);
 
     const tickrate = 1000;
     this.timer = setInterval(() => this.forceUpdate(), tickrate);
@@ -34,11 +32,11 @@ class AdminSummaryView extends Component {
       delete this.timer;
     }
 
-    this.session.popObserver(this);
+    this.props.session.popObserver(this);
   }
 
   serverTime() {
-    return DateTime.local().minus(this.session.timeDelta);
+    return DateTime.local().minus(this.props.session.timeDelta);
   }
 
   renderContestStatus() {
@@ -54,7 +52,7 @@ class AdminSummaryView extends Component {
     const { t } = this.props;
     return <React.Fragment>
       <p>{t("contest.not started")}</p>
-      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.session.startContest(); }}>
+      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.props.session.startContest(); }}>
         <button type="submit" className="btn btn-primary">
           <FontAwesomeIcon icon={faPlay}/> {t("contest.start")}
         </button>
@@ -137,7 +135,7 @@ class AdminSummaryView extends Component {
   renderCountdown() {
     const { t, i18n } = this.props;
     return <React.Fragment>
-      {t("contest.remaining time")} <CountdownView delta={this.session.timeDelta} end={this.getEndTime()}/>
+      {t("contest.remaining time")} <CountdownView delta={this.props.session.timeDelta} end={this.getEndTime()}/>
       { this.renderCountdownExtra() }
     </React.Fragment>;
   }
@@ -171,7 +169,7 @@ class AdminSummaryView extends Component {
       <React.Fragment>
         {t("contest.users remaining time")}
         {' '}
-        <CountdownView delta={this.session.timeDelta} end={endTime}/>
+        <CountdownView delta={this.props.session.timeDelta} end={endTime}/>
       </React.Fragment>
     );
   }
@@ -278,7 +276,7 @@ class AdminSummaryView extends Component {
     if (!window.confirm("Are you sure?")) return;
 
     const { t } = this.props;
-    client.adminApi(this.session.adminToken(), "/drop_contest", {});
+    client.adminApi(this.props.session.adminToken(), "/drop_contest", {});
     window.alert(t("reload"));
   }
 }

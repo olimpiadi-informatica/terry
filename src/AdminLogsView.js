@@ -9,35 +9,29 @@ import "./AdminLogsView.css";
 import PromiseView from './PromiseView';
 
 class AdminLogsView extends Component {
-  constructor(props) {
-    super(props);
+  static defaultState = {
+    level: "INFO",
+    category: "",
+    filter: "",
+  };
 
-    this.session = props.session;
-    this.state = {
-      level: "INFO",
-      category: "",
-      filter: "",
-    };
-
-    this.LOG_LEVELS = {
-      DEBUG: {
-        color: 'secondary',
-      },
-      INFO: {
-        color: 'info',
-      },
-      WARNING: {
-        color: 'warning',
-      },
-      ERROR: {
-        color: 'danger',
-      },
-    };
-
-    this.loadLogs();
+  static LOG_LEVELS = {
+    DEBUG: {
+      color: 'secondary',
+    },
+    INFO: {
+      color: 'info',
+    },
+    WARNING: {
+      color: 'warning',
+    },
+    ERROR: {
+      color: 'danger',
+    },
   }
 
   componentDidMount() {
+    this.loadLogs();
     this.interval = setInterval(() => this.loadLogs(), 5000);
   }
 
@@ -54,7 +48,6 @@ class AdminLogsView extends Component {
     if (this.state.category) {
       options.category = this.state.category;
     }
-    this.logsPromise = this.session.loadLogs(options);
     this.forceUpdate();
   }
 
@@ -133,7 +126,7 @@ class AdminLogsView extends Component {
         <div className="modal-body">
           <div className="form-group">
             <div className="btn-group" role="group" aria-label="Choose log level">
-              {Object.entries(this.LOG_LEVELS).map(([level, obj]) => (
+              {Object.entries(AdminLogsView.LOG_LEVELS).map(([level, obj]) => (
                 <button
                 className={[
                   'btn',

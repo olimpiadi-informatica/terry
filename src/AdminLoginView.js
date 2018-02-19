@@ -2,27 +2,21 @@ import React, { Component } from 'react';
 import {translateComponent} from "./utils";
 
 class AdminLoginView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.session = props.session;
-  }
-
   componentDidMount() {
-    this.session.pushObserver(this);
+    this.props.session.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.session.popObserver(this);
+    this.props.session.popObserver(this);
   }
 
   login() {
-    this.session.login(this.refs.form.token.value);
+    this.props.session.login(this.refs.form.token.value);
   }
 
   renderLoginError() {
     const { t } = this.props;
-    const error = this.session.error;
+    const error = this.props.session.error;
     if (error) {
       const message = error.response.data.message;
       return (<div className="alert alert-danger" role="alert">
