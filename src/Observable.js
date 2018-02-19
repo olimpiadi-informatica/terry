@@ -14,13 +14,20 @@ export default class Observable {
   }
 
   fireUpdate() {
-    for(let o of this.observers) {
+    console.info("fireUpdate");
+    this.propagateUpdate();
+  }
+
+  propagateUpdate() {
+    const observers = new Set(this.observers);
+    for(let o of observers) {
       o.forceUpdate();
     }
   }
 
   // Delegate for chaining observers
   forceUpdate() {
-    this.fireUpdate();
+    this.propagateUpdate();
   }
+
 }

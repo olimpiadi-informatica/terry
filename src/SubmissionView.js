@@ -104,65 +104,48 @@ class SubmissionView extends Component {
   }
 
   submit() {
-    return this.props.submission.submit().then(() => {
-      const taskName = this.props.submission.data.task;
-      const id = this.props.submission.data.id;
+    return this.props.submission.submit().delegate.then((submission) => {
+      console.error(submission);
+      const taskName = submission.data.task;
+      const id = submission.data.id;
       this.props.history.push("/" + taskName + "/submission/" + id);
     });
-  }
-
-  renderSubmissionForm() {
-    const { t } = this.props;
-    if(this.props.submission.isSubmitting()) return (
-      <div className="modal-body">
-        {t("submission.submit.processing")}
-      </div>
-    );
-
-    return (
-      <React.Fragment>
-        <div className="modal-body">
-          <form className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault() }}>
-            <div className="input-group">{ this.renderSourceSelector() }</div>
-            <div className="input-group">{ this.renderOutputSelector() }</div>
-          </form>
-        </div>
-        <div className="modal-footer">
-          <Link to={"/" + this.props.submission.input.task} role="button" className="btn btn-danger">
-            <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
-          </Link>
-          <button 
-            role="button" className="btn btn-success"
-            disabled={ !this.props.submission.canSubmit() }
-            onClick={() => this.submit() }
-          >
-            <FontAwesomeIcon icon={faPaperPlane}/> {t("submission.submit.submit")}
-          </button>
-        </div>
-      </React.Fragment>
-    );
-  }
-
-  renderDialog() {
-    if(!this.props.submission.isSubmitted()) {
-      return this.renderSubmissionForm();
-    }
   }
 
   render() {
     const { t } = this.props;
     return (
       <ModalView contentLabel="Submission creation" returnUrl={"/" + this.props.submission.input.task}>
-        <div className="modal-header">
-          <h5 className="modal-title">
-            {t("submission.submit.title")} <strong>{ this.props.submission.input.id.slice(0, 6) }</strong>
-          </h5>
-          <Link to={"/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </Link>
-        </div>
-
-        { this.renderDialog() }
+        <form
+          className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit() } }
+          disabled={ !this.props.submission.canSubmit() } 
+        >
+          <div className="modal-header">
+            <h5 className="modal-title">
+              {t("submission.submit.title")} <strong>{ this.props.submission.input.id.slice(0, 6) }</strong>
+            </h5>
+            <Link to={"/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </Link>
+          </div>
+          <div className="modal-body">
+            <div className="input-group">{ this.renderSourceSelector() }</div>
+            <div className="input-group">{ this.renderOutputSelector() }</div>
+          </div>
+          <div className="modal-footer">
+            <Link to={"/" + this.props.submission.input.task} role="button" className="btn btn-danger">
+              <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
+            </Link>
+            {this.props.submission.isSubmitted() ? t("submission.submit.processing") : null}
+            <button 
+              type="submit"
+              role="button" className="btn btn-success"
+              disabled={ !this.props.submission.canSubmit() }
+              >
+              <FontAwesomeIcon icon={faPaperPlane}/> {t("submission.submit.submit")}
+            </button>
+          </div>
+        </form>
       </ModalView>
     );
   }

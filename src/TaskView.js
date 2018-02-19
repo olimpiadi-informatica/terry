@@ -118,14 +118,14 @@ class TaskView extends Component {
         { this.renderCommands() }
 
         <Route path="/:taskName/submit/:inputId" render={
-          ({match}) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={this.getTask().name}/>
+          ({match}) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={match.params.taskName}/>
         }>
         </Route>
         <Route path="/:taskName/submissions" render={
-          ({match}) => <SubmissionListView {...this.props} taskName={this.getTask().name}/>
+          ({match}) => <SubmissionListView {...this.props} taskName={match.params.taskName}/>
         }/>
         <Route path="/:taskName/submission/:submissionId" render={
-          ({match}) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={this.getTask().name}/>
+          ({match}) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={match.params.taskName}/>
         }/>
 
         { this.renderSubmissionListButton() }

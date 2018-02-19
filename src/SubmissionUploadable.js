@@ -1,15 +1,12 @@
 import Observable from './Observable';
 import ObservablePromise from './ObservablePromise';
 
-export default class SubmissionUploadable extends Observable {
+export default class SubmissionUploadable {
   constructor(file, submission) {
-    super();
-
     this.file = file;
     this.submission = submission;
 
     this.uploadPromise = new ObservablePromise(this.doUpload());
-    this.uploadPromise.pushObserver(this);
   }
 
   doUpload() {

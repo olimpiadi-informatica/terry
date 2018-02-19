@@ -7,7 +7,6 @@ import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload'
 import CreateSubmissionView from './CreateSubmissionView';
 import SubmissionListView from './SubmissionListView';
-import SubmissionReportView from './SubmissionReportView';
 import client from './TerryClient';
 import { DateTime } from 'luxon';
 import {translateComponent} from "./utils";

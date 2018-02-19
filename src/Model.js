@@ -89,10 +89,13 @@ export default class Model extends Observable {
     this.fireUpdate();
   }
 
-  getSubmission(id) {
-    if (this.submissions[id] !== undefined) return this.submissions[id];
+  getSubmissionPromise(id) {
+    if(!id) throw Error();
 
-    return this.submissions[id] = new SubmissionResult(this, id);
+    if (this.submissions[id] !== undefined) return this.submissions[id];
+    return this.submissions[id] = new ObservablePromise(
+      client.api.get("/submission/" + id).then((response) => new SubmissionResult(response.data))
+    );
   }
 
 }
