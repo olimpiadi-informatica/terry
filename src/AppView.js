@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ContestView from './ContestView';
 import LoginView from './LoginView';
-import Model from './Model';
 import {translateComponent} from "./utils";
 import LoadingView from "./LoadingView";
 import PromiseView from './PromiseView';
+import { Model } from './user.model';
 
 class AppView extends Component {
   constructor(props) {
