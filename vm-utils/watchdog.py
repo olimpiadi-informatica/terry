@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 import curses
+import datetime
 import http.client
 import subprocess
 import threading
 import time
-
-import datetime
 
 
 def get_service_status(service_name):
@@ -25,9 +24,26 @@ def get_service_logs(services):
     return stdout.decode()
 
 
-def get_disk_usage(disk):
+def get_disk_usage():
     proc = subprocess.Popen(["bash", "-c",
-                             "df --output=used,size %s | tail -n 1" % disk],
+                             "df --output=used,size -k / | tail -n 1"],
+                            stdout=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    return stdout.decode()
+
+
+def get_ram_usage():
+    proc = subprocess.Popen(["bash", "-c",
+                             "free -t | tail -n 1"],
+                            stdout=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    return stdout.decode()
+
+
+def get_cpu_usage():
+    proc = subprocess.Popen(["bash", "-c",
+                             "top -b -n 2 -d 0.1 | grep Cpu | tail -n 1 | awk "
+                             "'{print $2 + $4}'"],
                             stdout=subprocess.PIPE)
     stdout, stderr = proc.communicate()
     return stdout.decode()
@@ -74,38 +90,63 @@ class InternetWatchdog:
     POLL_INTERVAL = 2
 
     def __init__(self):
-        self._connected = False
+        self._connected = "unknown"
         self.thread = threading.Thread(target=self._update)
         self.thread.start()
 
     def _update(self):
         while True:
-            self._connected = internet_on()
+            try:
+                if internet_on():
+                    self._connected = "connected"
+                else:
+                    self._connected = "disconnected"
+            except:
+                self._connected = "errored"
             time.sleep(SystemDWatchdog.POLL_INTERVAL)
 
     def status(self):
-        if self._connected:
-            return "connected"
-        else:
-            return "disconnected"
+        return self._connected
 
 
-class DiskWatchdog:
+class SystemWatchdog:
     POLL_INTERVAL = 2
 
-    def __init__(self, disk="/dev/sda1"):
-        self.usage = "0 1"
-        self.disk = disk
+    def __init__(self):
+        self.disk_usage = [0, 1]
+        self.ram_usage = [0, 1]
+        self.cpu_usage = 0.0
         self.thread = threading.Thread(target=self._update)
         self.thread.start()
 
     def _update(self):
         while True:
-            self.usage = get_disk_usage(self.disk)
+            try:
+                self.disk_usage = list(
+                    map(int, filter(lambda x: x, get_disk_usage().split(" "))))
+            except:
+                self.disk_usage = [0, 1]
+            try:
+                items = list(filter(lambda x: x, get_ram_usage().split(" ")))
+                self.ram_usage = [int(items[2]), int(items[1])]
+            except Exception as ex:
+                self.ram_usage = [str(ex), "x"]
+            try:
+                self.cpu_usage = int(float(get_cpu_usage()))
+            except Exception as e:
+                self.cpu_usage = -1
+                with open("/tmp/error", "w") as f:
+                    f.write(str(e))
             time.sleep(SystemDWatchdog.POLL_INTERVAL)
 
-    def get_usage(self):
-        return list(map(int, filter(lambda x: x, self.usage.split(" "))))
+    def get_disk_usage(self):
+        return self.disk_usage
+
+    def get_ram_usage(self):
+        return self.ram_usage
+
+    def get_cpu_usage(self):
+        return self.cpu_usage
 
 
 class Watchdog:
@@ -116,33 +157,54 @@ class Watchdog:
         self.max_y = 100
         self.systemd = SystemDWatchdog(Watchdog.SERVICES)
         self.internet = InternetWatchdog()
-        self.disk = DiskWatchdog()
+        self.system = SystemWatchdog()
         self.thread = threading.Thread(target=curses.wrapper, args=(self.ui,))
         self.thread.start()
 
     def top_part(self, pad):
         pad.clear()
-        pad.addstr("Services:\n", curses.A_BOLD)
+        row = 0
         for service, status in self.systemd.get_status().items():
-            pad.addstr("    %25s " % service)
+            pad.addstr(row, 0, "%20s " % service)
             if status == "active":
-                pad.addstr("[%s]\n" % status,
+                pad.addstr(row, 21, "[%s]\n" % status,
                            curses.color_pair(curses.COLOR_GREEN))
             else:
-                pad.addstr("[%s]\n" % status,
+                pad.addstr(row, 21, "[%s]\n" % status,
                            curses.color_pair(curses.COLOR_RED))
+            row += 1
 
-        pad.addstr(0, 50, "Server date:", curses.A_BOLD)
-        pad.addstr(0, 63, datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S"))
-        pad.addstr(1, 50, "Internet:", curses.A_BOLD)
-        pad.addstr(1, 60, self.internet.status())
-        pad.addstr(2, 50, "Disk usage:", curses.A_BOLD)
-        used, total = self.disk.get_usage()
+        pad.addstr(0, 40, "Server date:", curses.A_BOLD)
+        pad.addstr(0, 53, datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S"))
+
+        pad.addstr(1, 40, "Internet:", curses.A_BOLD)
+        pad.addstr(1, 53, self.internet.status())
+
+        pad.addstr(2, 40, "Disk usage:", curses.A_BOLD)
+        used, total = self.system.get_disk_usage()
         usage = "%s / %s" % (humanize_size(used), humanize_size(total))
         if used / total > 0.8:
-            pad.addstr(2, 62, usage, curses.color_pair(curses.COLOR_RED))
+            pad.addstr(2, 53, usage, curses.color_pair(curses.COLOR_RED))
         else:
-            pad.addstr(2, 62, usage)
+            pad.addstr(2, 53, usage)
+
+        pad.addstr(3, 40, "Ram usage:", curses.A_BOLD)
+        used, total = self.system.get_ram_usage()
+        usage = "%s / %s" % (humanize_size(used), humanize_size(total))
+        if used / total > 0.8:
+            pad.addstr(3, 53, usage, curses.color_pair(curses.COLOR_RED))
+        else:
+            pad.addstr(3, 53, usage)
+
+        pad.addstr(4, 40, "CPU usage:", curses.A_BOLD)
+        usage = self.system.get_cpu_usage()
+        if usage < 0:
+            pad.addstr(4, 53, "error", curses.color_pair(curses.COLOR_RED))
+        elif usage > 80:
+            pad.addstr(4, 53, "%d%%" % usage, curses.color_pair(
+                curses.COLOR_RED))
+        else:
+            pad.addstr(4, 53, "%d%%" % usage)
 
         pad.addstr(len(Watchdog.SERVICES) + 2, 0, "Logs:\n", curses.A_BOLD)
         pad.refresh(0, 0, 0, 0, len(Watchdog.SERVICES) + 2, self.max_x - 1)
@@ -159,13 +221,13 @@ class Watchdog:
         curses.use_default_colors()
         for i in range(1, curses.COLORS):
             curses.init_pair(i, i, -1)
-        curses.halfdelay(1)
-        self.max_y, self.max_x = stdscr.getmaxyx()
+        curses.halfdelay(10)
         self.pos_y, self.pos_x = 0, 0
 
         top = curses.newpad(len(Watchdog.SERVICES) + 4, 1000)
         bottom = curses.newpad(1000, 1000)
         while True:
+            self.max_y, self.max_x = stdscr.getmaxyx()
             self.top_part(top)
             self.bottom_part(bottom)
             try:
