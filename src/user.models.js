@@ -50,6 +50,7 @@ export class Model extends Observable {
       client.api.get('/user/' + this.userToken())
         .then((response) => {
           this.setServerTime(DateTime.fromHTTP(response.headers['date']));
+          delete this.lastLoginAttempt;
           this.fireUpdate();
           return new UserState(this, response.data);
         })
@@ -62,19 +63,8 @@ export class Model extends Observable {
   }
 
   attemptLogin(token) {
-    this.loginAttempt = {};
-
-    this.fireUpdate();
-
     this.cookies.set(Model.cookieName, token);
-    
-    return this.refreshUser()
-      .catch((response) => {
-        console.error(response);
-        this.loginAttempt.error = response;
-        this.fireUpdate();
-        return Promise.reject(response);                
-      });
+    return this.lastLoginAttempt = this.refreshUser();
   }
 
   logout() {

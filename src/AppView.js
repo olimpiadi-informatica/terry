@@ -24,7 +24,9 @@ class AppView extends Component {
   
   render() {
     const { t } = this.props;
-    if (!this.model.isLoggedIn()) return <LoginView model={this.model}/>;
+    if (!this.model.isLoggedIn() || this.model.lastLoginAttempt) {
+      return <LoginView model={this.model}/>;
+    }
 
     return <PromiseView promise={this.model.userStatePromise}
       renderPending={() => <LoadingView />}

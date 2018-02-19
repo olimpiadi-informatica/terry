@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {translateComponent} from "./utils";
+import PromiseView from './PromiseView';
 
 class LoginView extends Component {
   componentDidMount() {
@@ -15,17 +16,6 @@ class LoginView extends Component {
     this.props.model.attemptLogin(this.refs.form.token.value);
   }
 
-  getLoginError() {
-    const { t } = this.props;
-    const attempt = this.props.model.loginAttempt;
-    if (attempt && attempt.error) {
-      const message = attempt.error.response.data.message;
-      return (<div className="alert alert-danger" role="alert">
-        <strong>{t("login.error")}</strong> {message}
-      </div>);
-    }
-  }
-
   render() {
     const { t } = this.props;
     return (
@@ -37,8 +27,18 @@ class LoginView extends Component {
             <input name="token" id="token" className="form-control text-center" required
                   placeholder={t("login.token")} type="text"/>
           </div>
-          { this.getLoginError() }
           <input type="submit" className="btn btn-primary" value={t("login.login")} />
+          { this.props.model.lastLoginAttempt &&
+            <PromiseView promise={this.props.model.lastLoginAttempt}
+              renderPending={() => t("loading")}
+              renderRejected={(error) =>
+                <div className="alert alert-danger" role="alert">
+                  <strong>{t("login.error")}</strong> {error.response && error.response.data.message}
+                </div>  
+              }
+              renderFulfilled={() => null}
+            />
+          }
         </form>
       </div>
     );
