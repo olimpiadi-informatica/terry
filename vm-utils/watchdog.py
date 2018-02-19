@@ -3,6 +3,7 @@
 import curses
 import datetime
 import http.client
+import os.path
 import subprocess
 import threading
 import time
@@ -47,6 +48,13 @@ def get_cpu_usage():
                             stdout=subprocess.PIPE)
     stdout, stderr = proc.communicate()
     return stdout.decode()
+
+
+def get_version():
+    if not os.path.exists("/version"):
+        return "unknown"
+    with open("/version", "r") as f:
+        return f.read().strip()
 
 
 def internet_on():
@@ -158,6 +166,7 @@ class Watchdog:
         self.systemd = SystemDWatchdog(Watchdog.SERVICES)
         self.internet = InternetWatchdog()
         self.system = SystemWatchdog()
+        self.version = get_version()
         self.thread = threading.Thread(target=curses.wrapper, args=(self.ui,))
         self.thread.start()
 
@@ -205,6 +214,9 @@ class Watchdog:
                 curses.COLOR_RED))
         else:
             pad.addstr(4, 53, "%d%%" % usage)
+
+        pad.addstr(0, 80, "Version:", curses.A_BOLD)
+        pad.addstr(0, 89, self.version)
 
         pad.addstr(len(Watchdog.SERVICES) + 2, 0, "Logs:\n", curses.A_BOLD)
         pad.refresh(0, 0, 0, 0, len(Watchdog.SERVICES) + 2, self.max_x - 1)
