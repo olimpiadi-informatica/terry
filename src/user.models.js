@@ -151,13 +151,15 @@ class UserState extends Observable {
     this.model = model;
     this.data = data;
 
-    this.userTaskState = {};
-    for(const task of data.contest.tasks) {
-      const state = new UserTaskState(this.model, this, task);
-      this.userTaskState[task.name] = state;
+    if(data.contest.has_started) {
+      this.userTaskState = {};
+      for(const task of data.contest.tasks) {
+        const state = new UserTaskState(this.model, this, task);
+        this.userTaskState[task.name] = state;
+      }
+  
+      this.tasks = this.data.contest.tasks.map((d) => new Task(this, d.name, d));
     }
-
-    this.tasks = this.data.contest.tasks.map((d) => new Task(this, d.name, d));
   }
 
   getTask(taskName) {
