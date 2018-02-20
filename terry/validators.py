@@ -263,7 +263,7 @@ class Validators:
 
         correct_token = Database.get_meta("admin_token")
 
-        if not correct_token:
+        if correct_token is None:
             ContestManager.extract_contest(token)
             ContestManager.read_from_disk()
             correct_token = token

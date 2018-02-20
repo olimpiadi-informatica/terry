@@ -20,6 +20,7 @@ import gevent.queue
 import gevent.subprocess
 import nacl.exceptions
 import yaml
+from contextlib import suppress
 from werkzeug.exceptions import NotFound, Forbidden, InternalServerError
 
 from terry.config import Config
@@ -156,6 +157,14 @@ class ContestManager:
         except FileNotFoundError as ex:
             Logger.info("CONTEST", "Contest not found, you probably need to "
                                    "unzip it. Missing file %s" % ex.filename)
+            shutil.rmtree(Config.statementdir, ignore_errors=True)
+            shutil.rmtree(Config.web_statementdir, ignore_errors=True)
+            shutil.rmtree(Config.contest_path, ignore_errors=True)
+            with suppress(Exception):
+                os.remove(Config.encrypted_file)
+            with suppress(Exception):
+                os.remove(Config.decrypted_file)
+            Database.del_meta("admin_token")
             return
 
         if not Database.get_meta("contest_imported", default=False, type=bool):
