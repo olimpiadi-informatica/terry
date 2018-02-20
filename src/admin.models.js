@@ -58,6 +58,7 @@ export class AdminSession extends Observable {
         return Promise.reject(response);
       })
     );
+    this.statusPromise.pushObserver(this);
 
     return this.usersPromise = new ObservablePromise(
       this.statusPromise.delegate.then(() => client.adminApi(this.adminToken(), "/user_list"))
