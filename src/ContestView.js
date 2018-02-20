@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {Link, Route} from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt';
+import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import TaskView from './TaskView';
 import ReactMarkdown from 'react-markdown';
 import { Trans } from 'react-i18next';
@@ -43,6 +44,7 @@ class ContestView extends Component {
               }/>
             </main>
           </React.Fragment>: <div className="jumbotron">
+            <h1 className="text-center display-1 text-success" ><FontAwesomeIcon icon={faCheck} /></h1>
             <p className={"text-center"}>{t("login.not started")}</p>
           </div>
         }
