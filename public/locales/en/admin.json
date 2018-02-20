@@ -66,6 +66,7 @@
     "users have extra time": "{{count}} user has extra time",
     "users have extra time_plural": "{{count}} users have extra time",
     "manage users": "show users",
+    "download": "Download results",
     "download results": "Download contest results",
     "download results description": "The contest is finished, you must now download the zip containing all the contest data. This zip must then be sent to the committee."
   },
