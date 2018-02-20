@@ -14,7 +14,6 @@ class FeedbackView extends Component {
       renderCaseSummary: (c, id) => this.renderCaseSummary(c, id),
     };
 
-    console.log(this.props);
     const submissionData = this.props.submission.data;
     const score = submissionData.score;
     const max_score = this.props.userState.getTask(submissionData.task).data.max_score;

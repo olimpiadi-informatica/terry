@@ -14,7 +14,6 @@ export default class Observable {
   }
 
   fireUpdate() {
-    console.info("fireUpdate");
     this.propagateUpdate();
   }
 
