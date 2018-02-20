@@ -4,7 +4,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import TaskView from './TaskView';
 import ReactMarkdown from 'react-markdown';
-import { DateTime, Duration } from 'luxon';
 import { Trans } from 'react-i18next';
 import { translateComponent } from "./utils";
 import SidebarView from './SidebarView';

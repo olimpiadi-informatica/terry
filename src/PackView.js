@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
 import {translateComponent} from "./utils";
 import Pack from "./Pack";
 import LoadingView from "./LoadingView";

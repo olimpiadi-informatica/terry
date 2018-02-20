@@ -1,4 +1,3 @@
-import fontawesome from '@fortawesome/fontawesome'
 import 'bootstrap/dist/css/bootstrap.css';
 import './style.css';
 import './i18n.css';

@@ -15,7 +15,7 @@ class SidebarView extends Component {
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
             <h3>{t("navbar.total score")}</h3>
-            <ScoreView style={{'text-align': 'right', 'margin-right': '1rem'}} score={this.props.userState.data.total_score} max={this.props.userState.data.contest.max_total_score} size={2} />
+            <ScoreView style={{'textAlign': 'right', 'marginRight': '1rem'}} score={this.props.userState.data.total_score} max={this.props.userState.data.contest.max_total_score} size={2} />
           </li>
 
           <li className="divider-vertical" />

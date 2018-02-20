@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import { translateComponent } from "./utils";
-import LoadingView from "./LoadingView";
 import ModalView from './ModalView';
 import "./AdminLogsView.css";
 import PromiseView from './PromiseView';

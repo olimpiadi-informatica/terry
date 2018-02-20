@@ -5,11 +5,9 @@ import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
 import {translateComponent} from "./utils";
 import { AdminSession } from "./admin.models";
 import AdminLoginView from "./AdminLoginView";
-import LoadingView from "./LoadingView";
 import AdminLogsView from "./AdminLogsView";
 import AdminSummaryView from "./AdminSummaryView";
 import AdminUsersView from "./AdminUsersView";
-import UploadPackView from "./UploadPackView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
 import PromiseView from './PromiseView';

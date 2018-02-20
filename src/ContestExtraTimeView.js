@@ -6,7 +6,6 @@ import faHourglassStart from '@fortawesome/fontawesome-free-solid/faHourglassSta
 import ModalView from './ModalView';
 import {translateComponent} from "./utils";
 import {Trans} from "react-i18next";
-import { DateTime } from 'luxon';
 
 class ContestExtraTimeView extends Component {
   componentDidMount() {

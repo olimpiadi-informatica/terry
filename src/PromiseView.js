@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ObservablePromise from './ObservablePromise';
 
 class PromiseView extends Component {

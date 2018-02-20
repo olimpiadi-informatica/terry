@@ -1,7 +1,7 @@
 import client from './TerryClient';
 import Cookies from 'universal-cookie';
 import Observable from './Observable';
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import ObservablePromise from './ObservablePromise';
 
 export class Model extends Observable {
@@ -40,7 +40,6 @@ export class Model extends Observable {
   doLoadUser() {
     if(!this.isLoggedIn()) throw Error("doLoadUser can only be called after a successful login");
 
-    const userToken = this.cookies.get(Model.cookieName);
     return client.api.get('/user/' + this.userToken())
       .then((response) => {
         this.setServerTime(DateTime.fromHTTP(response.headers['date']));

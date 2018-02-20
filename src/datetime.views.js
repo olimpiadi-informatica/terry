@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { DateTime, Duration } from "luxon";
+import { DateTime } from "luxon";
 import moment from "moment";
-import { translateComponent } from "./utils";
 
 class AutoRefreshView extends Component {
   componentDidMount() {

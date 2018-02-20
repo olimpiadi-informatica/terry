@@ -1,21 +1,12 @@
 
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faPlus from '@fortawesome/fontawesome-free-solid/faPlus'
-import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
-import faUpload from '@fortawesome/fontawesome-free-solid/faUpload'
-import CreateSubmissionView from './CreateSubmissionView';
-import SubmissionListView from './SubmissionListView';
 import client from './TerryClient';
-import { DateTime } from 'luxon';
 import {translateComponent} from "./utils";
 
 import ReactMarkdown from 'react-markdown';
 import 'katex-all/dist/katex.min.css';
 import katex from 'katex-all/dist/katex.min.js';
 import renderMathInElement from 'katex-all/dist/contrib/auto-render.min.js';
-import PromiseView from './PromiseView';
 
 window.katex = katex;
 
@@ -36,7 +27,6 @@ class TaskStatementView extends Component {
   }
 
   render() {
-    const { t } = this.props;
     return <div ref="statement">
       <ReactMarkdown
         source={this.props.source}

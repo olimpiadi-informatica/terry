@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import faTrophy from '@fortawesome/fontawesome-free-solid/faTrophy'
 import ModalView from './ModalView';
 import {translateComponent} from "./utils";
-import {Trans} from "react-i18next";
-import { DateTime } from 'luxon';
 import client from './TerryClient';
 
 class DownloadResultsView extends Component {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ResultView from './ResultView'
 import { DateView } from './datetime.views';
 import { DateTime } from 'luxon';
-import {colorFromScore, translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import ScoreView from './ScoreView';
 
 class FeedbackView extends Component {
@@ -18,13 +18,12 @@ class FeedbackView extends Component {
     const submissionData = this.props.submission.data;
     const score = submissionData.score;
     const max_score = this.props.userState.getTask(submissionData.task).data.max_score;
-    const color = colorFromScore(score, max_score);
 
     return <div className="modal-body">
       <dl className="terry-file-view">
         <dt>{t("submission.feedback.date")}:</dt>
         <dd><DateView {...this.props} clock={() => this.props.model.serverTime()} date={ DateTime.fromISO(submissionData.date) }/></dd>
-        <dt style={{'margin-top': '0.75rem'}}>{t("submission.feedback.score")}:</dt>
+        <dt style={{'marginTop': '0.75rem'}}>{t("submission.feedback.score")}:</dt>
         <dd>
           <ScoreView score={score} max={max_score} size={1} />
         </dd>

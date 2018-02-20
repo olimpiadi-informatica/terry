@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faPlay from '@fortawesome/fontawesome-free-solid/faPlay'
 import {translateComponent} from "./utils";
-import {Trans} from "react-i18next";
 import { CountdownView } from './datetime.views';
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import { DateView } from './datetime.views';
 import client from './TerryClient';
 import PromiseView from './PromiseView';
@@ -119,12 +118,12 @@ class AdminSummaryView extends Component {
   renderCountdownExtra() {
     if(this.countUsersWithExtraTime() === 0) return;
 
-    const { t, i18n } = this.props;
+    const { t } = this.props;
     return <React.Fragment> (<span>{t("minutes more for some users", {count: this.getUsersExtraTime() / 60})}</span>)</React.Fragment>
   }
 
   renderCountdown() {
-    const { t, i18n } = this.props;
+    const { t } = this.props;
     return <React.Fragment>
       {t("contest.remaining time")} <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={this.getEndTime()}/>
       { this.renderCountdownExtra() }
@@ -152,8 +151,7 @@ class AdminSummaryView extends Component {
   }
 
   renderExtraTimeCountdown() {
-    const { t, i18n } = this.props;
-    const users = this.props.users;
+    const { t } = this.props;
     const endTime = this.getExtraTimeEndTime();
 
     return (
@@ -166,8 +164,7 @@ class AdminSummaryView extends Component {
   }
 
   render() {
-    const { t, i18n } = this.props;
-    const status = this.props.status.data;
+    const { t } = this.props;
 
     return <div className="container">
       <div className="card mb-3">
