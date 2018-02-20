@@ -24,14 +24,14 @@ class AppView extends Component {
   
   render() {
     const { t } = this.props;
-    if (!this.model.isLoggedIn() || this.model.lastLoginAttempt) {
+    if (!this.model.isLoggedIn() || (this.model.lastLoginAttempt && !this.model.lastLoginAttempt.isFulfilled())) {
       return <LoginView model={this.model}/>;
     }
 
     return <PromiseView promise={this.model.userStatePromise}
       renderPending={() => <LoadingView />}
       renderFulfilled={(userState) => <ContestView model={this.model} userState={userState}/>}
-      renderError={(error) => <div className="alert alert-danger" role="alert">
+      renderRejected={(error) => <div className="alert alert-danger" role="alert">
         <h4 className="alert-heading">{t("error")}</h4>
         <p>{t("reload")}</p>
       </div>}

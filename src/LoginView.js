@@ -13,7 +13,7 @@ class LoginView extends Component {
   }
 
   login() {
-    this.props.model.attemptLogin(this.refs.form.token.value);
+    this.props.model.login(this.refs.form.token.value);
   }
 
   render() {
@@ -30,7 +30,7 @@ class LoginView extends Component {
           <input type="submit" className="btn btn-primary" value={t("login.login")} />
           { this.props.model.lastLoginAttempt &&
             <PromiseView promise={this.props.model.lastLoginAttempt}
-              renderPending={() => t("loading")}
+              renderPending={() => <span>{t("loading")}</span>}
               renderRejected={(error) =>
                 <div className="alert alert-danger" role="alert">
                   <strong>{t("login.error")}</strong> {error.response && error.response.data.message}

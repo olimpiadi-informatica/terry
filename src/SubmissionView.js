@@ -53,7 +53,7 @@ class SubmissionView extends Component {
               renderFulfilled={(uploadedSource) => <React.Fragment>
                 { uploadedSource.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
               </React.Fragment>}
-              renderRejected={(error) => <p>{error}</p>}
+              renderRejected={() => <p>{t("error")}</p>}
               renderPending={() => <p>{t("submission.submit.processing")}</p>}
             />
           </div>
@@ -87,7 +87,7 @@ class SubmissionView extends Component {
           <FileView file={output.file} />
           <PromiseView promise={this.props.submission.getOutput().uploadPromise}
             renderFulfilled={(uploadedOutput) => <ValidationView {...this.props} result={uploadedOutput.data.validation} />}
-            renderRejected={(error) => <p>{error}</p>}
+            renderRejected={() => <p>{t("error")}</p>}
             renderPending={() => <p>{t("submission.submit.processing")}</p>}
           />
         </div>
@@ -133,10 +133,10 @@ class SubmissionView extends Component {
             <div className="input-group">{ this.renderOutputSelector() }</div>
           </div>
           <div className="modal-footer">
+            {this.props.submission.isSubmitted() ? t("submission.submit.processing") : null}
             <Link to={"/" + this.props.submission.input.task} role="button" className="btn btn-danger">
               <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
             </Link>
-            {this.props.submission.isSubmitted() ? t("submission.submit.processing") : null}
             <button 
               type="submit"
               role="button" className="btn btn-success"

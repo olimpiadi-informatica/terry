@@ -17,12 +17,8 @@ export class Model extends Observable {
 
   onAppStart() {
     if(this.isLoggedIn()) {
-      this.refreshUser();
+      this.loadUser();
     }
-  }
-
-  loadUser(token) {
-    return ;
   }
 
   userToken() {
@@ -41,30 +37,43 @@ export class Model extends Observable {
     this.timeDelta = DateTime.local().diff(time);
   }
 
-  refreshUser() {
-    if(!this.isLoggedIn()) throw Error("refreshUser can only be called after a successful login");
-    const userToken = this.cookies.get(Model.cookieName);
+  doLoadUser() {
+    if(!this.isLoggedIn()) throw Error("doLoadUser can only be called after a successful login");
 
-    this.fireUpdate();
-    return this.userStatePromise = new ObservablePromise(
-      client.api.get('/user/' + this.userToken())
-        .then((response) => {
-          this.setServerTime(DateTime.fromHTTP(response.headers['date']));
-          delete this.lastLoginAttempt;
-          this.fireUpdate();
-          return new UserState(this, response.data);
-        })
-        .catch(error => {
-          console.error("Forced logout because: ", error);
-          this.logout();
-          return Promise.reject(error);
-        })
-    );
+    const userToken = this.cookies.get(Model.cookieName);
+    return client.api.get('/user/' + this.userToken())
+      .then((response) => {
+        this.setServerTime(DateTime.fromHTTP(response.headers['date']));
+        return new UserState(this, response.data);
+      })
+    ;
   }
 
-  attemptLogin(token) {
+  loadUser() {
+    this.userStatePromise = new ObservablePromise(
+      this.doLoadUser()
+      .catch(error => {
+        console.error("Forced logout because: ", error);
+        this.logout();
+        return Promise.reject(error);
+      })
+    );
+    this.fireUpdate();
+  }
+
+  refreshUser() {
+    return this.doLoadUser().then((userState) => {
+      this.userStatePromise = new ObservablePromise(Promise.resolve(userState));
+      this.fireUpdate();
+    });
+  }
+
+  login(token) {
     this.cookies.set(Model.cookieName, token);
-    return this.lastLoginAttempt = this.refreshUser();
+    this.loadUser();
+    this.lastLoginAttempt = this.userStatePromise;
+    this.lastLoginAttempt.pushObserver(this);
+    this.fireUpdate();
   }
 
   logout() {
@@ -187,6 +196,8 @@ class UserTaskState extends Observable {
     this.user = user;
     this.task = task;
 
+    this.inputGenerationPromise = null;
+
     this.refreshSubmissionList();
   }
 
@@ -204,7 +215,7 @@ class UserTaskState extends Observable {
   }
 
   isGeneratingInput() {
-    return this.inputGenerationPromise !== undefined;
+    return this.inputGenerationPromise !== null;
   }
 
   generateInput() {
@@ -217,16 +228,13 @@ class UserTaskState extends Observable {
 
     this.fireUpdate();
 
-    return this.inputGenerationPromise = client.api.post('/generate_input', data).then((response) => {
-      return this.model.refreshUser();
-    }).then(() => {
-      delete this.inputGenerationPromise;
-      this.fireUpdate();
-    }, (response) => {
-      delete this.inputGenerationPromise;
-      this.fireUpdate();
-      return Promise.reject(response);
-    });
+    this.inputGenerationPromise = new ObservablePromise(
+      client.api.post('/generate_input', data).then((response) =>
+        Promise.resolve()
+        .then(() => this.model.refreshUser())
+        .then(() => response.data)
+      )
+    );
   }
 
   canSubmit(inputId) {
@@ -334,12 +342,12 @@ class Submission extends Observable {
 
     return this.submitPromise = new ObservablePromise(
       client.api.post("/submit", data)
-      .then((response) => new SubmissionResult(response.data))
-      .then((result) => {
-        this.model.refreshUser();
-        this.taskState.refreshSubmissionList();
-        return result;
-      })
+      .then((response) =>
+        Promise.resolve()
+        .then(() => this.model.refreshUser())
+        .then(() => this.taskState.refreshSubmissionList())
+        .then(() => new SubmissionResult(response.data))
+      )
     );
   }
 }

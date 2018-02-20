@@ -136,6 +136,7 @@ class SubmissionListView extends Component {
         <PromiseView
           promise={this.getListPromise()}
           renderPending={() => <div className="modal-body"><em>{t("loading")}</em></div>}
+          renderRejected={() => t("error")}
           renderFulfilled={(list) => this.renderBody(list)}
         />
         <div className="modal-footer">

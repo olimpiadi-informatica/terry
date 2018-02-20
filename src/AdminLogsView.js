@@ -67,7 +67,7 @@ class AdminLogsView extends Component {
 
   refreshLogs() {
     const promise = this.refreshLogsPromise = this.doLoadLogs();
-    this.refreshLogsPromise.then(() => {
+    this.refreshLogsPromise.delegate.then(() => {
       if(this.refreshLogsPromise !== promise) return;
       this.logsPromise = promise;
       this.forceUpdate();
@@ -168,6 +168,8 @@ class AdminLogsView extends Component {
                     </tr>
                     );
                   }}
+                  renderPending={() => t("loading")}
+                  renderRejected={() => t("error")}
                 />
               </tbody>
             </table>

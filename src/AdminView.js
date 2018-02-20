@@ -43,36 +43,40 @@ class AdminView extends Component {
   }
 
   render() {
+    const { t } = this.props;
     if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} />;
 
     return <React.Fragment>
       { this.renderNavBar() }
       <main>
         <PromiseView promise={this.session.statusPromise}
+          renderPending={() => t("loading")}
+          renderRejected={() => t("error")}
           renderFulfilled={(status) =>
             <PromiseView promise={this.session.usersPromise}
-              renderFulfilled={(users) => <React.Fragment>
-                <AdminSummaryView session={this.session} status={status} users={users} />
+              renderPending={() => t("loading")}
+              renderFulfilled={(users) =>
+                <React.Fragment>
+                  <AdminSummaryView session={this.session} status={status} users={users} />
 
-                <Route path="/admin/logs" render={
-                  ({match}) => <AdminLogsView session={this.session} />
-                }/>
+                  <Route path="/admin/logs" render={
+                    ({match}) => <AdminLogsView session={this.session} />
+                  }/>
 
-                <Route path="/admin/extra_time" render={
-                  ({match}) => <ContestExtraTimeView status={status} session={this.session} />
-                }/>
+                  <Route path="/admin/extra_time" render={
+                    ({match}) => <ContestExtraTimeView status={status} session={this.session} />
+                  }/>
 
-                <Route path="/admin/users" render={
-                  ({match}) => <AdminUsersView session={this.session} users={users} />
-                }/>
+                  <Route path="/admin/users" render={
+                    ({match}) => <AdminUsersView session={this.session} users={users} />
+                  }/>
 
-                <Route path="/admin/download_results" render={
-                  ({match}) => <DownloadResultsView session={this.session} />
-                }/>
-              </React.Fragment>}
-              renderRejected={(error) => <React.Fragment>
-                Error while loading users.
-              </React.Fragment>}
+                  <Route path="/admin/download_results" render={
+                    ({match}) => <DownloadResultsView session={this.session} />
+                  }/>
+                </React.Fragment>
+              }
+              renderRejected={() => t("error")}
             />
           }
         />

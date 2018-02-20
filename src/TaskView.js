@@ -62,11 +62,19 @@ class TaskView extends Component {
       )
     } else {
       if (this.getTaskState().isGeneratingInput()) {
-        return (
-          <span disabled={true} className="btn btn-success">
-            <FontAwesomeIcon icon={faPlus}/> {t("task.requesting")}
-          </span>
-        );
+        return <PromiseView promise={this.getTaskState().inputGenerationPromise}
+          renderPending={() => 
+            <button disabled={true} className="btn btn-success">
+              <FontAwesomeIcon icon={faPlus}/> {t("task.requesting")}
+            </button>
+          }
+          renderRejected={() =>
+            <button disabled={true} className="btn btn-success">
+              <FontAwesomeIcon icon={faPlus}/> {t("error")}
+            </button>
+          }
+          renderFulfilled={() => null}
+        />;
       } else {
         return (
           <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>

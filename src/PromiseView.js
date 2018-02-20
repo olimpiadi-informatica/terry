@@ -7,16 +7,9 @@ class PromiseView extends Component {
 
     if(!(props.promise instanceof ObservablePromise))
       throw new Error("invalid promise given to PromiseView: " + props.promise);
-  }
 
-  static defaultProps = {
-    renderRejected: (error) => {
-      // by default the promise is not expected to ever fail
-      // consider a rejection as a bug in the code
-      throw Error(error);
-    },
-    renderPending: (error) => <p>Pending...</p>,
-  };
+    if(!props.renderFulfilled || !props.renderPending || !props.renderRejected) throw Error();
+  }
 
   componentDidMount() {
     this.props.promise.pushObserver(this);

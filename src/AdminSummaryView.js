@@ -39,15 +39,6 @@ class AdminSummaryView extends Component {
     return DateTime.local().minus(this.props.session.timeDelta);
   }
 
-  renderContestStatus() {
-    const { t, i18n } = this.props;
-
-    if(!this.props.status.data.start_time) return this.renderNotStarted();
-    if(this.serverTime() < this.getEndTime()) return this.renderRunning();
-    if(this.serverTime() < this.getExtraTimeEndTime()) return this.renderRunningExtraTime();
-    return this.renderFinished();
-  }
-
   renderNotStarted() {
     const { t } = this.props;
     return <React.Fragment>
@@ -174,67 +165,6 @@ class AdminSummaryView extends Component {
     );
   }
 
-  renderLogSummary(logs) {
-    const { t, i18n } = this.props;
-
-    const items = logs.items;
-
-    if (items.length === 0)
-      return <React.Fragment>
-        {t("contest.no error recorded")}
-        {' '}
-        (<Link to="/admin/logs">{t("contest.show log")}</Link>)
-      </React.Fragment>;
-
-    const lastError = DateTime.fromISO(items[0].date);
-
-    return <React.Fragment>
-      {t("contest.error recorded at")}
-      {' '}
-      <DateView {...this.props} clock={() => this.props.session.serverTime()} date={lastError} />
-      {' '}
-      (<Link to="/admin/logs">{t("contest.show log")}</Link>)
-    </React.Fragment>;
-  }
-
-  renderExtraTimeSummary() {
-    const { t } = this.props;
-
-    if(this.props.status.extraTimeMinutes() === 0) {
-      return <React.Fragment>
-        {t("contest.no extra time set")}
-        {' '}
-        (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
-      </React.Fragment>;
-    } else {
-      return <React.Fragment>
-        {t('minutes', {count: this.props.status.extraTimeMinutes()})}
-        {' '}
-        (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
-      </React.Fragment>;
-    }
-  }
-
-  renderUserExtraTimeSummary() {
-    const { t } = this.props;
-    const users = this.props.users;
-
-    const numExtraTimeUsers = this.countUsersWithExtraTime();
-    if(numExtraTimeUsers > 0) {
-      return <React.Fragment>
-        {t("contest.users have extra time", {count: numExtraTimeUsers})}
-        {' '}
-        (<Link to="/admin/users">{t("contest.manage users")}</Link>)
-      </React.Fragment>;
-    } else {
-      return <React.Fragment>
-        {t("contest.no user has extra time")}
-        {' '}
-        (<Link to="/admin/users">{t("contest.manage users")}</Link>)
-      </React.Fragment>;
-    }
-  }
-
   render() {
     const { t, i18n } = this.props;
     const status = this.props.status.data;
@@ -243,14 +173,39 @@ class AdminSummaryView extends Component {
       <div className="card mb-3">
         <div className="card-body">
           <h3>{t("contest status")}</h3>
-          { this.renderContestStatus() }
+          {
+            !this.props.status.data.start_time ? this.renderNotStarted() :
+            this.serverTime() < this.getEndTime() ? this.renderRunning() :
+            this.serverTime() < this.getExtraTimeEndTime() ? this.renderRunningExtraTime() :
+            this.renderFinished()
+          }
         </div>
       </div>
       <div className="card mb-3">
         <div className="card-body">
           <h3>{t("system status")}</h3>
           <ul className="mb-0">
-            <li><PromiseView promise={this.logsPromise} renderFulfilled={(logs) => this.renderLogSummary(logs)}/></li>
+            <li><PromiseView promise={this.logsPromise}
+              renderFulfilled={(logs) => 
+                logs.items.length === 0 ? <React.Fragment>
+                  {t("contest.no error recorded")}
+                  {' '}
+                  (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+                </React.Fragment> : <React.Fragment>
+                  {t("contest.error recorded at")}
+                  {' '}
+                  <DateView
+                    {...this.props}
+                    clock={() => this.props.session.serverTime()}
+                    date={DateTime.fromISO(logs.items[0].date)}
+                  />
+                  {' '}
+                  (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+                </React.Fragment>
+              }
+              renderPending={() => t("loading")}
+              renderRejected={() => t("error")}
+            /></li>
           </ul>
         </div>
       </div>
@@ -258,8 +213,32 @@ class AdminSummaryView extends Component {
         <div className="card-body">
           <h3>{t("contest.extra time management")}</h3>
           <ul className="mb-0">
-            <li>{ this.renderExtraTimeSummary() }</li>
-            <li>{ this.renderUserExtraTimeSummary() }</li>
+            <li>
+              {
+                this.props.status.extraTimeMinutes() === 0 ? <React.Fragment>
+                  {t("contest.no extra time set")}
+                  {' '}
+                  (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+                </React.Fragment> : <React.Fragment>
+                  {t('minutes', {count: this.props.status.extraTimeMinutes()})}
+                  {' '}
+                  (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+                </React.Fragment>
+              }
+            </li>
+            <li>
+              {
+                this.countUsersWithExtraTime() > 0 ? <React.Fragment>
+                  {t("contest.users have extra time", {count: this.countUsersWithExtraTime()})}
+                  {' '}
+                  (<Link to="/admin/users">{t("contest.manage users")}</Link>)
+                </React.Fragment> : <React.Fragment>
+                  {t("contest.no user has extra time")}
+                  {' '}
+                  (<Link to="/admin/users">{t("contest.manage users")}</Link>)
+                </React.Fragment>
+              }
+            </li>
           </ul>
         </div>
       </div>
