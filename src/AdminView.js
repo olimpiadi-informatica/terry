@@ -44,7 +44,7 @@ class AdminView extends Component {
 
   render() {
     const { t } = this.props;
-    if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} />;
+    if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} {...this.props} />;
 
     return <React.Fragment>
       { this.renderNavBar() }

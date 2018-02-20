@@ -30,7 +30,7 @@ class PackView extends Component {
     if (!this.pack.isLoaded()) return <p>An error occurred: {this.pack.error.message}</p>;
 
     if (this.pack.data.uploaded) {
-      return <AdminView />;
+      return <AdminView pack={this.pack} />;
     } else {
       return <UploadPackView pack={this.pack} />;
     }

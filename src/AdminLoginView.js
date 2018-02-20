@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {translateComponent} from "./utils";
+import ReactMarkdown from 'react-markdown';
 
 class AdminLoginView extends Component {
   componentDidMount() {
@@ -29,7 +30,8 @@ class AdminLoginView extends Component {
     const { t } = this.props;
     return (
       <div className="jumbotron admin-jumbotron">
-        <h1 className="text-center display-3">{t("navbar.title")}</h1>
+        <h1 className="text-center display-3">{this.props.pack.data.name}</h1>
+        <ReactMarkdown source={this.props.pack.data.description}/>
         <hr />
         <h2 className="text-center">{t("login.please login")}</h2>
         <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
