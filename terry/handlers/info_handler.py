@@ -91,7 +91,7 @@ class InfoHandler(BaseHandler):
 
         if not user["contest"]["has_started"]:
             del user["extra_time"]
-            return
+            return user
 
         user["end_time"] = InfoHandler.get_end_time(user["extra_time"])
         del user["extra_time"]
