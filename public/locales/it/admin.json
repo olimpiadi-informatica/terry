@@ -63,6 +63,7 @@
     "users have extra time": "{{count}} utente ha del tempo aggiuntivo",
     "users have extra time_plural": "{{count}} utenti hanno del tempo aggiuntivo",
     "manage users": "mostra gli utenti",
+    "download": "Scarica risultati",
     "download results": "Scarica i risultati della gara",
     "download results description": "La gara è terminata, devi adesso scaricare l'archivio zip contenente tutti i dati della gara. Questo zip dovrà essere poi spedito al comitato."
   },
