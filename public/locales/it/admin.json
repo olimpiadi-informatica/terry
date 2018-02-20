@@ -20,6 +20,11 @@
     "login": "Entra",
     "error": "Errore:"
   },
+  "upload pack": {
+    "select file": "Seleziona il pacchetto di gara...",
+    "file": "File",
+    "upload": "Carica"
+  },
   "logs": {
     "title": "Registro",
     "date": "Data",
