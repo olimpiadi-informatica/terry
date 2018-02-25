@@ -50,6 +50,8 @@ def main(args):
     with open(args.atleti, "r") as f:
         reader = list(csv.DictReader(f, delimiter=";"))
 
+    tasks = args.tasks.split(",")
+
     atleti = dict()
     for sede in num_aule:
         atleti[sede] = []
@@ -71,7 +73,7 @@ def main(args):
         for aula in range(1, num_aule[sede]+1):
             full_sede = get_nth_sede(sede, aula)
             path = os.path.join(args.output_dir, full_sede + ".yaml")
-            contest = {"name": args.nome, "description": descrizione, "duration": args.durata, "users": atl}
+            contest = {"name": args.nome, "description": descrizione, "duration": args.durata, "users": atl, "tasks": tasks}
             with open(path, "w") as f:
                 f.write(yaml.dump(contest))
         atl_per_aula = len(atl)/num_aule[sede]
@@ -92,6 +94,7 @@ if __name__ == "__main__":
     parser.add_argument("nome", help="Nome del contest")
     parser.add_argument("descrizione", help="Descrizione del contest, usare %%s per il nome della sede")
     parser.add_argument("durata", help="Durata del contest", type=int)
+    parser.add_argument("tasks", help="Nomi dei task, separati da virgola")
     parser.add_argument("sedi", help="CSV con sede;aule (codice sede, numero aule)")
     parser.add_argument("atleti", help="CSV con sede;nome;cognome")
     parser.add_argument("output_dir", help="Cartella (viene creata) dove mettere i yaml con le info del contest per ogni sede")
