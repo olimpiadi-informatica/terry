@@ -5,34 +5,49 @@ import csv
 import os
 import math
 import yaml
+import random
+import argparse
+import subprocess
 
 USERNAME_LEN = 6
+TOKEN_LEN = 6
+TOKEN_CHARS = "abcdefghjkmnopqrstuvwxyz023456789"
+
+used_tokens = set()
+demo_tokens = dict()
 
 def get_nth_sede(sede, aula):
-    if len(sede) + int(math.log10(aula)) + 1 > USERNAME_LEN:
-        raise ValueError("Nome sede + numero aula troppo lungo")
     char_per_aula = USERNAME_LEN - len(sede)
+    if char_per_aula < 0:
+        raise ValueError("Nome sede + numero aula troppo lungo")
     return "%s%s" % (sede, str(aula).zfill(USERNAME_LEN-len(sede)))
 
 def gen_token():
-    return "password"
+    while True:
+        token = "".join([random.choice(TOKEN_CHARS) for _ in range(TOKEN_LEN)])
+        if token in used_tokens:
+            continue
+        used_tokens.add(token)
+        return token
 
-if len(sys.argv) != 7:
-    print("Usage: %s nome descrizione durata sedi.csv atleti.csv outputdir" % sys.argv[0])
-    sys.exit(1)
+def gen_token_demo(sede):
+    if sede not in demo_tokens:
+        demo_tokens[sede] = 0
+    demo_tokens[sede] += 1
+    return "demo.%s.%d" % (sede, demo_tokens[sede])
 
-def main():
-    nome_contest = sys.argv[1]
-    descrizione_contest = sys.argv[2]
-    durata = int(sys.argv[3])
-    sedi_file = sys.argv[4]
-    atleti_file = sys.argv[5]
-    output_dir = sys.argv[6]
 
-    with open(sedi_file, "r") as f:
+def gen_admin_token(password, sede):
+    proc = subprocess.Popen(["terr-gen-password", password, sede], stdout=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    return stdout.decode().strip()
+
+
+def main(args):
+    with open(args.sedi, "r") as f:
         num_aule = dict([sede["sede"], int(sede["aule"])] for sede in csv.DictReader(f, delimiter=";"))
 
-    with open(atleti_file, "r") as f:
+    with open(args.atleti, "r") as f:
         reader = list(csv.DictReader(f, delimiter=";"))
 
     atleti = dict()
@@ -43,18 +58,42 @@ def main():
         nome = atleta["Nome"]
         cognome = atleta["Cognome"]
         sede = atleta["sede"]
-        atleti[sede] += [{"token": gen_token(), "name": nome, "surname": cognome}]
+        if args.demo:
+            token = gen_token_demo(sede)
+        else:
+            token = gen_token()
+        atleti[sede] += [{"token": token, "name": nome, "surname": cognome}]
 
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(args.output_dir, exist_ok=True)
 
     for sede, atl in atleti.items():
+        descrizione = args.descrizione % sede if "%s" in args.descrizione else args.descrizione
         for aula in range(1, num_aule[sede]+1):
             full_sede = get_nth_sede(sede, aula)
-            path = os.path.join(output_dir, full_sede + ".yaml")
-            contest = {"name": nome_contest, "description": descrizione_contest, "duration": durata, "users": atl}
+            path = os.path.join(args.output_dir, full_sede + ".yaml")
+            contest = {"name": args.nome, "description": descrizione, "duration": args.durata, "users": atl}
             with open(path, "w") as f:
                 f.write(yaml.dump(contest))
+        atl_per_aula = len(atl)/num_aule[sede]
+        print("%6s  %3d atleti  %2d aule  %4.1f atl/aula %s" % (sede, len(atl), num_aule[sede], atl_per_aula, "*" if atl_per_aula > 20 else ""), file=sys.stderr)
+    if args.password:
+        print("sede;full_sede;password")
+        for sede in atleti:
+            for aula in range(1, num_aule[sede]+1):
+                full_sede = get_nth_sede(sede, aula)
+                password = gen_admin_token(args.password, full_sede)
+                print("%s;%s;%s" % (sede, full_sede, password))
+
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("nome", help="Nome del contest")
+    parser.add_argument("descrizione", help="Descrizione del contest, usare %%s per il nome della sede")
+    parser.add_argument("durata", help="Durata del contest", type=int)
+    parser.add_argument("sedi", help="CSV con sede;aule (codice sede, numero aule)")
+    parser.add_argument("atleti", help="CSV con sede;nome;cognome")
+    parser.add_argument("output_dir", help="Cartella (viene creata) dove mettere i yaml con le info del contest per ogni sede")
+    parser.add_argument("--password", help="Password dello zip da usare per generare le password dei pack")
+    parser.add_argument("--demo", help="Genera credenziali per la demo", action="store_true", default=False)
+    main(parser.parse_args())
