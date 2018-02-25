@@ -79,6 +79,7 @@ def main(args):
     if args.password:
         print("sede;full_sede;password")
         for sede in atleti:
+            print("%s..." % sede, file=sys.stderr)
             for aula in range(1, num_aule[sede]+1):
                 full_sede = get_nth_sede(sede, aula)
                 password = gen_admin_token(args.password, full_sede)
