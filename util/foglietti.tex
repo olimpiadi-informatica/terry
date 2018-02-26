@@ -1,0 +1,38 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{lmodern}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{sfmath}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tabularx}
+\usepackage[italian]{babel}
+\usepackage{mathpazo}
+\usepackage{booktabs}
+\usepackage[top=0cm,left=0cm,right=0cm,bottom=0cm]{geometry}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+\pagestyle{empty}
+
+{% for utenti in pages %}
+    \vspace*{0.5cm}
+    \centering {\fontsize{30}{40}\selectfont \bf {{contest_name}}} \\[0.1cm]
+    \centering {\huge \bf {{sede}}} \\[0.5cm]
+  {% for u in utenti %}
+      \begin{tabularx}{\textwidth}{ p{2ex} X p{1cm} p{3cm}}
+      \midrule\addlinespace[4ex]                                            &
+      \centering \LARGE \bf {{ u.name }} {{ u.surname }}                    &
+      \textbf{Token:}                                                       &
+      \texttt{ {{ u.token }} }                                              \\
+      \addlinespace[4ex]
+    \end{tabularx}
+  {% endfor %}
+  \begin{tabularx}{\textwidth}{c}
+    \midrule
+  \end{tabularx}
+  \newpage
+{% endfor %}
+
+\end{document}
+
