@@ -140,7 +140,6 @@ class AdminHandler(BaseHandler):
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "Contest has already been started!")
 
-        ContestManager.start()
         start_time = int(time.time())
         Database.set_meta("start_time", start_time)
         Logger.info("CONTEST", "Contest started")

@@ -150,7 +150,11 @@ class TestContestManager(unittest.TestCase):
         self._prepare_contest_dir(path)
         Config.statementdir = Utils.new_tmp_dir()
         Config.contest_path = path
-        ContestManager.read_from_disk()
+
+        with patch("gevent.spawn") as mock:
+            ContestManager.read_from_disk()
+            mock.assert_has_calls([call(ContestManager.worker, "poldo")],
+                                  any_order=True)
 
         self.assertEqual(18000, Database.get_meta(
             "contest_duration", type=int))
@@ -246,17 +250,6 @@ class TestContestManager(unittest.TestCase):
                     ContestManager.worker("poldo")
                 self.assertIn("Error 42 validating input",
                               ex.exception.args[0])
-
-    def test_start(self):
-        ContestManager.tasks = {"task1": "1!!", "task2": "2!!!"}
-        with patch("gevent.spawn") as mock:
-            ContestManager.start()
-            mock.assert_has_calls(
-                [
-                    call(ContestManager.worker, "task1"),
-                    call(ContestManager.worker, "task2")
-                ],
-                any_order=True)
 
     def test_get_input(self):
         input_path = Utils.new_tmp_file()

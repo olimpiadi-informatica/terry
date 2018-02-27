@@ -197,8 +197,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertIn("Contest has already been started",
                       ex.exception.response.data.decode())
 
-    @patch('terry.contest_manager.ContestManager.start')
-    def test_start_ok(self, start_mock):
+    def test_start_ok(self):
         out = self.admin_handler.start(
             admin_token='admin token', _ip='1.2.3.4')
 
@@ -207,7 +206,6 @@ class TestAdminHandler(unittest.TestCase):
         self.assertTrue(start_time >= datetime.datetime.now().timestamp() - 10)
 
         self.assertEqual(start_time, Database.get_meta('start_time', type=int))
-        start_mock.assert_called_once_with()
 
     def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:

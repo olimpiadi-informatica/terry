@@ -148,7 +148,7 @@ class ContestManager:
         return contest_config
 
     @staticmethod
-    def read_from_disk():
+    def read_from_disk(remove_enc=True):
         """
         Load a task from the disk and load the data into the database
         """
@@ -160,8 +160,9 @@ class ContestManager:
             shutil.rmtree(Config.statementdir, ignore_errors=True)
             shutil.rmtree(Config.web_statementdir, ignore_errors=True)
             shutil.rmtree(Config.contest_path, ignore_errors=True)
-            with suppress(Exception):
-                os.remove(Config.encrypted_file)
+            if remove_enc:
+                with suppress(Exception):
+                    os.remove(Config.encrypted_file)
             with suppress(Exception):
                 os.remove(Config.decrypted_file)
             Database.del_meta("admin_token")
@@ -222,6 +223,7 @@ class ContestManager:
         for task in ContestManager.tasks:
             ContestManager.input_queue[task] = gevent.queue.Queue(
                 Config.queue_size)
+            gevent.spawn(ContestManager.worker, task)
 
     @staticmethod
     def worker(task_name):
@@ -301,13 +303,6 @@ class ContestManager:
                              "Exception while creating an input file: " +
                              traceback.format_exc())
 
-    @staticmethod
-    def start():
-        """
-        Spawn the workers and keep the queues of input always ready and full
-        """
-        for name in ContestManager.tasks:
-            gevent.spawn(ContestManager.worker, name)
 
     @staticmethod
     def get_input(task_name, attempt):
