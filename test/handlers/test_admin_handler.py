@@ -29,7 +29,7 @@ class TestAdminHandler(unittest.TestCase):
         Utils.prepare_test()
         self.admin_handler = AdminHandler()
 
-        Database.set_meta("admin_token", "admin token")
+        Database.set_meta("admin_token", "ADMIN-TOKEN")
 
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001  # disable the logs
@@ -141,7 +141,7 @@ class TestAdminHandler(unittest.TestCase):
             start_date=start_date,
             end_date=end_date,
             level='INFO',
-            admin_token='admin token',
+            admin_token='ADMIN-TOKEN',
             _ip='1.2.3.4')
         self.assertEqual(3, len(
             res["items"]))  # NOTE: there is also the LOGIN_ADMIN row
@@ -158,7 +158,7 @@ class TestAdminHandler(unittest.TestCase):
             start_date=start_date,
             end_date=end_date,
             level='DEBUG',
-            admin_token='admin token',
+            admin_token='ADMIN-TOKEN',
             _ip='1.2.3.4',
             category='CATEGORY')
         self.assertEqual(2, len(res["items"]))
@@ -169,7 +169,7 @@ class TestAdminHandler(unittest.TestCase):
                 start_date=None,
                 end_date=None,
                 level='NOT-EXISTING-LEVEL',
-                admin_token='admin token',
+                admin_token='ADMIN-TOKEN',
                 _ip='1.2.3.4')
 
     def test_log_invalid_date(self):
@@ -178,7 +178,7 @@ class TestAdminHandler(unittest.TestCase):
                 start_date="i'm not a date",
                 end_date=None,
                 level='ERROR',
-                admin_token='admin token',
+                admin_token='ADMIN-TOKEN',
                 _ip='1.2.3.4')
 
     def test_start_invalid_token(self):
@@ -192,14 +192,14 @@ class TestAdminHandler(unittest.TestCase):
         Database.set_meta('start_time', 12345)
 
         with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.start(admin_token='admin token', _ip='1.2.3.4')
+            self.admin_handler.start(admin_token='ADMIN-TOKEN', _ip='1.2.3.4')
 
         self.assertIn("Contest has already been started",
                       ex.exception.response.data.decode())
 
     def test_start_ok(self):
         out = self.admin_handler.start(
-            admin_token='admin token', _ip='1.2.3.4')
+            admin_token='ADMIN-TOKEN', _ip='1.2.3.4')
 
         start_time = datetime.datetime.strptime(
             out["start_time"], "%Y-%m-%dT%H:%M:%S").timestamp()
@@ -210,7 +210,7 @@ class TestAdminHandler(unittest.TestCase):
     def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.set_extra_time(
-                admin_token='invalid token', extra_time=None, _ip=None)
+                admin_token='INVALID-TOKEN', extra_time=None, _ip=None)
 
         self.assertIn("Invalid admin token",
                       ex.exception.response.data.decode())
@@ -218,7 +218,7 @@ class TestAdminHandler(unittest.TestCase):
     def test_set_extra_time_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
             self.admin_handler.set_extra_time(
-                admin_token='admin token',
+                admin_token='ADMIN-TOKEN',
                 extra_time=42,
                 token="foobar",
                 _ip=None)
@@ -227,7 +227,7 @@ class TestAdminHandler(unittest.TestCase):
 
     def test_set_extra_time_global(self):
         self.admin_handler.set_extra_time(
-            admin_token='admin token', extra_time=42, _ip='1.2.3.4')
+            admin_token='ADMIN-TOKEN', extra_time=42, _ip='1.2.3.4')
 
         self.assertEqual(42, Database.get_meta('extra_time', type=int))
 
@@ -237,7 +237,7 @@ class TestAdminHandler(unittest.TestCase):
             "'user token', 'a', 'b', 0)")
 
         self.admin_handler.set_extra_time(
-            admin_token='admin token',
+            admin_token='ADMIN-TOKEN',
             extra_time=42,
             _ip='1.2.3.4',
             token='user token')
@@ -255,7 +255,7 @@ class TestAdminHandler(unittest.TestCase):
     def test_status(self):
         Database.set_meta('start_time', 1234)
         res = self.admin_handler.status(
-            admin_token='admin token', _ip='1.2.3.4')
+            admin_token='ADMIN-TOKEN', _ip='1.2.3.4')
 
         start_time = int(
             datetime.datetime.strptime(res["start_time"],
@@ -277,7 +277,7 @@ class TestAdminHandler(unittest.TestCase):
         Database.register_ip("token", "1.2.3.4")
         Database.register_ip("token", "1.2.3.5")
 
-        res = self.admin_handler.user_list(admin_token='admin token', _ip=None)
+        res = self.admin_handler.user_list(admin_token='ADMIN-TOKEN', _ip=None)
         self.assertEqual(2, len(res["items"]))
         user1 = next(i for i in res["items"] if i["token"] == "token")
         user2 = next(i for i in res["items"] if i["token"] == "token2")
@@ -313,7 +313,7 @@ class TestAdminHandler(unittest.TestCase):
             with open('db.sqlite3_for_test', 'w') as f:
                 pass
             zip_location = self.admin_handler.download_results(
-                admin_token='admin token', _ip='1.2.3.4')['path']
+                admin_token='ADMIN-TOKEN', _ip='1.2.3.4')['path']
             with open(os.path.join(Config.storedir, zip_location)) as f:
                 pass
         finally:
@@ -326,7 +326,7 @@ class TestAdminHandler(unittest.TestCase):
             os.chdir(Config.storedir)
             with self.assertRaises(subprocess.CalledProcessError) as ex:
                 self.admin_handler.download_results(
-                    admin_token='admin token', _ip='1.2.3.4')
+                    admin_token='ADMIN-TOKEN', _ip='1.2.3.4')
         finally:
             os.chdir(wd)
 

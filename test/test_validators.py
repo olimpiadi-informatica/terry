@@ -24,7 +24,7 @@ from test.utils import Utils
 class TestValidators(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
-        Database.set_meta("admin_token", "admin token")
+        Database.set_meta("admin_token", "ADMIN-TOKEN")
 
         self.log_backup = Logger.LOG_LEVEL
         Logger.LOG_LEVEL = 9001  # disable the logs
@@ -87,9 +87,28 @@ class TestValidators(unittest.TestCase):
 
     def test_admin_only(self):
         Utils.prepare_test()
-        Database.set_meta("admin_token", "admin token")
+        Database.set_meta("admin_token", "ADMIN-TOKEN")
         Logger.set_log_level(9001)
-        self.admin_only(admin_token="admin token", _ip="1.1.1.1")
+        self.admin_only(admin_token="ADMIN-TOKEN", _ip="1.1.1.1")
+
+    def test_admin_only_invalid_token(self):
+        Utils.prepare_test()
+        Database.set_meta("admin_token", "ADMIN-TOKEN")
+        Logger.set_log_level(9001)
+        with self.assertRaises(Forbidden):
+            self.admin_only(admin_token="WRONG-TOKEN", _ip="1.1.1.1")
+
+    def test_admin_only_with_spaces(self):
+        Utils.prepare_test()
+        Database.set_meta("admin_token", "ADMIN-TOKEN")
+        Logger.set_log_level(9001)
+        self.admin_only(admin_token="  ADMIN-TOKEN  ", _ip="1.1.1.1")
+
+    def test_admin_only_lower_case(self):
+        Utils.prepare_test()
+        Database.set_meta("admin_token", "ADMIN-TOKEN")
+        Logger.set_log_level(9001)
+        self.admin_only(admin_token="admin-token", _ip="1.1.1.1")
 
     def test_validate_file(self):
         self.file(file={"content": "foobar".encode(), "name": "file.txt"})
@@ -227,14 +246,14 @@ class TestValidators(unittest.TestCase):
         self.assertEqual("1.1.1.1", users[0]["ip"][0]["ip"])
 
     def test_validate_token(self):
-        Validators._validate_admin_token('admin token', '1.2.3.4')
+        Validators._validate_admin_token('ADMIN-TOKEN', '1.2.3.4')
 
     @patch("terry.contest_manager.ContestManager.extract_contest")
     @patch("terry.contest_manager.ContestManager.read_from_disk")
     def test_validate_token_no_token(self, read, extract):
         Database.del_meta("admin_token")
-        Validators._validate_admin_token("admin token", '1.2.3.4')
-        extract.assert_called_once_with("admin token")
+        Validators._validate_admin_token("ADMIN-TOKEN", '1.2.3.4')
+        extract.assert_called_once_with("ADMIN-TOKEN")
         read.assert_called_once_with()
 
     def test_validate_invalid_token(self):
@@ -250,7 +269,7 @@ class TestValidators(unittest.TestCase):
         self.assertIn("1.2.3.4", row[3])
 
     def test_validate_token_log_ip(self):
-        Validators._validate_admin_token('admin token', '1.2.3.4')
+        Validators._validate_admin_token('ADMIN-TOKEN', '1.2.3.4')
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
         row = Logger.c.fetchone()

@@ -47,7 +47,7 @@ class Validators:
         """
 
         def handle(*args, **kwargs):
-            admin_token = kwargs["admin_token"]
+            admin_token = kwargs["admin_token"].strip().upper()
             ip = kwargs["_ip"]
             Validators._validate_admin_token(admin_token, ip)
             del kwargs["admin_token"]
