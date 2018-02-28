@@ -1,10 +1,11 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
-[ -z "$2" ] && echo "Usage: $0 output_folder version"
+[ -z "$2" ] && echo "Usage: $0 output_folder version [root_authorized_keys]"
 [ -z "$2" ] && exit 1
 
 OUTDIR=$1
 VERSION=$2
+ROOT_AUTHORIZED_KEYS=$3
 
 [ -f $(dirname $0)/"nginx.conf" ] || echo "No nginx.conf file. Please \
   create one from nginx-example.conf."
@@ -41,6 +42,11 @@ cp $(dirname $0)/territoriali-backend.service ${OUTDIR}/etc/systemd/system
 cp $(dirname $0)/watchdog.py ${OUTDIR}/root
 mkdir -p ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
 cp $(dirname $0)/override.conf ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
+echo ioi > ${OUTDIR}/etc/hostname
+mkdir ${OUTDIR}/root/.ssh
+ssh-keygen -f ${OUTDIR}/root/.ssh/id_rsa -P "" -C "root@ioi"
+echo "PermitRootLogin yes" >> ${OUTDIR}/etc/ssh/sshd_config
+[ ! -z "$ROOT_AUTHORIZED_KEYS" ] && cp $ROOT_AUTHORIZED_KEYS ${OUTDIR}/root/.ssh/authorized_keys
 
 echo $VERSION > ${OUTDIR}/version
 
@@ -49,6 +55,6 @@ sudo linux32 chroot ${OUTDIR} bash -c "cd /app/territoriali-backend && \
   python setup.py install"
 
 # Enable services
-linux32 chroot ${OUTDIR} systemctl enable nginx.service 
+linux32 chroot ${OUTDIR} systemctl enable nginx.service
 linux32 chroot ${OUTDIR} systemctl enable territoriali-backend.service
 linux32 chroot ${OUTDIR} systemctl enable cronie.service

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 [ -z "$2" ] && echo "Usage: $0 output_folder password"
 [ -z "$2" ] && exit 1
