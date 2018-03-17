@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-[ -z "$2" ] && echo "Usage: $0 output_folder version [root_authorized_keys]"
+[ -z "$2" ] && echo "Usage: $0 output_folder version nginx.conf config.yaml [root_authorized_keys]"
 [ -z "$2" ] && exit 1
 
 OUTDIR=$1
@@ -38,8 +38,8 @@ mkdir -p ${OUTDIR}/app/territoriali-frontend
 cp -r $(dirname $0)/../territoriali-frontend/build/* ${OUTDIR}/app/territoriali-frontend/
 cp -r $(dirname $0)/../territoriali-backend ${OUTDIR}/app/
 
-cp $(dirname $0)/config.yaml ${OUTDIR}/app/
-cp $(dirname $0)/nginx.conf ${OUTDIR}/etc/nginx/
+cp "$CONFIG_PATH" ${OUTDIR}/app/
+cp "$NGINX_PATH" ${OUTDIR}/etc/nginx/
 cp $(dirname $0)/territoriali-backend.service ${OUTDIR}/etc/systemd/system
 cp $(dirname $0)/watchdog.py ${OUTDIR}/root
 mkdir -p ${OUTDIR}/etc/systemd/system/getty@tty1.service.d

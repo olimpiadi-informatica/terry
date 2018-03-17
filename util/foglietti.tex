@@ -9,6 +9,16 @@
 \usepackage{mathpazo}
 \usepackage{booktabs}
 \usepackage[top=0cm,left=0cm,right=0cm,bottom=0cm]{geometry}
+\usepackage{pifont}
+\usepackage{bbding}
+\usepackage{tikz}
+
+\newlength{\sometext}
+\settowidth{\sometext}{ {\small\ScissorHollowRight} }
+
+\newcommand{\Cutline}{\noindent
+\hspace*{0.0cm}\raisebox{-5.5pt}[0pt][0.5\baselineskip]{\ScissorHollowRight}\unskip{\tikz \draw[dashed](0,0)--({\linewidth-\sometext-3cm},0);}
+}
 
 \setlength{\parindent}{0pt}
 
@@ -20,19 +30,17 @@
     \centering {\fontsize{30}{40}\selectfont \bf {{contest_name}}} \\[0.1cm]
     \centering {\huge \bf {{sede}}} \\[0.5cm]
   {% for u in utenti %}
-      \begin{tabularx}{\textwidth}{ p{2ex} X p{1cm} p{3cm}}
-      \midrule\addlinespace[4ex]                                            &
-      \centering \LARGE \bf {{ u.name }} {{ u.surname }}                    &
+      \Cutline
+      \begin{tabularx}{\textwidth}{ p{2cm} l X p{1cm} p{4cm}}
+      \addlinespace[4ex]                                            &
+          \centering \LARGE \bf {{ u.name }} {{ u.surname }}                    & &
       \textbf{Token:}                                                       &
       \texttt{ {{ u.token }} }                                              \\
       \addlinespace[4ex]
     \end{tabularx}
   {% endfor %}
-  \begin{tabularx}{\textwidth}{c}
-    \midrule
-  \end{tabularx}
+  \Cutline
   \newpage
 {% endfor %}
 
 \end{document}
-

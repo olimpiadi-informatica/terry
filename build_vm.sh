@@ -40,5 +40,5 @@ chmod o+rx ${TMP}
 $HERE/vm-utils/gen_arch_root.sh ${TMP} ${ROOT_PASSWORD}
 $HERE/vm-utils/prepare_terry_arch.sh ${TMP} ${VERSION} $NGINX_PATH $CONFIG_PATH ${ROOT_AUTHORIZED_KEYS}
 $HERE/vm-utils/gen_image.sh -r ${TMP} -o ${TARGET_FILE} -t ovf \
-  -m ${RAM_SIZE_MB} -n "${IMAGE_NAME}" -s ${DISK_SIZE_MB} -u $USER -p tcp:9000:80
+  -m "${RAM_SIZE_MB}" -n "${IMAGE_NAME}" -s ${DISK_SIZE_MB} -u $USER -p tcp:9000:80
 EOF

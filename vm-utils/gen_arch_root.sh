@@ -57,12 +57,11 @@ $(dirname $0)/setup_chroot.sh ${OUTDIR}
 
 mkdir -p ${OUTDIR}/var/lib/pacman/
 linux32 pacman --config ${TMP}/pacman.conf -r ${OUTDIR} -Syu \
-  base linux grub networkmanager openssh ntp --noconfirm
+  base linux grub networkmanager openssh --noconfirm
 
 # Time zone and ntp
 ln -sf /usr/share/zoneinfo/Europe/Rome ${OUTDIR}/etc/localtime
 linux32 chroot ${OUTDIR} hwclock --systohc
-linux32 chroot ${OUTDIR} systemctl enable ntpd.service
 
 # Locale
 echo en_US.UTF-8 UTF-8 > ${OUTDIR}/etc/locale.gen
