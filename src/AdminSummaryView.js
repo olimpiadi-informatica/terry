@@ -76,7 +76,7 @@ class AdminSummaryView extends Component {
       </ul>
 
       <Link to={'/admin/download_results'} className="btn btn-primary">
-        {t("contest.download")}
+        {t("contest.download results")}
       </Link>
     </React.Fragment>;
   }

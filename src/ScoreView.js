@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import "./ScoreView.css";
 
 class ScoreView extends Component {
@@ -13,8 +13,8 @@ class ScoreView extends Component {
   }
 
   render() {
-    return <div className="terry-score" style={{'fontSize': this.css_size + 'rem', ...this.additional_style}}>
-      <span className="terry-score-value" style={{'fontSize': 2 * this.css_size + 'rem'}}>{this.score}</span> / {this.max_score}
+    return <div className="terry-score" style={{ 'fontSize': this.css_size + 'rem', ...this.additional_style }}>
+      <span className="terry-score-value" style={{ 'fontSize': 2 * this.css_size + 'rem' }}>{this.score}</span> / {this.max_score}
     </div>
   }
 }

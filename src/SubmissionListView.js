@@ -127,7 +127,7 @@ class SubmissionListView extends Component {
       <ModalView contentLabel={t("submission.list.title")} returnUrl={"/" + this.props.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
-            {t("submission.list.title")} <strong>{taskName}</strong>
+            {t("submission.list.title")} <strong class="text-uppercase">{taskName}</strong>
           </h5>
           <Link to={"/" + this.props.taskName} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
