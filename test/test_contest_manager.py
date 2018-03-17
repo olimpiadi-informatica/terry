@@ -46,6 +46,10 @@ class TestContestManager(unittest.TestCase):
         with self.assertRaises(Forbidden):
             ContestManager.extract_contest("without dashes")
 
+    def test_extract_contest_malformed_username(self):
+        with self.assertRaises(Forbidden):
+            ContestManager.extract_contest("user;name-XXXX-XXXX-XXXX-XXXX")
+
     def test_extract_contest_not_uploaded(self):
         Config.encrypted_file = "/not/exists"
         with self.assertRaises(NotFound):
@@ -153,8 +157,8 @@ class TestContestManager(unittest.TestCase):
 
         with patch("gevent.spawn") as mock:
             ContestManager.read_from_disk()
-            mock.assert_has_calls([call(ContestManager.worker, "poldo")],
-                                  any_order=True)
+            mock.assert_has_calls(
+                [call(ContestManager.worker, "poldo")], any_order=True)
 
         self.assertEqual(18000, Database.get_meta(
             "contest_duration", type=int))
@@ -317,15 +321,15 @@ class TestContestManager(unittest.TestCase):
 
     def _prepare_contest_dir(self, path):
         self._write_file(path, "contest.yaml", "duration: 18000\n"
-                                               "tasks:\n"
-                                               "    - poldo\n"
-                                               "users:\n"
-                                               "    - token: token\n"
-                                               "      name: Test\n"
-                                               "      surname: User\n")
+                         "tasks:\n"
+                         "    - poldo\n"
+                         "users:\n"
+                         "    - token: token\n"
+                         "      name: Test\n"
+                         "      surname: User\n")
         self._write_file(path, "poldo/task.yaml", "name: poldo\n"
-                                                  "description: Poldo\n"
-                                                  "max_score: 42")
+                         "description: Poldo\n"
+                         "max_score: 42")
         self._write_file(path, "poldo/statement/statement.md", "# Poldo")
         self._write_file(path, "poldo/managers/generator.linux.x86_64",
                          "#!/usr/bin/bash\n"

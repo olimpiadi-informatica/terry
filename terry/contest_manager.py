@@ -54,10 +54,14 @@ class ContestManager:
             BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
                                   "The provided password is malformed")
 
-        username, password = token.split("-", 1)
-        secret, scrambled_password = decode_data(password, SECRET_LEN)
-        file_password = recover_file_password(username, secret,
-                                              scrambled_password)
+        try:
+            username, password = token.split("-", 1)
+            secret, scrambled_password = decode_data(password, SECRET_LEN)
+            file_password = recover_file_password(username, secret,
+                                                  scrambled_password)
+        except ValueError:
+            BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
+                                  "The provided password is malformed")
         try:
             with open(Config.encrypted_file, "rb") as encrypted_file:
                 encrypted_data = encrypted_file.read()
@@ -156,7 +160,7 @@ class ContestManager:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
             Logger.info("CONTEST", "Contest not found, you probably need to "
-                                   "unzip it. Missing file %s" % ex.filename)
+                        "unzip it. Missing file %s" % ex.filename)
             shutil.rmtree(Config.statementdir, ignore_errors=True)
             shutil.rmtree(Config.web_statementdir, ignore_errors=True)
             shutil.rmtree(Config.contest_path, ignore_errors=True)
@@ -235,7 +239,7 @@ class ContestManager:
             try:
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
@@ -303,7 +307,6 @@ class ContestManager:
                              "Exception while creating an input file: " +
                              traceback.format_exc())
 
-
     @staticmethod
     def get_input(task_name, attempt):
         """
@@ -341,14 +344,13 @@ class ContestManager:
             ])
             if time.monotonic() > start_time + 1:
                 Logger.warning("TASK", "Evaluation of output %s "
-                                       "for task %s, with input %s, took %f "
-                                       "seconds" % (
-                                   output_path, task_name, input_path,
-                                   time.monotonic() - start_time))
+                               "for task %s, with input %s, took %f "
+                               "seconds" % (output_path, task_name, input_path,
+                                            time.monotonic() - start_time))
         except:
             # TODO log the stdout and stderr of the checker
             Logger.error("TASK", "Error while evaluating output %s "
-                                 "for task %s, with input %s: %s" %
+                         "for task %s, with input %s: %s" %
                          (output_path, task_name, input_path,
                           traceback.format_exc()))
             raise
