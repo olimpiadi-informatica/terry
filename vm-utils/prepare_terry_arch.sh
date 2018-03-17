@@ -5,15 +5,17 @@
 
 OUTDIR=$1
 VERSION=$2
-ROOT_AUTHORIZED_KEYS=$3
+NGINX_PATH=$3
+CONFIG_PATH=$4
+ROOT_AUTHORIZED_KEYS=$5
 
-[ -f $(dirname $0)/"nginx.conf" ] || echo "No nginx.conf file. Please \
+[ -f "$NGINX_PATH" ] || echo "No nginx.conf file. Please \
   create one from nginx-example.conf."
-[ -f $(dirname $0)/"nginx.conf" ] || exit 2
+[ -f "$NGINX_PATH" ] || exit 2
 
-[ -f $(dirname $0)/"config.yaml" ] || echo "No config.yaml file. Please \
+[ -f "$CONFIG_PATH" ] || echo "No config.yaml file. Please \
   create one from ../territoriali-backend/config/example.config.yaml."
-[ -f $(dirname $0)/"config.yaml" ] || exit 2
+[ -f "$CONFIG_PATH" ] || exit 2
 
 clean_chroot() {
   $(dirname $0)/unsetup_chroot.sh ${OUTDIR}
