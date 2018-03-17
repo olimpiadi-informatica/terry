@@ -40,12 +40,15 @@ class Config:
         if Config.loaded is True:
             raise RuntimeError("The config file can be loaded only once")
         Config.loaded = True
+
         try:
             with open(config_file, 'r') as f:
                 cfg = yaml.load(f)
         except FileNotFoundError:
-            print("Config file %s not found" % config_file, file=sys.stderr)
-            raise
+            print("Config file %s not found, you should create it!" % config_file, file=sys.stderr)
+            print("If you just want to use default values, launch with: -c /dev/null")
+            sys.exit(1)
+
         # if the config file is empty
         if cfg is None:
             cfg = {}
