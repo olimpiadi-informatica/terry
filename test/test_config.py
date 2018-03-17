@@ -25,7 +25,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(42, Config.test)
 
     def test_file_not_found(self):
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(SystemExit):
             with Utils.nostderr():
                 Config.set_config_file('/this/file/doesnt/exist')
 
