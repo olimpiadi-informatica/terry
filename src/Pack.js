@@ -1,5 +1,6 @@
 import client from './TerryClient';
 import Observable from './Observable';
+import { notifyError } from './utils';
 
 
 export default class Pack extends Observable {
@@ -25,8 +26,7 @@ export default class Pack extends Observable {
         this.fireUpdate();
       })
       .catch((response) => {
-        console.error(response);
-        this.error = response;
+        notifyError(response)
         delete this.data;
         delete this.loading;
         this.fireUpdate();
@@ -42,8 +42,7 @@ export default class Pack extends Observable {
       .then(response => {
         return this.update();
       }).catch(response => {
-        console.error(response);
-        this.error = response.response.data.message;
+        notifyError(response)
         this.fireUpdate();
       });
   }

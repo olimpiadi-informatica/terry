@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes'
 import faHourglassStart from '@fortawesome/fontawesome-free-solid/faHourglassStart'
 import ModalView from './ModalView';
-import {translateComponent} from "./utils";
-import {Trans} from "react-i18next";
+import { translateComponent } from "./utils";
+import { Trans } from "react-i18next";
+import { toast } from 'react-toastify'
 
 class ContestExtraTimeView extends Component {
   componentDidMount() {
@@ -17,11 +18,19 @@ class ContestExtraTimeView extends Component {
   }
 
   setExtraTime() {
-    if (!window.confirm('Are you sure?')) return;
+    const { t } = this.props
+
+    if (!window.confirm(t("confirmation"))) return;
 
     const minutes = this.refs.extraTimeForm.minutes.value
 
     this.props.session.setExtraTime(minutes * 60);
+
+    // notify success
+    toast.success(t("extra time done"))
+
+    // redirect
+    this.props.history.push("/admin")
   }
 
   renderError() {
@@ -67,10 +76,10 @@ class ContestExtraTimeView extends Component {
           </div>
           <div className="modal-footer">
             <Link to={"/admin"} role="button" className="btn btn-primary">
-              <FontAwesomeIcon icon={faTimes}/> {t("close")}
+              <FontAwesomeIcon icon={faTimes} /> {t("close")}
             </Link>
             <button type="submit" className="btn btn-warning">
-              <FontAwesomeIcon icon={faHourglassStart}/> {t("contest.Set extra time")}
+              <FontAwesomeIcon icon={faHourglassStart} /> {t("contest.Set extra time")}
             </button>
           </div>
         </form>
@@ -79,4 +88,4 @@ class ContestExtraTimeView extends Component {
   }
 }
 
-export default translateComponent(ContestExtraTimeView, "admin");
+export default translateComponent(withRouter(ContestExtraTimeView), "admin");

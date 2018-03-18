@@ -11,7 +11,7 @@ import SubmissionReportView from './SubmissionReportView';
 import client from './TerryClient';
 import { DateView } from './datetime.views';
 import { DateTime } from 'luxon';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 
 import PromiseView from './PromiseView';
 import TaskStatementView from './TaskStatementView';
@@ -47,38 +47,38 @@ class TaskView extends Component {
 
   renderCommands() {
     const { t } = this.props;
-    if(this.getTaskState().hasCurrentInput()) {
+    if (this.getTaskState().hasCurrentInput()) {
       const currentInput = this.getTaskState().getCurrentInput();
       return (
         <React.Fragment>
           <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
-          <FontAwesomeIcon icon={faDownload}/> {t("task.download input")}
+            <FontAwesomeIcon icon={faDownload} /> {t("task.download input")}
           </a>
           {' '}
           <Link to={"/" + this.getTask().name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
-            <FontAwesomeIcon icon={faUpload}/> {t("task.upload solution")}
+            <FontAwesomeIcon icon={faUpload} /> {t("task.upload solution")}
           </Link>
         </React.Fragment>
       )
     } else {
       if (this.getTaskState().isGeneratingInput()) {
         return <PromiseView promise={this.getTaskState().inputGenerationPromise}
-          renderPending={() => 
+          renderPending={() =>
             <button disabled={true} className="btn btn-success">
-              <FontAwesomeIcon icon={faPlus}/> {t("task.requesting")}
+              <FontAwesomeIcon icon={faPlus} /> {t("task.requesting")}
             </button>
           }
           renderRejected={() =>
             <button disabled={true} className="btn btn-success">
-              <FontAwesomeIcon icon={faPlus}/> {t("error")}
+              <FontAwesomeIcon icon={faPlus} /> {t("error")}
             </button>
           }
           renderFulfilled={() => null}
         />;
       } else {
         return (
-          <button role="button" className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-            <FontAwesomeIcon icon={faPlus}/> {t("task.request input")}
+          <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+            <FontAwesomeIcon icon={faPlus} /> {t("task.request input")}
           </button>
         );
       }
@@ -100,14 +100,14 @@ class TaskView extends Component {
     if (items.length === 0) {
       return null;
     } else {
-      const submission = items[items.length-1];
+      const submission = items[items.length - 1];
       return <div className="terry-submission-list-button">
-        <strong>{t("task.last submission")}</strong> <DateView {...this.props} clock={() => this.props.model.serverTime()} date={ DateTime.fromISO(submission.date)}/>
+        <strong>{t("task.last submission")}</strong> <DateView {...this.props} clock={() => this.props.model.serverTime()} date={DateTime.fromISO(submission.date)} />
         {' '}
         (<Link to={"/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
       </div>
     }
-}
+  }
 
   renderSubmissionListButton() {
     const { t } = this.props;
@@ -123,24 +123,24 @@ class TaskView extends Component {
     return (
       <React.Fragment>
         <h1>{this.getTask().data.title}</h1>
-        { this.renderCommands() }
+        {this.renderCommands()}
 
         <Route path="/:taskName/submit/:inputId" render={
-          ({match}) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={match.params.taskName}/>
+          ({ match }) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={match.params.taskName} />
         }>
         </Route>
         <Route path="/:taskName/submissions" render={
-          ({match}) => <SubmissionListView {...this.props} taskName={match.params.taskName}/>
-        }/>
+          ({ match }) => <SubmissionListView {...this.props} taskName={match.params.taskName} />
+        } />
         <Route path="/:taskName/submission/:submissionId" render={
-          ({match}) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={match.params.taskName}/>
-        }/>
+          ({ match }) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={match.params.taskName} />
+        } />
 
-        { this.renderSubmissionListButton() }
+        {this.renderSubmissionListButton()}
 
-        <hr/>
+        <hr />
 
-        { this.renderTaskStatement() }
+        {this.renderTaskStatement()}
       </React.Fragment>
     );
   }

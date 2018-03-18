@@ -1,4 +1,9 @@
 {
+  "pack upload done": "Contest package successfully uploaded",
+  "contest started": "Contest was successfully started",
+  "user extra time done": "Extra time successfully updated for the user",
+  "extra time done": "Extra time successfully updated",
+  "confirmation": "Are you sure?",
   "loading": "Loading...",
   "error": "Error",
   "close": "Close",

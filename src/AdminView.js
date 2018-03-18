@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt'
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import { AdminSession } from "./admin.models";
 import AdminLoginView from "./AdminLoginView";
 import AdminLogsView from "./AdminLogsView";
@@ -34,8 +34,8 @@ class AdminView extends Component {
     const { t } = this.props;
     return <nav className="terry-navbar">
       <Link to="/admin" className="navbar-brand">{t("navbar.title")}</Link>
-      <button role="button" className="terry-admin-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.session.logout()}}>
-        <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}
+      <button className="terry-admin-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.session.logout() }}>
+        <FontAwesomeIcon icon={faSignOutAlt} /> {t("navbar.logout")}
       </button>
     </nav>
   }
@@ -45,7 +45,7 @@ class AdminView extends Component {
     if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} {...this.props} />;
 
     return <React.Fragment>
-      { this.renderNavBar() }
+      {this.renderNavBar()}
       <main>
         <PromiseView promise={this.session.statusPromise}
           renderPending={() => t("loading")}
@@ -55,23 +55,23 @@ class AdminView extends Component {
               renderPending={() => t("loading")}
               renderFulfilled={(users) =>
                 <React.Fragment>
-                  <AdminSummaryView session={this.session} status={status} users={users} />
+                  <AdminSummaryView pack={this.props.pack} session={this.session} status={status} users={users} />
 
                   <Route path="/admin/logs" render={
-                    ({match}) => <AdminLogsView session={this.session} />
-                  }/>
+                    ({ match }) => <AdminLogsView session={this.session} />
+                  } />
 
                   <Route path="/admin/extra_time" render={
-                    ({match}) => <ContestExtraTimeView status={status} session={this.session} />
-                  }/>
+                    ({ match }) => <ContestExtraTimeView status={status} session={this.session} />
+                  } />
 
                   <Route path="/admin/users" render={
-                    ({match}) => <AdminUsersView session={this.session} users={users} />
-                  }/>
+                    ({ match }) => <AdminUsersView session={this.session} users={users} />
+                  } />
 
                   <Route path="/admin/download_results" render={
-                    ({match}) => <DownloadResultsView session={this.session} />
-                  }/>
+                    ({ match }) => <DownloadResultsView session={this.session} />
+                  } />
                 </React.Fragment>
               }
               renderRejected={() => t("error")}

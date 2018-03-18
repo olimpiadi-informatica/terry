@@ -1,4 +1,9 @@
 {
+  "pack upload done": "Pacchetto della gara caricato con successo",
+  "contest started": "La gara è stata avviata con successo",
+  "user extra time done": "Tempo aggiuntivo per l'utente aggiornato correttamente",
+  "extra time done": "Tempo aggiuntivo aggiornato correttamente",
+  "confirmation": "Sei sicuro?",
   "loading": "Caricamento...",
   "error": "Errore",
   "close": "Chiudi",

@@ -67,7 +67,7 @@ class AdminLogsView extends Component {
   refreshLogs() {
     const promise = this.refreshLogsPromise = this.doLoadLogs();
     this.refreshLogsPromise.delegate.then(() => {
-      if(this.refreshLogsPromise !== promise) return;
+      if (this.refreshLogsPromise !== promise) return;
       this.logsPromise = promise;
       this.forceUpdate();
     })
@@ -79,15 +79,15 @@ class AdminLogsView extends Component {
   }
 
   changeLevel(level) {
-    this.setState({level: level});
+    this.setState({ level: level });
   }
 
   changeCategory(cat) {
-    this.setState({category: cat});
+    this.setState({ category: cat });
   }
 
   changeFilter(filter) {
-    this.setState({filter: filter});
+    this.setState({ filter: filter });
   }
 
   filter(log) {
@@ -119,7 +119,6 @@ class AdminLogsView extends Component {
                     ((this.state.level === level) ? 'active' : ''),
                     'btn-' + obj.color
                   ].join(' ')}
-                  role="button"
                   onClick={(e) => this.changeLevel(level)}
                 >
                   {t("logs.levels." + level)}
@@ -131,17 +130,17 @@ class AdminLogsView extends Component {
               onChange={(e) => this.changeCategory(e.target.value)}
             />
             <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
-                  onChange={(e) => this.changeFilter(e.target.value)}/>
+              onChange={(e) => this.changeFilter(e.target.value)} />
           </div>
           <div className="terry-log-table no-padding">
             <table className="table">
               <thead>
-              <tr>
-                <th>{t("logs.date")}</th>
-                <th>{t("logs.category")}</th>
-                <th>{t("logs.level")}</th>
-                <th>{t("logs.message")}</th>
-              </tr>
+                <tr>
+                  <th>{t("logs.date")}</th>
+                  <th>{t("logs.category")}</th>
+                  <th>{t("logs.level")}</th>
+                  <th>{t("logs.message")}</th>
+                </tr>
               </thead>
               <tbody>
                 <PromiseView promise={this.logsPromise}
@@ -149,22 +148,22 @@ class AdminLogsView extends Component {
                     const items = logs.items.filter((l) => this.filter(l));
                     if (items.length === 0) return <tr><td colSpan="4">{t("no messages yet")}</td></tr>;
                     return items.map((log, i) =>
-                      <tr key={i} className={"table-"+LOG_LEVELS[log.level].color}>
+                      <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
                         <td>
                           <AbsoluteDateView {...this.props} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
                         </td>
                         <td>
-                          <button className="btn btn-link" onClick={() => {this.changeCategory(log.category)}}>
+                          <button className="btn btn-link" onClick={() => { this.changeCategory(log.category) }}>
                             {log.category}
                           </button>
                         </td>
                         <td>
-                          <button className="btn btn-link" onClick={() => {this.changeLevel(log.level)}}>
-                            {t("logs.levels."+log.level)}
+                          <button className="btn btn-link" onClick={() => { this.changeLevel(log.level) }}>
+                            {t("logs.levels." + log.level)}
                           </button>
                         </td>
                         <td><pre>{log.message}</pre></td>
-                    </tr>
+                      </tr>
                     );
                   }}
                   renderPending={() => t("loading")}
@@ -176,7 +175,7 @@ class AdminLogsView extends Component {
         </div>
         <div className="modal-footer">
           <Link to={"/admin"} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes}/> {t("close")}
+            <FontAwesomeIcon icon={faTimes} /> {t("close")}
           </Link>
         </div>
       </ModalView>

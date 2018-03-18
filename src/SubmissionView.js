@@ -7,7 +7,7 @@ import faPaperPlane from '@fortawesome/fontawesome-free-solid/faPaperPlane'
 import ValidationView from './ValidationView';
 import FileView from './FileView';
 import ModalView from './ModalView';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import "./SubmissionView.css";
 import PromiseView from './PromiseView';
 
@@ -23,17 +23,17 @@ class SubmissionView extends Component {
   renderSourceAlert(alert, i) {
     return (
       <div key={i} className={"alert alert-" + alert.severity}>
-        { alert.message }
+        {alert.message}
       </div>
     );
   }
 
   renderSourceSelector() {
     const { t } = this.props;
-    if(!this.props.submission.hasSource()) {
+    if (!this.props.submission.hasSource()) {
       return (
         <div key="absent" className="custom-file mb-3 col-4">
-          <input ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.props.submission.setSource(this.refs.source.files[0]) } />
+          <input ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(e) => this.props.submission.setSource(this.refs.source.files[0])} />
           <label className="custom-file-label" htmlFor="source-file">File sorgente...</label>
         </div>
       );
@@ -43,15 +43,15 @@ class SubmissionView extends Component {
         <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
             <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
-            <button role="button" key="present" className="terry-submission-object-drop btn btn-primary" onClick={ () => this.props.submission.resetSource() }>
-              <FontAwesomeIcon icon={faTrash}/> {t("submission.submit.change source")}
+            <button key="present" className="terry-submission-object-drop btn btn-primary" onClick={() => this.props.submission.resetSource()}>
+              <FontAwesomeIcon icon={faTrash} /> {t("submission.submit.change source")}
             </button>
           </div>
           <div className="card-body">
             <FileView file={source.file} />
             <PromiseView promise={this.props.submission.getSource().uploadPromise}
               renderFulfilled={(uploadedSource) => <React.Fragment>
-                { uploadedSource.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i)) }
+                {uploadedSource.data.validation.alerts.map((a, i) => this.renderSourceAlert(a, i))}
               </React.Fragment>}
               renderRejected={() => <p>{t("error")}</p>}
               renderPending={() => <p>{t("submission.submit.processing")}</p>}
@@ -79,8 +79,8 @@ class SubmissionView extends Component {
       <div key="present" className="card card-outline-primary w-100">
         <div className="card-header terry-submission-object-card">
           <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
-          <button role="button" key="present" className="btn btn-primary terry-submission-object-drop" onClick={ () => this.props.submission.resetOutput() }>
-            <FontAwesomeIcon icon={faTrash}/> {t("submission.submit.change output")}
+          <button key="present" className="btn btn-primary terry-submission-object-drop" onClick={() => this.props.submission.resetOutput()}>
+            <FontAwesomeIcon icon={faTrash} /> {t("submission.submit.change output")}
           </button>
         </div>
         <div className="card-body">
@@ -96,7 +96,7 @@ class SubmissionView extends Component {
   }
 
   renderOutputSelector() {
-    if(!this.props.submission.hasOutput()) {
+    if (!this.props.submission.hasOutput()) {
       return this.renderOutputUploadForm();
     } else {
       return this.renderOutputInfo();
@@ -117,32 +117,28 @@ class SubmissionView extends Component {
     return (
       <ModalView contentLabel="Submission creation" returnUrl={"/" + this.props.submission.input.task}>
         <form
-          className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit() } }
-          disabled={ !this.props.submission.canSubmit() } 
+          className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit() }}
+          disabled={!this.props.submission.canSubmit()}
         >
           <div className="modal-header">
             <h5 className="modal-title">
-              {t("submission.submit.title")} <strong>{ this.props.submission.input.id.slice(0, 6) }</strong>
+              {t("submission.submit.title")} <strong>{this.props.submission.input.id.slice(0, 6)}</strong>
             </h5>
             <Link to={"/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </Link>
           </div>
           <div className="modal-body">
-            <div className="input-group">{ this.renderSourceSelector() }</div>
-            <div className="input-group">{ this.renderOutputSelector() }</div>
+            <div className="input-group">{this.renderSourceSelector()}</div>
+            <div className="input-group">{this.renderOutputSelector()}</div>
           </div>
           <div className="modal-footer">
             {this.props.submission.isSubmitted() ? t("submission.submit.processing") : null}
             <Link to={"/" + this.props.submission.input.task} role="button" className="btn btn-danger">
-              <FontAwesomeIcon icon={faTimes}/> {t("cancel")}
+              <FontAwesomeIcon icon={faTimes} /> {t("cancel")}
             </Link>
-            <button 
-              type="submit"
-              role="button" className="btn btn-success"
-              disabled={ !this.props.submission.canSubmit() }
-              >
-              <FontAwesomeIcon icon={faPaperPlane}/> {t("submission.submit.submit")}
+            <button type="submit" className="btn btn-success" disabled={!this.props.submission.canSubmit()}>
+              <FontAwesomeIcon icon={faPaperPlane} /> {t("submission.submit.submit")}
             </button>
           </div>
         </form>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link, Route} from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSignOutAlt from '@fortawesome/fontawesome-free-solid/faSignOutAlt';
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
@@ -16,8 +16,8 @@ class ContestView extends Component {
       <nav className="terry-navbar">
         <Link to="/" className="navbar-brand">{this.props.userState.data.contest.name}</Link>
         <span className="terry-user-name">{this.props.userState.data.name} {this.props.userState.data.surname}</span>
-        <button role="button" className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.props.model.logout()}}>
-          <FontAwesomeIcon icon={faSignOutAlt}/> {t("navbar.logout")}
+        <button className="terry-logout-button btn btn-sm btn-light" onClick={(e) => { e.preventDefault(); this.props.model.logout() }}>
+          <FontAwesomeIcon icon={faSignOutAlt} /> {t("navbar.logout")}
         </button>
       </nav>
 
@@ -26,13 +26,13 @@ class ContestView extends Component {
           this.props.userState.data.contest.has_started ? <React.Fragment>
             <SidebarView {...this.props} />
             <main>
-              <Route path={'/:taskName'} render={ ({match}) =>
+              <Route path={'/:taskName'} render={({ match }) =>
                 <TaskView key={match.params.taskName} {...this.props} taskName={match.params.taskName} />
-              }/>
-              <Route exact path={'/'} render={ ({match}) =>
+              } />
+              <Route exact path={'/'} render={({ match }) =>
                 <React.Fragment>
                   <h1>{this.props.userState.data.contest.name}</h1>
-                  <ReactMarkdown source={this.props.userState.data.contest.description}/>
+                  <ReactMarkdown source={this.props.userState.data.contest.description} />
                   <hr />
                   <h2>{t("homepage.guide.title")}</h2>
                   <p>{t("homepage.guide.part1")}</p>
@@ -41,12 +41,12 @@ class ContestView extends Component {
                   </Trans>
                   <p>{t("homepage.guide.part3")}</p>
                 </React.Fragment>
-              }/>
+              } />
             </main>
-          </React.Fragment>: <div className="jumbotron">
-            <h1 className="text-center display-1 text-success" ><FontAwesomeIcon icon={faCheck} /></h1>
-            <p className={"text-center"}>{t("login.not started")}</p>
-          </div>
+          </React.Fragment> : <div className="jumbotron">
+              <h1 className="text-center display-1 text-success" ><FontAwesomeIcon icon={faCheck} /></h1>
+              <p className={"text-center"}>{t("login.not started")}</p>
+            </div>
         }
 
       </div>

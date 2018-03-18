@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import { DateTime } from "luxon";
 import ObservablePromise from './ObservablePromise';
+import { notifyError } from './utils';
 
 class AdminStatus {
   constructor(data) {
@@ -32,7 +33,7 @@ export class AdminSession extends Observable {
   }
 
   onAppStart() {
-    if(this.isLoggedIn()) {
+    if (this.isLoggedIn()) {
       this.updateStatus();
     }
   }
@@ -49,14 +50,15 @@ export class AdminSession extends Observable {
     this.fireUpdate();
     this.statusPromise = new ObservablePromise(
       client.adminApi(this.adminToken(), "/status")
-      .then((response) => {
-        this.setServerTime(DateTime.fromHTTP(response.headers['date']));
-        return new AdminStatus(response.data);
-      })
-      .catch((response) => {
-        this.logout();
-        return Promise.reject(response);
-      })
+        .then((response) => {
+          this.setServerTime(DateTime.fromHTTP(response.headers['date']));
+          return new AdminStatus(response.data);
+        })
+        .catch((response) => {
+          notifyError(response)
+          this.logout();
+          return Promise.reject(response);
+        })
     );
     this.statusPromise.pushObserver(this);
 
@@ -66,13 +68,13 @@ export class AdminSession extends Observable {
   }
 
   login(token) {
-    if(this.isLoggedIn()) throw Error();
+    if (this.isLoggedIn()) throw Error();
     this.cookies.set(AdminSession.cookieName, token);
     return this.updateStatus();
   }
 
   logout() {
-    if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
+    if (!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
     this.cookies.remove(AdminSession.cookieName);
     delete this.statusPromise;
     this.fireUpdate();
@@ -80,10 +82,11 @@ export class AdminSession extends Observable {
 
   startContest() {
     return client.adminApi(this.adminToken(), "/start")
-      .then(response => this.updateStatus())
-      .catch(response => {
-        console.error(response);
-        this.error = response.response.data.message;
+      .then(response => {
+        this.updateStatus()
+      })
+      .catch((response) => {
+        notifyError(response)
         this.fireUpdate();
       });
   }
@@ -97,12 +100,10 @@ export class AdminSession extends Observable {
     return client.adminApi(this.adminToken(), "/set_extra_time", options)
       .then(response => this.updateStatus())
       .catch(response => {
-        console.error(response);
-        this.error = response.response.data.message;
+        notifyError(response)
         this.fireUpdate();
         return Promise.reject(response);
       })
-    ;
   }
 
   loadLogs(options) {

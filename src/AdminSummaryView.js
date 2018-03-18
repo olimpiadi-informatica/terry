@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faPlay from '@fortawesome/fontawesome-free-solid/faPlay'
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import { CountdownView } from './datetime.views';
 import { DateTime } from 'luxon';
 import { DateView } from './datetime.views';
 import client from './TerryClient';
 import PromiseView from './PromiseView';
+import { notifyError } from './utils';
+import { withRouter } from "react-router-dom";
+import { toast } from "react-toastify";
 
 class AdminSummaryView extends Component {
   componentWillMount() {
@@ -42,9 +45,14 @@ class AdminSummaryView extends Component {
     const { t } = this.props;
     return <React.Fragment>
       <p>{t("contest.not started")}</p>
-      <form ref="form" onSubmit={(e) => { e.preventDefault(); this.props.session.startContest(); }}>
+      <form ref="form" onSubmit={(e) => {
+        e.preventDefault();
+        this.props.session.startContest().then(() => {
+          toast.success(t("contest started"))
+        })
+      }}>
         <button type="submit" className="btn btn-primary">
-          <FontAwesomeIcon icon={faPlay}/> {t("contest.start")}
+          <FontAwesomeIcon icon={faPlay} /> {t("contest.start")}
         </button>
       </form>
     </React.Fragment>;
@@ -52,16 +60,16 @@ class AdminSummaryView extends Component {
 
   renderRunning() {
     return <ul className="mb-0">
-      <li>{ this.renderStartTime() }</li>
-      <li>{ this.renderCountdown() }</li>
+      <li>{this.renderStartTime()}</li>
+      <li>{this.renderCountdown()}</li>
     </ul>;
   }
 
   renderRunningExtraTime() {
     return <ul className="mb-0">
-      <li>{ this.renderStartTime() }</li>
-      <li>{ this.renderEndTime() }</li>
-      <li>{ this.renderExtraTimeCountdown() }</li>
+      <li>{this.renderStartTime()}</li>
+      <li>{this.renderEndTime()}</li>
+      <li>{this.renderExtraTimeCountdown()}</li>
     </ul>;
   }
 
@@ -70,9 +78,9 @@ class AdminSummaryView extends Component {
 
     return <React.Fragment>
       <ul>
-        <li>{ this.renderStartTime() }</li>
-        <li>{ this.renderEndTime() }</li>
-        { this.renderExtraTimeEndTime() }
+        <li>{this.renderStartTime()}</li>
+        <li>{this.renderEndTime()}</li>
+        {this.renderExtraTimeEndTime()}
       </ul>
 
       <Link to={'/admin/download_results'} className="btn btn-primary">
@@ -98,13 +106,11 @@ class AdminSummaryView extends Component {
   }
 
   getExtraTimeEndTime() {
-    return this.getEndTime().plus({seconds: this.getUsersExtraTime()});
+    return this.getEndTime().plus({ seconds: this.getUsersExtraTime() });
   }
 
   isDeletable() {
-    return true;
-
-    // ... this.props.status.data.deletable
+    return this.props.pack.data.deletable;
   }
 
   renderStartTime() {
@@ -116,17 +122,17 @@ class AdminSummaryView extends Component {
   }
 
   renderCountdownExtra() {
-    if(this.countUsersWithExtraTime() === 0) return;
+    if (this.countUsersWithExtraTime() === 0) return;
 
     const { t } = this.props;
-    return <React.Fragment> (<span>{t("minutes more for some users", {count: this.getUsersExtraTime() / 60})}</span>)</React.Fragment>
+    return <React.Fragment> (<span>{t("minutes more for some users", { count: this.getUsersExtraTime() / 60 })}</span>)</React.Fragment>
   }
 
   renderCountdown() {
     const { t } = this.props;
     return <React.Fragment>
-      {t("contest.remaining time")} <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={this.getEndTime()}/>
-      { this.renderCountdownExtra() }
+      {t("contest.remaining time")} <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={this.getEndTime()} />
+      {this.renderCountdownExtra()}
     </React.Fragment>;
   }
 
@@ -140,7 +146,7 @@ class AdminSummaryView extends Component {
   }
 
   renderExtraTimeEndTime() {
-    if(this.countUsersWithExtraTime() === 0) return null;
+    if (this.countUsersWithExtraTime() === 0) return null;
 
     const { t, i18n } = this.props;
     return <li>
@@ -158,7 +164,7 @@ class AdminSummaryView extends Component {
       <React.Fragment>
         {t("contest.users remaining time")}
         {' '}
-        <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={endTime}/>
+        <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={endTime} />
       </React.Fragment>
     );
   }
@@ -172,9 +178,9 @@ class AdminSummaryView extends Component {
           <h3>{t("contest status")}</h3>
           {
             !this.props.status.data.start_time ? this.renderNotStarted() :
-            this.serverTime() < this.getEndTime() ? this.renderRunning() :
-            this.serverTime() < this.getExtraTimeEndTime() ? this.renderRunningExtraTime() :
-            this.renderFinished()
+              this.serverTime() < this.getEndTime() ? this.renderRunning() :
+                this.serverTime() < this.getExtraTimeEndTime() ? this.renderRunningExtraTime() :
+                  this.renderFinished()
           }
         </div>
       </div>
@@ -183,21 +189,21 @@ class AdminSummaryView extends Component {
           <h3>{t("system status")}</h3>
           <ul className="mb-0">
             <li><PromiseView promise={this.logsPromise}
-              renderFulfilled={(logs) => 
+              renderFulfilled={(logs) =>
                 logs.items.length === 0 ? <React.Fragment>
                   {t("contest.no error recorded")}
                   {' '}
                   (<Link to="/admin/logs">{t("contest.show log")}</Link>)
                 </React.Fragment> : <React.Fragment>
-                  {t("contest.error recorded at")}
-                  {' '}
-                  <DateView
-                    {...this.props}
-                    clock={() => this.props.session.serverTime()}
-                    date={DateTime.fromISO(logs.items[0].date)}
-                  />
-                  {' '}
-                  (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+                    {t("contest.error recorded at")}
+                    {' '}
+                    <DateView
+                      {...this.props}
+                      clock={() => this.props.session.serverTime()}
+                      date={DateTime.fromISO(logs.items[0].date)}
+                    />
+                    {' '}
+                    (<Link to="/admin/logs">{t("contest.show log")}</Link>)
                 </React.Fragment>
               }
               renderPending={() => t("loading")}
@@ -217,22 +223,22 @@ class AdminSummaryView extends Component {
                   {' '}
                   (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
                 </React.Fragment> : <React.Fragment>
-                  {t('minutes', {count: this.props.status.extraTimeMinutes()})}
-                  {' '}
-                  (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+                    {t('minutes', { count: this.props.status.extraTimeMinutes() })}
+                    {' '}
+                    (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
                 </React.Fragment>
               }
             </li>
             <li>
               {
                 this.countUsersWithExtraTime() > 0 ? <React.Fragment>
-                  {t("contest.users have extra time", {count: this.countUsersWithExtraTime()})}
+                  {t("contest.users have extra time", { count: this.countUsersWithExtraTime() })}
                   {' '}
                   (<Link to="/admin/users">{t("contest.manage users")}</Link>)
                 </React.Fragment> : <React.Fragment>
-                  {t("contest.no user has extra time")}
-                  {' '}
-                  (<Link to="/admin/users">{t("contest.manage users")}</Link>)
+                    {t("contest.no user has extra time")}
+                    {' '}
+                    (<Link to="/admin/users">{t("contest.manage users")}</Link>)
                 </React.Fragment>
               }
             </li>
@@ -249,12 +255,21 @@ class AdminSummaryView extends Component {
   }
 
   resetContest() {
-    if (!window.confirm("Are you sure?")) return;
+    const { t } = this.props
 
-    const { t } = this.props;
-    client.adminApi(this.props.session.adminToken(), "/drop_contest", {});
-    window.alert(t("reload"));
+    if (!window.confirm(t("confirmation"))) return;
+
+    client.adminApi(this.props.session.adminToken(), "/drop_contest", {})
+      .then(() => {
+        // logout (just to delete the admin token)
+        this.props.session.logout()
+        // reload
+        window.location.reload()
+      })
+      .catch((response) => {
+        notifyError(response)
+      })
   }
 }
 
-export default translateComponent(AdminSummaryView, "admin");
+export default translateComponent(withRouter(AdminSummaryView), "admin");
