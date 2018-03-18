@@ -10,44 +10,60 @@ import time
 
 
 def get_service_status(service_name):
-    proc = subprocess.Popen(["systemctl", "is-active", service_name],
-                            stdout=subprocess.PIPE)
-    stdout, stderr = proc.communicate()
-    return stdout.decode().strip()
+    proc = subprocess.run(["systemctl", "is-active", service_name],
+                          stdout=subprocess.PIPE)
+    return proc.stdout.decode().strip()
 
 
 def get_service_logs(services):
     command = ["journalctl", "-n", "25"]
     for service in services:
         command += ["-u", service]
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE)
-    stdout, stderr = proc.communicate()
-    return stdout.decode()
+    proc = subprocess.run(command, stdout=subprocess.PIPE)
+    return proc.stdout.decode()
 
 
 def get_disk_usage():
-    proc = subprocess.Popen(["bash", "-c",
-                             "df --output=used,size -k / | tail -n 1"],
-                            stdout=subprocess.PIPE)
-    stdout, stderr = proc.communicate()
-    return stdout.decode()
+    proc = subprocess.run(["bash", "-c",
+                           "df --output=used,size -k / | tail -n 1"],
+                          stdout=subprocess.PIPE)
+    return proc.stdout.decode()
 
 
 def get_ram_usage():
-    proc = subprocess.Popen(["bash", "-c",
-                             "free -t | tail -n 1"],
-                            stdout=subprocess.PIPE)
-    stdout, stderr = proc.communicate()
-    return stdout.decode()
+    proc = subprocess.run(["bash", "-c",
+                           "free -t | tail -n 1"],
+                          stdout=subprocess.PIPE)
+    return proc.stdout.decode()
 
 
 def get_cpu_usage():
-    proc = subprocess.Popen(["bash", "-c",
-                             "top -b -n 2 -d 0.1 | grep Cpu | tail -n 1 | awk "
-                             "'{print $2 + $4}'"],
-                            stdout=subprocess.PIPE)
-    stdout, stderr = proc.communicate()
-    return stdout.decode()
+    proc = subprocess.run(["bash", "-c",
+                           "env LANG=en_US.UTF-8 "
+                           "top -b -n 2 -d 0.1 |"
+                           "grep Cpu | "
+                           "tail -n 1 |"
+                           "awk '{print $2 + $4}'"],
+                          stdout=subprocess.PIPE)
+    return proc.stdout.decode()
+
+
+def get_tap0_ip():
+    try:
+        proc = subprocess.run(["bash", "-o", "pipefail", "-e", "-c",
+                               "ip -4 addr show dev tap0 | "
+                               "grep inet | "
+                               "tr -s ' ' | "
+                               "cut -d' ' -f3 |"
+                               "head -n 1 |"
+                               "cut -d'/' -f1"],
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+        if proc.returncode != 0:
+            return "error"
+        return proc.stdout.decode()
+    except:
+        return "error"
 
 
 def get_version():
@@ -124,6 +140,7 @@ class SystemWatchdog:
         self.disk_usage = [0, 1]
         self.ram_usage = [0, 1]
         self.cpu_usage = 0.0
+        self.tap_ip = get_tap0_ip()
         self.thread = threading.Thread(target=self._update)
         self.thread.start()
 
@@ -145,6 +162,7 @@ class SystemWatchdog:
                 self.cpu_usage = -1
                 with open("/tmp/error", "w") as f:
                     f.write(str(e))
+            self.tap_ip = get_tap0_ip()
             time.sleep(SystemDWatchdog.POLL_INTERVAL)
 
     def get_disk_usage(self):
@@ -155,6 +173,9 @@ class SystemWatchdog:
 
     def get_cpu_usage(self):
         return self.cpu_usage
+
+    def get_tap_ip(self):
+        return self.tap_ip
 
 
 class Watchdog:
@@ -217,6 +238,8 @@ class Watchdog:
 
         pad.addstr(0, 80, "Version:", curses.A_BOLD)
         pad.addstr(0, 89, self.version)
+        pad.addstr(1, 80, "Support:", curses.A_BOLD)
+        pad.addstr(1, 89, self.system.get_tap_ip())
 
         pad.addstr(len(Watchdog.SERVICES) + 2, 0, "Logs:\n", curses.A_BOLD)
         pad.refresh(0, 0, 0, 0, len(Watchdog.SERVICES) + 2, self.max_x - 1)
