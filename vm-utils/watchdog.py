@@ -236,10 +236,10 @@ class Watchdog:
         else:
             pad.addstr(4, 53, "%d%%" % usage)
 
-        pad.addstr(0, 80, "Version:", curses.A_BOLD)
-        pad.addstr(0, 89, self.version)
-        pad.addstr(1, 80, "Support:", curses.A_BOLD)
-        pad.addstr(1, 89, self.system.get_tap_ip())
+        pad.addstr(0, 78, "Version:", curses.A_BOLD)
+        pad.addstr(0, 87, self.version)
+        pad.addstr(1, 78, "Support:", curses.A_BOLD)
+        pad.addstr(1, 87, self.system.get_tap_ip())
 
         pad.addstr(len(Watchdog.SERVICES) + 2, 0, "Logs:\n", curses.A_BOLD)
         pad.refresh(0, 0, 0, 0, len(Watchdog.SERVICES) + 2, self.max_x - 1)

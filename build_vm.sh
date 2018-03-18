@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-[ -z "$6" ] && echo "Usage: $0 root_password version target_file image_name disk_size_mb ram_size_mb nginx.conf config.yaml [root_authorized_keys]"
+[ -z "$6" ] && echo "Usage: $0 root_password version target_file image_name disk_size_mb ram_size_mb nginx.conf config.yaml httptun_password [root_authorized_keys]"
 [ -z "$6" ] && exit 1
 
 HERE="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -14,7 +14,8 @@ DISK_SIZE_MB=$5
 RAM_SIZE_MB=$6
 NGINX_PATH=$7
 CONFIG_PATH=$8
-ROOT_AUTHORIZED_KEYS=$9
+HTTPTUN_PASSWORD=$9
+ROOT_AUTHORIZED_KEYS=${10}
 
 if [ ${TARGET_FILE: -4} != '.ova' ]
 then
@@ -38,7 +39,7 @@ popd
 sudo bash -e <<EOF
 chmod o+rx ${TMP}
 $HERE/vm-utils/gen_arch_root.sh ${TMP} ${ROOT_PASSWORD}
-$HERE/vm-utils/prepare_terry_arch.sh ${TMP} ${VERSION} $NGINX_PATH $CONFIG_PATH ${ROOT_AUTHORIZED_KEYS}
+$HERE/vm-utils/prepare_terry_arch.sh ${TMP} ${VERSION} ${NGINX_PATH} ${CONFIG_PATH} ${HTTPTUN_PASSWORD} ${ROOT_AUTHORIZED_KEYS}
 $HERE/vm-utils/gen_image.sh -r ${TMP} -o ${TARGET_FILE} -t ovf \
   -m "${RAM_SIZE_MB}" -n "${IMAGE_NAME}" -s ${DISK_SIZE_MB} -u $USER -p tcp:9000:80
 EOF
