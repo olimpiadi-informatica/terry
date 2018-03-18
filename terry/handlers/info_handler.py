@@ -43,7 +43,7 @@ class InfoHandler(BaseHandler):
             "max_total_score": sum(task["max_score"] for task in tasks)
         }
 
-    @Validators.during_contest
+    @Validators.contest_started
     @Validators.register_user_ip
     @Validators.validate_input_id
     def get_input(self, input):
@@ -52,7 +52,7 @@ class InfoHandler(BaseHandler):
         """
         return BaseHandler.format_dates(input)
 
-    @Validators.during_contest
+    @Validators.contest_started
     @Validators.register_user_ip
     @Validators.validate_output_id
     def get_output(self, output):
@@ -61,7 +61,7 @@ class InfoHandler(BaseHandler):
         """
         return InfoHandler.patch_output(output)
 
-    @Validators.during_contest
+    @Validators.contest_started
     @Validators.register_user_ip
     @Validators.validate_source_id
     def get_source(self, source):
@@ -70,7 +70,7 @@ class InfoHandler(BaseHandler):
         """
         return BaseHandler.format_dates(source)
 
-    @Validators.during_contest
+    @Validators.contest_started
     @Validators.register_user_ip
     @Validators.validate_submission_id
     def get_submission(self, submission):
@@ -119,7 +119,7 @@ class InfoHandler(BaseHandler):
 
         return BaseHandler.format_dates(user, fields=["end_time"])
 
-    @Validators.during_contest
+    @Validators.contest_started
     @Validators.register_user_ip
     @Validators.validate_token
     @Validators.validate_task

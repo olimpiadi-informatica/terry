@@ -33,6 +33,10 @@ class TestValidators(unittest.TestCase):
     def only_during_contest(self, token=None):
         pass
 
+    @Validators.contest_started
+    def only_contest_started(self):
+        pass
+
     @Validators.admin_only
     def admin_only(self):
         pass
@@ -78,6 +82,14 @@ class TestValidators(unittest.TestCase):
         Utils.start_contest(since=100, duration=20)
         with self.assertRaises(Forbidden):
             self.only_during_contest()
+
+    def test_started_contest_not_started(self):
+        with self.assertRaises(Forbidden):
+            self.only_contest_started()
+
+    def test_started_contest_ended(self):
+        Utils.start_contest(since=100, duration=20)
+        self.only_contest_started()
 
     def test_during_contest_extra_time(self):
         Utils.start_contest(since=100, duration=20)

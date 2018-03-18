@@ -319,6 +319,7 @@ class TestAdminHandler(unittest.TestCase):
         finally:
             os.chdir(wd)
 
+    @unittest.skip
     def test_failed_download_results(self):
         Config.storedir = Utils.new_tmp_dir()
         wd = os.getcwd()

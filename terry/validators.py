@@ -40,6 +40,17 @@ class Validators:
         return HandlerParams.initialize_handler_params(handle, handler)
 
     @staticmethod
+    def contest_started(handler):
+        """
+        Ensure the handler is called only when the contest has been started.
+        """
+        def handle(*args, **kwargs):
+            Validators._ensure_contest_started()
+            return handler(*args, **kwargs)
+
+        return HandlerParams.initialize_handler_params(handle, handler)
+
+    @staticmethod
     def admin_only(handler):
         """
         Ensure the handler is called from an admin. The `admin_token` param is
@@ -252,6 +263,12 @@ class Validators:
         if BaseHandler.get_end_time(extra_time) < time.time():
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The contest has ended")
+
+    @staticmethod
+    def _ensure_contest_started():
+        if Database.get_meta("start_time") is None:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "The contest has not started yet")
 
     @staticmethod
     def _validate_admin_token(token, ip):
