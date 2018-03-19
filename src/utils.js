@@ -23,7 +23,7 @@ export function notifyError(response) {
     // e.g. TypeError (fields: message, stack)
     toast.error(response.message)
   } else {
-    // e.g. nginx errors
-    toast.error(response)
+    // e.g. nginx errors (fields: status, statusText)
+    toast.error(response.status + ' ' + response.statusText)
   }
 }
