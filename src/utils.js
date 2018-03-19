@@ -19,7 +19,7 @@ export function notifyError(response) {
       // application errors (server)
       toast.error(response.response.data.message)
     } else if (typeof response.response.data === 'string') {
-      if (!response.response.data.startWith("<html>")) {
+      if (!response.response.data.startsWith("<html>")) {
         // application errors (client)
         toast.error(response.response.data)
       } else {
