@@ -71,6 +71,7 @@
   },
   "task": {
     "request input": "Request input",
+    "request new input": "Request new input",
     "download input": "Download input",
     "upload solution": "Upload solution",
     "requesting": "Requesting...",

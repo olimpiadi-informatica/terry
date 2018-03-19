@@ -71,6 +71,7 @@
   },
   "task": {
     "request input": "Richiedi input",
+    "request new input": "Richiedi nuovo input",
     "download input": "Scarica input",
     "upload solution": "Carica soluzione",
     "requesting": "Generazione...",

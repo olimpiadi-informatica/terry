@@ -45,6 +45,28 @@ class TaskView extends Component {
     this.props.model.popObserver(this);
   }
 
+  renderGenerateInputButton() {
+    const { t } = this.props
+
+    const button = (already) =>
+      <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+        <FontAwesomeIcon icon={faPlus} />
+        {' '}
+        {
+          already ? t("task.request new input") : t("task.request input")
+        }
+      </button>
+
+    // either "generate input" or "generate a new input", in case some input has already been generated
+    // (we use PromiseView just because we need the list of submissions to be ready...)
+    return <PromiseView
+      promise={this.getTaskState().submissionListPromise}
+      renderPending={() => button(false)}
+      renderFulfilled={(list) => button(list.items.length > 0)}
+      renderRejected={(error) => button(false)}
+    />
+  }
+
   renderCommands() {
     const { t } = this.props;
     if (this.getTaskState().hasCurrentInput()) {
@@ -73,18 +95,10 @@ class TaskView extends Component {
               <FontAwesomeIcon icon={faPlus} /> {t("error")}
             </button>
           }
-          renderFulfilled={() =>
-            <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-              <FontAwesomeIcon icon={faPlus} /> {t("task.request input")}
-            </button>
-          }
+          renderFulfilled={() => this.renderGenerateInputButton()}
         />;
       } else {
-        return (
-          <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-            <FontAwesomeIcon icon={faPlus} /> {t("task.request input")}
-          </button>
-        );
+        return this.renderGenerateInputButton();
       }
     }
   }
