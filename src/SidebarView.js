@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import React, { Component } from 'react';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import { CountdownView } from './datetime.views';
 import NavbarItemView from './NavbarItemView';
 import ScoreView from './ScoreView';
@@ -15,7 +15,7 @@ class SidebarView extends Component {
         <ul className="nav nav-pills flex-column">
           <li className="nav-item title">
             <h3>{t("navbar.total score")}</h3>
-            <ScoreView style={{'textAlign': 'right', 'marginRight': '1rem'}} score={this.props.userState.data.total_score} max={this.props.userState.data.contest.max_total_score} size={2} />
+            <ScoreView style={{ 'textAlign': 'right', 'marginRight': '1rem' }} score={this.props.userState.data.total_score} max={this.props.userState.data.contest.max_total_score} size={2} />
           </li>
 
           <li className="divider-vertical" />
@@ -25,7 +25,9 @@ class SidebarView extends Component {
             <p className="terry-remaining-time">
               <CountdownView {...this.props} clock={() => this.props.model.serverTime()} end={
                 DateTime.fromISO(this.props.userState.data.end_time)
-              }/>
+              } afterEnd={
+                <span>{t("contest finished")}</span>
+              } />
             </p>
           </li>
 
@@ -36,7 +38,7 @@ class SidebarView extends Component {
           </li>
           <li className="divider-vertical" />
 
-          { this.props.userState.data.contest.tasks.map((task,i) => <NavbarItemView key={i} taskName={task.name} {...this.props} />)}
+          {this.props.userState.data.contest.tasks.map((task, i) => <NavbarItemView key={i} taskName={task.name} {...this.props} />)}
         </ul>
       </nav>
     );

@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import Observable from './Observable';
 import { DateTime } from 'luxon';
 import ObservablePromise from './ObservablePromise';
+import { notifyError } from './utils'
 
 export class Model extends Observable {
   static cookieName = "userToken";
@@ -16,7 +17,7 @@ export class Model extends Observable {
   }
 
   onAppStart() {
-    if(this.isLoggedIn()) {
+    if (this.isLoggedIn()) {
       this.loadUser();
     }
   }
@@ -38,24 +39,24 @@ export class Model extends Observable {
   }
 
   doLoadUser() {
-    if(!this.isLoggedIn()) throw Error("doLoadUser can only be called after a successful login");
+    if (!this.isLoggedIn()) throw Error("doLoadUser can only be called after a successful login");
 
     return client.api.get('/user/' + this.userToken())
       .then((response) => {
         this.setServerTime(DateTime.fromHTTP(response.headers['date']));
         return new UserState(this, response.data);
       })
-    ;
+      ;
   }
 
   loadUser() {
     this.userStatePromise = new ObservablePromise(
       this.doLoadUser()
-      .catch(error => {
-        console.error("Forced logout because: ", error);
-        this.logout();
-        return Promise.reject(error);
-      })
+        .catch(error => {
+          console.error("Forced logout because: ", error);
+          this.logout();
+          return Promise.reject(error);
+        })
     );
     this.fireUpdate();
   }
@@ -76,7 +77,7 @@ export class Model extends Observable {
   }
 
   logout() {
-    if(!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
+    if (!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
     this.cookies.remove(Model.cookieName);
     delete this.userStatePromise;
     // TODO redirect to /
@@ -84,7 +85,7 @@ export class Model extends Observable {
   }
 
   getSubmissionPromise(id) {
-    if(!id) throw Error();
+    if (!id) throw Error();
 
     if (this.submissions[id] !== undefined) return this.submissions[id];
     return this.submissions[id] = new ObservablePromise(
@@ -127,6 +128,9 @@ class Output extends SubmissionUploadable {
           delete this.error;
         });
       })
+      .catch((response) => {
+        notifyError(response)
+      })
       .then(() => {
         return client.api.get("/output/" + id);
       });
@@ -150,20 +154,20 @@ class UserState extends Observable {
     this.model = model;
     this.data = data;
 
-    if(data.contest.has_started) {
+    if (data.contest.has_started) {
       this.userTaskState = {};
-      for(const task of data.contest.tasks) {
+      for (const task of data.contest.tasks) {
         const state = new UserTaskState(this.model, this, task);
         this.userTaskState[task.name] = state;
       }
-  
+
       this.tasks = this.data.contest.tasks.map((d) => new Task(this, d.name, d));
     }
   }
 
   getTask(taskName) {
     const byName = {};
-    for(let task of this.tasks) {
+    for (let task of this.tasks) {
       byName[task.name] = task;
     }
     return byName[taskName];
@@ -211,7 +215,7 @@ class UserTaskState extends Observable {
   }
 
   getCurrentInput() {
-    if(!this.hasCurrentInput()) throw new Error();
+    if (!this.hasCurrentInput()) throw new Error();
     return this.doGetCurrentInput();
   }
 
@@ -220,7 +224,7 @@ class UserTaskState extends Observable {
   }
 
   generateInput() {
-    if(this.isGeneratingInput()) throw new Error("already generating input");
+    if (this.isGeneratingInput()) throw new Error("already generating input")
 
     const data = new FormData();
 
@@ -232,9 +236,12 @@ class UserTaskState extends Observable {
     this.inputGenerationPromise = new ObservablePromise(
       client.api.post('/generate_input', data).then((response) =>
         Promise.resolve()
-        .then(() => this.model.refreshUser())
-        .then(() => response.data)
-      )
+          .then(() => this.model.refreshUser())
+          .then(() => response.data)
+      ).catch((response) => {
+        notifyError(response)
+        this.inputGenerationPromise = null
+      })
     );
   }
 
@@ -243,7 +250,7 @@ class UserTaskState extends Observable {
   }
 
   createSubmission(inputId) {
-    if(!this.canSubmit(inputId)) throw new Error();
+    if (!this.canSubmit(inputId)) throw new Error();
 
     const input = this.getCurrentInput();
     return new Submission(input, this);
@@ -274,11 +281,14 @@ class Submission extends Observable {
   }
 
   setSource(file) {
-    if(this.isSubmitted()) throw Error();
-    if(this.hasSource()) throw Error("setSource called when hasSource is true");
+    if (this.isSubmitted()) throw Error();
+    if (this.hasSource()) throw Error("setSource called when hasSource is true");
 
     this.source = new Source(file, this);
     this.source.uploadPromise.pushObserver(this);
+    this.source.uploadPromise.delegate.catch((response) => {
+      notifyError(response)
+    })
     this.fireUpdate();
   }
 
@@ -291,15 +301,15 @@ class Submission extends Observable {
   }
 
   resetSource() {
-    if(this.isSubmitted()) throw Error();
+    if (this.isSubmitted()) throw Error();
     this.source.uploadPromise.popObserver(this);
     delete this.source;
     this.fireUpdate();
   }
 
   setOutput(file) {
-    if(this.isSubmitted()) throw Error();
-    if(this.hasOutput()) throw Error("setOutput called when hasOutput is true")
+    if (this.isSubmitted()) throw Error();
+    if (this.hasOutput()) throw Error("setOutput called when hasOutput is true")
 
     this.output = new Output(file, this);
     this.output.uploadPromise.pushObserver(this);
@@ -315,7 +325,7 @@ class Submission extends Observable {
   }
 
   resetOutput() {
-    if(this.isSubmitted()) throw Error();
+    if (this.isSubmitted()) throw Error();
     this.output.uploadPromise.popObserver(this);
     delete this.output;
     this.fireUpdate();
@@ -331,7 +341,7 @@ class Submission extends Observable {
   }
 
   submit() {
-    if(!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
+    if (!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
 
     const data = new FormData();
 
@@ -343,12 +353,12 @@ class Submission extends Observable {
 
     return this.submitPromise = new ObservablePromise(
       client.api.post("/submit", data)
-      .then((response) =>
-        Promise.resolve()
-        .then(() => this.model.refreshUser())
-        .then(() => this.taskState.refreshSubmissionList())
-        .then(() => new SubmissionResult(response.data))
-      )
+        .then((response) =>
+          Promise.resolve()
+            .then(() => this.model.refreshUser())
+            .then(() => this.taskState.refreshSubmissionList())
+            .then(() => new SubmissionResult(response.data))
+        )
     );
   }
 }
@@ -356,7 +366,7 @@ class Submission extends Observable {
 class SubmissionResult extends Observable {
   constructor(data) {
     super();
-    if(!data) throw Error();
+    if (!data) throw Error();
     this.data = data;
   }
 }

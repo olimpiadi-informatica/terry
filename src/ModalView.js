@@ -8,30 +8,30 @@ class ModalView extends Component {
     super(props);
 
     this.modalStyle = {
-      overlay : {
-        position          : 'fixed',
-        top               : 0,
-        left              : 0,
-        right             : 0,
-        bottom            : 0,
-        backgroundColor   : 'rgba(42, 42, 42, 0.75)',
-        overflowY         : 'auto',
+      overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(42, 42, 42, 0.75)',
+        overflowY: 'auto',
       },
-      content : {
-        position                   : 'relative',
-        top                        : 'inherit',
-        left                       : 'inherit',
-        right                      : 'inherit',
-        bottom                     : 'inherit',
-        margin                     : '3rem auto',
-        maxWidth                   : '70%',
-        border                     : '1px solid #ccc',
-        background                 : '#fff',
-        overflow                   : 'auto',
-        WebkitOverflowScrolling    : 'touch',
-        borderRadius               : '4px',
-        outline                    : 'none',
-        padding                    : '0px',
+      content: {
+        position: 'relative',
+        top: 'inherit',
+        left: 'inherit',
+        right: 'inherit',
+        bottom: 'inherit',
+        margin: '3rem auto',
+        maxWidth: '70%',
+        border: '1px solid #ccc',
+        background: '#fff',
+        overflow: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        borderRadius: '4px',
+        outline: 'none',
+        padding: '0px',
       }
     };
     this.history = this.props.history;
@@ -42,10 +42,12 @@ class ModalView extends Component {
     return (
       <Modal isOpen={true} contentLabel={this.props.contentLabel} style={this.modalStyle}
         onRequestClose={() => this.history.push(this.returnUrl)}>
-        { this.props.children }
+        {this.props.children}
       </Modal>
     );
   }
 }
+
+Modal.setAppElement('#terry-container');
 
 export default ModalView = withRouter(ModalView);

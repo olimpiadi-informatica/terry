@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faTrophy from '@fortawesome/fontawesome-free-solid/faTrophy'
 import ModalView from './ModalView';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import client from './TerryClient';
 
 class DownloadResultsView extends Component {
@@ -32,14 +32,14 @@ class DownloadResultsView extends Component {
     const { t } = this.props;
 
     if (this.loadPromise !== undefined)
-      return <p>{t("loading")}</p>;
+      return <h3>{t("generating zip")}</h3>;
 
-    return <a role="button" className="btn btn-success btn-lg btn-block" href={client.filesBaseURI + this.data.path} download>
-      <FontAwesomeIcon icon={faTrophy}/>
+    return <a role="button" className="btn btn-success btn-lg" href={client.filesBaseURI + this.data.path} download>
+      <FontAwesomeIcon icon={faTrophy} />
       {' '}
       {t("contest.download results")}
       {' '}
-      <FontAwesomeIcon icon={faTrophy}/>
+      <FontAwesomeIcon icon={faTrophy} />
     </a>;
   }
 
@@ -57,10 +57,10 @@ class DownloadResultsView extends Component {
           </Link>
         </div>
         <div className="modal-body">
-          <div class="mb-3">
-            { t("contest.download results description") }
+          <div className="mb-3">
+            {t("contest.download results description")}
           </div>
-          { this.renderDownloadButton() }
+          {this.renderDownloadButton()}
         </div>
       </ModalView>
     );

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faPlay from '@fortawesome/fontawesome-free-solid/faPlay'
+import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
 import { translateComponent } from "./utils";
 import { CountdownView } from './datetime.views';
 import { DateTime } from 'luxon';
@@ -84,7 +85,7 @@ class AdminSummaryView extends Component {
       </ul>
 
       <Link to={'/admin/download_results'} className="btn btn-primary">
-        {t("contest.download results")}
+        <FontAwesomeIcon icon={faDownload} /> {t("contest.download results")}
       </Link>
     </React.Fragment>;
   }

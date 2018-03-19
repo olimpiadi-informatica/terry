@@ -73,7 +73,11 @@ class TaskView extends Component {
               <FontAwesomeIcon icon={faPlus} /> {t("error")}
             </button>
           }
-          renderFulfilled={() => null}
+          renderFulfilled={() =>
+            <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
+              <FontAwesomeIcon icon={faPlus} /> {t("task.request input")}
+            </button>
+          }
         />;
       } else {
         return (
@@ -115,7 +119,9 @@ class TaskView extends Component {
       promise={this.getTaskState().submissionListPromise}
       renderPending={() => null}
       renderFulfilled={(list) => this.returnLastSubmissionInfo(list)}
-      renderRejected={(error) => <em>{t("submission.list.load failed")}</em>}
+      renderRejected={(error) => <div className="terry-submission-list-button">
+        <em>{t("submission.list.load failed")}</em>
+      </div>}
     />
   }
 

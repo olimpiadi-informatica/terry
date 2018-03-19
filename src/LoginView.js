@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import PromiseView from './PromiseView';
 
 class LoginView extends Component {
@@ -23,17 +23,17 @@ class LoginView extends Component {
         <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
           <div className="form-group">
             <label htmlFor="token" className="sr-only">{t("login.token")}</label>
-            <input name="token" id="token" className="form-control text-center" required
-                  placeholder={t("login.token")} type="text"/>
+            <input autoComplete="off" name="token" id="token" className="form-control text-center" required
+              placeholder={t("login.token")} type="text" />
           </div>
           <input type="submit" className="btn btn-primary" value={t("login.login")} />
-          { this.props.model.lastLoginAttempt &&
+          {this.props.model.lastLoginAttempt &&
             <PromiseView promise={this.props.model.lastLoginAttempt}
               renderPending={() => <span>{t("loading")}</span>}
               renderRejected={(error) =>
                 <div className="alert alert-danger" role="alert">
                   <strong>{t("login.error")}</strong> {error.response && error.response.data.message}
-                </div>  
+                </div>
               }
               renderFulfilled={() => null}
             />

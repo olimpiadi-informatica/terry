@@ -109,11 +109,12 @@ class AdminLogsView extends Component {
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
-        <div className="modal-body">
-          <div className="form-group">
-            <div className="btn-group" role="group" aria-label="Choose log level">
+        <div className="modal-body no-padding">
+          <div className="form-group p-2 mb-0">
+            <div className="btn-group mb-1" role="group" aria-label="Choose log level">
               {Object.entries(LOG_LEVELS).map(([level, obj]) => (
                 <button
+                  key={level}
                   className={[
                     'btn',
                     ((this.state.level === level) ? 'active' : ''),
@@ -126,7 +127,7 @@ class AdminLogsView extends Component {
               ))}
             </div>
             <input
-              placeholder={t("logs.category filter")} className="form-control" value={this.state.category}
+              placeholder={t("logs.category filter")} className="form-control mb-1" value={this.state.category}
               onChange={(e) => this.changeCategory(e.target.value)}
             />
             <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
@@ -166,8 +167,8 @@ class AdminLogsView extends Component {
                       </tr>
                     );
                   }}
-                  renderPending={() => t("loading")}
-                  renderRejected={() => t("error")}
+                  renderPending={() => <tr><td colSpan="4">{t("loading")}</td></tr>}
+                  renderRejected={() => <tr><td colSpan="4">{t("error")}</td></tr>}
                 />
               </tbody>
             </table>

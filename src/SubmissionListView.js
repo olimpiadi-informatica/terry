@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 import client from './TerryClient';
 import ModalView from './ModalView';
 import ReactTooltip from 'react-tooltip';
-import {colorFromScore, translateComponent} from "./utils";
+import { colorFromScore, translateComponent } from "./utils";
 import "./SubmissionListView.css";
 import ScoreView from './ScoreView';
 import PromiseView from './PromiseView';
@@ -33,55 +33,55 @@ class SubmissionListView extends Component {
       submission.source.basename = cut(submission.source.path);
 
       submissionList.push(
-        <tr key={ submission.id }>
+        <tr key={submission.id}>
           <td>
-            <DateView {...this.props} clock={() => this.props.model.serverTime()} date={ DateTime.fromISO(submission.date) }/>
-            <br/>
-            <Link to={ "/" + submission.task + "/submission/" + submission.id }>
+            <DateView {...this.props} clock={() => this.props.model.serverTime()} date={DateTime.fromISO(submission.date)} />
+            <br />
+            <Link to={"/" + submission.task + "/submission/" + submission.id}>
               {t("submission.list.view details")}
             </Link>
           </td>
           <td>
             <ReactTooltip id={"input-" + submission.id} place="top" type="dark" effect="solid">
-              { submission.input.basename }
+              {submission.input.basename}
             </ReactTooltip>
             <ReactTooltip id={"source-" + submission.id} place="top" type="dark" effect="solid">
-              { submission.source.basename }
+              {submission.source.basename}
             </ReactTooltip>
             <ReactTooltip id={"output-" + submission.id} place="top" type="dark" effect="solid">
-              { submission.output.basename }
+              {submission.output.basename}
             </ReactTooltip>
 
             <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
               <a role="button" className="btn btn-light"
-                               aria-label={submission.input.basename}
-                               href={client.filesBaseURI + submission.input.path}
-                               download
-                               data-tip
-                               data-for={"input-" + submission.id}>
-                <FontAwesomeIcon icon={faDownload}/>
+                aria-label={submission.input.basename}
+                href={client.filesBaseURI + submission.input.path}
+                download
+                data-tip
+                data-for={"input-" + submission.id}>
+                <FontAwesomeIcon icon={faDownload} />
                 {' '}
                 <span className="hidden-md-down">{t("submission.list.input")}</span>
               </a>
 
               <a role="button" className="btn btn-light"
-                               aria-label={submission.source.basename}
-                               href={client.filesBaseURI + submission.source.path}
-                               download
-                               data-tip
-                               data-for={"source-" + submission.id}>
-                <FontAwesomeIcon icon={faDownload}/>
+                aria-label={submission.source.basename}
+                href={client.filesBaseURI + submission.source.path}
+                download
+                data-tip
+                data-for={"source-" + submission.id}>
+                <FontAwesomeIcon icon={faDownload} />
                 {' '}
                 <span className="hidden-md-down">{t("submission.list.source")}</span>
               </a>
 
               <a role="button" className="btn btn-light"
-                               aria-label={submission.output.basename}
-                               href={client.filesBaseURI + submission.output.path}
-                               download
-                               data-tip
-                               data-for={"output-" + submission.id}>
-                <FontAwesomeIcon icon={faDownload}/>
+                aria-label={submission.output.basename}
+                href={client.filesBaseURI + submission.output.path}
+                download
+                data-tip
+                data-for={"output-" + submission.id}>
+                <FontAwesomeIcon icon={faDownload} />
                 {' '}
                 <span className="hidden-md-down">{t("submission.list.output")}</span>
               </a>
@@ -113,7 +113,7 @@ class SubmissionListView extends Component {
             </tr>
           </thead>
           <tbody>
-            { this.renderSubmissionList(list) }
+            {this.renderSubmissionList(list)}
           </tbody>
         </table>
       </div>
@@ -127,7 +127,7 @@ class SubmissionListView extends Component {
       <ModalView contentLabel={t("submission.list.title")} returnUrl={"/" + this.props.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
-            {t("submission.list.title")} <strong class="text-uppercase">{taskName}</strong>
+            {t("submission.list.title")} <strong className="text-uppercase">{taskName}</strong>
           </h5>
           <Link to={"/" + this.props.taskName} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -141,7 +141,7 @@ class SubmissionListView extends Component {
         />
         <div className="modal-footer">
           <Link to={"/" + this.props.taskName} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes}/> {t("close")}
+            <FontAwesomeIcon icon={faTimes} /> {t("close")}
           </Link>
         </div>
       </ModalView>

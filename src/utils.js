@@ -19,8 +19,11 @@ export function notifyError(response) {
       toast.error(response.response.data.message)
     else
       toast.error(response.response.data)
-  } else {
+  } else if (response.hasOwnProperty('message')) {
     // e.g. TypeError (fields: message, stack)
     toast.error(response.message)
+  } else {
+    // e.g. nginx errors
+    toast.error(response)
   }
 }
