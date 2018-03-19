@@ -18,16 +18,20 @@ export function notifyError(response) {
     if (response.response.data.hasOwnProperty("message")) {
       // application errors (server)
       toast.error(response.response.data.message)
+    } else if (typeof response.response.data === 'string') {
+      if (!response.response.data.startWith("<html>")) {
+        // application errors (client)
+        toast.error(response.response.data)
+      } else {
+        // e.g. nginx errors (fields: status, statusText)
+        toast.error(response.response.status + ' ' + response.response.statusText)
+      }
     } else {
-      // application errors (client)
-      toast.error(response.response.data)
+      console.error("unhandled notifyError parameter!")
     }
   } else if (response.hasOwnProperty('message')) {
     // e.g. TypeError (fields: message, stack)
     toast.error(response.message)
-  } else if (response.hasOwnProperty('response')) {
-    // e.g. nginx errors (fields: status, statusText)
-    toast.error(response.response.status + ' ' + response.response.statusText)
   } else {
     console.error("unhandled notifyError parameter!")
   }
