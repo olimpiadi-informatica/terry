@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom'
+import client from './TerryClient'
 import ContestView from './ContestView';
 import LoginView from './LoginView';
-import {translateComponent} from "./utils";
+import { translateComponent } from "./utils";
 import LoadingView from "./LoadingView";
 import PromiseView from './PromiseView';
 import { Model } from './user.models';
+import ObservablePromise from './ObservablePromise';
 
 class AppView extends Component {
   constructor(props) {
@@ -21,22 +24,31 @@ class AppView extends Component {
   componentWillUnmount() {
     this.model.popObserver(this);
   }
-  
+
   render() {
     const { t } = this.props;
-    if (!this.model.isLoggedIn() || (this.model.lastLoginAttempt && !this.model.lastLoginAttempt.isFulfilled())) {
-      return <LoginView model={this.model}/>;
+    if (this.model.isLoggedIn()) {
+      return <PromiseView promise={this.model.userStatePromise}
+        renderPending={() => <LoadingView />}
+        renderFulfilled={(userState) => <ContestView model={this.model} userState={userState} />}
+        renderRejected={(error) => <div className="alert alert-danger" role="alert">
+          <h4 className="alert-heading">{t("error")}</h4>
+          <p>{t("reload")}</p>
+        </div>}
+      />;
+    } else {
+      return <PromiseView promise={new ObservablePromise(client.api("/admin/pack_status"))}
+        renderPending={() => <LoadingView />}
+        renderFulfilled={(response) => {
+          if (response.data.uploaded)
+            return <LoginView model={this.model} />
+          else
+            return <Redirect to='/admin' />
+        }}
+        renderRejected={(error) => <LoginView model={this.model} />}
+      />;
     }
-
-    return <PromiseView promise={this.model.userStatePromise}
-      renderPending={() => <LoadingView />}
-      renderFulfilled={(userState) => <ContestView model={this.model} userState={userState}/>}
-      renderRejected={(error) => <div className="alert alert-danger" role="alert">
-        <h4 className="alert-heading">{t("error")}</h4>
-        <p>{t("reload")}</p>
-      </div>}
-    />;
   }
 }
 
-export default translateComponent(AppView);
+export default translateComponent(AppView)
