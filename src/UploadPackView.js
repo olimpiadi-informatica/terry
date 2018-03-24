@@ -28,8 +28,8 @@ class UploadPackView extends Component {
         <h2 className="text-center">{t("upload pack.select file")}</h2>
         <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.upload(); }}>
           <div className="form-group">
-            <label htmlFor="token" className="sr-only">{t("upload pack.file")}</label>
-            <input type="file" name="file" id="file" className="form-control" required/>
+            <label htmlFor="file" className="sr-only">{t("upload pack.file")}</label>
+            <input type="file" accept=".enc" name="file" id="file" className="form-control" required/>
           </div>
           <input type="submit" className="btn btn-danger" value={t("upload pack.upload")} />
         </form>
