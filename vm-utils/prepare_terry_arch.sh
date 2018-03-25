@@ -68,6 +68,9 @@ After=network.target
 [Service]
 ExecStart=/usr/local/bin/client.py "${HTTPTUN_SERVER}" "${HTTPTUN_PASSWORD}"
 Restart=always
+RestartSec=90
+StartLimitIntervalSec=0
+StartLimitBurst=3
 
 [Install]
 WantedBy=multi-user.target

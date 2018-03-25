@@ -5,8 +5,13 @@ from requests import post
 import sys
 from io import StringIO
 import time
+import random
+import string
 
 stopped = False
+
+def random_string(N):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
 
 def get_input(args):
     while True:
@@ -53,8 +58,8 @@ def stress(args):
         last_time = time.monotonic()
         while not stopped:
             input_id = get_input(args)
-            output_id = send_file("%s/upload_output" % args.host, {"input_id": input_id, "token": args.token}, "lallabalalla")
-            source_id = send_file("%s/upload_source" % args.host, {"input_id": input_id, "token": args.token}, "lallabalalla")
+            output_id = send_file("%s/upload_output" % args.host, {"input_id": input_id, "token": args.token}, random_string(1024))
+            source_id = send_file("%s/upload_source" % args.host, {"input_id": input_id, "token": args.token}, random_string(1024))
             submit(args, output_id, source_id)
             current = time.monotonic()
             delta = current - last_time

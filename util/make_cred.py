@@ -11,7 +11,7 @@ import subprocess
 
 USERNAME_LEN = 6
 TOKEN_LEN = 6
-TOKEN_CHARS = "abcdefghjkmnopqrstuvwxyz023456789"
+TOKEN_CHARS = "abcdefghjkmnopqrstuvwxyz23456789"
 
 used_tokens = set()
 demo_tokens = dict()
