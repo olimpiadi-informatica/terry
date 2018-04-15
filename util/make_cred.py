@@ -12,6 +12,7 @@ import subprocess
 USERNAME_LEN = 6
 TOKEN_LEN = 6
 TOKEN_CHARS = "abcdefghjkmnopqrstuvwxyz23456789"
+STUD_AULA_TRESH = 40
 
 used_tokens = set()
 demo_tokens = dict()
@@ -77,7 +78,7 @@ def main(args):
             with open(path, "w") as f:
                 f.write(yaml.dump(contest))
         atl_per_aula = len(atl)/num_aule[sede]
-        print("%6s  %3d atleti  %2d aule  %4.1f atl/aula %s" % (sede, len(atl), num_aule[sede], atl_per_aula, "*" if atl_per_aula > 20 else ""), file=sys.stderr)
+        print("%6s  %3d atleti  %2d aule  %4.1f atl/aula %s" % (sede, len(atl), num_aule[sede], atl_per_aula, "*" if atl_per_aula > STUD_AULA_TRESH else ""), file=sys.stderr)
     if args.password:
         print("sede;full_sede;password")
         for sede in atleti:
