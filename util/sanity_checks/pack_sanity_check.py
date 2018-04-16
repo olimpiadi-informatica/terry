@@ -16,15 +16,10 @@ from colorama import Fore
 from terry.crypto import validate, metadata, decode, decode_data, SECRET_LEN, \
     recover_file_password
 
+from utils import get_output, evaluate, get_stats
+
 USERNAME_LEN = 6
 HERE = os.path.dirname(os.path.abspath(__file__))
-
-
-def get_output(command, stdin=None):
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE,
-                            stdin=subprocess.PIPE)
-    stdout, stderr = proc.communicate(stdin)
-    return stdout.decode()
 
 
 def get_nth_room(sede, aula):
@@ -34,13 +29,15 @@ def get_nth_room(sede, aula):
     return "%s%s" % (sede, str(aula).zfill(USERNAME_LEN - len(sede)))
 
 
-def validate_task(task, fuzz):
+def validate_task(task, fuzz, iterations, solutions):
     print(Fore.BLUE, "Validating task %s..." % task, Fore.RESET)
     generator = os.path.join(task, "managers", "generator.linux.i686")
     checker = os.path.join(task, "managers", "checker.linux.i686")
     validator = os.path.join(task, "managers", "validator.linux.i686")
+    task_yaml = os.path.join(task, "task.yaml")
     assert os.path.exists(generator)
     assert os.path.exists(checker)
+    assert os.path.exists(task_yaml)
     os.chmod(generator, 0o755)
     os.chmod(checker, 0o755)
     if not os.path.exists(validator):
@@ -49,6 +46,13 @@ def validate_task(task, fuzz):
         validator = None
     else:
         os.chmod(validator, 0o755)
+
+    with open(task_yaml, "r") as f:
+        task_info = yaml.load(f)
+    assert task_info["name"]
+    assert task_info["description"]
+    assert task_info["max_score"]
+    max_score = task_info["max_score"]
 
     seed = "42"
     input = os.path.join(task, "input.txt")
@@ -82,6 +86,24 @@ def validate_task(task, fuzz):
                 raise AssertionError("Check didn't print the feedback")
             if "validation" not in data:
                 raise AssertionError("Check didn't print the validation")
+    for solution in solutions:
+        print("Testing:", os.path.basename(solution), "with", iterations, "iterations")
+        results = [] 
+        for i in range(iterations):
+            results.append(evaluate(generator, validator, checker, solution))
+            if int(100*i/iterations) % 10 == 0:
+                print("  %d%%" % (100*i/iterations), end="", flush=True)
+        print("  100%")
+        score = get_stats(results, 0)
+        gen = get_stats(results, 1)
+        val = get_stats(results, 2)
+        sol = get_stats(results, 3)
+        chk = get_stats(results, 4)
+        print("  Score: [%.3f - %.3f] avg: %.3f" % (score[0]*max_score, score[1]*max_score, score[2]*max_score))
+        print("  Gen time: [%.3fs - %.3fs] avg: %.3fs" % (gen[0], gen[1], gen[2]))
+        print("  Val time: [%.3fs - %.3fs] avg: %.3fs" % (val[0], val[1], val[2]))
+        print("  Sol time: [%.3fs - %.3fs] avg: %.3fs" % (sol[0], sol[1], sol[2]))
+        print("  Chk time: [%.3fs - %.3fs] avg: %.3fs" % (chk[0], chk[1], chk[2]))
 
 
 def validate_sedi(sedi):
@@ -147,6 +169,8 @@ def main(args):
               Fore.RESET)
     decoded = decode(bytes.fromhex(args.password), pack)
 
+    solutions = [list(map(os.path.abspath, s.split(","))) for s in args.solutions.split(";")]
+
     extract_dir = tempfile.mkdtemp()
     os.chdir(extract_dir)
     print("Working in %s" % extract_dir)
@@ -159,10 +183,11 @@ def main(args):
         validate_sedi(args.sedi)
     if args.admin:
         validate_admin(args.admin, args.password)
-    for task in args.tasks.split(","):
+    for i, task in enumerate(args.tasks.split(",")):
         if not os.path.exists(task):
             raise AssertionError("Task %s not included in the pack" % task)
-        validate_task(task, args.fuzz)
+        sols = solutions[i] if i < len(solutions) else []
+        validate_task(task, args.fuzz, args.iterations, sols)
 
     shutil.rmtree(extract_dir)
 
@@ -182,4 +207,8 @@ if __name__ == "__main__":
                                        "checker fuzzing some inputs and "
                                        "outputs",
                         action="store_true")
+    parser.add_argument("--iterations", help="Number of iterations of checks",
+                        action="store", default=100, type=int)
+    parser.add_argument("--solutions", help="List of paths to solutions for each task (; to separate tasks, comma to separate solution for each task)",
+                        action="store", default="")
     main(parser.parse_args())
