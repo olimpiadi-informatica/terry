@@ -27,7 +27,7 @@ def main():
     args = parser.parse_args()
 
     contest = yaml.load(args.contest_yaml)
-    users = contest["users"]
+    users = [u for u in contest["users"] if not u.get("hidden")]
     users.sort(key=lambda x: x['surname'] + ":" + x["name"])
 
     npages = (len(users) + USERS_PER_PAGE - 1) // USERS_PER_PAGE

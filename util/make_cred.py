@@ -74,7 +74,8 @@ def main(args):
         for aula in range(1, num_aule[sede]+1):
             full_sede = get_nth_sede(sede, aula)
             path = os.path.join(args.output_dir, full_sede + ".yaml")
-            contest = {"name": args.nome, "description": descrizione, "duration": args.durata, "users": atl, "tasks": tasks}
+            backup = [{"name": "Riserva %d" % (i+1), "surname": sede, "token": gen_token(), "hidden": True} for i in range(args.num_backup)]
+            contest = {"name": args.nome, "description": descrizione, "duration": args.durata, "users": atl + backup, "tasks": tasks}
             with open(path, "w") as f:
                 f.write(yaml.dump(contest))
         atl_per_aula = len(atl)/num_aule[sede]
@@ -101,4 +102,5 @@ if __name__ == "__main__":
     parser.add_argument("output_dir", help="Cartella (viene creata) dove mettere i yaml con le info del contest per ogni sede")
     parser.add_argument("--password", help="Password dello zip da usare per generare le password dei pack")
     parser.add_argument("--demo", help="Genera credenziali per la demo", action="store_true", default=False)
+    parser.add_argument("--num-backup", help="Aggiunge degli account di backup in ogni sede", action="store", default=0, type=int)
     main(parser.parse_args())
