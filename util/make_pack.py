@@ -18,11 +18,12 @@ def main(args):
             if args.task_maker:
                 print("Building task", task)
                 subprocess.run(["task-maker", "--ui=silent", "--arch=i686"], cwd=target_dir)
+                subprocess.run(["task-maker", "--ui=silent", "--arch=x86-64"], cwd=target_dir)
             shutil.rmtree(os.path.join(target_dir, "files"), True)
             shutil.rmtree(os.path.join(target_dir, "temp"), True)
             shutil.rmtree(os.path.join(target_dir, "solutions"), True)
         
-        subprocess.run(["zip", "-r", "pack.zip"] + task_names, cwd=workdir)
+        subprocess.run(["zip", "-r", "pack.zip", "__users__"] + task_names, cwd=workdir)
         subprocess.run(["terr-crypt-file", "--metadata", args.metadata, args.password, os.path.join(workdir, "pack.zip"), args.output])
 
     if not args.skip_check:
