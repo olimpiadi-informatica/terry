@@ -169,7 +169,11 @@ def main(args):
               Fore.RESET)
     decoded = decode(bytes.fromhex(args.password), pack)
 
-    solutions = [list(map(os.path.abspath, s.split(","))) for s in args.solutions.split(";")]
+    tasks = args.tasks.split(",")
+    if args.solutions:
+        solutions = [list(map(os.path.abspath, s.split(","))) for s in args.solutions.split(";")]
+    else:
+        solutions = [[]] * len(tasks)
 
     extract_dir = tempfile.mkdtemp()
     os.chdir(extract_dir)
@@ -183,7 +187,7 @@ def main(args):
         validate_sedi(args.sedi)
     if args.admin:
         validate_admin(args.admin, args.password)
-    for i, task in enumerate(args.tasks.split(",")):
+    for i, task in enumerate(tasks):
         if not os.path.exists(task):
             raise AssertionError("Task %s not included in the pack" % task)
         sols = solutions[i] if i < len(solutions) else []
@@ -210,5 +214,5 @@ if __name__ == "__main__":
     parser.add_argument("--iterations", help="Number of iterations of checks",
                         action="store", default=100, type=int)
     parser.add_argument("--solutions", help="List of paths to solutions for each task (; to separate tasks, comma to separate solution for each task)",
-                        action="store", default="")
+                        action="store")
     main(parser.parse_args())
