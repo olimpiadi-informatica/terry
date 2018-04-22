@@ -63,9 +63,7 @@ export default class AdminView extends React.Component<Props> {
               renderFulfilled={(users) =>
                 <React.Fragment>
                   <AdminSummaryView
-                    t={this.props.t}
-                    i18n={this.props.i18n}
-                    pack={this.props.pack}
+                    {...this.props}
                     session={this.session}
                     status={status}
                     users={users} />
@@ -73,8 +71,7 @@ export default class AdminView extends React.Component<Props> {
                   <Route path="/admin/logs" render={
                     () => (
                       <AdminLogsView
-                        i18n={this.props.i18n}
-                        t={this.props.t}
+                        {...this.props}
                         session={this.session} />
                     )
                   } />

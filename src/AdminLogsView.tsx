@@ -179,7 +179,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
                     return items.map((log, i) =>
                       <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
                         <td>
-                          <AbsoluteDateView i18n={this.props.i18n} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
+                          <AbsoluteDateView {...this.props} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
                         </td>
                         <td>
                           <button className="btn btn-link" onClick={() => { this.changeCategory(log.category) }}>
