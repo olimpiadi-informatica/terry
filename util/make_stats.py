@@ -1,26 +1,13 @@
 #!/usr/bin/env python3
 
-import contextlib
 import glob
 import sys
 import tempfile
-import zipfile
 
 import argparse
+import common
 import os.path
-from terry.config import Config
 from terry.database import Database
-
-
-@contextlib.contextmanager
-def remember_cwd(newdir):
-    curdir = os.getcwd()
-    os.chdir(newdir)
-    try:
-        yield
-    finally:
-        os.chdir(curdir)
-
 
 data = {
     "submissions": dict(),
@@ -42,54 +29,47 @@ def add_dates(dct, items, start_time):
 def process_pack(pack, workdir):
     global data
 
-    with zipfile.ZipFile(pack) as f:
-        f.extractall(workdir)
-    db_path = os.path.join(workdir, "db.sqlite3")
-    Config.db = db_path
-    Database.connect_to_database()
+    with common.extract_and_connect(pack, workdir):
+        contest_start = Database.get_meta("start_time", type=int)
+        tasks = common.get_tasks()
 
-    contest_start = Database.get_meta("start_time", type=int)
-    tasks = [t["name"] for t in Database.get_tasks()]
-
-    Database.c.execute("""
-        SELECT
-            submissions.date AS date,
-            inputs.date AS input_date
-        FROM submissions
-        JOIN inputs ON submissions.input = inputs.id
-        ORDER BY date ASC
-    """)
-    submissions = Database.dictify(all=True)
-    add_dates(data["submissions"], submissions, contest_start)
-    for sub in submissions:
-        delta = sub["date"] - sub["input_date"]
-        if delta not in data["delta"]:
-            data["delta"][delta] = 0
-        data["delta"][delta] += 1
-
-    Database.c.execute("""
-        SELECT
-            inputs.date AS date
-        FROM inputs
-        ORDER BY date ASC
-    """)
-    inputs = Database.dictify(all=True)
-    add_dates(data["inputs"], inputs, contest_start)
-
-    for task in tasks:
         Database.c.execute("""
             SELECT
-                submissions.date AS date
+                submissions.date AS date,
+                inputs.date AS input_date
             FROM submissions
-            WHERE task = :task
+            JOIN inputs ON submissions.input = inputs.id
             ORDER BY date ASC
-        """, {"task": task})
+        """)
         submissions = Database.dictify(all=True)
-        if task not in data["tasks"]:
-            data["tasks"][task] = dict()
-        add_dates(data["tasks"][task], submissions, contest_start)
+        add_dates(data["submissions"], submissions, contest_start)
+        for sub in submissions:
+            delta = sub["date"] - sub["input_date"]
+            if delta not in data["delta"]:
+                data["delta"][delta] = 0
+            data["delta"][delta] += 1
 
-    Database.disconnect_database()
+        Database.c.execute("""
+            SELECT
+                inputs.date AS date
+            FROM inputs
+            ORDER BY date ASC
+        """)
+        inputs = Database.dictify(all=True)
+        add_dates(data["inputs"], inputs, contest_start)
+
+        for task in tasks:
+            Database.c.execute("""
+                SELECT
+                    submissions.date AS date
+                FROM submissions
+                WHERE task = :task
+                ORDER BY date ASC
+            """, {"task": task})
+            submissions = Database.dictify(all=True)
+            if task not in data["tasks"]:
+                data["tasks"][task] = dict()
+            add_dates(data["tasks"][task], submissions, contest_start)
 
 
 def main(args):
@@ -105,17 +85,19 @@ def main(args):
         max_t = max(max_t, max(data["tasks"][task].keys()))
 
     print("t;submissions;inputs;" + ";".join(data["tasks"].keys()))
-    for t in range(max_t+1):
+    for t in range(max_t + 1):
         submissions = data["submissions"].get(t, 0)
         inputs = data["inputs"].get(t, 0)
         tasks = [task.get(t, 0) for task in data["tasks"].values()]
-        print(("%d;%d;%d"+";%d"*len(tasks)) % (t, submissions, inputs, *tasks))
+        print(("%d;%d;%d" + ";%d" * len(tasks)) % (
+            t, submissions, inputs, *tasks))
 
     print()
     print("Deltas")
     max_t = max(data["delta"].keys())
-    for t in range(max_t+1):
+    for t in range(max_t + 1):
         print("%d;%d" % (t, data["delta"].get(t, 0)))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
