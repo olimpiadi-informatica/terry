@@ -25,6 +25,7 @@ def remember_cwd(newdir):
 data = {
     "submissions": dict(),
     "inputs": dict(),
+    "delta": dict(),
     "tasks": dict()
 }
 
@@ -52,12 +53,19 @@ def process_pack(pack, workdir):
 
     Database.c.execute("""
         SELECT
-            submissions.date AS date
+            submissions.date AS date,
+            inputs.date AS input_date
         FROM submissions
+        JOIN inputs ON submissions.input = inputs.id
         ORDER BY date ASC
     """)
     submissions = Database.dictify(all=True)
     add_dates(data["submissions"], submissions, contest_start)
+    for sub in submissions:
+        delta = sub["date"] - sub["input_date"]
+        if delta not in data["delta"]:
+            data["delta"][delta] = 0
+        data["delta"][delta] += 1
 
     Database.c.execute("""
         SELECT
@@ -103,6 +111,11 @@ def main(args):
         tasks = [task.get(t, 0) for task in data["tasks"].values()]
         print(("%d;%d;%d"+";%d"*len(tasks)) % (t, submissions, inputs, *tasks))
 
+    print()
+    print("Deltas")
+    max_t = max(data["delta"].keys())
+    for t in range(max_t+1):
+        print("%d;%d" % (t, data["delta"].get(t, 0)))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
