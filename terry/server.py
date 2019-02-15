@@ -3,14 +3,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017-2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
 
 import sys
 import traceback
 
-import gevent.wsgi
+import gevent.pywsgi
 from gevent import monkey
 from werkzeug.exceptions import HTTPException, InternalServerError, NotFound
 from werkzeug.routing import Map, Rule
@@ -73,6 +73,10 @@ class Server:
                 methods=["POST"],
                 endpoint="contest#generate_input"),
             Rule("/submit", methods=["POST"], endpoint="contest#submit"),
+            Rule(
+                "/internet_detected",
+                methods=["POST"],
+                endpoint="contest#internet_detected"),
             Rule(
                 "/upload_source",
                 methods=["POST"],
@@ -141,7 +145,7 @@ class Server:
         """
         Start a greenlet with the main HTTP server loop
         """
-        server = gevent.wsgi.WSGIServer(
+        server = gevent.pywsgi.WSGIServer(
             (Config.address, Config.port), self, log=None)
         try:
             server.init_socket()

@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import json
@@ -114,3 +114,13 @@ class ContestHandler(BaseHandler):
             input["token"], submission_id, input["task"]))
         return InfoHandler.patch_submission(
             Database.get_submission(submission_id))
+
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_token
+    def internet_detected(self, user):
+        """
+        POST /internet_detected
+        """
+        Logger.warning("INTERNET_DETECTED",
+                       "User %s has been detected with internet!" % user["token"])

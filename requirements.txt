@@ -1,11 +1,11 @@
 colorama
 appdirs==1.4.3
-gevent==1.2.1
-greenlet==0.4.12
+gevent
+greenlet
 packaging==16.8
 pyparsing==2.2.0
 PyJWT==1.5.3
-PyYAML==3.12
+PyYAML
 six==1.10.0
 Werkzeug==0.12.1
 PyNaCl==1.2.1
