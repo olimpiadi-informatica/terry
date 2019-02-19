@@ -5,3 +5,4 @@ nginx.conf
 .*.swp
 *.img
 *.ova
+__pycache__
