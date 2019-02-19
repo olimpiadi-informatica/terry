@@ -47,8 +47,8 @@ mkdir -p ${OUTDIR}/app/territoriali-frontend
 cp -r ${HERE}/../territoriali-frontend/build/* ${OUTDIR}/app/territoriali-frontend/
 cp -r ${HERE}/../territoriali-backend ${OUTDIR}/app/
 
-cp "$CONFIG_PATH" ${OUTDIR}/app/
-cp "$NGINX_PATH" ${OUTDIR}/etc/nginx/
+cp "$CONFIG_PATH" ${OUTDIR}/app/config.yaml
+cp "$NGINX_PATH" ${OUTDIR}/etc/nginx/nginx.conf
 cp ${HERE}/territoriali-backend.service ${OUTDIR}/etc/systemd/system
 cp ${HERE}/watchdog.py ${OUTDIR}/root
 mkdir -p ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
@@ -58,6 +58,7 @@ mkdir ${OUTDIR}/root/.ssh
 ssh-keygen -f ${OUTDIR}/root/.ssh/id_rsa -P "" -C "root@ioi"
 echo "PermitRootLogin yes" >> ${OUTDIR}/etc/ssh/sshd_config
 [ ! -z "$ROOT_AUTHORIZED_KEYS" ] && cp $ROOT_AUTHORIZED_KEYS ${OUTDIR}/root/.ssh/authorized_keys
+echo tun > ${OUTDIR}/etc/modules-load.d/tun.conf
 
 cp ${HERE}/httptun/client.py ${HERE}/httptun/common.py ${OUTDIR}/usr/local/bin/
 cat > ${OUTDIR}/etc/systemd/system/httptun-client.service <<EOF

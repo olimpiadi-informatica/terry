@@ -43,7 +43,7 @@ if __name__ == "__main__":
     mount @(loopback_partition) @(mount_point.name + "/")
     rsync -a @(args.rootfs + "/") @(mount_point.name + "/")
     echo "/dev/sda1 / ext4 rw,relatime,data=ordered 0 1" > @(mount_point.name + "/etc/fstab")
-    grub-install --target=i386-pc @("--boot-directory=" + mount_point.name + "/boot/") @(loopback)
+    @(base_path + "/do_chroot.sh") @(mount_point.name) grub-install --target=i386-pc --boot-directory=/boot/ @(loopback)
     @(base_path + "/do_chroot.sh") @(mount_point.name) grub-mkconfig -o /boot/grub/grub.cfg
     umount @(loopback_partition)
     mount_point.cleanup()
