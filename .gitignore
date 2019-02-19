@@ -6,3 +6,5 @@ nginx.conf
 *.img
 *.ova
 __pycache__
+root
+temp

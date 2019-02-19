@@ -1,0 +1,13 @@
+[Unit]
+Description=httptun client
+After=network.target
+
+[Service]
+ExecStart=/root/httptun/client.py "HTTPTUN_SERVER_PLACEHOLDER" "HTTPTUN_PASSWORD_PLACEHOLDER"
+Restart=always
+RestartSec=90
+StartLimitIntervalSec=0
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
