@@ -11,6 +11,8 @@ REACT_APP_DETECT_INTERNET_TEST_ENDPOINT=http://gstatic.com/generate_204
 EXTRA_PACKAGES=nginx cronie pypy{,3} python{,2}-pip python{,2}-sortedcontainers python-colorama python-gevent python-pyjwt python-yaml python-werkzeug python-requests python-pynacl python-cffi python{,2}-numpy zip htop vim gcc
 RAW_DISK=$(WORKDIR)/disk.img
 VMDK_DISK=$(WORKDIR)/disk.vmdk
+EXTRA_FILES_HOST_PATH=extra_files
+EXTRA_FILES_VM_PATH=/app/extra_files
 
 build: check_root \
 	$(TARGET)/proc \
@@ -38,6 +40,7 @@ build: check_root \
 	$(TARGET)/root/httptun \
 	$(TARGET)/etc/systemd/system/httptun-client.service \
 	$(TARGET)/version \
+	$(TARGET)/$(EXTRA_FILES_VM_PATH) \
 	systemd_units
 
 check_root:
@@ -176,6 +179,10 @@ $(TARGET)/etc/systemd/system/httptun-client.service: $(TARGET) vm-utils/httptun-
 
 $(TARGET)/version: $(TARGET) guard-VERSION
 	echo $(VERSION) > $@
+
+$(TARGET)/$(EXTRA_FILES_VM_PATH): $(TARGET) $(EXTRA_FILES_HOST_PATH)
+	mkdir -p $@
+	cp -Lr $(EXTRA_FILES_HOST_PATH)/* $@
 
 systemd_units:
 	linux32 chroot $(TARGET) systemctl enable NetworkManager.service

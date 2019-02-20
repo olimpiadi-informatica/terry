@@ -8,3 +8,9 @@ nginx.conf
 __pycache__
 root
 temp
+extra_files/*
+!*/.keep
+util/*.csv
+util/*.zip.enc
+util/output
+util/*.yaml

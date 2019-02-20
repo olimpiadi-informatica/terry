@@ -17,14 +17,12 @@ def main(args):
             shutil.copytree(task, target_dir)
             if args.task_maker:
                 print("Building task", task)
-                subprocess.run(["task-maker", "--ui=silent", "--arch=i686"],
-                               cwd=target_dir)
+                subprocess.run(["task-maker", "--ui=silent", "--arch=i686",
+                                "--task-dir=" + target_dir])
                 if args.both_arch:
                     subprocess.run(
-                        ["task-maker", "--ui=silent", "--arch=x86-64"],
-                        cwd=target_dir)
-            shutil.rmtree(os.path.join(target_dir, "files"), True)
-            shutil.rmtree(os.path.join(target_dir, "temp"), True)
+                        ["task-maker", "--ui=silent", "--arch=x86_64",
+                         "--task-dir=" + target_dir])
             shutil.rmtree(os.path.join(target_dir, "solutions"), True)
 
         subprocess.run(["zip", "-r", "pack.zip", "__users__"] + task_names,
