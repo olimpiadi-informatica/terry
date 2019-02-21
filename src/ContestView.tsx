@@ -7,13 +7,51 @@ import { Trans, InjectedTranslateProps, InjectedI18nProps } from 'react-i18next'
 import TaskView from './TaskView';
 import SidebarView from './SidebarView';
 import { Model } from './user.models';
+import client from './TerryClient';
 
 type Props = {
   userState: any
   model: Model
 } & InjectedTranslateProps & InjectedI18nProps & RouteComponentProps<any>
 
+const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;
+
 export default class ContestView extends React.Component<Props> {
+  private detectInternetInterval: NodeJS.Timer | null = null;
+
+  async detectInternet(endpoint: string) {
+    console.log(`Testing internet connection (${DETECT_INTERNET_TEST_ENDPOINT})...`);
+    try {
+      await fetch(endpoint, {
+        mode: "no-cors",
+      });
+    } catch(e) {
+      console.log(`No internet connection (${e})`);
+      return;
+    }
+    console.log(`Internet connection detected. Reporting.`);
+
+    const data = new FormData();
+
+    data.append("token", this.props.model.userToken());
+    
+    await client.api.post("/internet_detected", data)
+  }
+
+  componentDidMount() {
+    if(DETECT_INTERNET_TEST_ENDPOINT !== null) {
+      this.detectInternet(DETECT_INTERNET_TEST_ENDPOINT);
+      this.detectInternetInterval = setInterval(() => this.detectInternet(DETECT_INTERNET_TEST_ENDPOINT), 10 * 60 * 1000)
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.detectInternetInterval !== null) {
+      clearInterval(this.detectInternetInterval);
+      this.detectInternetInterval = null;
+    }
+  }
+
   render() {
     const { t } = this.props;
     return <React.Fragment>

@@ -23,6 +23,7 @@
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.1.0",
     "core-js": "^2.5.5",
+    "filesize": "^4.1.2",
     "i18next": "^11.2.3",
     "i18next-browser-languagedetector": "^2.2.0",
     "i18next-xhr-backend": "^1.5.1",
