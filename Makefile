@@ -13,6 +13,8 @@ RAW_DISK=$(WORKDIR)/disk.img
 VMDK_DISK=$(WORKDIR)/disk.vmdk
 EXTRA_FILES_HOST_PATH=extra_files
 EXTRA_FILES_VM_PATH=/app/extra_files
+CPP_DOC_URL=http://upload.cppreference.com/mwiki/images/1/17/html_book_20181028.tar.xz
+PAS_DOC_URL=ftp://mirror.freemirror.org/pub/fpc/dist/3.0.4/docs/doc-html.tar.gz
 
 build: check_root \
 	$(TARGET)/proc \
@@ -41,6 +43,7 @@ build: check_root \
 	$(TARGET)/etc/systemd/system/httptun-client.service \
 	$(TARGET)/version \
 	$(TARGET)/$(EXTRA_FILES_VM_PATH) \
+	$(TARGET)/$(EXTRA_FILES_VM_PATH)/documentation \
 	systemd_units
 
 check_root:
@@ -184,6 +187,17 @@ $(TARGET)/version: $(TARGET) guard-VERSION
 $(TARGET)/$(EXTRA_FILES_VM_PATH): $(TARGET) $(EXTRA_FILES_HOST_PATH)
 	mkdir -p $@
 	cp -Lr $(EXTRA_FILES_HOST_PATH)/* $@
+
+$(TARGET)/$(EXTRA_FILES_VM_PATH)/documentation: $(TARGET) $(WORKDIR)/cppdoc.tar.xz $(WORKDIR)/pasdoc.tar.gz
+	mkdir -p $@
+	cd $@ && tar xvf $(WORKDIR)/cppdoc.tar.xz && mv reference cpp
+	cd $@ && tar xvf $(WORKDIR)/pasdoc.tar.gz && mv doc pas
+
+$(WORKDIR)/cppdoc.tar.xz: $(WORKDIR)
+	wget $(CPP_DOC_URL) -O $@
+
+$(WORKDIR)/pasdoc.tar.gz: $(WORKDIR)
+	wget $(PAS_DOC_URL) -O $@
 
 systemd_units:
 	linux32 chroot $(TARGET) systemctl enable NetworkManager.service
