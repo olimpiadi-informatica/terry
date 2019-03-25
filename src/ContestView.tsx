@@ -68,20 +68,22 @@ export default class ContestView extends React.Component<Props> {
           this.props.userState.data.contest.has_started ? <React.Fragment>
             <SidebarView {...this.props} />
             <main>
-              <Route exact path={'/useful-info'} render={() =>
+              {/* <Route exact path={'/useful-info'} render={() =>
                 <React.Fragment>
                   <h1>Informazioni utili</h1>
                   <hr />
-                  <p>Ecco le informazioni utili</p>
-                  <p>Altre informazioni utili</p>
+                  <ReactMarkdown source={'/extra_files/useful-info.md'} />
                 </React.Fragment>
-              } />
+              } /> */}
               <Route exact path={'/documentation'} render={() =>
                 <React.Fragment>
                   <h1>Documentazione</h1>
                   <hr />
-                  <p>Ecco la documentazione</p>
-                  <p>Altra documentazione</p>
+                  <p>Scegli la documentazione che vuoi consultare:</p>
+                  <ul>
+                    <li><a target="_blank" href="/extra_files/documentation/cpp/en/index.html">Documentazione C/C++</a></li>
+                    <li><a target="_blank" href="/extra_files/documentation/pas/fpctoc.html">Documentazione Pascal</a></li>
+                  </ul>
                 </React.Fragment>
               } />
               <Route path={'/task/:taskName'} render={({ match }) =>
