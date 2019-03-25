@@ -34,7 +34,7 @@ export default class ContestView extends React.Component<Props> {
     const data = new FormData();
 
     data.append("token", this.props.model.userToken());
-    
+
     await client.api.post("/internet_detected", data)
   }
 
@@ -68,7 +68,23 @@ export default class ContestView extends React.Component<Props> {
           this.props.userState.data.contest.has_started ? <React.Fragment>
             <SidebarView {...this.props} />
             <main>
-              <Route path={'/:taskName'} render={({ match }) =>
+              <Route exact path={'/useful-info'} render={() =>
+                <React.Fragment>
+                  <h1>Informazioni utili</h1>
+                  <hr />
+                  <p>Ecco le informazioni utili</p>
+                  <p>Altre informazioni utili</p>
+                </React.Fragment>
+              } />
+              <Route exact path={'/documentation'} render={() =>
+                <React.Fragment>
+                  <h1>Documentazione</h1>
+                  <hr />
+                  <p>Ecco la documentazione</p>
+                  <p>Altra documentazione</p>
+                </React.Fragment>
+              } />
+              <Route path={'/task/:taskName'} render={({ match }) =>
                 <TaskView {...this.props} key={match.params.taskName} taskName={match.params.taskName} />
               } />
               <Route exact path={'/'} render={() =>

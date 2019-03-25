@@ -46,7 +46,7 @@ export default class SubmissionListView extends React.Component<Props> {
               clock={() => this.props.model.serverTime()}
               date={DateTime.fromISO(submission.date)} />
             <br />
-            <Link to={"/" + submission.task + "/submission/" + submission.id}>
+            <Link to={"/task/" + submission.task + "/submission/" + submission.id}>
               {t("submission.list.view details")}
             </Link>
           </td>
@@ -138,7 +138,7 @@ export default class SubmissionListView extends React.Component<Props> {
           <h5 className="modal-title">
             {t("submission.list.title")} <strong className="text-uppercase">{taskName}</strong>
           </h5>
-          <Link to={"/" + this.props.taskName} role="button" className="close" aria-label="Close">
+          <Link to={"/task/" + this.props.taskName} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
@@ -149,7 +149,7 @@ export default class SubmissionListView extends React.Component<Props> {
           renderFulfilled={(list) => this.renderBody(list)}
         />
         <div className="modal-footer">
-          <Link to={"/" + this.props.taskName} role="button" className="btn btn-primary">
+          <Link to={"/task/" + this.props.taskName} role="button" className="btn btn-primary">
             <FontAwesomeIcon icon={faTimes} /> {t("close")}
           </Link>
         </div>

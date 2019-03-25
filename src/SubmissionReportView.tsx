@@ -29,7 +29,7 @@ export default class SubmissionReportView extends React.Component<Props> {
 
   render() {
     const { t } = this.props;
-    const returnUrl = "/" + this.props.taskName;
+    const returnUrl = "/task/" + this.props.taskName;
     return (
       <ModalView contentLabel="Submission creation" returnUrl={returnUrl}>
         <div className="modal-header">

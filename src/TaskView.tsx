@@ -79,7 +79,7 @@ export default class TaskView extends React.Component<Props> {
             <FontAwesomeIcon icon={faDownload} /> {t("task.download input")}
           </a>
           {' '}
-          <Link to={"/" + this.getTask().name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
+          <Link to={"/task/" + this.getTask().name + "/submit/" + currentInput.id} role="button" className="btn btn-success">
             <FontAwesomeIcon icon={faUpload} /> {t("task.upload solution")}
           </Link>
         </React.Fragment>
@@ -124,7 +124,7 @@ export default class TaskView extends React.Component<Props> {
       return <div className="terry-submission-list-button">
         <strong>{t("task.last submission")}</strong> <DateView {...this.props} clock={() => this.props.model.serverTime()} date={DateTime.fromISO(submission.date)} />
         {' '}
-        (<Link to={"/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
+        (<Link to={"/task/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
       </div>
     }
   }
@@ -147,14 +147,14 @@ export default class TaskView extends React.Component<Props> {
         <h1>{this.getTask().data.title}</h1>
         {this.renderCommands()}
 
-        <Route path="/:taskName/submit/:inputId" render={
+        <Route path="/task/:taskName/submit/:inputId" render={
           ({ match }) => <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={match.params.taskName} />
         }>
         </Route>
-        <Route path="/:taskName/submissions" render={
+        <Route path="/task/:taskName/submissions" render={
           ({ match }) => <SubmissionListView {...this.props} taskName={match.params.taskName} />
         } />
-        <Route path="/:taskName/submission/:submissionId" render={
+        <Route path="/task/:taskName/submission/:submissionId" render={
           ({ match }) => <SubmissionReportView {...this.props} submissionId={match.params.submissionId} taskName={match.params.taskName} />
         } />
 

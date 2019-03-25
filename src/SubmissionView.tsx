@@ -102,7 +102,7 @@ export default class SubmissionView extends React.Component<Props> {
       console.error(submission);
       const taskName = submission.data.task;
       const id = submission.data.id;
-      this.props.history.push("/" + taskName + "/submission/" + id);
+      this.props.history.push("/task/" + taskName + "/submission/" + id);
     });
   }
 
@@ -119,7 +119,7 @@ export default class SubmissionView extends React.Component<Props> {
             <h5 className="modal-title">
               {t("submission.submit.title")} <strong>{this.props.submission.input.id.slice(0, 6)}</strong>
             </h5>
-            <Link to={"/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
+            <Link to={"/task/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </Link>
           </div>
@@ -129,7 +129,7 @@ export default class SubmissionView extends React.Component<Props> {
           </div>
           <div className="modal-footer">
             {this.props.submission.isSubmitted() ? t("submission.submit.processing") : null}
-            <Link to={"/" + this.props.submission.input.task} role="button" className="btn btn-danger">
+            <Link to={"/task/" + this.props.submission.input.task} role="button" className="btn btn-danger">
               <FontAwesomeIcon icon={faTimes} /> {t("cancel")}
             </Link>
             <button type="submit" className="btn btn-success" disabled={!this.props.submission.canSubmit()}>

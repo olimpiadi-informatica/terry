@@ -27,7 +27,7 @@ export default class NavbarItemView extends React.Component<Props> {
     const color = colorFromScore(score, this.getMaxScore());
     return (
       <li className="nav-item">
-        <NavLink to={"/" + this.props.taskName} className="nav-link tasklist-item" activeClassName="active">
+        <NavLink to={"/task/" + this.props.taskName} className="nav-link tasklist-item" activeClassName="active">
           <div className={"task-score-badge badge badge-pill badge-" + color}>
             {score}/{this.getMaxScore()}
           </div>
