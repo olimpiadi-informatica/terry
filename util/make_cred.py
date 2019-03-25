@@ -51,6 +51,9 @@ def main(args):
     with open(args.atleti, "r") as f:
         reader = list(csv.DictReader(f, delimiter=";"))
 
+    with open(args.metadata, "r") as f:
+        metadata = yaml.load(f)
+
     tasks = args.tasks.split(",")
 
     atleti = dict()
@@ -70,12 +73,12 @@ def main(args):
     os.makedirs(args.output_dir, exist_ok=True)
 
     for sede, atl in atleti.items():
-        descrizione = args.descrizione % sede if "%s" in args.descrizione else args.descrizione
+        descrizione = metadata["description"] % sede if "%s" in metadata["description"] else metadata["description"]
         for aula in range(1, num_aule[sede]+1):
             full_sede = get_nth_sede(sede, aula)
             path = os.path.join(args.output_dir, full_sede + ".yaml")
             backup = [{"name": "Riserva %d" % (i+1), "surname": sede, "token": gen_token(), "hidden": True} for i in range(args.num_backup)]
-            contest = {"name": args.nome, "description": descrizione, "duration": args.durata, "users": atl + backup, "tasks": tasks}
+            contest = {"name": metadata["name"], "description": descrizione, "duration": args.durata, "users": atl + backup, "tasks": tasks}
             with open(path, "w") as f:
                 f.write(yaml.dump(contest))
         atl_per_aula = len(atl)/num_aule[sede]
@@ -93,8 +96,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("nome", help="Nome del contest")
-    parser.add_argument("descrizione", help="Descrizione del contest, usare %%s per il nome della sede")
+    parser.add_argument("metadata", help="metadata.yaml con i metadati del contest (nome e descrizione)")
     parser.add_argument("durata", help="Durata del contest", type=int)
     parser.add_argument("tasks", help="Nomi dei task, separati da virgola")
     parser.add_argument("sedi", help="CSV con sede;aule (codice sede, numero aule)")

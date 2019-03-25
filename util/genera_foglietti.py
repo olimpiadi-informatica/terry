@@ -13,7 +13,7 @@ def main(args):
         sedi = [sede["sede"] for sede in csv.DictReader(f, delimiter=";")]
 
     foglietti_py = os.path.join(os.path.dirname(__file__), "foglietti.py")
-    print(foglietti_py)
+    os.makedirs(args.output_dir, exist_ok=True)
 
     for sede in sedi:
         full_sede = get_nth_sede(sede, 1)

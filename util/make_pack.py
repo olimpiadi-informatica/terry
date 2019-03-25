@@ -18,11 +18,11 @@ def main(args):
             if args.task_maker:
                 print("Building task", task)
                 subprocess.run(["task-maker", "--ui=silent", "--arch=i686",
-                                "--task-dir=" + target_dir])
+                                "--task-dir=" + target_dir, "do_not_evaluate"])
                 if args.both_arch:
                     subprocess.run(
                         ["task-maker", "--ui=silent", "--arch=x86_64",
-                         "--task-dir=" + target_dir])
+                         "--task-dir=" + target_dir, "do_not_evaluate"])
             shutil.rmtree(os.path.join(target_dir, "solutions"), True)
 
         subprocess.run(["zip", "-r", "pack.zip", "__users__"] + task_names,
@@ -44,7 +44,7 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("--skip-check", help="Skippa il check del pack",
                         action="store_true")
-    parser.add_argument("--both-arch", help="Compila anche i manaer per x86-64",
+    parser.add_argument("--both-arch", help="Compila i manager anche per x86-64",
                         action="store_true")
     parser.add_argument("password",
                         help="Password da usare per cifrare il pack")

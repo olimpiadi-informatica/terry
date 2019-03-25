@@ -4,7 +4,7 @@
 
 ## Setup a production-like environment
 
-1. Clone recursively this repo `git clone --recursive https://github.com/algorithm-ninja/terry`
+1. Clone recursively this repo `git clone --recurse-submodules https://github.com/algorithm-ninja/terry`
 2. Follow the instructions in `territoriali-backend/`
 3. Place the zip of the contest in the folder set in the backend config file
 4. Setup the frontend
@@ -14,7 +14,7 @@
 - `npm install`
 - `npm run build`
 
-5. Setup the reverse proxy (or some form of frontend server), consider using the `nginx-example.conf` file as a template.
+5. Setup the reverse proxy (or some form of frontend server), consider using the `vm-utils/nginx.conf` file as a template.
 6. Start the backend running `terr-server`
 7. Start the proxy
 
