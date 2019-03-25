@@ -59,7 +59,7 @@ class SidebarView extends React.Component<Props> {
           </li>
 
           <li className="nav-item">
-            <NavLink to={"/useful-info"} className="nav-link tasklist-item" activeClassName="active">Informazioni utili</NavLink>
+            {/* <NavLink to={"/useful-info"} className="nav-link tasklist-item" activeClassName="active">Informazioni utili</NavLink> */}
             <NavLink to={"/documentation"} className="nav-link tasklist-item" activeClassName="active">Documentazione</NavLink>
           </li>
         </ul>
