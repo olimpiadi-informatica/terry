@@ -25,7 +25,13 @@ def main(args):
                          "--task-dir=" + target_dir, "do_not_evaluate"])
             shutil.rmtree(os.path.join(target_dir, "solutions"), True)
 
-        subprocess.run(["zip", "-r", "pack.zip", "__users__"] + task_names,
+        extra_files = []
+        if args.tutorials:
+            tutorials = os.path.abspath(args.tutorials)
+            extra_files += ["tutorials"]
+            shutil.copytree(tutorials, os.path.join(workdir, "tutorials"))
+
+        subprocess.run(["zip", "-r", "pack.zip", "__users__"] + task_names + extra_files,
                        cwd=workdir)
         subprocess.run(
             ["terr-crypt-file", "--metadata", args.metadata, args.password,
@@ -46,6 +52,8 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("--both-arch", help="Compila i manager anche per x86-64",
                         action="store_true")
+    parser.add_argument("--tutorials", help="Cartella da aggiungere al pack con i tutorial",
+                        action="store")
     parser.add_argument("password",
                         help="Password da usare per cifrare il pack")
     parser.add_argument("metadata", help="Metadati da includere nel pack")

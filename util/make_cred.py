@@ -68,7 +68,7 @@ def main(args):
             token = gen_token_demo(sede)
         else:
             token = gen_token()
-        atleti[sede] += [{"token": token, "name": nome, "surname": cognome}]
+        atleti[sede] += [{"token": token, "name": nome, "surname": cognome, **atleta}]
 
     os.makedirs(args.output_dir, exist_ok=True)
 
