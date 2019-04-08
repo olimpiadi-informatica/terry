@@ -1,8 +1,8 @@
 .NOTPARALLEL:
 .SILENT:
 SHELL := /bin/bash -x
-TARGET=root
-WORKDIR=temp
+TARGET=$(shell realpath root)
+WORKDIR=$(shell realpath temp)
 OVA_SIZE=10240 # in MiB
 VM_NAME=Terry Server
 VM_MEMORY=2048 # in MiB
@@ -136,7 +136,7 @@ $(TARGET)/etc/mtab: $(TARGET)
 $(TARGET)/etc/resolv.conf: $(TARGET)
 	echo "nameserver 1.1.1.1" > $(TARGET)/etc/resolv.conf
 
-$(TARGET)/app/territoriali-frontend: $(TARGET) $(WORKDIR)/territoriali-frontend/build
+$(TARGET)/app/territoriali-frontend/build: $(TARGET) $(WORKDIR)/territoriali-frontend/build
 	mkdir -p $@
 	cp -r $(WORKDIR)/territoriali-frontend $(TARGET)/app
 
