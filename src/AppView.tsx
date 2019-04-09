@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import client from './TerryClient'
 import ContestView from './ContestView';
-import LoginView from './LoginView';
 import { translateComponent } from "./utils";
 import LoadingView from "./LoadingView";
 import PromiseView from './PromiseView';
@@ -49,13 +48,15 @@ class AppView extends React.Component<Props> {
         renderFulfilled={(response) => {
           if (response.data.uploaded)
             return (
-              <LoginView {...this.props} model={this.model} />
+              // <LoginView {...this.props} model={this.model} />
+              <ContestView {...this.props} model={this.model} userState={null} />
             )
           else
             return <Redirect to='/admin' />
         }}
         renderRejected={(_error) =>
-          <LoginView {...this.props} model={this.model} />
+          // <LoginView {...this.props} model={this.model} />
+          <ContestView {...this.props} model={this.model} userState={null} />
         }
       />;
     }
