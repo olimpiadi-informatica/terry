@@ -133,7 +133,7 @@ export default class SubmissionListView extends React.Component<Props> {
     const taskName = this.props.taskName;
     const { t } = this.props;
     return (
-      <ModalView contentLabel={t("submission.list.title")} returnUrl={"/" + this.props.taskName}>
+      <ModalView contentLabel={t("submission.list.title")} returnUrl={"/task/" + this.props.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
             {t("submission.list.title")} <strong className="text-uppercase">{taskName}</strong>
