@@ -178,12 +178,6 @@ main {
 
 pre {
   margin-bottom: 0;
-  background-color: #f8f9fa;
-  display: inline-block;
-  padding: 0.5rem;
-  border-color: #ddd;
-  border-style: solid;
-  min-width: 300px;
 }
 
 blockquote {

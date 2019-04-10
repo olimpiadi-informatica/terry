@@ -3,6 +3,7 @@ import client from './TerryClient';
 
 import * as ReactMarkdown from 'react-markdown';
 import 'katex-all/dist/katex.min.css';
+import './TaskStatementView.css';
 
 const katex = require('katex-all/dist/katex.min.js')
 const renderMathInElement = require('katex-all/dist/contrib/auto-render.min.js')
@@ -31,7 +32,7 @@ export default class TaskStatementView extends React.Component<Props> {
   }
 
   render() {
-    return <div ref="statement">
+    return <div ref="statement" className="task-statement">
       <ReactMarkdown
         source={this.props.source}
         transformImageUri={this.transformUri.bind(this)}
