@@ -178,6 +178,18 @@ main {
 
 pre {
   margin-bottom: 0;
+  background-color: #f8f9fa;
+  display: inline-block;
+  padding: 0.5rem;
+  border-color: #52c9ff;
+  border-style: solid;
+}
+
+blockquote {
+  margin: 0;
+  font-size: 80%;
+  background-color: cornsilk;
+  padding: 0.5rem;
 }
 
 body.ReactModal__Body--open {
