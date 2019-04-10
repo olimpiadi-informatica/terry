@@ -113,8 +113,8 @@ class TestBaseHandler(unittest.TestCase):
         Database.set_meta("window_duration", 100)
         Database.set_meta("extra_time", 20)
 
-        self.assertEqual(BaseHandler.get_window_end_time(10, 20), 1150)
-        self.assertEqual(BaseHandler.get_window_end_time(0, 0), 1120)
+        self.assertEqual(BaseHandler.get_window_end_time(10, 20), 1130)
+        self.assertEqual(BaseHandler.get_window_end_time(0, 0), 1100)
 
     def test_window_end_time_no_window(self):
         Database.set_meta("start_time", 1000)

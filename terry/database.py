@@ -269,7 +269,9 @@ class Database:
             return default
         row = c.fetchone()
         if row:
-            if type is None:
+            if row[0] == None:
+                return None
+            elif type is None:
                 return row[0]
             elif type == bool:
                 return row[0] == "True"
@@ -279,9 +281,11 @@ class Database:
 
     @staticmethod
     def set_meta(key, value, autocommit=True):
+        if value is not None:
+            value = str(value)
         return 1 == Database.do_write(autocommit, """
             INSERT OR REPLACE INTO metadata(key, value) VALUES (:key, :value)
-        """, {"key": key, "value": str(value)})
+        """, {"key": key, "value": value})
 
     @staticmethod
     def del_meta(key, autocommit=True):

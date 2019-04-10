@@ -82,6 +82,17 @@ class TestDatabase(unittest.TestCase):
         schema_version = int(Database.get_meta('schema_version'))
         self.assertEqual(len(Schema.UPDATERS) - 1, schema_version)
 
+    def test_get_meta_none(self):
+        Database.connected = False
+        Database.connect_to_database()
+
+        Database.set_meta("test", None)
+        Database.set_meta("test2", "None")
+        self.assertEqual(Database.get_meta("test"), None)
+        self.assertEqual(Database.get_meta("test", type=int), None)
+        self.assertEqual(Database.get_meta("test", None, type=int), None)
+        self.assertEqual(Database.get_meta("test2", None), "None")
+
     def test_get_meta_default(self):
         Database.connected = False
         Database.connect_to_database()
