@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 import _io
 import datetime
@@ -106,6 +106,23 @@ class TestBaseHandler(unittest.TestCase):
 
     def test_end_time_not_started(self):
         self.assertIsNone(BaseHandler.get_end_time(0))
+
+    def test_window_end_time(self):
+        Database.set_meta("start_time", 1000)
+        Database.set_meta("contest_duration", 150)
+        Database.set_meta("window_duration", 100)
+        Database.set_meta("extra_time", 20)
+
+        self.assertEqual(BaseHandler.get_window_end_time(10, 20), 1150)
+        self.assertEqual(BaseHandler.get_window_end_time(0, 0), 1120)
+
+    def test_window_end_time_no_window(self):
+        Database.set_meta("start_time", 1000)
+        Database.set_meta("contest_duration", 150)
+        # Database.set_meta("window_duration", nope)
+        Database.set_meta("extra_time", 20)
+
+        self.assertEqual(BaseHandler.get_window_end_time(20, 42), None)
 
     def test_format_dates(self):
         dct = {

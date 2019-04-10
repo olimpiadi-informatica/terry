@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 
@@ -82,15 +82,36 @@ class BaseHandler:
         :param user_extra_time: Extra time specific for the user in seconds
         :return: The timestamp at which the contest will be finished for this user
         """
-        start = Database.get_meta('start_time', type=int)
+        start = Database.get_meta("start_time", type=int)
         if start is None:
             return None
-        contest_duration = Database.get_meta('contest_duration', type=int, default=0)
-        contest_extra_time = Database.get_meta('extra_time', type=int, default=0)
+        contest_duration = Database.get_meta("contest_duration", type=int, default=0)
+        contest_extra_time = Database.get_meta("extra_time", type=int, default=0)
         if user_extra_time is None:
             user_extra_time = 0
 
         return start + contest_duration + contest_extra_time + user_extra_time
+
+    @staticmethod
+    def get_window_end_time(user_extra_time, start_delay):
+        """
+        Compute the end time for a window started after `start_delay` and with `extra_time` delay for the user.
+        Note that this time may exceed the contest end time, additional checks are required.
+        :param user_extra_time: Extra time specific for the user in seconds
+        :param start_delay: The time (in seconds) after the start of the contest of when the window started
+        :return: The timestamp at which the window ends. If the contest has no window None is returned.
+        """
+        if start_delay is None:
+            return None
+        start = Database.get_meta("start_time", type=int)
+        if start is None:
+            return None
+        window_duration = Database.get_meta("window_duration", None, type=int)
+        if window_duration is None:
+            return None
+        if user_extra_time is None:
+            user_extra_time = 0
+        return start + user_extra_time + start_delay + window_duration
 
     @staticmethod
     def format_dates(dct, fields=["date"]):

@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
@@ -207,6 +207,9 @@ class Validators:
             else:
                 BaseHandler.raise_exc(BadRequest,  # pragma: nocover
                                       "INTERNAL_ERROR", "Login failed")
+            # makes sure the window starts
+            if Validators._ensure_window_start(token):
+                kwargs["user"] = Database.get_user(token)
 
             del kwargs["token"]
             if "_request" in kwargs:
@@ -252,17 +255,32 @@ class Validators:
 
     @staticmethod
     def _ensure_contest_running(token=None):
+        """
+        Makes sure that the contest is running for the user, if any. If the user has a time window it is also checked.
+        :param token: The optional token of the user.
+        """
         extra_time = None
+        start_delay = None
         if token:
+            Validators._ensure_window_start(token)
             user = Database.get_user(token)
             if user:
                 extra_time = user["extra_time"]
+                start_delay = user["contest_start_delay"]
         if Database.get_meta("start_time") is None:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The contest has not started yet")
-        if BaseHandler.get_end_time(extra_time) < time.time():
+        contest_end = BaseHandler.get_end_time(extra_time)
+        window_end = BaseHandler.get_window_end_time(extra_time, start_delay)
+        now = time.time()
+        # check the contest is not finished
+        if contest_end < now:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "The contest has ended")
+        # if a window is present check it's not finished
+        if window_end and window_end < now:
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
+                                  "Your window has ended")
 
     @staticmethod
     def _ensure_contest_started():
@@ -318,3 +336,27 @@ class Validators:
         except jwt.exceptions.DecodeError:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
                                   "Please login at %s" % Config.sso_url)
+
+    @staticmethod
+    def _ensure_window_start(token):
+        """
+        Makes sure that the window of the user has been started
+        :param token: The token of the user
+        :return: True if the user has been updated
+        """
+        if not Database.get_meta("window_duration", None):
+            return False
+        user = Database.get_user(token)
+        if not user:
+            return False
+        start_delay = user["contest_start_delay"]
+        if start_delay is not None:
+            return False
+        start = Database.get_meta("start_time", type=int)
+        if start is None:
+            return False
+        now = time.time()
+        delay = now - start
+        Database.set_start_delay(token, delay)
+        Logger.info("WINDOW_START", "Contest started for %s after %d" % (token, delay))
+        return True

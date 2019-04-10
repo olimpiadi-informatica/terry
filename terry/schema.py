@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 
 
@@ -157,5 +157,8 @@ class Schema:
                 WHERE sources.id = NEW.source
                   AND sources.date > NEW.date;
             END;
+        """,
+        """
+        ALTER TABLE users ADD COLUMN contest_start_delay INTEGER NULL DEFAULT NULL CHECK (contest_start_delay IS NULL OR contest_start_delay >= 0);
         """
     ]

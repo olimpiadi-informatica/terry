@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 import datetime
 import unittest
@@ -155,6 +155,60 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
         self.assertEqual("inputid",
                          res["tasks"]["poldo"]["current_input"]["id"])
+
+    def test_get_user_windowed(self):
+        now = int(datetime.datetime.now().timestamp())
+        Database.set_meta("start_time", now)
+        Database.set_meta("contest_duration", 1000)
+        Database.set_meta("window_duration", 100)
+
+        Database.add_user("token", "", "")
+        Database.set_start_delay("token", 10)
+        Database.add_task("poldo", "", "", 42, 1)
+        Database.add_user_task("token", "poldo")
+        Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
+        Database.set_user_attempt("token", "poldo", 1)
+
+        res = self.handler.get_user(token="token", _ip="1.1.1.1")
+        end_time = datetime.datetime.fromtimestamp(now + 110).strftime(
+            '%Y-%m-%dT%H:%M:%S')
+        self.assertEqual(end_time, res["end_time"])
+
+    def test_get_user_windowed_almost_finished(self):
+        now = int(datetime.datetime.now().timestamp())
+        Database.set_meta("start_time", now - 90)
+        Database.set_meta("contest_duration", 1000)
+        Database.set_meta("window_duration", 100)
+
+        Database.add_user("token", "", "")
+        Database.set_start_delay("token", 10)
+        Database.add_task("poldo", "", "", 42, 1)
+        Database.add_user_task("token", "poldo")
+        Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
+        Database.set_user_attempt("token", "poldo", 1)
+
+        res = self.handler.get_user(token="token", _ip="1.1.1.1")
+        end_time = datetime.datetime.fromtimestamp(now + 20).strftime(
+            '%Y-%m-%dT%H:%M:%S')
+        self.assertEqual(end_time, res["end_time"])
+
+    def test_get_user_windowed_partial_window(self):
+        now = int(datetime.datetime.now().timestamp())
+        Database.set_meta("start_time", now)
+        Database.set_meta("contest_duration", 1000)
+        Database.set_meta("window_duration", 100)
+
+        Database.add_user("token", "", "")
+        Database.set_start_delay("token", 990)
+        Database.add_task("poldo", "", "", 42, 1)
+        Database.add_user_task("token", "poldo")
+        Database.add_input("inputid", "token", "poldo", 1, "/path", 42)
+        Database.set_user_attempt("token", "poldo", 1)
+
+        res = self.handler.get_user(token="token", _ip="1.1.1.1")
+        end_time = datetime.datetime.fromtimestamp(now + 1000).strftime(
+            '%Y-%m-%dT%H:%M:%S')
+        self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_no_current_attempt(self):
         Utils.start_contest(since=100, duration=200)

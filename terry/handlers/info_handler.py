@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017-2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017-2018 - Massimo Cairo <cairomassimo@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
@@ -93,7 +93,14 @@ class InfoHandler(BaseHandler):
             del user["extra_time"]
             return user
 
-        user["end_time"] = InfoHandler.get_end_time(user["extra_time"])
+        end_time = InfoHandler.get_end_time(user["extra_time"])
+        if user["contest_start_delay"] is not None:
+            end_time = min(
+                end_time,
+                InfoHandler.get_window_end_time(user["extra_time"],
+                                                user["contest_start_delay"]))
+
+        user["end_time"] = end_time
         del user["extra_time"]
         user["tasks"] = {}
 

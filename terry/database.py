@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 
@@ -383,3 +383,10 @@ class Database:
             UPDATE users SET extra_time = :extra_time
             WHERE token = :token
         """, {"token": token, "extra_time": extra_time})
+
+    @staticmethod
+    def set_start_delay(token, start_delay, autocommit=True):
+        return 1 == Database.do_write(autocommit, """
+            UPDATE users SET contest_start_delay = :start_delay
+            WHERE token = :token
+        """, {"token": token, "start_delay": start_delay})

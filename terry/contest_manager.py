@@ -3,7 +3,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
-# Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2017-2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
@@ -159,8 +159,9 @@ class ContestManager:
         try:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
-            Logger.info("CONTEST", "Contest not found, you probably need to "
-                        "unzip it. Missing file %s" % ex.filename)
+            Logger.info(
+                "CONTEST", "Contest not found, you probably need to "
+                "unzip it. Missing file %s" % ex.filename)
             shutil.rmtree(Config.statementdir, ignore_errors=True)
             shutil.rmtree(Config.web_statementdir, ignore_errors=True)
             shutil.rmtree(Config.contest_path, ignore_errors=True)
@@ -184,6 +185,11 @@ class ContestManager:
                 Database.set_meta(
                     "contest_description",
                     contest.get("description", ""),
+                    autocommit=False)
+                Database.set_meta(
+                    "window_duration",
+                    # if None the contest is not USACO-style
+                    contest.get("window_duration"),
                     autocommit=False)
                 count = 0
 
@@ -303,9 +309,9 @@ class ContestManager:
                 # this method is blocking if the queue is full
                 queue.put({"id": id, "path": path})
             except:
-                Logger.error("TASK",
-                             "Exception while creating an input file: " +
-                             traceback.format_exc())
+                Logger.error(
+                    "TASK", "Exception while creating an input file: " +
+                    traceback.format_exc())
 
     @staticmethod
     def get_input(task_name, attempt):
@@ -343,17 +349,19 @@ class ContestManager:
                 StorageManager.get_absolute_path(output_path)
             ])
             if time.monotonic() > start_time + 1:
-                Logger.warning("TASK", "Evaluation of output %s "
-                               "for task %s, with input %s, took %f "
-                               "seconds" % (output_path, task_name, input_path,
-                                            time.monotonic() - start_time))
+                Logger.warning(
+                    "TASK", "Evaluation of output %s "
+                    "for task %s, with input %s, took %f "
+                    "seconds" % (output_path, task_name, input_path,
+                                 time.monotonic() - start_time))
         except:
             # TODO log the stdout and stderr of the checker
-            Logger.error("TASK", "Error while evaluating output %s "
-                         "for task %s, with input %s: %s" %
-                         (output_path, task_name, input_path,
-                          traceback.format_exc()))
+            Logger.error(
+                "TASK", "Error while evaluating output %s "
+                "for task %s, with input %s: %s" %
+                (output_path, task_name, input_path, traceback.format_exc()))
             raise
-        Logger.info("TASK", "Evaluated output %s for task %s, with input %s" %
-                    (output_path, task_name, input_path))
+        Logger.info(
+            "TASK", "Evaluated output %s for task %s, with input %s" %
+            (output_path, task_name, input_path))
         return output
