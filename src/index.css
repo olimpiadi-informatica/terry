@@ -183,6 +183,7 @@ pre {
   padding: 0.5rem;
   border-color: #ddd;
   border-style: solid;
+  min-width: 300px;
 }
 
 blockquote {
