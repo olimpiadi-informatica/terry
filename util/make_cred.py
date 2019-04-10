@@ -79,6 +79,8 @@ def main(args):
             path = os.path.join(args.output_dir, full_sede + ".yaml")
             backup = [{"name": "Riserva %d" % (i+1), "surname": sede, "token": gen_token(), "hidden": True} for i in range(args.num_backup)]
             contest = {"name": metadata["name"], "description": descrizione, "duration": args.durata, "users": atl + backup, "tasks": tasks}
+            if args.window_duration:
+                contest["window_duration"] = args.window_duration
             with open(path, "w") as f:
                 f.write(yaml.dump(contest))
         atl_per_aula = len(atl)/num_aule[sede]
@@ -105,4 +107,5 @@ if __name__ == "__main__":
     parser.add_argument("--password", help="Password dello zip da usare per generare le password dei pack")
     parser.add_argument("--demo", help="Genera credenziali per la demo", action="store_true", default=False)
     parser.add_argument("--num-backup", help="Aggiunge degli account di backup in ogni sede", action="store", default=0, type=int)
+    parser.add_argument("--window-duration", help="Durata della gara di ogni utente", action="store", type=int)
     main(parser.parse_args())
