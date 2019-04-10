@@ -109,7 +109,7 @@ export default class SubmissionView extends React.Component<Props> {
   render() {
     const { t } = this.props;
     return (
-      <ModalView contentLabel="Submission creation" returnUrl={"/" + this.props.submission.input.task}>
+      <ModalView contentLabel="Submission creation" returnUrl={"/task/" + this.props.submission.input.task}>
         <form
           className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit() }}
         // FIXME: after typescript switch, the following was shown to be wrong
