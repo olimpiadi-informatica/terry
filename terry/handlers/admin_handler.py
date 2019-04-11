@@ -79,7 +79,8 @@ class AdminHandler(BaseHandler):
         command = "zip -r '" + zipf_name + "' db.sqlite3* log.sqlite3* " \
                                            "files/input files/output " \
                                            "files/source /version* " \
-                                           "/proc/cpuinfo*"
+                                           "/proc/cpuinfo* " \
+                                           "/var/log/nginx"
 
         try:
             gevent.subprocess.check_output(
