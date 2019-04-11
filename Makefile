@@ -164,7 +164,7 @@ $(TARGET)/etc/systemd/system/getty@tty1.service.d/override.conf: $(TARGET) vm-ut
 $(TARGET)/root/.ssh: $(TARGET)
 	mkdir -p $@
 	yes | ssh-keygen -f $@/id_rsa -P "" -C "root@terry"
-	-[ ! -z "$(ROOT_AUTHORIZED_KEYS)" ] && cp $(ROOT_AUTHORIZED_KEYS) $@/authorized_keys
+	-[[ "$(ROOT_AUTHORIZED_KEYS)" != "" ]] && cp $(ROOT_AUTHORIZED_KEYS) $@/authorized_keys
 
 $(TARGET)/etc/modules-load.d/tun.conf: $(TARGET)
 	echo tun > $@
@@ -190,8 +190,8 @@ $(TARGET)/$(EXTRA_FILES_VM_PATH): $(TARGET) $(EXTRA_FILES_HOST_PATH)
 
 $(TARGET)/$(EXTRA_FILES_VM_PATH)/documentation: $(TARGET) $(WORKDIR)/cppdoc.tar.xz $(WORKDIR)/pasdoc.tar.gz
 	mkdir -p $@
-	cd $@ && tar xvf $(WORKDIR)/cppdoc.tar.xz && mv reference cpp
-	cd $@ && tar xvf $(WORKDIR)/pasdoc.tar.gz && mv doc pas
+	cd $@ && tar xf $(WORKDIR)/cppdoc.tar.xz && mv reference cpp
+	cd $@ && tar xf $(WORKDIR)/pasdoc.tar.gz && mv doc pas
 
 $(WORKDIR)/cppdoc.tar.xz: $(WORKDIR)
 	wget $(CPP_DOC_URL) -O $@
