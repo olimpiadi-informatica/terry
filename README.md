@@ -109,7 +109,7 @@ Once you have made all the configuration files and prepared all the tasks for th
 
 3. Make the `pack.zip.enc` file:
 
-   - `util/make_pack.zip --task-maker --both-arch aabbccddeeff00 metadata.yaml pack.zip.enc __users__ path/to/task1 path/to/task2 path/to/task3 --tutorials path/to/tutorials`
+   - `util/make_pack.py --task-maker --both-arch aabbccddeeff00 metadata.yaml pack.zip.enc __users__ path/to/task1 path/to/task2 path/to/task3 --tutorials path/to/tutorials`
    - `--task-maker` is **highly** suggested, will use task-maker to build the tasks.
    - `--both-arch` will make the executables for both `i686` and `x86_64`.
    - `metadata.yaml` the 1KiB limited file with the contest metadata.
