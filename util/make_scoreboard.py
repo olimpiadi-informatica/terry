@@ -67,7 +67,7 @@ def main(args):
         user["venue"] = venue
 
     with open(args.out_csv, "w") as f:
-        keys = ["venue", "surname", "name"] + tasks + ["score"]
+        keys = ["venue", "surname", "name", "token"] + tasks + ["score"]
         writer = csv.DictWriter(f, keys)
         writer.writeheader()
         writer.writerows(dict((x, d[x]) for x in keys) for d in data.values())
