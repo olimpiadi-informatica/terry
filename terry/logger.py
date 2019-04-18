@@ -65,6 +65,11 @@ class Logger:
         """)
 
     @staticmethod
+    def disconnect_database():
+        Logger.conn.close()
+        Logger.connected = False
+
+    @staticmethod
     def set_log_level(lvl):
         """
         Set the minimum level of the messages to be printed on console. Note
