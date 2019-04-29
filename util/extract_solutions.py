@@ -45,16 +45,15 @@ def store_submission(submission, taskdir, workdir, source_only):
             f.write("Score: %f\r\n" % submission["score"])
 
 
-def analyze_pack(pack, workdir, token, all, source_only, outdir):
+def analyze_pack(pack, workdir, token, all, source_only, no_group_venue, outdir):
     packname = os.path.basename(pack)[:4]
     if packname[3] == "0":
         packname = packname[:3]
     with common.extract_and_connect(pack, workdir):
+        users = Database.get_users()
         if token:
-            users = [Database.get_user(token)]
-        else:
-            users = Database.get_users()
-        if not users or not users[0]:
+            users = list(filter(lambda u: u["token"] in token, users))
+        if not users:
             return False
         for user in users:
             token = user["token"]
@@ -64,14 +63,19 @@ def analyze_pack(pack, workdir, token, all, source_only, outdir):
             for task in tasks:
                 submissions = Database.get_submissions(token, task)
                 num_submissions += len(submissions)
-                taskdir = os.path.join(outdir, packname, task, token)
+                if no_group_venue:
+                    taskdir = os.path.join(outdir, task, token)
+                else:
+                    taskdir = os.path.join(outdir, packname, task, token)
                 os.makedirs(taskdir, exist_ok=True)
                 if not all:
-                    submissions = [max(submissions, key=lambda x: x["score"])]
+                    best = max(submissions, key=lambda x: x["score"], default=None)
+                    if best:
+                        submissions = [best]
                 for submission in submissions:
                     store_submission(submission, taskdir, workdir, source_only)
             print("    > %d submissions" % num_submissions, file=sys.stderr)
-        return num_submissions > 0
+        return len(token) == 1 and num_submissions > 0
 
 
 def main(args):
@@ -79,8 +83,8 @@ def main(args):
             glob.glob(os.path.join(args.zip_dir, args.venue + "**"))):
         print("Analyzing pack", os.path.basename(pack), file=sys.stderr)
         with tempfile.TemporaryDirectory() as workdir:
-            if analyze_pack(pack, workdir, args.token, args.all,
-                            args.source_only, args.out_dir):
+            if analyze_pack(pack, workdir, set(args.token), args.all,
+                            args.source_only, args.no_group_venue, args.out_dir):
                 return
 
 
@@ -88,10 +92,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("zip_dir", help="Directory with all the zips")
     parser.add_argument("out_dir", help="Directory where to put the files")
-    parser.add_argument("token", help="Token of the student", nargs="?")
+    parser.add_argument("token", help="Token of the student", nargs="*")
     parser.add_argument("--all", help="Extract all the submissions, not only "
                                       "the best", action="store_true")
     parser.add_argument("--source-only", help="Extract only the source",
+                        action="store_true")
+    parser.add_argument("--no-group-venue", help="Do not group by venue",
                         action="store_true")
     parser.add_argument("--venue", help="Prefix of the pack of the student",
                         default="")

@@ -19,16 +19,21 @@ def remember_cwd(newdir):
 def extract_and_connect(path, workdir):
     from terry.config import Config
     from terry.database import Database
+    from terry.logger import Logger
 
     with zipfile.ZipFile(path) as f:
         f.extractall(workdir)
     db_path = os.path.join(workdir, "db.sqlite3")
+    log_path = os.path.join(workdir, "log.sqlite3")
     Config.db = db_path
+    Config.logfile = log_path
     Database.connect_to_database()
+    Logger.connect_to_database()
     try:
         yield
     finally:
         Database.disconnect_database()
+        Logger.disconnect_database()
 
 
 def get_tasks():
