@@ -2,6 +2,10 @@
 
 **terry** is a Google-Code-Jam-like programming contest environment designed for the territorial phase of the Italian Olympiad in Informatics (OII, _Olimpiadi Italiane di Informatica_).
 
+## Specification of the terry format
+
+You can find the specification of the format accepted by `terry` [here](https://github.com/algorithm-ninja/terry/blob/master/format-specs.md).
+
 ## Setup a production-like environment
 
 1. Clone recursively this repo `git clone --recurse-submodules https://github.com/algorithm-ninja/terry`
