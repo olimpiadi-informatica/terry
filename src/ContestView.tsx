@@ -17,6 +17,7 @@ type Props = {
 } & InjectedTranslateProps & InjectedI18nProps & RouteComponentProps<any>
 
 const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;
+const DETECT_INTERNET_TEST_CONTENT = process.env.REACT_APP_DETECT_INTERNET_TEST_CONTENT || null;
 
 export default class ContestView extends React.Component<Props> {
   private detectInternetInterval: NodeJS.Timer | null = null;
@@ -24,9 +25,13 @@ export default class ContestView extends React.Component<Props> {
   async detectInternet(endpoint: string) {
     console.log(`Testing internet connection (${DETECT_INTERNET_TEST_ENDPOINT})...`);
     try {
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         mode: "no-cors",
       });
+      const content = await res.text();
+      if (content !== DETECT_INTERNET_TEST_CONTENT) {
+        console.log(`Invalid content ${content}`);
+      }
     } catch(e) {
       console.log(`No internet connection (${e})`);
       return;
