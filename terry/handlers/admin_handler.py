@@ -57,7 +57,7 @@ class AdminHandler(BaseHandler):
             return {"uploaded": False}
         with open(Config.encrypted_file, "rb") as f:
             raw_meta = crypto.metadata(f.read(crypto.DATA_OFFSET))
-        metadata = yaml.load(raw_meta.strip(b"\x00"))
+        metadata = yaml.safe_load(raw_meta.strip(b"\x00"))
         if metadata is None:
             metadata = dict()
         metadata["uploaded"] = True
@@ -216,7 +216,7 @@ class AdminHandler(BaseHandler):
                 # pack password is wrong
                 self.raise_exc(Forbidden, "FORBIDDEN", "Wrong pack token")
 
-        metadata = yaml.load(crypto.metadata(pack).strip(b"\x00"))
+        metadata = yaml.safe_load(crypto.metadata(pack).strip(b"\x00"))
         if not metadata.get("deletable"):
             self.raise_exc(Forbidden, "FORBIDDEN", "Contest not deletable")
 

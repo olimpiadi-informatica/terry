@@ -115,7 +115,6 @@ class ContestHandler(BaseHandler):
         return InfoHandler.patch_submission(
             Database.get_submission(submission_id))
 
-    @Validators.during_contest
     @Validators.register_user_ip
     @Validators.validate_token
     def internet_detected(self, user):

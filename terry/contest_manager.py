@@ -105,7 +105,7 @@ class ContestManager:
         :return: Returns the config of the contest
         """
         with open(os.path.join(path, "contest.yaml")) as f:
-            contest_config = yaml.load(f)
+            contest_config = yaml.safe_load(f)
         tasks = []
         os.makedirs(Config.statementdir, exist_ok=True)
         for task in contest_config["tasks"]:
@@ -121,7 +121,7 @@ class ContestManager:
 
             # load the task config
             with open(os.path.join(path, task, "task.yaml")) as f:
-                task_config = yaml.load(f)
+                task_config = yaml.safe_load(f)
 
             checker = os.path.join(
                 taskdir, "managers",

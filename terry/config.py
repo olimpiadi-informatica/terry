@@ -43,7 +43,7 @@ class Config:
 
         try:
             with open(config_file, 'r') as f:
-                cfg = yaml.load(f)
+                cfg = yaml.safe_load(f)
         except FileNotFoundError:
             print("Config file %s not found, you should create it!" % config_file, file=sys.stderr)
             print("If you just want to use default values, launch with: -c /dev/null", file=sys.stderr)
