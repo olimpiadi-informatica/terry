@@ -116,10 +116,9 @@ class ContestHandler(BaseHandler):
             Database.get_submission(submission_id))
 
     @Validators.register_user_ip
-    @Validators.validate_token
-    def internet_detected(self, user):
+    def internet_detected(self, token):
         """
         POST /internet_detected
         """
         Logger.warning("INTERNET_DETECTED",
-                       "User %s has been detected with internet!" % user["token"])
+                       "User %s has been detected with internet!" % token)
