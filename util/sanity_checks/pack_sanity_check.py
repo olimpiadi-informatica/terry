@@ -48,7 +48,7 @@ def validate_task(task, fuzz, iterations, solutions):
         os.chmod(validator, 0o755)
 
     with open(task_yaml, "r") as f:
-        task_info = yaml.load(f)
+        task_info = yaml.safe_load(f)
     assert task_info["name"]
     assert task_info["description"]
     assert task_info["max_score"]
@@ -88,7 +88,7 @@ def validate_task(task, fuzz, iterations, solutions):
                 raise AssertionError("Check didn't print the validation")
     for solution in solutions:
         print("Testing:", os.path.basename(solution), "with", iterations, "iterations")
-        results = [] 
+        results = []
         for i in range(iterations):
             results.append(evaluate(generator, validator, checker, solution))
             if int(100*i/iterations) % 10 == 0:
@@ -117,7 +117,7 @@ def validate_sedi(sedi):
         print("    %s" % sede)
         with open(os.path.join("__users__", get_nth_room(sede, 1) + ".yaml")) \
                 as f:
-            contest = yaml.load(f)
+            contest = yaml.safe_load(f)
             for user in contest["users"]:
                 if user["token"] in tokens:
                     raise AssertionError("Duplicate token: %s" % user["token"])
@@ -128,7 +128,7 @@ def validate_sedi(sedi):
                                                "%s.yaml" % full_sede)):
                 raise AssertionError("YAML for sede %s not found" % full_sede)
             with open(os.path.join("__users__", full_sede + ".yaml")) as f:
-                contest2 = yaml.load(f)
+                contest2 = yaml.safe_load(f)
                 if contest != contest2:
                     raise AssertionError("YAML for room %d is different from "
                                          "room 1 in %s" % (aula, sede))
@@ -156,7 +156,7 @@ def main(args):
         pack = pack.read()
     if not validate(pack):
         raise AssertionError("Corrupted pack")
-    meta = yaml.load(metadata(pack).strip(b"\x00"))
+    meta = yaml.safe_load(metadata(pack).strip(b"\x00"))
     if meta.get("deletable"):
         print(Fore.YELLOW, "WARNING: The pack is marked as deletable",
               Fore.RESET)

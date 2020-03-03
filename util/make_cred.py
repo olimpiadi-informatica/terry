@@ -52,7 +52,7 @@ def main(args):
         reader = list(csv.DictReader(f, delimiter=";"))
 
     with open(args.metadata, "r") as f:
-        metadata = yaml.load(f)
+        metadata = yaml.safe_load(f)
 
     tasks = args.tasks.split(",")
 

@@ -26,7 +26,7 @@ def main():
 
     args = parser.parse_args()
 
-    contest = yaml.load(args.contest_yaml)
+    contest = yaml.safe_load(args.contest_yaml)
     users = [u for u in contest["users"] if not u.get("hidden")]
     users.sort(key=lambda x: x['surname'] + ":" + x["name"])
 
