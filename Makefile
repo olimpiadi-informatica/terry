@@ -6,14 +6,15 @@ WORKDIR=$(shell realpath temp)
 OVA_SIZE=10240 # in MiB
 VM_NAME=Terry Server
 VM_MEMORY=2048 # in MiB
-VM_HOST_PORT=9000
-REACT_APP_DETECT_INTERNET_TEST_ENDPOINT=http://gstatic.com/generate_204
-EXTRA_PACKAGES=nginx cronie pypy{,3} python{,2}-pip python{,2}-sortedcontainers python-colorama python-gevent python-pyjwt python-yaml python-werkzeug python-requests python-pynacl python-cffi python{,2}-numpy zip htop vim gcc
+VM_HOST_PORT=27492
+REACT_APP_DETECT_INTERNET_TEST_ENDPOINT=https://territoriali.olinfo.it/check_internet
+REACT_APP_DETECT_INTERNET_TEST_CONTENT="wibble monster++"
+EXTRA_PACKAGES=nginx cronie pypy3 python-pip python-sortedcontainers python-colorama python-gevent python-pyjwt python-yaml python-werkzeug python-requests python-pynacl python-cffi python-numpy zip htop vim gcc nano
 RAW_DISK=$(WORKDIR)/disk.img
 VMDK_DISK=$(WORKDIR)/disk.vmdk
 EXTRA_FILES_HOST_PATH=extra_files
 EXTRA_FILES_VM_PATH=/app/extra_files
-CPP_DOC_URL=http://upload.cppreference.com/mwiki/images/1/17/html_book_20181028.tar.xz
+CPP_DOC_URL=http://upload.cppreference.com/mwiki/images/1/16/html_book_20190607.tar.xz
 PAS_DOC_URL=ftp://mirror.freemirror.org/pub/fpc/dist/3.0.4/docs/doc-html.tar.gz
 
 build: check_root \
@@ -56,7 +57,8 @@ $(WORKDIR):
 	mkdir -p $@
 
 $(WORKDIR)/territoriali-frontend/build: territoriali-frontend $(WORKDIR)
-	export REACT_APP_DETECT_INTERNET_TEST_ENDPOINT=$(REACT_APP_DETECT_INTERNET_TEST_ENDPOINT) && \
+	export REACT_APP_DETECT_INTERNET_TEST_ENDPOINT=$(REACT_APP_DETECT_INTERNET_TEST_ENDPOINT) \
+		REACT_APP_DETECT_INTERNET_TEST_CONTENT=$(REACT_APP_DETECT_INTERNET_TEST_CONTENT) && \
 		cd territoriali-frontend && yarn && yarn build
 	mkdir -p $(WORKDIR)/territoriali-frontend
 	cp -r territoriali-frontend/build $(WORKDIR)/territoriali-frontend/build
@@ -135,6 +137,7 @@ $(TARGET)/etc/mtab: $(TARGET)
 
 $(TARGET)/etc/resolv.conf: $(TARGET)
 	echo "nameserver 1.1.1.1" > $(TARGET)/etc/resolv.conf
+	echo "nameserver 8.8.8.8" >> $(TARGET)/etc/resolv.conf
 
 $(TARGET)/app/territoriali-frontend/build: $(TARGET) $(WORKDIR)/territoriali-frontend/build
 	mkdir -p $@
@@ -143,7 +146,7 @@ $(TARGET)/app/territoriali-frontend/build: $(TARGET) $(WORKDIR)/territoriali-fro
 $(TARGET)/app/territoriali-backend: $(TARGET) $(WORKDIR)/territoriali-backend
 	mkdir -p $@
 	cp -r $(WORKDIR)/territoriali-backend $(TARGET)/app
-	linux32 chroot $(TARGET) bash -c "cd /app/territoriali-backend && python setup.py install"
+	linux32 chroot $(TARGET) bash -c "cd /app/territoriali-backend && rm -rf build dist territoriali_backend.egg-info && python setup.py install"
 
 $(TARGET)/app/config.yaml: $(TARGET) $(WORKDIR)/config.yaml
 	cp $(WORKDIR)/config.yaml $(TARGET)/app/config.yaml
@@ -216,7 +219,7 @@ unchroot:
 
 $(RAW_DISK): $(TARGET) $(WORKDIR)
 	linux32 chroot $(TARGET) pacman -Scc --noconfirm
-	$(eval LOOPBACK := $(shell losetup -f))	
+	$(eval LOOPBACK := $(shell losetup -f))
 	# setup the disk image
 	truncate -s $$(($(OVA_SIZE) * 1024 * 1024 )) $(RAW_DISK)
 	losetup $(LOOPBACK) "$(RAW_DISK)"
