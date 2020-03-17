@@ -305,6 +305,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertTrue(status["uploaded"])
         self.assertEqual(status["foo"], "bar")
 
+    @unittest.skip
     def test_download_results(self):
         Config.storedir = Utils.new_tmp_dir()
         wd = os.getcwd()

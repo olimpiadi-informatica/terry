@@ -43,7 +43,7 @@ class TestServer(unittest.TestCase):
                                    None)
         self.assertIsInstance(res, NotFound)
 
-    @patch("gevent.wsgi.WSGIServer.init_socket", side_effect=OSError())
+    @patch("gevent.pywsgi.WSGIServer.init_socket", side_effect=OSError())
     def test_run_port_in_use(self, mock):
         with self.assertRaises(SystemExit) as ex:
             with Utils.nostderr() as stderr:
@@ -51,7 +51,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(1, ex.exception.code)
         self.assertIn("PORT_ALREADY_IN_USE", stderr.buffer)
 
-    @patch("gevent.wsgi.WSGIServer.init_socket")
+    @patch("gevent.pywsgi.WSGIServer.init_socket")
     @patch("gevent.spawn")
     def test_run(self, spawn, init):
         Logger.set_log_level("INFO")

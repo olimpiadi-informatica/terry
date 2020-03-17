@@ -206,15 +206,16 @@ class TestContestManager(unittest.TestCase):
             "generator": "/gen",
             "validator": "/val"
         }
+        class FakeQueue:
+            def put(self, _):
+                raise NotImplementedError("Stop loop")
+        ContestManager.input_queue["poldo"] = FakeQueue()
 
         with patch(
                 "terry.logger.Logger.error",
                 side_effect=TestContestManager._stop_worker_loop):
-            with patch(
-                    "gevent.queue.Queue.put",
-                    side_effect=NotImplementedError("Stop loop")):
-                with self.assertRaises(NotImplementedError) as ex:
-                    ContestManager.worker("poldo")
+            with self.assertRaises(NotImplementedError) as ex:
+                ContestManager.worker("poldo")
 
     @patch("gevent.subprocess.call", return_value=42)
     @patch("terry.database.Database.gen_id", return_value="inputid")
@@ -223,17 +224,18 @@ class TestContestManager(unittest.TestCase):
             "generator": "/gen",
             "validator": "/val"
         }
+        class FakeQueue:
+            def put(self, _):
+                raise NotImplementedError("Stop loop")
+        ContestManager.input_queue["poldo"] = FakeQueue()
 
         with patch(
                 "terry.logger.Logger.error",
                 side_effect=TestContestManager._stop_worker_loop):
-            with patch(
-                    "gevent.queue.Queue.put",
-                    side_effect=NotImplementedError("Stop loop")):
-                with self.assertRaises(Exception) as ex:
-                    ContestManager.worker("poldo")
-                self.assertIn("Error 42 generating input",
-                              ex.exception.args[0])
+            with self.assertRaises(Exception) as ex:
+                ContestManager.worker("poldo")
+            self.assertIn("Error 42 generating input",
+                            ex.exception.args[0])
 
     @patch("gevent.subprocess.call")
     @patch("terry.database.Database.gen_id", return_value="inputid")
@@ -243,17 +245,18 @@ class TestContestManager(unittest.TestCase):
             "generator": "/gen",
             "validator": "/val"
         }
+        class FakeQueue:
+            def put(self, _):
+                raise NotImplementedError("Stop loop")
+        ContestManager.input_queue["poldo"] = FakeQueue()
 
         with patch(
                 "terry.logger.Logger.error",
                 side_effect=TestContestManager._stop_worker_loop):
-            with patch(
-                    "gevent.queue.Queue.put",
-                    side_effect=NotImplementedError("Stop loop")):
-                with self.assertRaises(Exception) as ex:
-                    ContestManager.worker("poldo")
-                self.assertIn("Error 42 validating input",
-                              ex.exception.args[0])
+            with self.assertRaises(Exception) as ex:
+                ContestManager.worker("poldo")
+            self.assertIn("Error 42 validating input",
+                            ex.exception.args[0])
 
     def test_get_input(self):
         input_path = Utils.new_tmp_file()
