@@ -6,6 +6,7 @@ import 'babel-polyfill';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import AppView from './AppView';
+import LoadingView from './LoadingView';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import i18n from './i18n';
@@ -30,13 +31,15 @@ window.addEventListener('unhandledrejection', (event: any) => {
 
 ReactDOM.render(
     <React.Fragment>
-        <ToastContainer />
-        <Router>
-            <Switch>
-                <Route path={'/admin'} component={PackView} />
-                <Route component={AppView} />
-            </Switch>
-        </Router>
+        <React.Suspense fallback={<LoadingView />}>
+            <ToastContainer />
+            <Router>
+                <Switch>
+                    <Route path={'/admin'} component={PackView} />
+                    <Route component={AppView} />
+                </Switch>
+            </Router>
+        </React.Suspense>
     </React.Fragment>,
     document.getElementById("root")
 );

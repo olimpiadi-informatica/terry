@@ -23,7 +23,8 @@ i18next
     },
 
     react: {
-      wait: true
+      wait: true,
+      useSuspense: false
     },
 
     returnNull: false,
