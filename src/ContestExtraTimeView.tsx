@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faHourglassStart } from '@fortawesome/fontawesome-free-solid'
+import { faTimes, faHourglassStart } from '@fortawesome/free-solid-svg-icons'
 import ModalView from './ModalView';
-import { Trans, InjectedTranslateProps } from "react-i18next";
+import { Trans, WithTranslation } from "react-i18next";
 import { toast } from 'react-toastify'
 import { AdminSession } from './admin.models';
 
@@ -13,7 +13,7 @@ type Props = {
     data: { start_time: string, end_time: string }
     extraTimeMinutes: () => number
   }
-} & InjectedTranslateProps & RouteComponentProps<any>
+} & WithTranslation & RouteComponentProps<any>
 
 class ContestExtraTimeView extends React.Component<Props> {
   componentDidMount() {

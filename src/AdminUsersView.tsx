@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faHourglassStart } from '@fortawesome/fontawesome-free-solid'
+import { faTimes, faHourglassStart } from '@fortawesome/free-solid-svg-icons'
 import ModalView from './ModalView';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { AdminSession } from './admin.models';
-import { InjectedTranslateProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 
 type UserExtraTimeProps = {
   session: AdminSession
   user: any
-} & InjectedTranslateProps
+} & WithTranslation
 
 class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
   setExtraTime() {
@@ -44,7 +44,7 @@ class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
 type AdminUsersProps = {
   session: AdminSession
   users: { data: { items: any[] } }
-} & InjectedTranslateProps
+} & WithTranslation
 
 export default class AdminUsersView extends React.Component<AdminUsersProps> {
   componentDidMount() {

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { InjectedTranslateProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import { Model } from './user.models';
 import PromiseView from './PromiseView';
 
 type Props = {
   model: Model
-} & InjectedTranslateProps
+} & WithTranslation
 
 export default class LoginView extends React.Component<Props> {
   componentDidMount() {
@@ -31,7 +31,7 @@ export default class LoginView extends React.Component<Props> {
             <input autoComplete="off" name="token" id="token" className="form-control text-center" required
               placeholder={t("login.token")} type="text" />
           </div>
-          <input type="submit" className="btn btn-primary" value={t("login.login")} />
+          <input type="submit" className="btn btn-primary" value={t("login.login")!} />
           {this.props.model.lastLoginAttempt &&
             <PromiseView promise={this.props.model.lastLoginAttempt}
               renderPending={() => <span>{t("loading")}</span>}

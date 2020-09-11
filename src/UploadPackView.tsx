@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { InjectedTranslateProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import Pack from './Pack';
 
 type Props = {
   pack: Pack
-} & InjectedTranslateProps
+} & WithTranslation
 
 export default class UploadPackView extends React.Component<Props> {
   componentDidMount() {
@@ -32,7 +32,7 @@ export default class UploadPackView extends React.Component<Props> {
             <label htmlFor="file" className="sr-only">{t("upload pack.file")}</label>
             <input type="file" accept=".enc" name="file" id="file" className="form-control" required />
           </div>
-          <input type="submit" className="btn btn-danger" value={t("upload pack.upload")} />
+          <input type="submit" className="btn btn-danger" value={t("upload pack.upload")!} />
         </form>
       </div>
     );

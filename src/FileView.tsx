@@ -1,13 +1,13 @@
 import * as React from 'react';
-import * as filesize from 'filesize';
+import filesize from 'filesize';
 import { DateView } from './datetime.views';
 import { DateTime } from "luxon";
 import "./FileView.css";
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 
 type Props = {
   file: any
-} & InjectedTranslateProps & InjectedI18nProps
+} & WithTranslation
 
 export default class FileView extends React.Component<Props> {
   render() {

@@ -1,5 +1,4 @@
-import { translate } from "react-i18next";
-import { withRouter } from "react-router-dom";
+import { withTranslation } from "react-i18next"
 import { toast } from 'react-toastify'
 
 export function colorFromScore(score: number, max_score: number) {
@@ -10,7 +9,8 @@ export function translateComponent(Component: any, namespace?: string) {
   if (!namespace) namespace = "translations";
   // withRouter is required to forward props update.
   // See https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md
-  return translate(namespace)(withRouter(Component));
+  // return withTranslation(namespace)(withRouter(Component));
+  return withTranslation(namespace)(Component);
 }
 
 export function notifyError(response: any) {

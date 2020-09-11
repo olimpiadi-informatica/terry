@@ -3,19 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome": "^1.1.5",
-    "@fortawesome/fontawesome-free-regular": "^5.0.13",
-    "@fortawesome/fontawesome-free-solid": "^5.0.10",
-    "@fortawesome/fontawesome-svg-core": "^1.2.0-11",
-    "@fortawesome/react-fontawesome": "0.1.0-8",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-regular-svg-icons": "^5.14.0",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@types/core-js": "^0.9.46",
     "@types/filesize": "^3.6.0",
-    "@types/i18next-browser-languagedetector": "^2.0.1",
-    "@types/i18next-xhr-backend": "^1.4.1",
     "@types/luxon": "^0.5.1",
     "@types/node": "^9.6.5",
     "@types/react-dom": "^16.0.5",
-    "@types/react-fontawesome": "^1.6.2",
     "@types/react-i18next": "^7.3.2",
     "@types/react-modal": "^3.1.2",
     "@types/react-router-dom": "^4.2.6",
@@ -25,34 +21,45 @@
     "bootstrap": "^4.1.0",
     "core-js": "^2.5.5",
     "filesize": "^4.1.2",
-    "i18next": "^11.2.3",
-    "i18next-browser-languagedetector": "^2.2.0",
+    "i18next": "^19.7.0",
+    "i18next-browser-languagedetector": "^6.0.1",
     "i18next-xhr-backend": "^1.5.1",
     "katex-all": "^0.6.0-pre",
     "luxon": "^1.0.0",
     "moment": "^2.22.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-i18next": "^7.6.0",
+    "react-i18next": "^11.7.2",
     "react-markdown": "^4.0.6",
     "react-modal": "^3.4.1",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
-    "react-scripts-ts": "^2.15.1",
+    "react-scripts": "^3.4.3",
     "react-toastify": "^4.0.0-rc.4",
     "react-tooltip": "^3.5.0",
     "tslint": "^5.9.1",
     "tslint-react": "^3.5.1",
-    "typescript": "^2.8.3",
+    "typescript": "^3.9.7",
     "universal-cookie": "^2.1.2"
   },
   "scripts": {
-    "start": "concurrently --kill-others \"react-scripts-ts start\" \"node proxy.js\"",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "start": "concurrently --kill-others \"react-scripts start\" \"node proxy.js\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { AdminSession } from './admin.models';
-import { InjectedTranslateProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 const ReactMarkdown = require('react-markdown');
 
 type Props = {
   session: AdminSession
   pack: { data: { deletable: boolean, name: string, description: string } }
-} & InjectedTranslateProps
+} & WithTranslation
 
 export default class AdminLoginView extends React.Component<Props> {
   componentDidMount() {
@@ -36,7 +36,7 @@ export default class AdminLoginView extends React.Component<Props> {
             <input name="token" id="token" className="form-control text-center" required
               placeholder={t("login.token")} />
           </div>
-          <input type="submit" className="btn btn-danger" value={t("login.login")} />
+          <input type="submit" className="btn btn-danger" value={t("login.login")!} />
         </form>
       </div>
     );

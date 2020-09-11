@@ -1,13 +1,13 @@
 import * as React from 'react';
 import SubmissionView from './SubmissionView';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import { RouteComponentProps } from 'react-router';
 
 type Props = {
   userState: any
   taskName: string
   inputId: string
-} & InjectedTranslateProps & InjectedI18nProps & RouteComponentProps<any>
+} & WithTranslation & RouteComponentProps<any>
 
 export default class CreateSubmissionView extends React.Component<Props> {
   submission: any;

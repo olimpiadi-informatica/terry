@@ -6,13 +6,13 @@ import { CountdownView } from './datetime.views';
 import NavbarItemView from './NavbarItemView';
 import ScoreView from './ScoreView';
 import "./SidebarView.css";
-import { InjectedTranslateProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import { Model } from './user.models';
 
 type Props = {
   userState: any
   model: Model
-} & InjectedTranslateProps
+} & WithTranslation
 
 class SidebarView extends React.Component<Props> {
   render() {

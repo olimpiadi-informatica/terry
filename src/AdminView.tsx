@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSignOutAlt } from '@fortawesome/fontawesome-free-solid'
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { AdminSession } from "./admin.models";
 import AdminLoginView from "./AdminLoginView";
 import AdminLogsView from "./AdminLogsView";
@@ -10,12 +10,12 @@ import AdminUsersView from "./AdminUsersView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
 import PromiseView from './PromiseView';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import Pack from './Pack';
 
 type Props = {
   pack: Pack
-} & InjectedTranslateProps & InjectedI18nProps
+} & WithTranslation
 
 export default class AdminView extends React.Component<Props> {
   session: AdminSession;
@@ -79,7 +79,7 @@ export default class AdminView extends React.Component<Props> {
                   <Route path="/admin/extra_time" render={
                     () => (
                       <ContestExtraTimeView
-                        t={this.props.t}
+                      {...this.props}
                         status={status}
                         session={this.session} />
                     )
@@ -88,7 +88,7 @@ export default class AdminView extends React.Component<Props> {
                   <Route path="/admin/users" render={
                     () => (
                       <AdminUsersView
-                        t={this.props.t}
+                      {...this.props}
                         session={this.session}
                         users={users} />
                     )
@@ -97,7 +97,7 @@ export default class AdminView extends React.Component<Props> {
                   <Route path="/admin/download_results" render={
                     () => (
                       <DownloadResultsView
-                        t={this.props.t}
+                        {...this.props}
                         session={this.session} />
                     )
                   } />

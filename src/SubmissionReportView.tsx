@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/fontawesome-free-solid'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import ModalView from './ModalView';
 import FeedbackView from './FeedbackView';
 import PromiseView from './PromiseView';
 import ObservablePromise from './ObservablePromise';
 import { Model } from './user.models';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 
 type Props = {
   model: Model
   submissionId: string
   taskName: string
-} & InjectedTranslateProps & InjectedI18nProps
+} & WithTranslation
 
 export default class SubmissionReportView extends React.Component<Props> {
   submissionPromise: ObservablePromise;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faDownload } from '@fortawesome/fontawesome-free-solid'
+import { faPlay, faDownload } from '@fortawesome/free-solid-svg-icons'
 import { CountdownView } from './datetime.views';
 import { DateTime } from 'luxon';
 import { DateView } from './datetime.views';
@@ -10,7 +10,7 @@ import PromiseView from './PromiseView';
 import { notifyError } from './utils';
 import { toast } from "react-toastify";
 import { AdminSession } from './admin.models';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import ObservablePromise from './ObservablePromise';
 
 type User = {
@@ -25,7 +25,7 @@ type Props = {
     extraTimeMinutes: () => number
   }
   pack: { data: { deletable: boolean } }
-} & InjectedTranslateProps & InjectedI18nProps
+} & WithTranslation
 
 export default class AdminSummaryView extends React.Component<Props> {
   timer?: NodeJS.Timer;

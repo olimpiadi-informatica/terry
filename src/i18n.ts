@@ -1,14 +1,14 @@
-import * as i18n from 'i18next';
-import * as Backend from 'i18next-xhr-backend';
-import * as LanguageDetector from 'i18next-browser-languagedetector';
-import { reactI18nextModule } from 'react-i18next';
+import i18next from 'i18next';
+import Backend from 'i18next-xhr-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 
 require("moment/locale/it");
 
-i18n
+i18next
   .use(Backend)
   .use(LanguageDetector)
-  .use(reactI18nextModule)
+  .use(initReactI18next)
   .init({
     fallbackLng: 'en',
 
@@ -24,8 +24,10 @@ i18n
 
     react: {
       wait: true
-    }
+    },
+
+    returnNull: false,
   });
 
 
-export default i18n;
+export default i18next;

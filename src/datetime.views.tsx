@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DateTime } from "luxon";
-import * as moment from "moment";
-import { InjectedI18nProps, InjectedTranslateProps } from 'react-i18next';
+import moment from "moment";
+import { WithTranslation } from 'react-i18next';
 
 type Props = {
   rate: number
@@ -30,7 +30,7 @@ class AutoRefreshView extends React.Component<Props> {
 type DateViewProps = {
   date: DateTime
   clock: () => DateTime
-} & InjectedI18nProps
+} & WithTranslation
 
 export class DateView extends React.Component<DateViewProps> {
   render() {
@@ -62,7 +62,7 @@ type CountDownProps = {
   end: DateTime
   clock: () => DateTime
   afterEnd?: React.ReactNode
-} & InjectedTranslateProps
+} & WithTranslation
 
 export class CountdownView extends React.Component<CountDownProps> {
   timer?: NodeJS.Timer;

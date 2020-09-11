@@ -7,9 +7,9 @@ import LoadingView from "./LoadingView";
 import PromiseView from './PromiseView';
 import { Model } from './user.models';
 import ObservablePromise from './ObservablePromise';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 
-type Props = InjectedTranslateProps & InjectedI18nProps & RouteComponentProps<any>
+type Props = WithTranslation & RouteComponentProps<any>
 
 class AppView extends React.Component<Props> {
   model: Model;

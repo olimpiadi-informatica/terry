@@ -1,7 +1,7 @@
 import * as React from 'react';
 import client from './TerryClient';
 
-import * as ReactMarkdown from 'react-markdown';
+import ReactMarkdown from 'react-markdown';
 import 'katex-all/dist/katex.min.css';
 import './TaskStatementView.css';
 

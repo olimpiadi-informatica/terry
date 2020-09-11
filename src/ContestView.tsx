@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Link, Route, RouteComponentProps } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/fontawesome-free-solid';
-import { faClock } from '@fortawesome/fontawesome-free-regular';
-import * as ReactMarkdown from 'react-markdown';
-import { Trans, InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
+import ReactMarkdown from 'react-markdown';
+import { Trans, WithTranslation } from 'react-i18next';
 import TaskView from './TaskView';
 import SidebarView from './SidebarView';
 import { Model } from './user.models';
@@ -14,7 +14,7 @@ import LoginView from './LoginView';
 type Props = {
   userState: any
   model: Model
-} & InjectedTranslateProps & InjectedI18nProps & RouteComponentProps<any>
+} & WithTranslation & RouteComponentProps<any>
 
 const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;
 const DETECT_INTERNET_TEST_CONTENT = process.env.REACT_APP_DETECT_INTERNET_TEST_CONTENT || null;

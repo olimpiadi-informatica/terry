@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faTimes } from '@fortawesome/fontawesome-free-solid'
+import { faDownload, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { DateView } from './datetime.views';
 import { DateTime } from 'luxon';
 import client from './TerryClient';
 import ModalView from './ModalView';
-import * as ReactTooltip from 'react-tooltip';
+import ReactTooltip from 'react-tooltip';
 import { colorFromScore } from "./utils";
 import "./SubmissionListView.css";
 import ScoreView from './ScoreView';
 import PromiseView from './PromiseView';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 
 type Props = {
   userState: any
   taskName: string
   model: any
-} & InjectedTranslateProps & InjectedI18nProps
+} & WithTranslation
 
 export default class SubmissionListView extends React.Component<Props> {
   getTask() {

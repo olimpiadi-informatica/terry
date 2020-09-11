@@ -4,10 +4,10 @@ import Pack from "./Pack";
 import LoadingView from "./LoadingView";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import { RouteComponentProps } from 'react-router';
 
-type Props = InjectedTranslateProps & InjectedI18nProps & RouteComponentProps<any>
+type Props = WithTranslation & RouteComponentProps<any>
 
 class PackView extends React.Component<Props> {
   pack: Pack;

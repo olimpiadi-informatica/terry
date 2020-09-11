@@ -4,13 +4,13 @@ import { DateView } from './datetime.views';
 import { DateTime } from 'luxon';
 import ScoreView from './ScoreView';
 import { TestCase } from './domain';
-import { InjectedTranslateProps, InjectedI18nProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 
 type Props = {
   submission: any
   userState?: any
   model: any
-} & InjectedTranslateProps & InjectedI18nProps
+} & WithTranslation
 
 export default class FeedbackView extends React.Component<Props> {
   render() {

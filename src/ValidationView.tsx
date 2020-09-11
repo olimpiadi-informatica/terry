@@ -1,11 +1,11 @@
 import * as React from 'react';
 import ResultView from './ResultView'
-import { InjectedTranslateProps } from 'react-i18next';
+import { WithTranslation } from 'react-i18next';
 import { TestCase } from './domain'
 
 type Props = {
   result: any
-} & InjectedTranslateProps
+} & WithTranslation
 
 export default class ValidationView extends React.Component<Props> {
   render() {
