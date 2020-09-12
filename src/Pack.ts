@@ -1,7 +1,6 @@
-import client from './TerryClient';
-import Observable from './Observable';
-import { notifyError } from './utils';
-
+import client from "./TerryClient";
+import Observable from "./Observable";
+import { notifyError } from "./utils";
 
 export default class Pack extends Observable {
   loading?: Promise<any>;
@@ -22,7 +21,8 @@ export default class Pack extends Observable {
 
   update() {
     this.fireUpdate();
-    return this.loading = client.api("/admin/pack_status")
+    return (this.loading = client
+      .api("/admin/pack_status")
       .then((response) => {
         this.data = response.data;
         delete this.error;
@@ -30,11 +30,11 @@ export default class Pack extends Observable {
         this.fireUpdate();
       })
       .catch((response) => {
-        notifyError(response)
+        notifyError(response);
         delete this.data;
         delete this.loading;
         this.fireUpdate();
-      });
+      }));
   }
 
   upload(file: any) {
@@ -42,13 +42,14 @@ export default class Pack extends Observable {
 
     data.append("file", file);
 
-    return client.api.post("/admin/upload_pack", data)
+    return client.api
+      .post("/admin/upload_pack", data)
       .then(() => {
         return this.update();
-      }).catch(response => {
-        notifyError(response)
+      })
+      .catch((response) => {
+        notifyError(response);
         this.fireUpdate();
       });
   }
-
 }

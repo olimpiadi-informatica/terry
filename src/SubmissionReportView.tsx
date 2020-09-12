@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import ModalView from './ModalView';
-import FeedbackView from './FeedbackView';
-import PromiseView from './PromiseView';
-import ObservablePromise from './ObservablePromise';
-import { Model } from './user.models';
-import { WithTranslation } from 'react-i18next';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import ModalView from "./ModalView";
+import FeedbackView from "./FeedbackView";
+import PromiseView from "./PromiseView";
+import ObservablePromise from "./ObservablePromise";
+import { Model } from "./user.models";
+import { WithTranslation } from "react-i18next";
 
 type Props = {
-  model: Model
-  submissionId: string
-  taskName: string
-} & WithTranslation
+  model: Model;
+  submissionId: string;
+  taskName: string;
+} & WithTranslation;
 
 export default class SubmissionReportView extends React.Component<Props> {
   submissionPromise: ObservablePromise;
@@ -40,8 +40,9 @@ export default class SubmissionReportView extends React.Component<Props> {
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
-        <PromiseView promise={this.getSubmissionPromise()}
-          renderFulfilled={(submission) =>
+        <PromiseView
+          promise={this.getSubmissionPromise()}
+          renderFulfilled={(submission) => (
             <React.Fragment>
               <FeedbackView {...this.props} submission={submission} />
               <div className="modal-footer">
@@ -50,7 +51,7 @@ export default class SubmissionReportView extends React.Component<Props> {
                 </Link>
               </div>
             </React.Fragment>
-          }
+          )}
           renderPending={() => <div className="modal-body">{t("loading")}</div>}
           renderRejected={() => <div className="modal-body">{t("error")}</div>}
         />

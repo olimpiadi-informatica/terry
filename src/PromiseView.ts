@@ -1,12 +1,12 @@
-import * as React from 'react';
-import ObservablePromise from './ObservablePromise';
+import * as React from "react";
+import ObservablePromise from "./ObservablePromise";
 
 type Props = {
-  promise: ObservablePromise
-  renderPending: () => React.ReactNode
-  renderFulfilled: (value: any) => React.ReactNode
-  renderRejected: (error: any) => React.ReactNode
-}
+  promise: ObservablePromise;
+  renderPending: () => React.ReactNode;
+  renderFulfilled: (value: any) => React.ReactNode;
+  renderRejected: (error: any) => React.ReactNode;
+};
 
 class PromiseView extends React.Component<Props> {
   constructor(props: Props) {

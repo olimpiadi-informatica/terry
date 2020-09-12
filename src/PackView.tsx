@@ -1,13 +1,13 @@
-import * as React from 'react';
+import * as React from "react";
 import { translateComponent } from "./utils";
 import Pack from "./Pack";
 import LoadingView from "./LoadingView";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
-import { WithTranslation } from 'react-i18next';
-import { RouteComponentProps } from 'react-router';
+import { WithTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router";
 
-type Props = WithTranslation & RouteComponentProps<any>
+type Props = WithTranslation & RouteComponentProps<any>;
 
 class PackView extends React.Component<Props> {
   pack: Pack;

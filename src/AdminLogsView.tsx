@@ -1,49 +1,48 @@
-import * as React from 'react';
-import { Object } from 'core-js';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import ModalView from './ModalView';
+import * as React from "react";
+import { Object } from "core-js";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import ModalView from "./ModalView";
 import "./AdminLogsView.css";
-import PromiseView from './PromiseView';
-import { AbsoluteDateView } from './datetime.views';
-import { DateTime } from 'luxon';
-import { AdminSession } from './admin.models';
-import ObservablePromise from './ObservablePromise';
-import { WithTranslation } from 'react-i18next';
-
+import PromiseView from "./PromiseView";
+import { AbsoluteDateView } from "./datetime.views";
+import { DateTime } from "luxon";
+import { AdminSession } from "./admin.models";
+import ObservablePromise from "./ObservablePromise";
+import { WithTranslation } from "react-i18next";
 
 const LOG_LEVELS: any = {
   DEBUG: {
-    color: 'secondary',
+    color: "secondary",
   },
   INFO: {
-    color: 'info',
+    color: "info",
   },
   WARNING: {
-    color: 'warning',
+    color: "warning",
   },
   ERROR: {
-    color: 'danger',
+    color: "danger",
   },
-}
+};
 
 type LogItem = {
-  level: string
-  category: string
-  message: string
-  date: string
-}
+  level: string;
+  category: string;
+  message: string;
+  date: string;
+};
 
 type Props = {
-  session: AdminSession
-} & WithTranslation
+  session: AdminSession;
+} & WithTranslation;
 
 type State = {
-  level: string
-  category: string
-  filter: string
-}
+  level: string;
+  category: string;
+  filter: string;
+};
 
 export default class AdminLogsView extends React.Component<Props, State> {
   logsPromise: any;
@@ -84,7 +83,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
     const options: any = {
       start_date: "2000-01-01T00:00:00.000",
       end_date: "2030-01-01T00:00:00.000",
-      level: this.state.level
+      level: this.state.level,
     };
     if (this.state.category) {
       options.category = this.state.category;
@@ -93,17 +92,16 @@ export default class AdminLogsView extends React.Component<Props, State> {
   }
 
   refreshLogs() {
-    const promise = this.refreshLogsPromise = this.doLoadLogs();
+    const promise = (this.refreshLogsPromise = this.doLoadLogs());
     this.refreshLogsPromise.delegate.then(() => {
       if (this.refreshLogsPromise !== promise) return;
       this.logsPromise = promise;
       this.forceUpdate();
-    })
+    });
   }
 
   componentDidUpdate(_props: Props, state: State) {
-    if (state.level !== this.state.level || state.category !== this.state.category)
-      this.loadLogs();
+    if (state.level !== this.state.level || state.category !== this.state.category) this.loadLogs();
   }
 
   changeLevel(level: string) {
@@ -130,9 +128,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
     return (
       <ModalView contentLabel={t("logs.title")} returnUrl={"/admin"}>
         <div className="modal-header">
-          <h5 className="modal-title">
-            {t("logs.title")}
-          </h5>
+          <h5 className="modal-title">{t("logs.title")}</h5>
           <Link to={"/admin"} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
@@ -143,11 +139,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
               {Object.entries(LOG_LEVELS).map(([level, obj]) => (
                 <button
                   key={level}
-                  className={[
-                    'btn',
-                    ((this.state.level === level) ? 'active' : ''),
-                    'btn-' + obj.color
-                  ].join(' ')}
+                  className={["btn", this.state.level === level ? "active" : "", "btn-" + obj.color].join(" ")}
                   onClick={() => this.changeLevel(level)}
                 >
                   {t("logs.levels." + level)}
@@ -155,11 +147,17 @@ export default class AdminLogsView extends React.Component<Props, State> {
               ))}
             </div>
             <input
-              placeholder={t("logs.category filter")} className="form-control mb-1" value={this.state.category}
+              placeholder={t("logs.category filter")}
+              className="form-control mb-1"
+              value={this.state.category}
               onChange={(e) => this.changeCategory(e.target.value)}
             />
-            <input placeholder={t("logs.message filter")} className="form-control" value={this.state.filter}
-              onChange={(e) => this.changeFilter(e.target.value)} />
+            <input
+              placeholder={t("logs.message filter")}
+              className="form-control"
+              value={this.state.filter}
+              onChange={(e) => this.changeFilter(e.target.value)}
+            />
           </div>
           <div className="terry-log-table no-padding">
             <table className="table">
@@ -172,31 +170,61 @@ export default class AdminLogsView extends React.Component<Props, State> {
                 </tr>
               </thead>
               <tbody>
-                <PromiseView promise={this.logsPromise}
+                <PromiseView
+                  promise={this.logsPromise}
                   renderFulfilled={(logs: { items: LogItem[] }) => {
                     const items = logs.items.filter((l) => this.filter(l));
-                    if (items.length === 0) return <tr><td colSpan={4}>{t("no messages yet")}</td></tr>;
-                    return items.map((log, i) =>
+                    if (items.length === 0)
+                      return (
+                        <tr>
+                          <td colSpan={4}>{t("no messages yet")}</td>
+                        </tr>
+                      );
+                    return items.map((log, i) => (
                       <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
                         <td>
-                          <AbsoluteDateView {...this.props} clock={() => this.props.session.serverTime()} date={DateTime.fromISO(log.date)} />
+                          <AbsoluteDateView
+                            {...this.props}
+                            clock={() => this.props.session.serverTime()}
+                            date={DateTime.fromISO(log.date)}
+                          />
                         </td>
                         <td>
-                          <button className="btn btn-link" onClick={() => { this.changeCategory(log.category) }}>
+                          <button
+                            className="btn btn-link"
+                            onClick={() => {
+                              this.changeCategory(log.category);
+                            }}
+                          >
                             {log.category}
                           </button>
                         </td>
                         <td>
-                          <button className="btn btn-link" onClick={() => { this.changeLevel(log.level) }}>
+                          <button
+                            className="btn btn-link"
+                            onClick={() => {
+                              this.changeLevel(log.level);
+                            }}
+                          >
                             {t("logs.levels." + log.level)}
                           </button>
                         </td>
-                        <td><pre>{log.message}</pre></td>
+                        <td>
+                          <pre>{log.message}</pre>
+                        </td>
                       </tr>
-                    );
+                    ));
                   }}
-                  renderPending={() => <tr><td colSpan={4}>{t("loading")}</td></tr>}
-                  renderRejected={() => <tr><td colSpan={4}>{t("error")}</td></tr>}
+                  renderPending={() => (
+                    <tr>
+                      <td colSpan={4}>{t("loading")}</td>
+                    </tr>
+                  )}
+                  renderRejected={() => (
+                    <tr>
+                      <td colSpan={4}>{t("error")}</td>
+                    </tr>
+                  )}
                 />
               </tbody>
             </table>

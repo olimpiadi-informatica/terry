@@ -1,14 +1,14 @@
-import client from './TerryClient';
-import Cookies from 'universal-cookie';
-import Observable from './Observable';
+import client from "./TerryClient";
+import Cookies from "universal-cookie";
+import Observable from "./Observable";
 import { DateTime } from "luxon";
-import ObservablePromise from './ObservablePromise';
-import { notifyError } from './utils';
+import ObservablePromise from "./ObservablePromise";
+import { notifyError } from "./utils";
 
 type AdminStatusData = {
-  extra_time: number
-  token?: string
-}
+  extra_time: number;
+  token?: string;
+};
 
 class AdminStatus {
   data: AdminStatusData;
@@ -18,7 +18,7 @@ class AdminStatus {
   }
 
   extraTimeMinutes() {
-    return Math.round(this.data.extra_time / 60)
+    return Math.round(this.data.extra_time / 60);
   }
 }
 
@@ -61,22 +61,23 @@ export class AdminSession extends Observable {
   updateStatus() {
     this.fireUpdate();
     this.statusPromise = new ObservablePromise(
-      client.adminApi(this.adminToken(), "/status")
+      client
+        .adminApi(this.adminToken(), "/status")
         .then((response: any) => {
-          this.setServerTime(DateTime.fromHTTP(response.headers['date']));
+          this.setServerTime(DateTime.fromHTTP(response.headers["date"]));
           return new AdminStatus(response.data);
         })
         .catch((response: any) => {
-          notifyError(response)
+          notifyError(response);
           this.logout();
           return Promise.reject(response);
         })
     );
     this.statusPromise.pushObserver(this);
 
-    return this.usersPromise = new ObservablePromise(
+    return (this.usersPromise = new ObservablePromise(
       this.statusPromise.delegate.then(() => client.adminApi(this.adminToken(), "/user_list"))
-    );
+    ));
   }
 
   login(token: string) {
@@ -93,12 +94,13 @@ export class AdminSession extends Observable {
   }
 
   startContest() {
-    return client.adminApi(this.adminToken(), "/start")
+    return client
+      .adminApi(this.adminToken(), "/start")
       .then(() => {
-        this.updateStatus()
+        this.updateStatus();
       })
       .catch((response: any) => {
-        notifyError(response)
+        notifyError(response);
         this.fireUpdate();
       });
   }
@@ -109,17 +111,19 @@ export class AdminSession extends Observable {
       extra_time: extraTime,
     };
     if (token) options.token = token;
-    return client.adminApi(this.adminToken(), "/set_extra_time", options)
+    return client
+      .adminApi(this.adminToken(), "/set_extra_time", options)
       .then(() => this.updateStatus())
       .catch((response: any) => {
-        notifyError(response)
+        notifyError(response);
         this.fireUpdate();
         return Promise.reject(response);
-      })
+      });
   }
 
   loadLogs(options: any) {
-    return new ObservablePromise(client.adminApi(this.adminToken(), "/log", options).then((response: any) => response.data));
+    return new ObservablePromise(
+      client.adminApi(this.adminToken(), "/log", options).then((response: any) => response.data)
+    );
   }
-
 }

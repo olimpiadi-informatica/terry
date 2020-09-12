@@ -1,19 +1,20 @@
-import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faHourglassStart } from '@fortawesome/free-solid-svg-icons'
-import ModalView from './ModalView';
+import * as React from "react";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
+import ModalView from "./ModalView";
 import { Trans, WithTranslation } from "react-i18next";
-import { toast } from 'react-toastify'
-import { AdminSession } from './admin.models';
+import { toast } from "react-toastify";
+import { AdminSession } from "./admin.models";
 
 type Props = {
-  session: AdminSession
+  session: AdminSession;
   status: {
-    data: { start_time: string, end_time: string }
-    extraTimeMinutes: () => number
-  }
-} & WithTranslation & RouteComponentProps<any>
+    data: { start_time: string; end_time: string };
+    extraTimeMinutes: () => number;
+  };
+} & WithTranslation &
+  RouteComponentProps<any>;
 
 class ContestExtraTimeView extends React.Component<Props> {
   componentDidMount() {
@@ -25,37 +26,42 @@ class ContestExtraTimeView extends React.Component<Props> {
   }
 
   setExtraTime() {
-    const { t } = this.props
+    const { t } = this.props;
 
     if (!window.confirm(t("confirmation"))) return;
 
-    const minutes = (this.refs.extraTimeForm as any).minutes.value
+    const minutes = (this.refs.extraTimeForm as any).minutes.value;
 
     this.props.session.setExtraTime(minutes * 60).then(() => {
       // notify success
-      toast.success(t("extra time done"))
+      toast.success(t("extra time done"));
 
       // redirect
-      this.props.history.push("/admin")
-    })
+      this.props.history.push("/admin");
+    });
   }
 
   render() {
     const { t } = this.props;
     return (
       <ModalView contentLabel={t("logs.title")} returnUrl={"/admin"}>
-        <form ref="extraTimeForm" onSubmit={(e) => { e.preventDefault(); this.setExtraTime() }}>
+        <form
+          ref="extraTimeForm"
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.setExtraTime();
+          }}
+        >
           <div className="modal-header">
-            <h5 className="modal-title">
-              {t("contest.extra time")}
-            </h5>
+            <h5 className="modal-title">{t("contest.extra time")}</h5>
             <Link to={"/admin"} role="button" className="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </Link>
           </div>
           <div className="modal-body">
             <Trans i18nKey="contest.extratime disclamer" parent="p">
-              You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <em>is logged</em> and must be justified to the committee.
+              You can set an extra time for all the contestants in case of problems that afflicts everyone. This action{" "}
+              <em>is logged</em> and must be justified to the committee.
             </Trans>
             <div className="form-group mb-0">
               <label htmlFor="minutes">{t("contest.extra time")}:</label>
@@ -65,7 +71,7 @@ class ContestExtraTimeView extends React.Component<Props> {
                 type="number"
                 className="form-control"
                 required
-                defaultValue={'' + this.props.status.extraTimeMinutes()}
+                defaultValue={"" + this.props.status.extraTimeMinutes()}
               />
               <small className="form-text text-muted">{t("contest.in minutes")}</small>
             </div>
@@ -84,4 +90,4 @@ class ContestExtraTimeView extends React.Component<Props> {
   }
 }
 
-export default withRouter(ContestExtraTimeView)
+export default withRouter(ContestExtraTimeView);

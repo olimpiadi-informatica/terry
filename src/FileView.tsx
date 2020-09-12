@@ -1,13 +1,13 @@
-import * as React from 'react';
-import filesize from 'filesize';
-import { DateView } from './datetime.views';
+import * as React from "react";
+import filesize from "filesize";
+import { DateView } from "./datetime.views";
 import { DateTime } from "luxon";
 import "./FileView.css";
-import { WithTranslation } from 'react-i18next';
+import { WithTranslation } from "react-i18next";
 
 type Props = {
-  file: any
-} & WithTranslation
+  file: any;
+} & WithTranslation;
 
 export default class FileView extends React.Component<Props> {
   render() {
@@ -22,7 +22,8 @@ export default class FileView extends React.Component<Props> {
           <DateView
             {...this.props}
             clock={() => DateTime.local()}
-            date={DateTime.fromJSDate(this.props.file.lastModifiedDate)} />
+            date={DateTime.fromJSDate(this.props.file.lastModifiedDate)}
+          />
         </dd>
 
         <dt>{t("submission.file.size")}</dt>

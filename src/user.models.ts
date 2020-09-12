@@ -1,9 +1,9 @@
-import client from './TerryClient';
-import Cookies from 'universal-cookie';
-import Observable from './Observable';
-import { DateTime, Duration } from 'luxon';
-import ObservablePromise from './ObservablePromise';
-import { notifyError } from './utils'
+import client from "./TerryClient";
+import Cookies from "universal-cookie";
+import Observable from "./Observable";
+import { DateTime, Duration } from "luxon";
+import ObservablePromise from "./ObservablePromise";
+import { notifyError } from "./utils";
 
 export class Model extends Observable {
   submissions: any;
@@ -46,22 +46,19 @@ export class Model extends Observable {
   doLoadUser() {
     if (!this.isLoggedIn()) throw Error("doLoadUser can only be called after a successful login");
 
-    return client.api.get('/user/' + this.userToken())
-      .then((response) => {
-        this.setServerTime(DateTime.fromHTTP(response.headers['date']));
-        return new UserState(this, response.data);
-      })
-      ;
+    return client.api.get("/user/" + this.userToken()).then((response) => {
+      this.setServerTime(DateTime.fromHTTP(response.headers["date"]));
+      return new UserState(this, response.data);
+    });
   }
 
   loadUser() {
     this.userStatePromise = new ObservablePromise(
-      this.doLoadUser()
-        .catch(error => {
-          console.error("Forced logout because: ", error);
-          this.logout();
-          return Promise.reject(error);
-        })
+      this.doLoadUser().catch((error) => {
+        console.error("Forced logout because: ", error);
+        this.logout();
+        return Promise.reject(error);
+      })
     );
     this.fireUpdate();
   }
@@ -93,9 +90,9 @@ export class Model extends Observable {
     if (!id) throw Error();
 
     if (this.submissions[id] !== undefined) return this.submissions[id];
-    return this.submissions[id] = new ObservablePromise(
+    return (this.submissions[id] = new ObservablePromise(
       client.api.get("/submission/" + id).then((response) => new SubmissionResult(response.data))
-    );
+    ));
   }
 }
 
@@ -128,7 +125,7 @@ class Output {
         });
       })
       .catch((response) => {
-        notifyError(response)
+        notifyError(response);
       })
       .then(() => {
         return client.api.get("/output/" + id);
@@ -158,7 +155,7 @@ class Source {
     data.append("input_id", this.submission.input.id);
     data.append("file", this.file);
 
-    return client.api.post("/upload_source", data)
+    return client.api.post("/upload_source", data);
   }
 
   isValidForSubmit() {
@@ -199,7 +196,6 @@ class UserState extends Observable {
   getTaskState(taskName: string) {
     return this.userTaskState[taskName];
   }
-
 }
 
 class Task extends Observable {
@@ -256,7 +252,7 @@ class UserTaskState extends Observable {
   }
 
   generateInput() {
-    if (this.isGeneratingInput()) throw new Error("already generating input")
+    if (this.isGeneratingInput()) throw new Error("already generating input");
 
     const data = new FormData();
 
@@ -266,14 +262,17 @@ class UserTaskState extends Observable {
     this.fireUpdate();
 
     this.inputGenerationPromise = new ObservablePromise(
-      client.api.post('/generate_input', data).then((response) =>
-        Promise.resolve()
-          .then(() => this.model.refreshUser())
-          .then(() => response.data)
-      ).catch((response) => {
-        notifyError(response)
-        this.inputGenerationPromise = undefined
-      })
+      client.api
+        .post("/generate_input", data)
+        .then((response) =>
+          Promise.resolve()
+            .then(() => this.model.refreshUser())
+            .then(() => response.data)
+        )
+        .catch((response) => {
+          notifyError(response);
+          this.inputGenerationPromise = undefined;
+        })
     );
   }
 
@@ -298,7 +297,6 @@ class UserTaskState extends Observable {
     this.submissionListPromise = new ObservablePromise(this.loadSubmissionList());
     this.fireUpdate();
   }
-
 }
 
 export class Submission extends Observable {
@@ -326,8 +324,8 @@ export class Submission extends Observable {
     this.source = new Source(file, this);
     this.source.uploadPromise.pushObserver(this);
     this.source.uploadPromise.delegate.catch((response) => {
-      notifyError(response)
-    })
+      notifyError(response);
+    });
     this.fireUpdate();
   }
 
@@ -340,7 +338,7 @@ export class Submission extends Observable {
 
   setOutput(file: any) {
     if (this.isSubmitted()) throw Error();
-    if (this.hasOutput()) throw Error("setOutput called when hasOutput is true")
+    if (this.hasOutput()) throw Error("setOutput called when hasOutput is true");
 
     this.output = new Output(file, this);
     this.output.uploadPromise.pushObserver(this);
@@ -361,8 +359,14 @@ export class Submission extends Observable {
   }
 
   canSubmit() {
-    return !this.isSubmitted() && this.hasOutput() && this.output && this.output.isValidForSubmit()
-      && this.source && this.source.isValidForSubmit();
+    return (
+      !this.isSubmitted() &&
+      this.hasOutput() &&
+      this.output &&
+      this.output.isValidForSubmit() &&
+      this.source &&
+      this.source.isValidForSubmit()
+    );
   }
 
   isSubmitted() {
@@ -371,8 +375,8 @@ export class Submission extends Observable {
 
   submit() {
     if (!this.canSubmit()) throw new Error("called submit() but canSubmit() returns false");
-    if (!this.source) throw new Error()
-    if (!this.output) throw new Error()
+    if (!this.source) throw new Error();
+    if (!this.output) throw new Error();
 
     const data = new FormData();
 
@@ -382,15 +386,14 @@ export class Submission extends Observable {
 
     this.fireUpdate();
 
-    return this.submitPromise = new ObservablePromise(
-      client.api.post("/submit", data)
-        .then((response) =>
-          Promise.resolve()
-            .then(() => this.model.refreshUser())
-            .then(() => this.taskState.refreshSubmissionList())
-            .then(() => new SubmissionResult(response.data))
-        )
-    );
+    return (this.submitPromise = new ObservablePromise(
+      client.api.post("/submit", data).then((response) =>
+        Promise.resolve()
+          .then(() => this.model.refreshUser())
+          .then(() => this.taskState.refreshSubmissionList())
+          .then(() => new SubmissionResult(response.data))
+      )
+    ));
   }
 }
 

@@ -1,7 +1,7 @@
-import i18next from 'i18next';
-import Backend from 'i18next-xhr-backend';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import { initReactI18next } from 'react-i18next';
+import i18next from "i18next";
+import Backend from "i18next-xhr-backend";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
 require("moment/locale/it");
 
@@ -10,11 +10,11 @@ i18next
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: "en",
 
     // have a common namespace used around the full app
-    ns: ['translations'],
-    defaultNS: 'translations',
+    ns: ["translations"],
+    defaultNS: "translations",
 
     debug: true,
 
@@ -24,11 +24,10 @@ i18next
 
     react: {
       wait: true,
-      useSuspense: false
+      useSuspense: false,
     },
 
     returnNull: false,
   });
-
 
 export default i18next;

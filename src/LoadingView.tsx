@@ -9,6 +9,6 @@ export default class LoadingView extends React.Component {
         <div className="sk-cube4 sk-cube" />
         <div className="sk-cube3 sk-cube" />
       </div>
-    )
+    );
   }
 }

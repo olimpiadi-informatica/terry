@@ -1,13 +1,14 @@
-import * as React from 'react';
-import SubmissionView from './SubmissionView';
-import { WithTranslation } from 'react-i18next';
-import { RouteComponentProps } from 'react-router';
+import * as React from "react";
+import SubmissionView from "./SubmissionView";
+import { WithTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router";
 
 type Props = {
-  userState: any
-  taskName: string
-  inputId: string
-} & WithTranslation & RouteComponentProps<any>
+  userState: any;
+  taskName: string;
+  inputId: string;
+} & WithTranslation &
+  RouteComponentProps<any>;
 
 export default class CreateSubmissionView extends React.Component<Props> {
   submission: any;
@@ -27,10 +28,6 @@ export default class CreateSubmissionView extends React.Component<Props> {
   render() {
     const { t } = this.props;
     if (this.submission === undefined) return <p>{t("submission.cannot submit")}</p>;
-    return (
-      <SubmissionView
-        {...this.props}
-        submission={this.submission} />
-    );
+    return <SubmissionView {...this.props} submission={this.submission} />;
   }
 }

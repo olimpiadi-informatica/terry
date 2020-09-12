@@ -1,4 +1,4 @@
-import Observable from './Observable';
+import Observable from "./Observable";
 
 export default class ObservablePromise extends Observable {
   delegate: Promise<any>;
@@ -18,15 +18,18 @@ export default class ObservablePromise extends Observable {
     this.value = null;
     this.error = null;
 
-    delegate.then((value) => {
-      this.state = "fulfilled";
-      this.value = value;
-      this.fireUpdate();
-    }, (error) => {
-      this.state = "rejected";
-      this.error = error;
-      this.fireUpdate();
-    });
+    delegate.then(
+      (value) => {
+        this.state = "fulfilled";
+        this.value = value;
+        this.fireUpdate();
+      },
+      (error) => {
+        this.state = "rejected";
+        this.error = error;
+        this.fireUpdate();
+      }
+    );
   }
 
   isPending() {
@@ -40,5 +43,4 @@ export default class ObservablePromise extends Observable {
   isRejected() {
     return this.state === "rejected";
   }
-
 }
