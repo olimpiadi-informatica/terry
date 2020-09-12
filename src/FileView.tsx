@@ -3,21 +3,20 @@ import filesize from "filesize";
 import { DateView } from "./datetime.views";
 import { DateTime } from "luxon";
 import "./FileView.css";
-import { WithTranslation } from "react-i18next";
+import { Trans } from "@lingui/macro";
 
 type Props = {
   file: any;
-} & WithTranslation;
+};
 
 export default class FileView extends React.Component<Props> {
   render() {
-    const { t } = this.props;
     return (
       <dl className="terry-file-view">
-        <dt>{t("submission.file.file")}</dt>
+        <dt><Trans>File:</Trans></dt>
         <dd>{this.props.file.name}</dd>
 
-        <dt>{t("submission.file.last update")}</dt>
+        <dt><Trans>Last update:</Trans></dt>
         <dd>
           <DateView
             {...this.props}
@@ -26,7 +25,7 @@ export default class FileView extends React.Component<Props> {
           />
         </dd>
 
-        <dt>{t("submission.file.size")}</dt>
+        <dt><Trans>Size:</Trans></dt>
         <dd>{filesize(this.props.file.size, { standard: "iec" })}</dd>
       </dl>
     );

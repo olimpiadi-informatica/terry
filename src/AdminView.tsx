@@ -10,12 +10,13 @@ import AdminUsersView from "./AdminUsersView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
 import PromiseView from "./PromiseView";
-import { WithTranslation } from "react-i18next";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 import Pack from "./Pack";
 
 type Props = {
   pack: Pack;
-} & WithTranslation;
+};
 
 export default class AdminView extends React.Component<Props> {
   session: AdminSession;
@@ -38,11 +39,10 @@ export default class AdminView extends React.Component<Props> {
   }
 
   renderNavBar() {
-    const { t } = this.props;
     return (
       <nav className="terry-navbar">
         <Link to="/admin" className="navbar-brand">
-          {t("navbar.title")}
+          <Trans>Admin</Trans>
         </Link>
         <button
           className="terry-admin-logout-button btn btn-sm btn-light"
@@ -51,14 +51,13 @@ export default class AdminView extends React.Component<Props> {
             this.session.logout();
           }}
         >
-          <FontAwesomeIcon icon={faSignOutAlt} /> {t("navbar.logout")}
+          <FontAwesomeIcon icon={faSignOutAlt} /> <Trans>Logout</Trans>
         </button>
       </nav>
     );
   }
 
   render() {
-    const { t } = this.props;
     if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} {...this.props} />;
 
     return (
@@ -67,13 +66,13 @@ export default class AdminView extends React.Component<Props> {
         <main>
           <PromiseView
             promise={this.session.statusPromise}
-            renderPending={() => t("loading")}
-            renderRejected={() => t("error")}
+            renderPending={() => i18n._(t`Loading...`)}
+            renderRejected={() => i18n._(t`Error`)}
             renderFulfilled={(status) =>
               this.session.usersPromise && (
                 <PromiseView
                   promise={this.session.usersPromise}
-                  renderPending={() => t("loading")}
+                  renderPending={() => i18n._(t`Loading...`)}
                   renderFulfilled={(users) => (
                     <React.Fragment>
                       <AdminSummaryView {...this.props} session={this.session} status={status} users={users} />
@@ -99,7 +98,7 @@ export default class AdminView extends React.Component<Props> {
                       />
                     </React.Fragment>
                   )}
-                  renderRejected={() => t("error")}
+                  renderRejected={() => i18n._(t`Error`)}
                 />
               )
             }

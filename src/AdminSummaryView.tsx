@@ -10,8 +10,9 @@ import PromiseView from "./PromiseView";
 import { notifyError } from "./utils";
 import { toast } from "react-toastify";
 import { AdminSession } from "./admin.models";
-import { WithTranslation } from "react-i18next";
 import ObservablePromise from "./ObservablePromise";
+import { Trans, t, Plural } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 type User = {
   extra_time: number;
@@ -25,7 +26,7 @@ type Props = {
     extraTimeMinutes: () => number;
   };
   pack: { data: { deletable: boolean } };
-} & WithTranslation;
+};
 
 export default class AdminSummaryView extends React.Component<Props> {
   timer?: NodeJS.Timer;
@@ -60,21 +61,22 @@ export default class AdminSummaryView extends React.Component<Props> {
   }
 
   renderNotStarted() {
-    const { t } = this.props;
     return (
       <React.Fragment>
-        <p>{t("contest.not started")}</p>
+        <p>
+          <Trans>The contest has not started yet!</Trans>
+        </p>
         <form
           ref="form"
           onSubmit={(e) => {
             e.preventDefault();
             this.props.session.startContest().then(() => {
-              toast.success(t("contest started"));
+              toast.success(i18n._(t`Contest was successfully started`));
             });
           }}
         >
           <button type="submit" className="btn btn-primary">
-            <FontAwesomeIcon icon={faPlay} /> {t("contest.start")}
+            <FontAwesomeIcon icon={faPlay} /> {i18n._(t`Start`)}
           </button>
         </form>
       </React.Fragment>
@@ -101,8 +103,6 @@ export default class AdminSummaryView extends React.Component<Props> {
   }
 
   renderFinished() {
-    const { t } = this.props;
-
     return (
       <React.Fragment>
         <ul>
@@ -112,7 +112,7 @@ export default class AdminSummaryView extends React.Component<Props> {
         </ul>
 
         <Link to={"/admin/download_results"} className="btn btn-primary">
-          <FontAwesomeIcon icon={faDownload} /> {t("contest.download results")}
+          <FontAwesomeIcon icon={faDownload} /> <Trans>Download contest results</Trans>
         </Link>
       </React.Fragment>
     );
@@ -146,11 +146,10 @@ export default class AdminSummaryView extends React.Component<Props> {
   }
 
   renderStartTime() {
-    const { t, i18n } = this.props;
-    const startTime = this.getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT);
     return (
       <React.Fragment>
-        {t("contest.started at")} {startTime}
+        <Trans>Contest started at</Trans>{" "}
+        {this.getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </React.Fragment>
     );
   }
@@ -158,15 +157,16 @@ export default class AdminSummaryView extends React.Component<Props> {
   renderCountdownExtra() {
     if (this.countUsersWithExtraTime() === 0) return;
 
-    const { t } = this.props;
     return (
       <React.Fragment>
         {" "}
         (
         <span>
-          {t("minutes more for some users", {
-            count: this.getUsersExtraTime() / 60,
-          })}
+          <Plural
+            value={this.getUsersExtraTime() / 60}
+            one="plus # extra minute for some user"
+            other="plus # extra minutes for some user"
+          />
         </span>
         )
       </React.Fragment>
@@ -174,21 +174,20 @@ export default class AdminSummaryView extends React.Component<Props> {
   }
 
   renderCountdown() {
-    const { t } = this.props;
     return (
       <React.Fragment>
-        {t("contest.remaining time")}{" "}
-        <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={this.getEndTime()} />
+        <Trans>Remaining time</Trans>{" "}
+        <CountdownView clock={() => this.props.session.serverTime()} end={this.getEndTime()} />
         {this.renderCountdownExtra()}
       </React.Fragment>
     );
   }
 
   renderEndTime() {
-    const { t, i18n } = this.props;
     return (
       <React.Fragment>
-        {t("contest.ended at")} {this.getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+        <Trans>Contest ended at </Trans>
+        {this.getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </React.Fragment>
     );
   }
@@ -196,35 +195,34 @@ export default class AdminSummaryView extends React.Component<Props> {
   renderExtraTimeEndTime() {
     if (this.countUsersWithExtraTime() === 0) return null;
 
-    const { t, i18n } = this.props;
     return (
       <li>
-        {t("contest.ended for everyone at")}{" "}
+        <Trans>Contest ended for everyone at </Trans>
+
         {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </li>
     );
   }
 
   renderExtraTimeCountdown() {
-    const { t } = this.props;
     const endTime = this.getExtraTimeEndTime();
 
     return (
       <React.Fragment>
-        {t("contest.users remaining time")}{" "}
-        <CountdownView {...this.props} clock={() => this.props.session.serverTime()} end={endTime} />
+        <Trans>Remaining time for some participant </Trans>
+        <CountdownView clock={() => this.props.session.serverTime()} end={endTime} />
       </React.Fragment>
     );
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <div className="container">
         <div className="card mb-3">
           <div className="card-body">
-            <h3>{t("contest status")}</h3>
+            <h3>
+              <Trans>Contest status</Trans>
+            </h3>
             {!this.props.status.data.start_time
               ? this.renderNotStarted()
               : this.serverTime() < this.getEndTime()
@@ -236,7 +234,9 @@ export default class AdminSummaryView extends React.Component<Props> {
         </div>
         <div className="card mb-3">
           <div className="card-body">
-            <h3>{t("system status")}</h3>
+            <h3>
+              <Trans>System status</Trans>
+            </h3>
             <ul className="mb-0">
               <li>
                 {this.logsPromise && (
@@ -245,22 +245,30 @@ export default class AdminSummaryView extends React.Component<Props> {
                     renderFulfilled={(logs) =>
                       logs.items.length === 0 ? (
                         <React.Fragment>
-                          {t("contest.no error recorded")} (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+                          <Trans>No issue detected</Trans> (
+                          <Link to="/admin/logs">
+                            <Trans>show log</Trans>
+                          </Link>
+                          )
                         </React.Fragment>
                       ) : (
                         <React.Fragment>
-                          {t("contest.error recorded at")}{" "}
+                          <Trans>Issue last detected</Trans>{" "}
                           <DateView
                             {...this.props}
                             clock={() => this.props.session.serverTime()}
                             date={DateTime.fromISO(logs.items[0].date)}
                           />{" "}
-                          (<Link to="/admin/logs">{t("contest.show log")}</Link>)
+                          (
+                          <Link to="/admin/logs">
+                            <Trans>show log</Trans>
+                          </Link>
+                          )
                         </React.Fragment>
                       )
                     }
-                    renderPending={() => t("loading")}
-                    renderRejected={() => t("error")}
+                    renderPending={() => i18n._(t`Loading...`)}
+                    renderRejected={() => i18n._(t`Error`)}
                   />
                 )}
               </li>
@@ -269,44 +277,59 @@ export default class AdminSummaryView extends React.Component<Props> {
         </div>
         <div className="card mb-3">
           <div className="card-body">
-            <h3>{t("contest.extra time management")}</h3>
+            <h3>
+              <Trans>Extra time</Trans>
+            </h3>
             <ul className="mb-0">
               <li>
                 {this.props.status.extraTimeMinutes() === 0 ? (
                   <React.Fragment>
-                    {t("contest.no extra time set")} (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+                    <Trans>No extra time set</Trans> (
+                    <Link to="/admin/extra_time">
+                      <Trans>set extra time</Trans>
+                    </Link>
+                    )
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
-                    {t("minutes", {
-                      count: this.props.status.extraTimeMinutes(),
-                    })}{" "}
-                    (<Link to="/admin/extra_time">{t("contest.set extra time")}</Link>)
+                    <Plural
+                      value={this.props.status.extraTimeMinutes()}
+                      one="Contest duration was extended by # minute"
+                      other="Contest duration was extended by # minutes"
+                    />
+                    (
+                    <Link to="/admin/extra_time">
+                      <Trans>set extra time</Trans>
+                    </Link>
+                    )
                   </React.Fragment>
                 )}
               </li>
               <li>
-                {this.countUsersWithExtraTime() > 0 ? (
-                  <React.Fragment>
-                    {t("contest.users have extra time", {
-                      count: this.countUsersWithExtraTime(),
-                    })}{" "}
-                    (<Link to="/admin/users">{t("contest.manage users")}</Link>)
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    {t("contest.no user has extra time")} (<Link to="/admin/users">{t("contest.manage users")}</Link>)
-                  </React.Fragment>
-                )}
+                <React.Fragment>
+                  <Plural
+                    value={this.countUsersWithExtraTime()}
+                    _0="No user has extra time"
+                    one="# user has extra time"
+                    other="# users have extra time"
+                  />{" "}
+                  (
+                  <Link to="/admin/users">
+                    <Trans>show users</Trans>
+                  </Link>
+                  )
+                </React.Fragment>
               </li>
             </ul>
           </div>
         </div>
         <div className="card mb-3 striped-background">
           <div className="card-body">
-            <h3>Danger zone</h3>
+            <h3>
+              <Trans>Danger zone</Trans>
+            </h3>
             <button disabled={!this.isDeletable()} className="btn btn-danger" onClick={() => this.resetContest()}>
-              RESET
+              <Trans>RESET</Trans>
             </button>
           </div>
         </div>
@@ -315,9 +338,7 @@ export default class AdminSummaryView extends React.Component<Props> {
   }
 
   resetContest() {
-    const { t } = this.props;
-
-    if (!window.confirm(t("confirmation"))) return;
+    if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
     client
       .adminApi(this.props.session.adminToken(), "/drop_contest", {})

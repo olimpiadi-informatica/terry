@@ -5,24 +5,23 @@ import ModalView from "./ModalView";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AdminSession } from "./admin.models";
-import { WithTranslation } from "react-i18next";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 type UserExtraTimeProps = {
   session: AdminSession;
   user: any;
-} & WithTranslation;
+};
 
 class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
   setExtraTime() {
-    const { t } = this.props;
-
-    if (!window.confirm(t("confirmation"))) return;
+    if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
     const minutes = (this.refs.form as any).minutes.value;
     this.props.session.setExtraTime(minutes * 60, this.props.user.token);
 
     // show success
-    toast.success(t("user extra time done"));
+    toast.success(i18n._(t`Extra time successfully updated for the user`));
   }
 
   extraTimeMinutes() {
@@ -30,8 +29,6 @@ class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <form
         ref="form"
@@ -48,7 +45,7 @@ class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
           defaultValue={"" + this.extraTimeMinutes()}
         />
         <button type="submit" className="btn btn-warning">
-          <FontAwesomeIcon icon={faHourglassStart} /> {t("users.set")}
+          <FontAwesomeIcon icon={faHourglassStart} /> <Trans>Set</Trans>
         </button>
       </form>
     );
@@ -58,7 +55,7 @@ class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
 type AdminUsersProps = {
   session: AdminSession;
   users: { data: { items: any[] } };
-} & WithTranslation;
+};
 
 export default class AdminUsersView extends React.Component<AdminUsersProps> {
   componentDidMount() {
@@ -84,19 +81,17 @@ export default class AdminUsersView extends React.Component<AdminUsersProps> {
         <td>{user.token}</td>
         <td>{ips}</td>
         <td>
-          <UserExtraTimeView {...this.props} user={user} />
+          <UserExtraTimeView session={this.props.session} user={user} />
         </td>
       </tr>
     );
   }
 
   render() {
-    const { t } = this.props;
-
     return (
-      <ModalView contentLabel={t("users.title")} returnUrl={"/admin"}>
+      <ModalView contentLabel={i18n._(t`Contestants`)} returnUrl={"/admin"}>
         <div className="modal-header">
-          <h5 className="modal-title">{t("users.title")}</h5>
+          <h5 className="modal-title">{i18n._(t`Contestants`)}</h5>
           <Link to={"/admin"} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
@@ -105,12 +100,12 @@ export default class AdminUsersView extends React.Component<AdminUsersProps> {
           <table className="table terry-table">
             <thead>
               <tr>
-                <th>{t("users.name")}</th>
-                <th>{t("users.surname")}</th>
-                <th>{t("users.token")}</th>
-                <th>{t("users.ips")}</th>
+                <th><Trans>Name</Trans></th>
+                <th><Trans>Surname</Trans></th>
+                <th><Trans>Token</Trans></th>
+                <th><Trans>IP</Trans></th>
                 <th>
-                  {t("users.extra time")} <small>{t("users.in minutes")}</small>
+                  <Trans>Extra time</Trans> <small><Trans>(in minutes)</Trans></small>
                 </th>
               </tr>
             </thead>
@@ -119,7 +114,7 @@ export default class AdminUsersView extends React.Component<AdminUsersProps> {
         </div>
         <div className="modal-footer">
           <Link to={"/admin"} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> {t("close")}
+            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
           </Link>
         </div>
       </ModalView>

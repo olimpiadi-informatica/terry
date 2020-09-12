@@ -1,15 +1,13 @@
 import * as React from "react";
-import { translateComponent } from "./utils";
 import Pack from "./Pack";
 import LoadingView from "./LoadingView";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
-import { WithTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
 
-type Props = WithTranslation & RouteComponentProps<any>;
+type Props = RouteComponentProps<any>;
 
-class PackView extends React.Component<Props> {
+export default class PackView extends React.Component<Props> {
   pack: Pack;
 
   constructor(props: Props) {
@@ -42,5 +40,3 @@ class PackView extends React.Component<Props> {
     }
   }
 }
-
-export default translateComponent(PackView, "admin");

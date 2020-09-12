@@ -4,17 +4,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import ReactMarkdown from "react-markdown";
-import { Trans, WithTranslation } from "react-i18next";
 import TaskView from "./TaskView";
 import SidebarView from "./SidebarView";
 import { Model } from "./user.models";
 import client from "./TerryClient";
 import LoginView from "./LoginView";
+import { Trans } from "@lingui/macro";
 
 type Props = {
   userState: any;
   model: Model;
-} & WithTranslation &
+} &
   RouteComponentProps<any>;
 
 const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;
@@ -64,8 +64,6 @@ export default class ContestView extends React.Component<Props> {
   }
 
   getBody() {
-    const { t } = this.props;
-
     return (
       <React.Fragment>
         <SidebarView {...this.props} />
@@ -75,23 +73,23 @@ export default class ContestView extends React.Component<Props> {
             path={"/useful-info"}
             render={() => (
               <React.Fragment>
-                <h1>Informazioni utili</h1>
+                <h1><Trans>Useful information</Trans></h1>
                 <hr />
-                <p>Scegli la guida che vuoi consultare:</p>
+                <p><Trans>Select the tutorial you want to consult:</Trans></p>
                 <ul>
                   <li>
                     <a target="_blank" href="/extra_files/tutorials/codeblocks/">
-                      Come usare Codeblocks per programmare in C/C++
+                      <Trans>How to use Codeblocks for programming in C/C++</Trans>
                     </a>
                   </li>
                   <li>
                     <a target="_blank" href="/extra_files/tutorials/lazarus/">
-                      Come usare Lazarus per programmare in Pascal
+                      <Trans>How to use Lazarus for programming in Pascal</Trans>
                     </a>
                   </li>
                   <li>
                     <a target="_blank" href="/extra_files/tutorials/faq/">
-                      Risposte ad alcune domande frequenti
+                      <Trans>FAQ</Trans>
                     </a>
                   </li>
                 </ul>
@@ -103,18 +101,18 @@ export default class ContestView extends React.Component<Props> {
             path={"/documentation"}
             render={() => (
               <React.Fragment>
-                <h1>Documentazione</h1>
+                <h1><Trans>Documentation</Trans></h1>
                 <hr />
-                <p>Scegli la documentazione che vuoi consultare:</p>
+                <p><Trans>Select the documentation you want to consult:</Trans></p>
                 <ul>
                   <li>
                     <a target="_blank" href="/extra_files/documentation/cpp/en/index.html">
-                      Documentazione C/C++
+                      <Trans>C/C++ Documentation</Trans>
                     </a>
                   </li>
                   <li>
                     <a target="_blank" href="/extra_files/documentation/pas/fpctoc.html">
-                      Documentazione Pascal
+                      <Trans>Pascal Documentation</Trans>
                     </a>
                   </li>
                 </ul>
@@ -139,15 +137,23 @@ export default class ContestView extends React.Component<Props> {
                 {this.props.userState ? <hr /> : null}
                 {this.props.userState && this.props.userState.data.contest.has_started ? (
                   <React.Fragment>
-                    <h2>{t("homepage.guide.title")}</h2>
-                    <p>{t("homepage.guide.part1")}</p>
-                    <Trans i18nKey="homepage.guide.part2">
+                    <h2>
+                      <Trans>Usage guide</Trans>
+                    </h2>
+                    <p>
+                      <Trans>On the left side of this page you can find the tasks, click on any one to open it.</Trans>
+                    </p>
+                    <Trans>
                       You can submit <em>as many times as you want</em>, but you will have a different input every time.
                       When you make a submission remember to send the correct source file and the output corresponding
                       to the last generated input. When you have uploaded your files <em>remember to submit</em> them by
                       clicking the green button!
                     </Trans>
-                    <p>{t("homepage.guide.part3")}</p>
+                    <p>
+                      <Trans>
+                        If you want to submit more than one source code file, please create a zip file containing them.
+                      </Trans>
+                    </p>
                   </React.Fragment>
                 ) : this.props.userState ? (
                   <React.Fragment>
@@ -155,7 +161,12 @@ export default class ContestView extends React.Component<Props> {
                       <h1 className="text-center display-1">
                         <FontAwesomeIcon icon={faClock} />
                       </h1>
-                      <p className={"text-center"}>{t("login.not started")}</p>
+                      <p className={"text-center"}>
+                        <Trans>
+                          The contest has not started yet! Refresh this page when the contest has started to be able to
+                          login.
+                        </Trans>
+                      </p>
                     </div>
                   </React.Fragment>
                 ) : (
@@ -170,8 +181,6 @@ export default class ContestView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <React.Fragment>
         <nav className="terry-navbar">
@@ -190,7 +199,7 @@ export default class ContestView extends React.Component<Props> {
                 this.props.model.logout();
               }}
             >
-              <FontAwesomeIcon icon={faSignOutAlt} /> {t("navbar.logout")}
+              <FontAwesomeIcon icon={faSignOutAlt} /> <Trans>Logout</Trans>
             </button>
           )}
         </nav>

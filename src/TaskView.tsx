@@ -10,14 +10,13 @@ import SubmissionListView from "./SubmissionListView";
 import SubmissionReportView from "./SubmissionReportView";
 import PromiseView from "./PromiseView";
 import TaskStatementView from "./TaskStatementView";
-import { WithTranslation } from "react-i18next";
+import { Trans } from "@lingui/macro";
 
 type Props = {
   userState: any;
   taskName: string;
   model: any;
-} & WithTranslation &
-  RouteComponentProps<any>;
+} & RouteComponentProps<any>;
 
 export default class TaskView extends React.Component<Props> {
   getTask() {
@@ -49,11 +48,9 @@ export default class TaskView extends React.Component<Props> {
   }
 
   renderGenerateInputButton() {
-    const { t } = this.props;
-
     const button = (already: boolean) => (
       <button className="btn btn-success" onClick={() => this.getTaskState().generateInput()}>
-        <FontAwesomeIcon icon={faPlus} /> {already ? t("task.request new input") : t("task.request input")}
+        <FontAwesomeIcon icon={faPlus} /> {already ? <Trans>Request new input</Trans> : <Trans>Request input</Trans>}
       </button>
     );
 
@@ -70,20 +67,19 @@ export default class TaskView extends React.Component<Props> {
   }
 
   renderCommands() {
-    const { t } = this.props;
     if (this.getTaskState().hasCurrentInput()) {
       const currentInput = this.getTaskState().getCurrentInput();
       return (
         <React.Fragment>
           <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
-            <FontAwesomeIcon icon={faDownload} /> {t("task.download input")}
+            <FontAwesomeIcon icon={faDownload} /> <Trans>Download input</Trans>
           </a>{" "}
           <Link
             to={"/task/" + this.getTask().name + "/submit/" + currentInput.id}
             role="button"
             className="btn btn-success"
           >
-            <FontAwesomeIcon icon={faUpload} /> {t("task.upload solution")}
+            <FontAwesomeIcon icon={faUpload} /> <Trans>Upload solution</Trans>
           </Link>
         </React.Fragment>
       );
@@ -94,12 +90,12 @@ export default class TaskView extends React.Component<Props> {
             promise={this.getTaskState().inputGenerationPromise}
             renderPending={() => (
               <button disabled={true} className="btn btn-success">
-                <FontAwesomeIcon icon={faPlus} /> {t("task.requesting")}
+                <FontAwesomeIcon icon={faPlus} /> <Trans>Requesting...</Trans>
               </button>
             )}
             renderRejected={() => (
               <button disabled={true} className="btn btn-success">
-                <FontAwesomeIcon icon={faPlus} /> {t("error")}
+                <FontAwesomeIcon icon={faPlus} /> <Trans>Error</Trans>
               </button>
             )}
             renderFulfilled={() => this.renderGenerateInputButton()}
@@ -112,19 +108,25 @@ export default class TaskView extends React.Component<Props> {
   }
 
   renderTaskStatement() {
-    const { t } = this.props;
     return (
       <PromiseView
         promise={this.getTask().statementPromise}
         renderFulfilled={(statement) => <TaskStatementView task={this.getTask()} source={statement} />}
-        renderPending={() => <p>{t("loading")}</p>}
-        renderRejected={() => <p>{t("task.statement fail")}</p>}
+        renderPending={() => (
+          <p>
+            <Trans>Loading...</Trans>
+          </p>
+        )}
+        renderRejected={() => (
+          <p>
+            <Trans>Failed to load task statement. Try reloading the page.</Trans>
+          </p>
+        )}
       />
     );
   }
 
   returnLastSubmissionInfo(list: any) {
-    const { t } = this.props;
     const items = list.items;
     if (items.length === 0) {
       return null;
@@ -132,20 +134,25 @@ export default class TaskView extends React.Component<Props> {
       const submission = items[items.length - 1];
       return (
         <div className="terry-submission-list-button">
-          <strong>{t("task.last submission")}</strong>{" "}
+          <strong>
+            <Trans>Last submission:</Trans>
+          </strong>{" "}
           <DateView
             {...this.props}
             clock={() => this.props.model.serverTime()}
             date={DateTime.fromISO(submission.date)}
           />{" "}
-          (<Link to={"/task/" + this.getTask().name + "/submissions"}>{t("task.view all")}</Link>)
+          (
+          <Link to={"/task/" + this.getTask().name + "/submissions"}>
+            <Trans>view all submissions</Trans>
+          </Link>
+          )
         </div>
       );
     }
   }
 
   renderSubmissionListButton() {
-    const { t } = this.props;
     return (
       <PromiseView
         promise={this.getTaskState().submissionListPromise}
@@ -153,7 +160,9 @@ export default class TaskView extends React.Component<Props> {
         renderFulfilled={(list) => this.returnLastSubmissionInfo(list)}
         renderRejected={(_error) => (
           <div className="terry-submission-list-button">
-            <em>{t("submission.list.load failed")}</em>
+            <em>
+              <Trans>Loading submission list failed, reload page.</Trans>
+            </em>
           </div>
         )}
       />

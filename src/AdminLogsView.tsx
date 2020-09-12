@@ -10,7 +10,8 @@ import { AbsoluteDateView } from "./datetime.views";
 import { DateTime } from "luxon";
 import { AdminSession } from "./admin.models";
 import ObservablePromise from "./ObservablePromise";
-import { WithTranslation } from "react-i18next";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 const LOG_LEVELS: any = {
   DEBUG: {
@@ -36,7 +37,7 @@ type LogItem = {
 
 type Props = {
   session: AdminSession;
-} & WithTranslation;
+};
 
 type State = {
   level: string;
@@ -123,12 +124,12 @@ export default class AdminLogsView extends React.Component<Props, State> {
   }
 
   render() {
-    const { t } = this.props;
-
     return (
-      <ModalView contentLabel={t("logs.title")} returnUrl={"/admin"}>
+      <ModalView contentLabel={i18n._(t`Logs`)} returnUrl={"/admin"}>
         <div className="modal-header">
-          <h5 className="modal-title">{t("logs.title")}</h5>
+          <h5 className="modal-title">
+            <Trans>Logs</Trans>
+          </h5>
           <Link to={"/admin"} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
@@ -142,18 +143,18 @@ export default class AdminLogsView extends React.Component<Props, State> {
                   className={["btn", this.state.level === level ? "active" : "", "btn-" + obj.color].join(" ")}
                   onClick={() => this.changeLevel(level)}
                 >
-                  {t("logs.levels." + level)}
+                  {level}
                 </button>
               ))}
             </div>
             <input
-              placeholder={t("logs.category filter")}
+              placeholder={i18n._(t`Category filter`)}
               className="form-control mb-1"
               value={this.state.category}
               onChange={(e) => this.changeCategory(e.target.value)}
             />
             <input
-              placeholder={t("logs.message filter")}
+              placeholder={i18n._(t`Message filter`)}
               className="form-control"
               value={this.state.filter}
               onChange={(e) => this.changeFilter(e.target.value)}
@@ -163,10 +164,18 @@ export default class AdminLogsView extends React.Component<Props, State> {
             <table className="table">
               <thead>
                 <tr>
-                  <th>{t("logs.date")}</th>
-                  <th>{t("logs.category")}</th>
-                  <th>{t("logs.level")}</th>
-                  <th>{t("logs.message")}</th>
+                  <th>
+                    <Trans>Date</Trans>
+                  </th>
+                  <th>
+                    <Trans>Category</Trans>
+                  </th>
+                  <th>
+                    <Trans>Level</Trans>
+                  </th>
+                  <th>
+                    <Trans>Message</Trans>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -177,14 +186,15 @@ export default class AdminLogsView extends React.Component<Props, State> {
                     if (items.length === 0)
                       return (
                         <tr>
-                          <td colSpan={4}>{t("no messages yet")}</td>
+                          <td colSpan={4}>
+                            <Trans>No messages yet</Trans>
+                          </td>
                         </tr>
                       );
                     return items.map((log, i) => (
                       <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
                         <td>
                           <AbsoluteDateView
-                            {...this.props}
                             clock={() => this.props.session.serverTime()}
                             date={DateTime.fromISO(log.date)}
                           />
@@ -206,7 +216,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
                               this.changeLevel(log.level);
                             }}
                           >
-                            {t("logs.levels." + log.level)}
+                            {log.level}
                           </button>
                         </td>
                         <td>
@@ -217,12 +227,14 @@ export default class AdminLogsView extends React.Component<Props, State> {
                   }}
                   renderPending={() => (
                     <tr>
-                      <td colSpan={4}>{t("loading")}</td>
+                      <td colSpan={4}>{<Trans>Loading...</Trans>}</td>
                     </tr>
                   )}
                   renderRejected={() => (
                     <tr>
-                      <td colSpan={4}>{t("error")}</td>
+                      <td colSpan={4}>
+                        <Trans>Error</Trans>
+                      </td>
                     </tr>
                   )}
                 />
@@ -232,7 +244,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
         </div>
         <div className="modal-footer">
           <Link to={"/admin"} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> {t("close")}
+            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
           </Link>
         </div>
       </ModalView>

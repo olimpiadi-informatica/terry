@@ -1,11 +1,11 @@
 import * as React from "react";
 import ResultView from "./ResultView";
-import { WithTranslation } from "react-i18next";
 import { TestCase } from "./domain";
+import { Select } from "@lingui/macro";
 
 type Props = {
   result: any;
-} & WithTranslation;
+};
 
 export default class ValidationView extends React.Component<Props> {
   render() {
@@ -29,11 +29,13 @@ export default class ValidationView extends React.Component<Props> {
   }
 
   renderCase(c: TestCase, id: number) {
-    const { t } = this.props;
     return (
       <li id={"case-" + id} key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
         <span>
-          Case #<samp>{id}</samp>: <b>{t("submission.validation." + c.status)}</b>
+          Case #<samp>{id}</samp>:{" "}
+          <b>
+            <Select value={c.status} parsed="parsed" missing="missing" invalid="invalid" other="?" />
+          </b>
           <br />
           <em>{c.message}</em>
         </span>

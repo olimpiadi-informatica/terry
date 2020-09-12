@@ -2,16 +2,15 @@ import * as React from "react";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 import client from "./TerryClient";
 import ContestView from "./ContestView";
-import { translateComponent } from "./utils";
 import LoadingView from "./LoadingView";
 import PromiseView from "./PromiseView";
 import { Model } from "./user.models";
 import ObservablePromise from "./ObservablePromise";
-import { WithTranslation } from "react-i18next";
+import { Trans } from "@lingui/macro";
 
-type Props = WithTranslation & RouteComponentProps<any>;
+type Props = RouteComponentProps<any>;
 
-class AppView extends React.Component<Props> {
+export default class AppView extends React.Component<Props> {
   model: Model;
 
   constructor(props: Props) {
@@ -30,7 +29,6 @@ class AppView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
     if (this.model.isLoggedIn()) {
       return (
         this.model.userStatePromise && (
@@ -40,8 +38,12 @@ class AppView extends React.Component<Props> {
             renderFulfilled={(userState) => <ContestView {...this.props} model={this.model} userState={userState} />}
             renderRejected={(_error) => (
               <div className="alert alert-danger" role="alert">
-                <h4 className="alert-heading">{t("error")}</h4>
-                <p>{t("reload")}</p>
+                <h4 className="alert-heading">
+                  <Trans>Error</Trans>
+                </h4>
+                <p>
+                  <Trans>Reload</Trans>
+                </p>
               </div>
             )}
           />
@@ -69,5 +71,3 @@ class AppView extends React.Component<Props> {
     }
   }
 }
-
-export default translateComponent(AppView);

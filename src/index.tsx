@@ -9,7 +9,9 @@ import AppView from "./AppView";
 import LoadingView from "./LoadingView";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import i18n from "./i18n";
+import { I18nProvider } from "@lingui/react";
+import { i18n, defaultLanguage } from "./i18n";
+
 import PackView from "./PackView";
 
 import { ToastContainer } from "react-toastify";
@@ -20,7 +22,7 @@ if (window.location.origin.endsWith(":3000")) window.location.replace("http://lo
 /******** DEVELOPMENT SPECIFIC **********/
 
 // when the language changes set the attribute so that bootstrap components can be translated via css
-i18n.on("languageChanged", (lang) => document.getElementsByTagName("html")[0].setAttribute("lang", lang.substr(0, 2)));
+// i18n_.on("languageChanged", (lang) => document.getElementsByTagName("html")[0].setAttribute("lang", lang.substr(0, 2)));
 
 // handle errors in promises
 window.addEventListener("unhandledrejection", (event: any) => {
@@ -31,15 +33,17 @@ window.addEventListener("unhandledrejection", (event: any) => {
 
 ReactDOM.render(
   <React.Fragment>
-    <React.Suspense fallback={<LoadingView />}>
-      <ToastContainer />
-      <Router>
-        <Switch>
-          <Route path={"/admin"} component={PackView} />
-          <Route component={AppView} />
-        </Switch>
-      </Router>
-    </React.Suspense>
+    <I18nProvider language={defaultLanguage} i18n={i18n}>
+      <React.Suspense fallback={<LoadingView />}>
+        <ToastContainer />
+        <Router>
+          <Switch>
+            <Route path={"/admin"} component={PackView} />
+            <Route component={AppView} />
+          </Switch>
+        </Router>
+      </React.Suspense>
+    </I18nProvider>
   </React.Fragment>,
   document.getElementById("root")
 );

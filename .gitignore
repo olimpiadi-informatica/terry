@@ -21,3 +21,6 @@ yarn-error.log*
 
 # DB
 *.sqlite3
+
+# translations
+src/locales/_build

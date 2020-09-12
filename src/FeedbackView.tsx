@@ -4,18 +4,16 @@ import { DateView } from "./datetime.views";
 import { DateTime } from "luxon";
 import ScoreView from "./ScoreView";
 import { TestCase } from "./domain";
-import { WithTranslation } from "react-i18next";
+import { Trans } from "@lingui/macro";
 
 type Props = {
   submission: any;
   userState?: any;
   model: any;
-} & WithTranslation;
+};
 
 export default class FeedbackView extends React.Component<Props> {
   render() {
-    const { t } = this.props;
-
     const ops = {
       renderCase: (c: TestCase, id: number) => this.renderCase(c, id),
       renderCaseSummary: (c: TestCase, id: number) => this.renderCaseSummary(c, id),
@@ -28,7 +26,9 @@ export default class FeedbackView extends React.Component<Props> {
     return (
       <div className="modal-body">
         <dl className="terry-file-view">
-          <dt>{t("submission.feedback.date")}:</dt>
+          <dt>
+            <Trans>Date</Trans>:
+          </dt>
           <dd>
             <DateView
               {...this.props}
@@ -36,7 +36,9 @@ export default class FeedbackView extends React.Component<Props> {
               date={DateTime.fromISO(submissionData.date)}
             />
           </dd>
-          <dt style={{ marginTop: "0.75rem" }}>{t("submission.feedback.score")}:</dt>
+          <dt style={{ marginTop: "0.75rem" }}>
+            <Trans>Score</Trans>:
+          </dt>
           <dd>
             <ScoreView score={score} max={max_score} size={1} />
           </dd>
@@ -59,11 +61,10 @@ export default class FeedbackView extends React.Component<Props> {
   }
 
   renderCase(c: TestCase, id: number) {
-    const { t } = this.props;
     return (
       <li id={"case-" + id} key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
         <span>
-          Case #<samp>{id}</samp>: <b>{c.correct ? t("submission.correct") : t("submission.wrong")}</b>
+          Case #<samp>{id}</samp>: <b>{c.correct ? <Trans>correct</Trans> : <Trans>wrong</Trans>}</b>
           <br />
           <pre>{c.message}</pre>
         </span>

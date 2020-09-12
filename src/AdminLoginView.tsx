@@ -1,12 +1,14 @@
 import * as React from "react";
 import { AdminSession } from "./admin.models";
-import { WithTranslation } from "react-i18next";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
+
 const ReactMarkdown = require("react-markdown");
 
 type Props = {
   session: AdminSession;
   pack: { data: { deletable: boolean; name: string; description: string } };
-} & WithTranslation;
+};
 
 export default class AdminLoginView extends React.Component<Props> {
   componentDidMount() {
@@ -23,13 +25,14 @@ export default class AdminLoginView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
     return (
       <div className="jumbotron admin-jumbotron">
         <h1 className="text-center display-3">{this.props.pack.data.name}</h1>
         <ReactMarkdown source={this.props.pack.data.description} />
         <hr />
-        <h2 className="text-center">{t("login.please login")}</h2>
+        <h2 className="text-center">
+          <Trans>Log in</Trans>
+        </h2>
         <form
           ref="form"
           action=""
@@ -40,17 +43,17 @@ export default class AdminLoginView extends React.Component<Props> {
         >
           <div className="form-group">
             <label htmlFor="token" className="sr-only">
-              {t("login.token")}
+              <Trans>Admin token</Trans>
             </label>
             <input
               name="token"
               id="token"
               className="form-control text-center"
               required
-              placeholder={t("login.token")}
+              placeholder={i18n._(t`Admin token`)}
             />
           </div>
-          <input type="submit" className="btn btn-danger" value={t("login.login")!} />
+          <input type="submit" className="btn btn-danger" value={i18n._(t`Login`)} />
         </form>
       </div>
     );

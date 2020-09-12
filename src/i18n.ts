@@ -1,33 +1,13 @@
-import i18next from "i18next";
-import Backend from "i18next-xhr-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
-
+import { setupI18n } from "@lingui/core";
+import catalogIt from "./locales/it/messages";
+import catalogEn from "./locales/en/messages";
 require("moment/locale/it");
 
-i18next
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "en",
+const catalogs = {
+  it: catalogIt,
+  en: catalogEn,
+};
 
-    // have a common namespace used around the full app
-    ns: ["translations"],
-    defaultNS: "translations",
+export const defaultLanguage = "it";
 
-    debug: true,
-
-    interpolation: {
-      escapeValue: false, // not needed for react!!
-    },
-
-    react: {
-      wait: true,
-      useSuspense: false,
-    },
-
-    returnNull: false,
-  });
-
-export default i18next;
+export const i18n = setupI18n({ catalogs, language: defaultLanguage });

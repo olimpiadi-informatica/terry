@@ -11,13 +11,14 @@ import { colorFromScore } from "./utils";
 import "./SubmissionListView.css";
 import ScoreView from "./ScoreView";
 import PromiseView from "./PromiseView";
-import { WithTranslation } from "react-i18next";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 type Props = {
   userState: any;
   taskName: string;
   model: any;
-} & WithTranslation;
+};
 
 export default class SubmissionListView extends React.Component<Props> {
   getTask() {
@@ -29,7 +30,6 @@ export default class SubmissionListView extends React.Component<Props> {
   }
 
   renderSubmissionList(list: any) {
-    const { t } = this.props;
     const submissionList = [];
 
     for (let submission of list.items) {
@@ -48,7 +48,7 @@ export default class SubmissionListView extends React.Component<Props> {
             />
             <br />
             <Link to={"/task/" + submission.task + "/submission/" + submission.id}>
-              {t("submission.list.view details")}
+              <Trans>view details</Trans>
             </Link>
           </td>
           <td>
@@ -73,7 +73,7 @@ export default class SubmissionListView extends React.Component<Props> {
                 data-for={"input-" + submission.id}
               >
                 <FontAwesomeIcon icon={faDownload} />{" "}
-                <span className="hidden-md-down">{t("submission.list.input")}</span>
+                <span className="hidden-md-down"><Trans>Input file</Trans></span>
               </a>
 
               <a
@@ -86,7 +86,7 @@ export default class SubmissionListView extends React.Component<Props> {
                 data-for={"source-" + submission.id}
               >
                 <FontAwesomeIcon icon={faDownload} />{" "}
-                <span className="hidden-md-down">{t("submission.list.source")}</span>
+                <span className="hidden-md-down"><Trans>Source file</Trans></span>
               </a>
 
               <a
@@ -99,7 +99,7 @@ export default class SubmissionListView extends React.Component<Props> {
                 data-for={"output-" + submission.id}
               >
                 <FontAwesomeIcon icon={faDownload} />{" "}
-                <span className="hidden-md-down">{t("submission.list.output")}</span>
+                <span className="hidden-md-down"><Trans>Output file</Trans></span>
               </a>
             </div>
           </td>
@@ -114,11 +114,10 @@ export default class SubmissionListView extends React.Component<Props> {
   }
 
   renderBody(list: any) {
-    const { t } = this.props;
     if (list.items.length === 0)
       return (
         <div className="modal-body">
-          <em>{t("submission.list.no submissions")}</em>
+          <em><Trans>You have not submitted yet.</Trans></em>
         </div>
       );
 
@@ -127,9 +126,9 @@ export default class SubmissionListView extends React.Component<Props> {
         <table className="table terry-table">
           <thead>
             <tr>
-              <th>{t("submission.list.date")}</th>
-              <th>{t("submission.list.download")}</th>
-              <th>{t("submission.list.score")}</th>
+              <th><Trans>Date</Trans></th>
+              <th><Trans>Download</Trans></th>
+              <th><Trans>Score</Trans></th>
             </tr>
           </thead>
           <tbody>{this.renderSubmissionList(list)}</tbody>
@@ -140,12 +139,11 @@ export default class SubmissionListView extends React.Component<Props> {
 
   render() {
     const taskName = this.props.taskName;
-    const { t } = this.props;
     return (
-      <ModalView contentLabel={t("submission.list.title")} returnUrl={"/task/" + this.props.taskName}>
+      <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={"/task/" + this.props.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
-            {t("submission.list.title")} <strong className="text-uppercase">{taskName}</strong>
+            <Trans>Submission for</Trans> <strong className="text-uppercase">{taskName}</strong>
           </h5>
           <Link to={"/task/" + this.props.taskName} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -155,15 +153,15 @@ export default class SubmissionListView extends React.Component<Props> {
           promise={this.getListPromise()}
           renderPending={() => (
             <div className="modal-body">
-              <em>{t("loading")}</em>
+              <em><Trans>Loading...</Trans></em>
             </div>
           )}
-          renderRejected={() => t("error")}
+          renderRejected={() => i18n._(t`Error`)}
           renderFulfilled={(list) => this.renderBody(list)}
         />
         <div className="modal-footer">
           <Link to={"/task/" + this.props.taskName} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> {t("close")}
+            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
           </Link>
         </div>
       </ModalView>

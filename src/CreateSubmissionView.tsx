@@ -1,14 +1,13 @@
 import * as React from "react";
 import SubmissionView from "./SubmissionView";
-import { WithTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
 
 type Props = {
   userState: any;
   taskName: string;
   inputId: string;
-} & WithTranslation &
-  RouteComponentProps<any>;
+} & RouteComponentProps<any>;
 
 export default class CreateSubmissionView extends React.Component<Props> {
   submission: any;
@@ -26,8 +25,12 @@ export default class CreateSubmissionView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
-    if (this.submission === undefined) return <p>{t("submission.cannot submit")}</p>;
+    if (this.submission === undefined)
+      return (
+        <p>
+          <Trans>Cannot submit for this input.</Trans>
+        </p>
+      );
     return <SubmissionView {...this.props} submission={this.submission} />;
   }
 }
