@@ -37,6 +37,24 @@ admin_token: SOMETHING DIFFERENT FROM THE DEFAULT
 num_proxy: 1
 ```
 
+### Using Docker
+
+Inside the `docker` folder there are the files needed for building a docker container with the backend and frontend.
+You can also find a prebuilt image in [Docker Hub](https://hub.docker.com/r/edomora97/terry).
+
+To use the docker image you should mount a folder to `/data` inside the container.
+After the first startup of the container the default configuration file is created, you can customize it and restart the container.
+All the data is persisted inside `/data`, mounting that folder as a volume makes sure you won't lose any data by recreating the container.
+
+The container exposes port 80, where `nginx` is configured to serve the backend and the frontend.
+With `-P` that port will be mapped to a random local port, you may want to use `-p 12345:80` to fix the exported port.
+
+```sh
+docker run -d -v $(pwd)/storage:/data -P edomora97/terry:latest
+```
+
+The nginx and terr-server logs are stored inside `/data/logs`.
+
 ## Build the server VM
 
 1. Clone with `--recursive` this repo
