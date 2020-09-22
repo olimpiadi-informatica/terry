@@ -71,7 +71,7 @@ export class Model extends Observable {
   }
 
   login(token: string) {
-    this.cookies.set(Model.cookieName, token);
+    this.cookies.set(Model.cookieName, token, { path: "/" });
     this.loadUser();
     this.lastLoginAttempt = this.userStatePromise;
     this.lastLoginAttempt && this.lastLoginAttempt.pushObserver(this);
@@ -80,7 +80,7 @@ export class Model extends Observable {
 
   logout() {
     if (!this.isLoggedIn()) throw Error("logout() should be called only if logged in");
-    this.cookies.remove(Model.cookieName);
+    this.cookies.remove(Model.cookieName, { path: "/" });
     delete this.userStatePromise;
     // TODO redirect to /
     this.fireUpdate();

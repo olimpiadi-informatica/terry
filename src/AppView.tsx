@@ -55,17 +55,10 @@ export default class AppView extends React.Component<Props> {
           promise={new ObservablePromise(client.api("/admin/pack_status"))}
           renderPending={() => <LoadingView />}
           renderFulfilled={(response) => {
-            if (response.data.uploaded)
-              return (
-                // <LoginView {...this.props} model={this.model} />
-                <ContestView {...this.props} model={this.model} userState={null} />
-              );
+            if (response.data.uploaded) return <ContestView {...this.props} model={this.model} userState={null} />;
             else return <Redirect to="/admin" />;
           }}
-          renderRejected={(_error) => (
-            // <LoginView {...this.props} model={this.model} />
-            <ContestView {...this.props} model={this.model} userState={null} />
-          )}
+          renderRejected={(_error) => <ContestView {...this.props} model={this.model} userState={null} />}
         />
       );
     }
