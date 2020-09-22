@@ -28,13 +28,13 @@ msgstr "Admin"
 msgid "Admin token"
 msgstr "Admin token"
 
-#: src/AdminSummaryView.tsx:244
+#: src/AdminSummaryView.tsx:235
 #: src/AdminUsersView.tsx:11
 #: src/ContestExtraTimeView.tsx:17
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src/ContestView.tsx:95
+#: src/ContestView.tsx:104
 msgid "C/C++ Documentation"
 msgstr "C/C++ Documentation"
 
@@ -46,11 +46,11 @@ msgstr "Cancel"
 msgid "Cannot submit for this input."
 msgstr "Cannot submit for this input."
 
-#: src/AdminLogsView.tsx:121
+#: src/AdminLogsView.tsx:120
 msgid "Category"
 msgstr "Category"
 
-#: src/AdminLogsView.tsx:110
+#: src/AdminLogsView.tsx:109
 msgid "Category filter"
 msgstr "Category filter"
 
@@ -62,7 +62,7 @@ msgstr "Change output"
 msgid "Change source"
 msgstr "Change source"
 
-#: src/AdminLogsView.tsx:175
+#: src/AdminLogsView.tsx:174
 #: src/AdminUsersView.tsx:82
 #: src/ContestExtraTimeView.tsx:60
 #: src/SubmissionListView.tsx:107
@@ -71,27 +71,27 @@ msgstr "Change source"
 msgid "Close"
 msgstr "Close"
 
-#: src/AdminSummaryView.tsx:131
+#: src/AdminSummaryView.tsx:125
 msgid "Contest ended at"
 msgstr "Contest ended at"
 
-#: src/AdminSummaryView.tsx:140
+#: src/AdminSummaryView.tsx:133
 msgid "Contest ended for everyone at"
 msgstr "Contest ended for everyone at"
 
-#: src/datetime.views.tsx:55
+#: src/datetime.views.tsx:49
 msgid "Contest finished"
 msgstr "Contest finished"
 
-#: src/AdminSummaryView.tsx:104
+#: src/AdminSummaryView.tsx:100
 msgid "Contest started at"
 msgstr "Contest started at"
 
-#: src/AdminSummaryView.tsx:159
+#: src/AdminSummaryView.tsx:150
 msgid "Contest status"
 msgstr "Contest status"
 
-#: src/AdminSummaryView.tsx:47
+#: src/AdminSummaryView.tsx:45
 msgid "Contest was successfully started"
 msgstr "Contest was successfully started"
 
@@ -104,17 +104,17 @@ msgstr "Contestants"
 msgid "Creating final zip..."
 msgstr "Creating final zip..."
 
-#: src/AdminSummaryView.tsx:234
+#: src/AdminSummaryView.tsx:225
 msgid "Danger zone"
 msgstr "Danger zone"
 
-#: src/AdminLogsView.tsx:118
+#: src/AdminLogsView.tsx:117
 #: src/FeedbackView.tsx:19
 #: src/SubmissionListView.tsx:82
 msgid "Date"
 msgstr "Date"
 
-#: src/ContestView.tsx:89
+#: src/ContestView.tsx:95
 #: src/SidebarView.tsx:48
 msgid "Documentation"
 msgstr "Documentation"
@@ -123,7 +123,7 @@ msgstr "Documentation"
 msgid "Download"
 msgstr "Download"
 
-#: src/AdminSummaryView.tsx:79
+#: src/AdminSummaryView.tsx:76
 #: src/DownloadResultsView.tsx:33
 #: src/DownloadResultsView.tsx:40
 msgid "Download contest results"
@@ -137,8 +137,8 @@ msgstr "Download input"
 msgid "Download results"
 msgstr "Download results"
 
-#: src/AdminLogsView.tsx:166
-#: src/AdminSummaryView.tsx:191
+#: src/AdminLogsView.tsx:165
+#: src/AdminSummaryView.tsx:182
 #: src/AdminView.tsx:48
 #: src/AdminView.tsx:58
 #: src/AppView.tsx:26
@@ -150,7 +150,7 @@ msgstr "Download results"
 msgid "Error"
 msgstr "Error"
 
-#: src/AdminSummaryView.tsx:199
+#: src/AdminSummaryView.tsx:190
 #: src/AdminUsersView.tsx:73
 #: src/ContestExtraTimeView.tsx:28
 #: src/ContestExtraTimeView.tsx:35
@@ -166,7 +166,7 @@ msgstr "Extra time successfully updated"
 msgid "Extra time successfully updated for the user"
 msgstr "Extra time successfully updated for the user"
 
-#: src/ContestView.tsx:83
+#: src/ContestView.tsx:88
 msgid "FAQ"
 msgstr "FAQ"
 
@@ -182,11 +182,11 @@ msgstr "File"
 msgid "File:"
 msgstr "File:"
 
-#: src/ContestView.tsx:73
+#: src/ContestView.tsx:78
 msgid "How to use Codeblocks for programming in C/C++"
 msgstr "How to use Codeblocks for programming in C/C++"
 
-#: src/ContestView.tsx:78
+#: src/ContestView.tsx:83
 msgid "How to use Lazarus for programming in Pascal"
 msgstr "How to use Lazarus for programming in Pascal"
 
@@ -194,7 +194,7 @@ msgstr "How to use Lazarus for programming in Pascal"
 msgid "IP"
 msgstr "IP"
 
-#: src/ContestView.tsx:124
+#: src/ContestView.tsx:133
 msgid "If you want to submit more than one source code file, please create a zip file containing them."
 msgstr "If you want to submit more than one source code file, please create a zip file containing them."
 
@@ -202,7 +202,7 @@ msgstr "If you want to submit more than one source code file, please create a zi
 msgid "Input file"
 msgstr "Input file"
 
-#: src/AdminSummaryView.tsx:184
+#: src/AdminSummaryView.tsx:175
 msgid "Issue last detected"
 msgstr "Issue last detected"
 
@@ -214,7 +214,7 @@ msgstr "Last submission:"
 msgid "Last update:"
 msgstr "Last update:"
 
-#: src/AdminLogsView.tsx:124
+#: src/AdminLogsView.tsx:123
 msgid "Level"
 msgstr "Level"
 
@@ -222,8 +222,8 @@ msgstr "Level"
 msgid "Loading submission list failed, reload page."
 msgstr "Loading submission list failed, reload page."
 
-#: src/AdminLogsView.tsx:163
-#: src/AdminSummaryView.tsx:191
+#: src/AdminLogsView.tsx:162
+#: src/AdminSummaryView.tsx:182
 #: src/AdminView.tsx:48
 #: src/AdminView.tsx:48
 #: src/LoginView.tsx:32
@@ -243,20 +243,20 @@ msgid "Login"
 msgstr "Login"
 
 #: src/AdminView.tsx:38
-#: src/ContestView.tsx:159
+#: src/ContestView.tsx:172
 msgid "Logout"
 msgstr "Logout"
 
-#: src/AdminLogsView.tsx:94
-#: src/AdminLogsView.tsx:97
+#: src/AdminLogsView.tsx:93
+#: src/AdminLogsView.tsx:96
 msgid "Logs"
 msgstr "Logs"
 
-#: src/AdminLogsView.tsx:127
+#: src/AdminLogsView.tsx:126
 msgid "Message"
 msgstr "Message"
 
-#: src/AdminLogsView.tsx:111
+#: src/AdminLogsView.tsx:110
 msgid "Message filter"
 msgstr "Message filter"
 
@@ -264,19 +264,19 @@ msgstr "Message filter"
 msgid "Name"
 msgstr "Name"
 
-#: src/AdminSummaryView.tsx:204
+#: src/AdminSummaryView.tsx:195
 msgid "No extra time set"
 msgstr "No extra time set"
 
-#: src/AdminSummaryView.tsx:178
+#: src/AdminSummaryView.tsx:169
 msgid "No issue detected"
 msgstr "No issue detected"
 
-#: src/AdminLogsView.tsx:137
+#: src/AdminLogsView.tsx:136
 msgid "No messages yet"
 msgstr "No messages yet"
 
-#: src/ContestView.tsx:115
+#: src/ContestView.tsx:124
 msgid "On the left side of this page you can find the tasks, click on any one to open it."
 msgstr "On the left side of this page you can find the tasks, click on any one to open it."
 
@@ -288,7 +288,7 @@ msgstr "Output file"
 msgid "Output file info"
 msgstr "Output file info"
 
-#: src/ContestView.tsx:100
+#: src/ContestView.tsx:109
 msgid "Pascal Documentation"
 msgstr "Pascal Documentation"
 
@@ -306,7 +306,7 @@ msgstr "Please select the contest file..."
 msgid "Processing..."
 msgstr "Processing..."
 
-#: src/AdminSummaryView.tsx:237
+#: src/AdminSummaryView.tsx:228
 msgid "RESET"
 msgstr "RESET"
 
@@ -314,12 +314,12 @@ msgstr "RESET"
 msgid "Reload"
 msgstr "Reload"
 
-#: src/AdminSummaryView.tsx:123
+#: src/AdminSummaryView.tsx:118
 #: src/SidebarView.tsx:22
 msgid "Remaining time"
 msgstr "Remaining time"
 
-#: src/AdminSummaryView.tsx:150
+#: src/AdminSummaryView.tsx:141
 msgid "Remaining time for some participant"
 msgstr "Remaining time for some participant"
 
@@ -344,11 +344,11 @@ msgstr "Resources"
 msgid "Score"
 msgstr "Score"
 
-#: src/ContestView.tsx:91
+#: src/ContestView.tsx:99
 msgid "Select the documentation you want to consult:"
 msgstr "Select the documentation you want to consult:"
 
-#: src/ContestView.tsx:69
+#: src/ContestView.tsx:73
 msgid "Select the tutorial you want to consult:"
 msgstr "Select the tutorial you want to consult:"
 
@@ -376,7 +376,7 @@ msgstr "Source file info"
 msgid "Source file..."
 msgstr "Source file..."
 
-#: src/AdminSummaryView.tsx:51
+#: src/AdminSummaryView.tsx:49
 msgid "Start"
 msgstr "Start"
 
@@ -401,7 +401,7 @@ msgstr "Submit"
 msgid "Surname"
 msgstr "Surname"
 
-#: src/AdminSummaryView.tsx:173
+#: src/AdminSummaryView.tsx:164
 msgid "System status"
 msgstr "System status"
 
@@ -409,11 +409,11 @@ msgstr "System status"
 msgid "Tasks"
 msgstr "Tasks"
 
-#: src/AdminSummaryView.tsx:41
+#: src/AdminSummaryView.tsx:40
 msgid "The contest has not started yet!"
 msgstr "The contest has not started yet!"
 
-#: src/ContestView.tsx:134
+#: src/ContestView.tsx:143
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 
@@ -439,11 +439,11 @@ msgstr "Upload"
 msgid "Upload solution"
 msgstr "Upload solution"
 
-#: src/ContestView.tsx:112
+#: src/ContestView.tsx:121
 msgid "Usage guide"
 msgstr "Usage guide"
 
-#: src/ContestView.tsx:67
+#: src/ContestView.tsx:69
 #: src/SidebarView.tsx:45
 msgid "Useful information"
 msgstr "Useful information"
@@ -452,7 +452,7 @@ msgstr "Useful information"
 msgid "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <0>is logged</0> and must be justified to the committee."
 msgstr "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <0>is logged</0> and must be justified to the committee."
 
-#: src/ContestView.tsx:117
+#: src/ContestView.tsx:126
 msgid "You can submit <0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <1>remember to submit</1> them by clicking the green button!"
 msgstr "You can submit <0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <1>remember to submit</1> them by clicking the green button!"
 
@@ -468,17 +468,17 @@ msgstr "Your score"
 msgid "correct"
 msgstr "correct"
 
-#: src/AdminSummaryView.tsx:206
-#: src/AdminSummaryView.tsx:213
+#: src/AdminSummaryView.tsx:197
+#: src/AdminSummaryView.tsx:204
 msgid "set extra time"
 msgstr "set extra time"
 
-#: src/AdminSummaryView.tsx:180
-#: src/AdminSummaryView.tsx:188
+#: src/AdminSummaryView.tsx:171
+#: src/AdminSummaryView.tsx:179
 msgid "show log"
 msgstr "show log"
 
-#: src/AdminSummaryView.tsx:223
+#: src/AdminSummaryView.tsx:214
 msgid "show users"
 msgstr "show users"
 
@@ -494,15 +494,15 @@ msgstr "view details"
 msgid "wrong"
 msgstr "wrong"
 
-#: src/AdminSummaryView.tsx:220
+#: src/AdminSummaryView.tsx:211
 msgid "{0, plural, =0 {No user has extra time} one {# user has extra time} other {# users have extra time}}"
 msgstr "{0, plural, =0 {No user has extra time} one {# user has extra time} other {# users have extra time}}"
 
-#: src/AdminSummaryView.tsx:210
+#: src/AdminSummaryView.tsx:201
 msgid "{0, plural, one {Contest duration was extended by # minute} other {Contest duration was extended by # minutes}}"
 msgstr "{0, plural, one {Contest duration was extended by # minute} other {Contest duration was extended by # minutes}}"
 
-#: src/AdminSummaryView.tsx:116
+#: src/AdminSummaryView.tsx:111
 msgid "{0, plural, one {plus # extra minute for some user} other {plus # extra minutes for some user}}"
 msgstr "{0, plural, one {plus # extra minute for some user} other {plus # extra minutes for some user}}"
 
