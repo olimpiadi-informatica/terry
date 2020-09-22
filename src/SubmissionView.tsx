@@ -34,7 +34,7 @@ export default class SubmissionView extends React.Component<Props> {
   renderSourceSelector() {
     if (!this.props.submission.source) {
       return (
-        <div key="absent" className="custom-file mb-3 col-4">
+        <div key="absent" className="custom-file mb-3">
           <input
             ref="source"
             name="source"
@@ -93,7 +93,7 @@ export default class SubmissionView extends React.Component<Props> {
   renderOutputSelector() {
     if (!this.props.submission.output) {
       return (
-        <div key="absent" className="custom-file col-4">
+        <div key="absent" className="custom-file">
           <input
             ref="output"
             name="output"

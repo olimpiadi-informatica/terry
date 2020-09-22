@@ -186,7 +186,7 @@ export default class AdminSummaryView extends React.Component<Props> {
   renderEndTime() {
     return (
       <React.Fragment>
-        <Trans>Contest ended at </Trans>
+        <Trans>Contest ended at</Trans>{" "}
         {this.getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </React.Fragment>
     );
@@ -197,8 +197,7 @@ export default class AdminSummaryView extends React.Component<Props> {
 
     return (
       <li>
-        <Trans>Contest ended for everyone at </Trans>
-
+        <Trans>Contest ended for everyone at</Trans>{" "}
         {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </li>
     );
@@ -209,7 +208,7 @@ export default class AdminSummaryView extends React.Component<Props> {
 
     return (
       <React.Fragment>
-        <Trans>Remaining time for some participant </Trans>
+        <Trans>Remaining time for some participant</Trans>{" "}
         <CountdownView clock={() => this.props.session.serverTime()} end={endTime} />
       </React.Fragment>
     );
@@ -296,7 +295,7 @@ export default class AdminSummaryView extends React.Component<Props> {
                       value={this.props.status.extraTimeMinutes()}
                       one="Contest duration was extended by # minute"
                       other="Contest duration was extended by # minutes"
-                    />
+                    />{" "}
                     (
                     <Link to="/admin/extra_time">
                       <Trans>set extra time</Trans>
