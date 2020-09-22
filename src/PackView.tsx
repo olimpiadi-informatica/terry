@@ -8,28 +8,20 @@ import { RouteComponentProps } from "react-router";
 type Props = RouteComponentProps<any>;
 
 export default class PackView extends React.Component<Props> {
-  pack: Pack;
-
-  constructor(props: Props) {
-    super(props);
-
-    this.pack = new Pack();
-  }
-
-  componentWillMount() {
-    this.pack.onAppStart();
-  }
+  pack: (Pack | null) = null;
 
   componentDidMount() {
+    this.pack = new Pack();
+    this.pack.onAppStart();
     this.pack.pushObserver(this);
   }
 
   componentWillUnmount() {
-    this.pack.popObserver(this);
+    this.pack!.popObserver(this);
   }
 
   render() {
-    if (this.pack.isLoading()) return <LoadingView />;
+    if (!this.pack || this.pack.isLoading()) return <LoadingView />;
     // FIXME: use a proper ErrorView or similar
     if (!this.pack.isLoaded()) return <p>An error occurred: {this.pack.error.message}</p>;
 

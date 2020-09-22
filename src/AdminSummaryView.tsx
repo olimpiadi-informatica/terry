@@ -32,15 +32,12 @@ export default class AdminSummaryView extends React.Component<Props> {
   timer?: NodeJS.Timer;
   logsPromise?: ObservablePromise;
 
-  componentWillMount() {
+  componentDidMount() {
     this.logsPromise = this.props.session.loadLogs({
       start_date: "2000-01-01T00:00:00.000",
       end_date: "2030-01-01T00:00:00.000",
       level: "WARNING",
     });
-  }
-
-  componentDidMount() {
     this.props.session.pushObserver(this);
 
     const tickrate = 1000;

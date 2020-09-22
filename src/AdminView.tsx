@@ -26,11 +26,8 @@ export default class AdminView extends React.Component<Props> {
     this.session = new AdminSession();
   }
 
-  componentWillMount() {
-    this.session.onAppStart();
-  }
-
   componentDidMount() {
+    this.session.onAppStart();
     this.session.pushObserver(this);
   }
 

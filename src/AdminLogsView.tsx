@@ -59,11 +59,8 @@ export default class AdminLogsView extends React.Component<Props, State> {
     };
   }
 
-  componentWillMount() {
-    this.loadLogs();
-  }
-
   componentDidMount() {
+    this.loadLogs();
     this.interval = setInterval(() => this.refreshLogs(), 5000);
   }
 
