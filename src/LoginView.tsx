@@ -9,6 +9,13 @@ type Props = {
 };
 
 export default class LoginView extends React.Component<Props> {
+  tokenRef: React.RefObject<HTMLInputElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.tokenRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.model.pushObserver(this);
   }
@@ -18,7 +25,7 @@ export default class LoginView extends React.Component<Props> {
   }
 
   login() {
-    this.props.model.login((this.refs.form as any).token.value);
+    this.props.model.login(this.tokenRef.current!.value);
   }
 
   render() {
@@ -28,7 +35,6 @@ export default class LoginView extends React.Component<Props> {
           <Trans>Please login</Trans>
         </h1>
         <form
-          ref="form"
           action=""
           onSubmit={(e) => {
             e.preventDefault();
@@ -43,6 +49,7 @@ export default class LoginView extends React.Component<Props> {
               autoComplete="off"
               name="token"
               id="token"
+              ref={this.tokenRef}
               className="form-control text-center"
               required
               placeholder={i18n._(t`Token`)}

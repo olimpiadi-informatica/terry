@@ -17,6 +17,15 @@ type Props = {
 } & RouteComponentProps<any>;
 
 export default class SubmissionView extends React.Component<Props> {
+  sourceRef: React.RefObject<HTMLInputElement>;
+  outputRef: React.RefObject<HTMLInputElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.sourceRef = React.createRef();
+    this.outputRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.submission.pushObserver(this);
   }
@@ -35,12 +44,8 @@ export default class SubmissionView extends React.Component<Props> {
 
   async selectSourceFile() {
     // FIXME: string ref
-    const file = (this.refs.source as any).files[0];
-    // no file was selected
-    if (file === undefined) {
-      return;
-    }
-    if (await checkFile(file)) {
+    const file = this.sourceRef.current!.files![0];
+    if (file !== undefined && (await checkFile(file))) {
       this.props.submission.setSource(file);
     }
   }
@@ -50,7 +55,7 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="absent" className="custom-file mb-3">
           <input
-            ref="source"
+            ref={this.sourceRef}
             name="source"
             type="file"
             id="source-file"
@@ -127,12 +132,12 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="absent" className="custom-file">
           <input
-            ref="output"
+            ref={this.outputRef}
             name="output"
             type="file"
             id="output-file"
             className="custom-file-input"
-            onChange={() => this.props.submission.setOutput((this.refs.output as any).files[0])}
+            onChange={() => this.props.submission.setOutput(this.outputRef.current!.files![0])}
           />
           <label className="custom-file-label" htmlFor="output-file">
             File di output...
@@ -193,7 +198,6 @@ export default class SubmissionView extends React.Component<Props> {
       <ModalView contentLabel="Submission creation" returnUrl={"/task/" + this.props.submission.input.task}>
         <form
           className="submissionForm"
-          ref="form"
           onSubmit={(e) => {
             e.preventDefault();
             this.submit();

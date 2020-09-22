@@ -11,6 +11,13 @@ type Props = {
 };
 
 export default class AdminLoginView extends React.Component<Props> {
+  tokenRef: React.RefObject<HTMLInputElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.tokenRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.session.pushObserver(this);
   }
@@ -20,7 +27,7 @@ export default class AdminLoginView extends React.Component<Props> {
   }
 
   login() {
-    const token = (this.refs.form as any).token.value;
+    const token = this.tokenRef.current!.value;
     this.props.session.login(token);
   }
 
@@ -34,7 +41,6 @@ export default class AdminLoginView extends React.Component<Props> {
           <Trans>Log in</Trans>
         </h2>
         <form
-          ref="form"
           action=""
           onSubmit={(e) => {
             e.preventDefault();
@@ -48,6 +54,7 @@ export default class AdminLoginView extends React.Component<Props> {
             <input
               name="token"
               id="token"
+              ref={this.tokenRef}
               className="form-control text-center"
               required
               placeholder={i18n._(t`Admin token`)}

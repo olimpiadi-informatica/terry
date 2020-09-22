@@ -14,10 +14,17 @@ type UserExtraTimeProps = {
 };
 
 class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
+  minutesRef: React.RefObject<HTMLInputElement>;
+
+  constructor(props: UserExtraTimeProps) {
+    super(props);
+    this.minutesRef = React.createRef();
+  }
+
   setExtraTime() {
     if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
-    const minutes = (this.refs.form as any).minutes.value;
+    const minutes = parseInt(this.minutesRef.current!.value);
     this.props.session.setExtraTime(minutes * 60, this.props.user.token);
 
     // show success
@@ -31,7 +38,6 @@ class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
   render() {
     return (
       <form
-        ref="form"
         className="form-inline"
         onSubmit={(e) => {
           e.preventDefault();
@@ -41,6 +47,7 @@ class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
         <input
           name="minutes"
           type="number"
+          ref={this.minutesRef}
           className="form-control mr-sm-2"
           defaultValue={"" + this.extraTimeMinutes()}
         />

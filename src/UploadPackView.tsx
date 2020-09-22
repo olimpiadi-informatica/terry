@@ -8,6 +8,13 @@ type Props = {
 };
 
 export default class UploadPackView extends React.Component<Props> {
+  inputRef: React.RefObject<HTMLInputElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.inputRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.pack.pushObserver(this);
   }
@@ -17,7 +24,7 @@ export default class UploadPackView extends React.Component<Props> {
   }
 
   upload() {
-    this.props.pack.upload((this.refs.form as any).file.files[0]);
+    this.props.pack.upload(this.inputRef.current!.files![0]);
   }
 
   render() {
@@ -31,7 +38,6 @@ export default class UploadPackView extends React.Component<Props> {
           <Trans>Please select the contest file...</Trans>
         </h2>
         <form
-          ref="form"
           action=""
           onSubmit={(e) => {
             e.preventDefault();
@@ -42,7 +48,15 @@ export default class UploadPackView extends React.Component<Props> {
             <label htmlFor="file" className="sr-only">
               <Trans>File</Trans>
             </label>
-            <input type="file" accept=".enc" name="file" id="file" className="form-control" required />
+            <input
+              type="file"
+              accept=".enc"
+              name="file"
+              id="file"
+              ref={this.inputRef}
+              className="form-control"
+              required
+            />
           </div>
           <input type="submit" className="btn btn-danger" value={i18n._(t`Upload`)} />
         </form>

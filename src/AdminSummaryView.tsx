@@ -67,7 +67,6 @@ export default class AdminSummaryView extends React.Component<Props> {
           <Trans>The contest has not started yet!</Trans>
         </p>
         <form
-          ref="form"
           onSubmit={(e) => {
             e.preventDefault();
             this.props.session.startContest().then(() => {

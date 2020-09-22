@@ -14,6 +14,13 @@ type Props = {
 };
 
 export default class TaskStatementView extends React.Component<Props> {
+  statementRef: React.RefObject<HTMLDivElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.statementRef = React.createRef();
+  }
+
   transformUri(url: string) {
     const taskBaseUri = this.props.task.data.statement_path.match(/.*\//)[0];
     return client.statementsBaseURI + taskBaseUri + url;
@@ -22,7 +29,7 @@ export default class TaskStatementView extends React.Component<Props> {
   componentDidMount() {
     (window as any).katex = katex;
 
-    renderMathInElement(this.refs.statement, {
+    renderMathInElement(this.statementRef.current, {
       delimiters: [
         { left: "$", right: "$", display: false },
         { left: "$$", right: "$$", display: true },
@@ -33,7 +40,7 @@ export default class TaskStatementView extends React.Component<Props> {
 
   render() {
     return (
-      <div ref="statement" className="task-statement">
+      <div ref={this.statementRef} className="task-statement">
         <ReactMarkdown
           source={this.props.source}
           transformImageUri={this.transformUri.bind(this)}
