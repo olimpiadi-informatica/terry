@@ -1,7 +1,9 @@
 import { t } from "@lingui/macro";
 import { MessageDescriptor } from "@lingui/core";
+import { i18n } from "./i18n";
+import { toast } from "react-toastify";
 
-export const MAX_SOURCE_SIZE = 32 * 1024;
+export const MAX_SOURCE_SIZE = 30000;
 
 type SourceLanguageType = { [key: string]: MessageDescriptor };
 
@@ -54,3 +56,66 @@ export const FORBIDDEN_EXTENSIONS: SourceLanguageType = {
   sln: t`Visual Studio project`,
   suo: t`Visual Studio project`,
 };
+
+const FORBIDDEN_MAGIC_NUMBERS = [
+  "\x4D\x5A", // Windows
+  "\xCE\xFA\xED\xFE", // MacOs 32 bit
+  "\xCF\xFA\xED\xFE", // MacOs 64 bit
+  "\xBE\xBA\xFE\xCA", // MacOs 32 bit FAT
+  "\xBF\xBA\xFE\xCA", // MacOs 64 bit FAT
+  "\x7F\x45\x4C\x46\x01", // ELF 32 bit
+  "\x7F\x45\x4C\x46\x02", // ELF 64 bit
+];
+
+export async function checkFile(file: File) {
+  const name = file.name as string;
+  const nameParts = name.split(".");
+  const extension = nameParts[nameParts.length - 1];
+  const size = file.size as number | undefined;
+
+  if (size !== undefined && size === 0) {
+    toast.error(i18n._(t`You selected an empty file`));
+  } else if (size !== undefined && size > MAX_SOURCE_SIZE) {
+    toast.error(i18n._(t`The file you selected is too big (${size} bytes > ${MAX_SOURCE_SIZE} bytes)`));
+  } else if (nameParts.length < 2) {
+    toast.error(i18n._(t`Select a file with an extension`));
+  } else if (extension.includes(" ")) {
+    toast.error(i18n._(t`The extension cannot contain spaces`));
+  } else if (extension in FORBIDDEN_EXTENSIONS) {
+    toast.error(
+      i18n._(
+        t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`
+      ) +
+        " " +
+        i18n._(FORBIDDEN_EXTENSIONS[extension])
+    );
+  } else if (await isExecutable(file)) {
+    toast.error(
+      i18n._(
+        t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`
+      )
+    );
+  } else {
+    return true;
+  }
+  return false;
+}
+
+async function isExecutable(blob: Blob): Promise<boolean> {
+  const buffer = await blob.slice(0, 5).arrayBuffer();
+  const view = new Uint8Array(buffer);
+  for (const magic of FORBIDDEN_MAGIC_NUMBERS) {
+    let valid = true;
+    for (let i = 0; i < magic.length && i < view.length; i++) {
+      if (view[i] !== magic.charCodeAt(i)) {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      console.log("Source file detected to be binary file: it starts with", magic);
+      return Promise.resolve(true);
+    }
+  }
+  return Promise.resolve(false);
+}

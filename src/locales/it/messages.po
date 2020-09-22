@@ -34,18 +34,18 @@ msgstr "Admin token"
 msgid "Are you sure?"
 msgstr "Sei sicuro?"
 
-#: src/submissionLimits.ts:8
+#: src/submissionLimits.ts:19
 msgid "C"
 msgstr "C"
 
-#: src/submissionLimits.ts:9
+#: src/submissionLimits.ts:20
 msgid "C#"
 msgstr "C#"
 
-#: src/submissionLimits.ts:4
-#: src/submissionLimits.ts:5
-#: src/submissionLimits.ts:6
-#: src/submissionLimits.ts:7
+#: src/submissionLimits.ts:15
+#: src/submissionLimits.ts:16
+#: src/submissionLimits.ts:17
+#: src/submissionLimits.ts:18
 msgid "C++"
 msgstr "C++"
 
@@ -86,38 +86,38 @@ msgstr "Modifica sorgente"
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/submissionLimits.ts:31
+#: src/submissionLimits.ts:42
 msgid "CodeBlocks project"
 msgstr "Progetto CodeBlocks"
 
-#: src/submissionLimits.ts:35
+#: src/submissionLimits.ts:46
 msgid "Compiled Java binary"
 msgstr "Binario Java compilato"
 
-#: src/submissionLimits.ts:34
+#: src/submissionLimits.ts:45
 msgid "Compiled Java class"
 msgstr "Classe Java compilata"
 
-#: src/submissionLimits.ts:36
-#: src/submissionLimits.ts:37
-#: src/submissionLimits.ts:38
+#: src/submissionLimits.ts:47
+#: src/submissionLimits.ts:48
+#: src/submissionLimits.ts:49
 msgid "Compiled Python object"
 msgstr "Oggetto Python compilato"
 
-#: src/submissionLimits.ts:26
-#: src/submissionLimits.ts:27
-#: src/submissionLimits.ts:28
-#: src/submissionLimits.ts:29
-#: src/submissionLimits.ts:30
-msgid "Compiled binary"
-msgstr "Binario compilato"
-
+#: src/submissionLimits.ts:37
+#: src/submissionLimits.ts:38
 #: src/submissionLimits.ts:39
 #: src/submissionLimits.ts:40
 #: src/submissionLimits.ts:41
-#: src/submissionLimits.ts:42
-#: src/submissionLimits.ts:43
-#: src/submissionLimits.ts:44
+msgid "Compiled binary"
+msgstr "Binario compilato"
+
+#: src/submissionLimits.ts:50
+#: src/submissionLimits.ts:51
+#: src/submissionLimits.ts:52
+#: src/submissionLimits.ts:53
+#: src/submissionLimits.ts:54
+#: src/submissionLimits.ts:55
 msgid "Compressed archive"
 msgstr "Archivio compresso"
 
@@ -236,7 +236,7 @@ msgstr "File"
 msgid "File:"
 msgstr "File:"
 
-#: src/submissionLimits.ts:10
+#: src/submissionLimits.ts:21
 msgid "Go"
 msgstr "Go"
 
@@ -264,15 +264,15 @@ msgstr "File di input"
 msgid "Issue last detected"
 msgstr "Ultimo errore rilevato"
 
-#: src/submissionLimits.ts:11
+#: src/submissionLimits.ts:22
 msgid "Java"
 msgstr "Java"
 
-#: src/submissionLimits.ts:12
+#: src/submissionLimits.ts:23
 msgid "Javascript"
 msgstr "Javascript"
 
-#: src/submissionLimits.ts:13
+#: src/submissionLimits.ts:24
 msgid "Kotlin"
 msgstr "Kotlin"
 
@@ -358,16 +358,16 @@ msgstr "File di output"
 msgid "Output file info"
 msgstr "Info sull'output"
 
-#: src/submissionLimits.ts:45
+#: src/submissionLimits.ts:56
 msgid "PDF file"
 msgstr "File PDF"
 
-#: src/submissionLimits.ts:15
+#: src/submissionLimits.ts:26
 msgid "PHP"
 msgstr "PHP"
 
-#: src/submissionLimits.ts:16
-#: src/submissionLimits.ts:17
+#: src/submissionLimits.ts:27
+#: src/submissionLimits.ts:28
 msgid "Pascal"
 msgstr "Pascal"
 
@@ -389,9 +389,9 @@ msgstr "Seleziona il pacchetto di gara..."
 msgid "Processing..."
 msgstr "Caricamento..."
 
-#: src/submissionLimits.ts:18
-#: src/submissionLimits.ts:19
-#: src/submissionLimits.ts:20
+#: src/submissionLimits.ts:29
+#: src/submissionLimits.ts:30
+#: src/submissionLimits.ts:31
 msgid "Python"
 msgstr "Python"
 
@@ -428,11 +428,11 @@ msgstr "Generazione..."
 msgid "Resources"
 msgstr "Risorse utili"
 
-#: src/submissionLimits.ts:21
+#: src/submissionLimits.ts:32
 msgid "Ruby"
 msgstr "Ruby"
 
-#: src/submissionLimits.ts:22
+#: src/submissionLimits.ts:33
 msgid "Rust"
 msgstr "Rust"
 
@@ -441,7 +441,7 @@ msgstr "Rust"
 msgid "Score"
 msgstr "Punteggio"
 
-#: src/SubmissionView.tsx:42
+#: src/submissionLimits.ts:84
 msgid "Select a file with an extension"
 msgstr "Seleziona un file con un'estensione"
 
@@ -473,7 +473,7 @@ msgstr "Sorgente"
 msgid "Source file info"
 msgstr "Informazioni sorgente"
 
-#: src/SubmissionView.tsx:31
+#: src/SubmissionView.tsx:52
 msgid "Source file..."
 msgstr "Sorgente..."
 
@@ -510,7 +510,7 @@ msgstr "Stato del sistema"
 msgid "Tasks"
 msgstr "Problemi"
 
-#: src/submissionLimits.ts:32
+#: src/submissionLimits.ts:43
 msgid "Text file"
 msgstr "File di testo"
 
@@ -530,13 +530,21 @@ msgstr "La gara è terminata"
 msgid "The contest is finished, you must now download the zip containing all the contest data. This zip must then be sent to the committee."
 msgstr "La gara è terminata, devi adesso scaricare l'archivio zip contenente tutti i dati della gara. Questo zip dovrà essere poi spedito al comitato."
 
-#: src/SubmissionView.tsx:49
+#: src/submissionLimits.ts:87
 msgid "The extension cannot contain spaces"
 msgstr "L'estensione del file non deve contenere spazi"
 
-#: src/SubmissionView.tsx:55
+#: src/submissionLimits.ts:95
+msgid "The file you selected has been detected as an executable. Please select the corresponding source file instead."
+msgstr "Il file che hai selezionato sembra essere un eseguibile. Seleziona il corrispondente file sorgente."
+
+#: src/submissionLimits.ts:90
 msgid "The file you selected is not allowed, please select the actual source file of your program. The detected file type is"
 msgstr "Il file che hai selezionato non è consentito, seleziona il sorgente del tuo programma. Il tipo di file rilevato è:"
+
+#: src/submissionLimits.ts:81
+msgid "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
+msgstr "Il file che hai selezionato è troppo grande ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 
 #: src/AdminUsersView.tsx:75
 #: src/LoginView.tsx:26
@@ -544,7 +552,7 @@ msgstr "Il file che hai selezionato non è consentito, seleziona il sorgente del
 msgid "Token"
 msgstr "Token"
 
-#: src/submissionLimits.ts:14
+#: src/submissionLimits.ts:25
 msgid "Typescript"
 msgstr "Typescript"
 
@@ -565,18 +573,18 @@ msgstr "Guida"
 msgid "Useful information"
 msgstr "Informazioni utili"
 
-#: src/submissionLimits.ts:46
-#: src/submissionLimits.ts:47
-#: src/submissionLimits.ts:48
-#: src/submissionLimits.ts:49
+#: src/submissionLimits.ts:57
+#: src/submissionLimits.ts:58
+#: src/submissionLimits.ts:59
+#: src/submissionLimits.ts:60
 msgid "Visual Studio project"
 msgstr "Progetto di Visual Studio"
 
-#: src/submissionLimits.ts:23
+#: src/submissionLimits.ts:34
 msgid "VisualBasic"
 msgstr "VisualBasic"
 
-#: src/submissionLimits.ts:33
+#: src/submissionLimits.ts:44
 msgid "XML file"
 msgstr "File XML"
 
@@ -592,9 +600,13 @@ msgstr "Puoi inviare soluzioni <0>quante volte vuoi</0> ma avrai degli input dif
 msgid "You have not submitted yet."
 msgstr "Non hai ancora sottomesso nulla."
 
-#: src/SubmissionView.tsx:65
+#: src/SubmissionView.tsx:67
 msgid "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 msgstr "Hai selezionato un file con un'estensione sconosciuta. Questa sottoposizione potrebbe essere invalidata se non si tratta del vero sorgente del programma che ha generato il file di output. Se pensi di aver selezionato il file sbagliato cambialo prima di inviare la sottoposizione."
+
+#: src/submissionLimits.ts:78
+msgid "You selected an empty file"
+msgstr "Hai selezionato un file vuoto"
 
 #: src/SidebarView.tsx:16
 msgid "Your score"

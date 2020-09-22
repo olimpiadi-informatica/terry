@@ -10,8 +10,7 @@ import PromiseView from "./PromiseView";
 import { Submission } from "./user.models";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "./i18n";
-import { FORBIDDEN_EXTENSIONS, ALLOWED_EXTENSIONS } from "./submissionLimits";
-import { toast } from "react-toastify";
+import { ALLOWED_EXTENSIONS, checkFile } from "./submissionLimits";
 
 type Props = {
   submission: Submission;
@@ -34,6 +33,18 @@ export default class SubmissionView extends React.Component<Props> {
     );
   }
 
+  async selectSourceFile() {
+    // FIXME: string ref
+    const file = (this.refs.source as any).files[0];
+    // no file was selected
+    if (file === undefined) {
+      return;
+    }
+    if (await checkFile(file)) {
+      this.props.submission.setSource(file);
+    }
+  }
+
   renderSourceSelector() {
     if (!this.props.submission.source) {
       return (
@@ -44,7 +55,7 @@ export default class SubmissionView extends React.Component<Props> {
             type="file"
             id="source-file"
             className="custom-file-input"
-            onChange={(_e) => this.props.submission.setSource((this.refs.source as any).files[0])}
+            onChange={async () => await this.selectSourceFile()}
           />
           <label className="custom-file-label" htmlFor="source-file">
             <Trans>Source file...</Trans>
@@ -55,37 +66,15 @@ export default class SubmissionView extends React.Component<Props> {
       const source = this.props.submission.source;
       const name = source.file.name as string;
       const nameParts = name.split(".");
+      const extension = nameParts[nameParts.length - 1];
       let warn = null;
       let language = null;
-      if (nameParts.length < 2) {
-        toast.error(i18n._(t`Select a file with an extension`));
-        this.props.submission.resetSource();
-        return "";
+      if (extension in ALLOWED_EXTENSIONS) {
+        language = i18n._(ALLOWED_EXTENSIONS[extension]);
       } else {
-        const extension = nameParts[nameParts.length - 1];
-        if (extension.includes(" ")) {
-          toast.error(i18n._(t`The extension cannot contain spaces`));
-          this.props.submission.resetSource();
-          return "";
-        } else {
-          if (extension in FORBIDDEN_EXTENSIONS) {
-            toast.error(
-              i18n._(
-                t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`
-              ) +
-                " " +
-                i18n._(FORBIDDEN_EXTENSIONS[extension])
-            );
-            this.props.submission.resetSource();
-            return "";
-          } else if (extension in ALLOWED_EXTENSIONS) {
-            language = i18n._(ALLOWED_EXTENSIONS[extension]);
-          } else {
-            warn = i18n._(
-              t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`
-            );
-          }
-        }
+        warn = i18n._(
+          t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`
+        );
       }
       return (
         <div key="present" className="card card-outline-primary w-100 mb-3">
