@@ -8,7 +8,10 @@ import ModalView from "./ModalView";
 import "./SubmissionView.css";
 import PromiseView from "./PromiseView";
 import { Submission } from "./user.models";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
+import { FORBIDDEN_EXTENSIONS, ALLOWED_EXTENSIONS } from "./submissionLimits";
+import { toast } from "react-toastify";
 
 type Props = {
   submission: Submission;
@@ -50,6 +53,40 @@ export default class SubmissionView extends React.Component<Props> {
       );
     } else {
       const source = this.props.submission.source;
+      const name = source.file.name as string;
+      const nameParts = name.split(".");
+      let warn = null;
+      let language = null;
+      if (nameParts.length < 2) {
+        toast.error(i18n._(t`Select a file with an extension`));
+        this.props.submission.resetSource();
+        return "";
+      } else {
+        const extension = nameParts[nameParts.length - 1];
+        if (extension.includes(" ")) {
+          toast.error(i18n._(t`The extension cannot contain spaces`));
+          this.props.submission.resetSource();
+          return "";
+        } else {
+          if (extension in FORBIDDEN_EXTENSIONS) {
+            toast.error(
+              i18n._(
+                t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`
+              ) +
+                " " +
+                i18n._(FORBIDDEN_EXTENSIONS[extension])
+            );
+            this.props.submission.resetSource();
+            return "";
+          } else if (extension in ALLOWED_EXTENSIONS) {
+            language = i18n._(ALLOWED_EXTENSIONS[extension]);
+          } else {
+            warn = i18n._(
+              t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`
+            );
+          }
+        }
+      }
       return (
         <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
@@ -66,6 +103,12 @@ export default class SubmissionView extends React.Component<Props> {
           </div>
           <div className="card-body">
             <FileView {...this.props} file={source.file} />
+            {warn && <div className={"alert alert-warning"}>{warn}</div>}
+            {language && (
+              <div className={"alert alert-primary"}>
+                <Trans>Detected language:</Trans> {language}
+              </div>
+            )}
             <PromiseView
               promise={this.props.submission.source.uploadPromise}
               renderFulfilled={(uploadedSource) => (
@@ -166,8 +209,6 @@ export default class SubmissionView extends React.Component<Props> {
             e.preventDefault();
             this.submit();
           }}
-          // FIXME: after typescript switch, the following was shown to be wrong
-          // disabled={!this.props.submission.canSubmit()}
         >
           <div className="modal-header">
             <h5 className="modal-title">
