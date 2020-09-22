@@ -9,8 +9,7 @@ import AppView from "./AppView";
 import LoadingView from "./LoadingView";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import { I18nProvider } from "@lingui/react";
-import { i18n, defaultLanguage } from "./i18n";
+import { TransProvider } from "./i18n";
 
 import PackView from "./PackView";
 
@@ -21,9 +20,6 @@ import "react-toastify/dist/ReactToastify.min.css";
 if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:9000");
 /******** DEVELOPMENT SPECIFIC **********/
 
-// when the language changes set the attribute so that bootstrap components can be translated via css
-// i18n_.on("languageChanged", (lang) => document.getElementsByTagName("html")[0].setAttribute("lang", lang.substr(0, 2)));
-
 // handle errors in promises
 window.addEventListener("unhandledrejection", (event: any) => {
   // FIXME: dirty trick to avoid alerts in development
@@ -33,7 +29,7 @@ window.addEventListener("unhandledrejection", (event: any) => {
 
 ReactDOM.render(
   <React.Fragment>
-    <I18nProvider language={defaultLanguage} i18n={i18n}>
+    <TransProvider>
       <React.Suspense fallback={<LoadingView />}>
         <ToastContainer />
         <Router>
@@ -43,7 +39,7 @@ ReactDOM.render(
           </Switch>
         </Router>
       </React.Suspense>
-    </I18nProvider>
+    </TransProvider>
   </React.Fragment>,
   document.getElementById("root")
 );

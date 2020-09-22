@@ -193,3 +193,7 @@ blockquote > ul {
 body.ReactModal__Body--open {
   overflow-y: hidden;
 }
+
+.language-selector {
+  max-width: 10em;
+}

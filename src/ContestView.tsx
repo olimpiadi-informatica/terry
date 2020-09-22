@@ -10,18 +10,19 @@ import { Model } from "./user.models";
 import client from "./TerryClient";
 import LoginView from "./LoginView";
 import { Trans } from "@lingui/macro";
+import { LanguageContext, supportedLanguages } from "./i18n";
 
 type Props = {
   userState: any;
   model: Model;
-} &
-  RouteComponentProps<any>;
+} & RouteComponentProps<any>;
 
 const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;
 const DETECT_INTERNET_TEST_CONTENT = process.env.REACT_APP_DETECT_INTERNET_TEST_CONTENT || null;
 
 export default class ContestView extends React.Component<Props> {
   private detectInternetInterval: NodeJS.Timer | null = null;
+  static contextType = LanguageContext;
 
   async detectInternet(endpoint: string) {
     console.log(`Testing internet connection (${DETECT_INTERNET_TEST_ENDPOINT})...`);
@@ -73,9 +74,13 @@ export default class ContestView extends React.Component<Props> {
             path={"/useful-info"}
             render={() => (
               <React.Fragment>
-                <h1><Trans>Useful information</Trans></h1>
+                <h1>
+                  <Trans>Useful information</Trans>
+                </h1>
                 <hr />
-                <p><Trans>Select the tutorial you want to consult:</Trans></p>
+                <p>
+                  <Trans>Select the tutorial you want to consult:</Trans>
+                </p>
                 <ul>
                   <li>
                     <a target="_blank" href="/extra_files/tutorials/codeblocks/">
@@ -101,9 +106,13 @@ export default class ContestView extends React.Component<Props> {
             path={"/documentation"}
             render={() => (
               <React.Fragment>
-                <h1><Trans>Documentation</Trans></h1>
+                <h1>
+                  <Trans>Documentation</Trans>
+                </h1>
                 <hr />
-                <p><Trans>Select the documentation you want to consult:</Trans></p>
+                <p>
+                  <Trans>Select the documentation you want to consult:</Trans>
+                </p>
                 <ul>
                   <li>
                     <a target="_blank" href="/extra_files/documentation/cpp/en/index.html">
@@ -180,6 +189,11 @@ export default class ContestView extends React.Component<Props> {
     );
   }
 
+  changeLanguage(event: React.ChangeEvent<HTMLSelectElement>) {
+    let lang = event.target.value;
+    this.context.changeLanguage(lang);
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -202,6 +216,21 @@ export default class ContestView extends React.Component<Props> {
               <FontAwesomeIcon icon={faSignOutAlt} /> <Trans>Logout</Trans>
             </button>
           )}
+          <LanguageContext.Consumer>
+            {({ lang }) => (
+              <select
+                className="ml-2 form-control form-control-sm language-selector"
+                onChange={this.changeLanguage.bind(this)}
+                value={lang}
+              >
+                {supportedLanguages.map(({ lang, name }) => (
+                  <option key={lang} value={lang}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </LanguageContext.Consumer>
         </nav>
 
         <div className="terry-body">{this.getBody()}</div>
