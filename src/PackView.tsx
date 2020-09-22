@@ -8,7 +8,7 @@ import { RouteComponentProps } from "react-router";
 type Props = RouteComponentProps<any>;
 
 export default class PackView extends React.Component<Props> {
-  pack: (Pack | null) = null;
+  pack: Pack | null = null;
 
   componentDidMount() {
     this.pack = new Pack();
