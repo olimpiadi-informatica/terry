@@ -73,7 +73,9 @@ export default class SubmissionListView extends React.Component<Props> {
                 data-for={"input-" + submission.id}
               >
                 <FontAwesomeIcon icon={faDownload} />{" "}
-                <span className="hidden-md-down"><Trans>Input file</Trans></span>
+                <span className="hidden-md-down">
+                  <Trans>Input file</Trans>
+                </span>
               </a>
 
               <a
@@ -86,7 +88,9 @@ export default class SubmissionListView extends React.Component<Props> {
                 data-for={"source-" + submission.id}
               >
                 <FontAwesomeIcon icon={faDownload} />{" "}
-                <span className="hidden-md-down"><Trans>Source file</Trans></span>
+                <span className="hidden-md-down">
+                  <Trans>Source file</Trans>
+                </span>
               </a>
 
               <a
@@ -99,7 +103,9 @@ export default class SubmissionListView extends React.Component<Props> {
                 data-for={"output-" + submission.id}
               >
                 <FontAwesomeIcon icon={faDownload} />{" "}
-                <span className="hidden-md-down"><Trans>Output file</Trans></span>
+                <span className="hidden-md-down">
+                  <Trans>Output file</Trans>
+                </span>
               </a>
             </div>
           </td>
@@ -117,7 +123,9 @@ export default class SubmissionListView extends React.Component<Props> {
     if (list.items.length === 0)
       return (
         <div className="modal-body">
-          <em><Trans>You have not submitted yet.</Trans></em>
+          <em>
+            <Trans>You have not submitted yet.</Trans>
+          </em>
         </div>
       );
 
@@ -126,9 +134,15 @@ export default class SubmissionListView extends React.Component<Props> {
         <table className="table terry-table">
           <thead>
             <tr>
-              <th><Trans>Date</Trans></th>
-              <th><Trans>Download</Trans></th>
-              <th><Trans>Score</Trans></th>
+              <th>
+                <Trans>Date</Trans>
+              </th>
+              <th>
+                <Trans>Download</Trans>
+              </th>
+              <th>
+                <Trans>Score</Trans>
+              </th>
             </tr>
           </thead>
           <tbody>{this.renderSubmissionList(list)}</tbody>
@@ -153,7 +167,9 @@ export default class SubmissionListView extends React.Component<Props> {
           promise={this.getListPromise()}
           renderPending={() => (
             <div className="modal-body">
-              <em><Trans>Loading...</Trans></em>
+              <em>
+                <Trans>Loading...</Trans>
+              </em>
             </div>
           )}
           renderRejected={() => i18n._(t`Error`)}

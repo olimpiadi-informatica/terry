@@ -100,12 +100,23 @@ export default class AdminUsersView extends React.Component<AdminUsersProps> {
           <table className="table terry-table">
             <thead>
               <tr>
-                <th><Trans>Name</Trans></th>
-                <th><Trans>Surname</Trans></th>
-                <th><Trans>Token</Trans></th>
-                <th><Trans>IP</Trans></th>
                 <th>
-                  <Trans>Extra time</Trans> <small><Trans>(in minutes)</Trans></small>
+                  <Trans>Name</Trans>
+                </th>
+                <th>
+                  <Trans>Surname</Trans>
+                </th>
+                <th>
+                  <Trans>Token</Trans>
+                </th>
+                <th>
+                  <Trans>IP</Trans>
+                </th>
+                <th>
+                  <Trans>Extra time</Trans>{" "}
+                  <small>
+                    <Trans>(in minutes)</Trans>
+                  </small>
                 </th>
               </tr>
             </thead>

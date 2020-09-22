@@ -23,9 +23,13 @@ export default class UploadPackView extends React.Component<Props> {
   render() {
     return (
       <div className="jumbotron admin-jumbotron">
-        <h1 className="text-center display-3"><Trans>Admin</Trans></h1>
+        <h1 className="text-center display-3">
+          <Trans>Admin</Trans>
+        </h1>
         <hr />
-        <h2 className="text-center"><Trans>Please select the contest file...</Trans></h2>
+        <h2 className="text-center">
+          <Trans>Please select the contest file...</Trans>
+        </h2>
         <form
           ref="form"
           action=""

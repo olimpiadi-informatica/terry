@@ -53,7 +53,9 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
-            <h5 className="modal-subtitle"><Trans>Source file info</Trans></h5>
+            <h5 className="modal-subtitle">
+              <Trans>Source file info</Trans>
+            </h5>
             <button
               key="present"
               className="terry-submission-object-drop btn btn-primary"
@@ -71,8 +73,16 @@ export default class SubmissionView extends React.Component<Props> {
                   {uploadedSource.data.validation.alerts.map((a: any, i: number) => this.renderSourceAlert(a, i))}
                 </React.Fragment>
               )}
-              renderRejected={() => <p><Trans>Error</Trans></p>}
-              renderPending={() => <p><Trans>Processing...</Trans></p>}
+              renderRejected={() => (
+                <p>
+                  <Trans>Error</Trans>
+                </p>
+              )}
+              renderPending={() => (
+                <p>
+                  <Trans>Processing...</Trans>
+                </p>
+              )}
             />
           </div>
         </div>
@@ -102,7 +112,9 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="present" className="card card-outline-primary w-100">
           <div className="card-header terry-submission-object-card">
-            <h5 className="modal-subtitle"><Trans>Output file info</Trans></h5>
+            <h5 className="modal-subtitle">
+              <Trans>Output file info</Trans>
+            </h5>
             <button
               key="present"
               className="btn btn-primary terry-submission-object-drop"
@@ -118,8 +130,16 @@ export default class SubmissionView extends React.Component<Props> {
               renderFulfilled={(uploadedOutput) => (
                 <ValidationView {...this.props} result={uploadedOutput.data.validation} />
               )}
-              renderRejected={() => <p><Trans>Error</Trans></p>}
-              renderPending={() => <p><Trans>Processing...</Trans></p>}
+              renderRejected={() => (
+                <p>
+                  <Trans>Error</Trans>
+                </p>
+              )}
+              renderPending={() => (
+                <p>
+                  <Trans>Processing...</Trans>
+                </p>
+              )}
             />
           </div>
         </div>

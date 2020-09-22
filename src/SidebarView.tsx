@@ -21,7 +21,9 @@ export default class SidebarView extends React.Component<Props> {
           {this.props.userState && this.props.userState.data.contest.has_started && (
             <React.Fragment>
               <li className="nav-item title">
-                <h5 className="text-uppercase"><Trans>Your score</Trans></h5>
+                <h5 className="text-uppercase">
+                  <Trans>Your score</Trans>
+                </h5>
                 <ScoreView
                   style={{ textAlign: "right", marginRight: "1rem" }}
                   score={this.props.userState.data.total_score}
@@ -33,20 +35,28 @@ export default class SidebarView extends React.Component<Props> {
               <li className="divider-vertical" />
 
               <li className="nav-item title">
-                <h5 className="text-uppercase"><Trans>Remaining time</Trans></h5>
+                <h5 className="text-uppercase">
+                  <Trans>Remaining time</Trans>
+                </h5>
                 <p className="terry-remaining-time">
                   <CountdownView
                     {...this.props}
                     clock={() => this.props.model.serverTime()}
                     end={DateTime.fromISO(this.props.userState.data.end_time)}
-                    afterEnd={() => <span><Trans>The contest is finished</Trans></span>}
+                    afterEnd={() => (
+                      <span>
+                        <Trans>The contest is finished</Trans>
+                      </span>
+                    )}
                   />
                 </p>
               </li>
               <li className="divider-vertical" />
 
               <li className="nav-item title">
-                <h5 className="text-uppercase"><Trans>Tasks</Trans></h5>
+                <h5 className="text-uppercase">
+                  <Trans>Tasks</Trans>
+                </h5>
               </li>
               <li className="divider-vertical" />
 
@@ -59,15 +69,17 @@ export default class SidebarView extends React.Component<Props> {
           )}
 
           <li className="nav-item title mt-3">
-            <h5 className="text-uppercase"><Trans>Resources</Trans></h5>
+            <h5 className="text-uppercase">
+              <Trans>Resources</Trans>
+            </h5>
           </li>
 
           <li className="nav-item">
             <NavLink to={"/useful-info"} className="nav-link tasklist-item" activeClassName="active">
-            <Trans>Useful information</Trans>
+              <Trans>Useful information</Trans>
             </NavLink>
             <NavLink to={"/documentation"} className="nav-link tasklist-item" activeClassName="active">
-            <Trans>Documentation</Trans>
+              <Trans>Documentation</Trans>
             </NavLink>
           </li>
         </ul>

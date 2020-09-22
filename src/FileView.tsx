@@ -13,10 +13,14 @@ export default class FileView extends React.Component<Props> {
   render() {
     return (
       <dl className="terry-file-view">
-        <dt><Trans>File:</Trans></dt>
+        <dt>
+          <Trans>File:</Trans>
+        </dt>
         <dd>{this.props.file.name}</dd>
 
-        <dt><Trans>Last update:</Trans></dt>
+        <dt>
+          <Trans>Last update:</Trans>
+        </dt>
         <dd>
           <DateView
             {...this.props}
@@ -25,7 +29,9 @@ export default class FileView extends React.Component<Props> {
           />
         </dd>
 
-        <dt><Trans>Size:</Trans></dt>
+        <dt>
+          <Trans>Size:</Trans>
+        </dt>
         <dd>{filesize(this.props.file.size, { standard: "iec" })}</dd>
       </dl>
     );
