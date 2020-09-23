@@ -4,25 +4,25 @@
  */
 
 #source-file-span:lang(en)::after {
-    content: "Source code...";
+  content: "Source code...";
 }
 
 #output-file-span:lang(en)::after {
-    content: "Output file...";
+  content: "Output file...";
 }
 
 .custom-file-control:lang(en)::before {
-    content: "Choose";
+  content: "Choose";
 }
 
 #source-file-span:lang(it)::after {
-    content: "File sorgente...";
+  content: "File sorgente...";
 }
 
 #output-file-span:lang(it)::after {
-    content: "File di output...";
+  content: "File di output...";
 }
 
 .custom-file-control:lang(it)::before {
-    content: "Carica";
+  content: "Carica";
 }

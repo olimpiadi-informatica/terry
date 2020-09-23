@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { WithTranslation } from 'react-i18next';
-import { Model } from './user.models';
-import PromiseView from './PromiseView';
+import * as React from "react";
+import { Model } from "./user.models";
+import PromiseView from "./PromiseView";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 type Props = {
-  model: Model
-} & WithTranslation
+  model: Model;
+};
 
 export default class LoginView extends React.Component<Props> {
   componentDidMount() {
@@ -21,28 +22,53 @@ export default class LoginView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
     return (
       <div className="jumbotron">
-        <h1 className={"text-center"}>{t("login.please login")}</h1>
-        <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
+        <h1 className={"text-center"}>
+          <Trans>Please login</Trans>
+        </h1>
+        <form
+          ref="form"
+          action=""
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.login();
+          }}
+        >
           <div className="form-group">
-            <label htmlFor="token" className="sr-only">{t("login.token")}</label>
-            <input autoComplete="off" name="token" id="token" className="form-control text-center" required
-              placeholder={t("login.token")} type="text" />
+            <label htmlFor="token" className="sr-only">
+              <Trans>Token</Trans>
+            </label>
+            <input
+              autoComplete="off"
+              name="token"
+              id="token"
+              className="form-control text-center"
+              required
+              placeholder={i18n._(t`Token`)}
+              type="text"
+            />
           </div>
-          <input type="submit" className="btn btn-primary" value={t("login.login")!} />
-          {this.props.model.lastLoginAttempt &&
-            <PromiseView promise={this.props.model.lastLoginAttempt}
-              renderPending={() => <span>{t("loading")}</span>}
-              renderRejected={(error) =>
+          <input type="submit" className="btn btn-primary" value={i18n._(t`Login`)} />
+          {this.props.model.lastLoginAttempt && (
+            <PromiseView
+              promise={this.props.model.lastLoginAttempt}
+              renderPending={() => (
+                <span>
+                  <Trans>Loading...</Trans>
+                </span>
+              )}
+              renderRejected={(error) => (
                 <div className="alert alert-danger" role="alert">
-                  <strong>{t("login.error")}</strong> {error.response && error.response.data.message}
+                  <strong>
+                    <Trans>Error</Trans>
+                  </strong>{" "}
+                  {error.response && error.response.data.message}
                 </div>
-              }
+              )}
               renderFulfilled={() => null}
             />
-          }
+          )}
         </form>
       </div>
     );

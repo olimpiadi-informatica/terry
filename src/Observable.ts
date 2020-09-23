@@ -1,6 +1,7 @@
-type ForceUpdateable = { //React.ComponentType<RouteComponentProps<any>>
-  forceUpdate: () => void
-}
+type ForceUpdateable = {
+  //React.ComponentType<RouteComponentProps<any>>
+  forceUpdate: () => void;
+};
 
 export default class Observable {
   observers: ForceUpdateable[];
@@ -34,5 +35,4 @@ export default class Observable {
   forceUpdate() {
     this.propagateUpdate();
   }
-
 }

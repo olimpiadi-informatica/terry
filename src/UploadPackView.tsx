@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { WithTranslation } from 'react-i18next';
-import Pack from './Pack';
+import * as React from "react";
+import Pack from "./Pack";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 type Props = {
-  pack: Pack
-} & WithTranslation
+  pack: Pack;
+};
 
 export default class UploadPackView extends React.Component<Props> {
   componentDidMount() {
@@ -20,19 +21,30 @@ export default class UploadPackView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
-
     return (
       <div className="jumbotron admin-jumbotron">
-        <h1 className="text-center display-3">{t("navbar.title")}</h1>
+        <h1 className="text-center display-3">
+          <Trans>Admin</Trans>
+        </h1>
         <hr />
-        <h2 className="text-center">{t("upload pack.select file")}</h2>
-        <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.upload(); }}>
+        <h2 className="text-center">
+          <Trans>Please select the contest file...</Trans>
+        </h2>
+        <form
+          ref="form"
+          action=""
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.upload();
+          }}
+        >
           <div className="form-group">
-            <label htmlFor="file" className="sr-only">{t("upload pack.file")}</label>
+            <label htmlFor="file" className="sr-only">
+              <Trans>File</Trans>
+            </label>
             <input type="file" accept=".enc" name="file" id="file" className="form-control" required />
           </div>
-          <input type="submit" className="btn btn-danger" value={t("upload pack.upload")!} />
+          <input type="submit" className="btn btn-danger" value={i18n._(t`Upload`)} />
         </form>
       </div>
     );

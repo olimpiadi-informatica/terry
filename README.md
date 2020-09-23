@@ -29,3 +29,16 @@ Build/start the front-end with the following environment variable:
 ```
 REACT_APP_DETECT_INTERNET_TEST_ENDPOINT="http://gstatic.com/generate_204"
 ```
+
+## Translation workflow
+
+1. Write your text in English wrapping it in the `<Trans>` component
+2. Run `yarn extract` for updating the `.po` files inside `src/locales`. It will show you how many translations are still missing
+3. Make your translations in the `.po` files
+4. Compile the new translations with `yarn compile`
+
+If you want to support a new language:
+1. Run `yarn add-locale <locale>`
+2. Write your translations in the `.po` file
+3. Compile the translation with `yarn compile`
+4. Add your language to the catalog and to the language list in `src/i18n.tsx`

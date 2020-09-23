@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { NavLink } from 'react-router-dom';
-import { colorFromScore } from './utils';
-import { Model } from './user.models';
+import * as React from "react";
+import { NavLink } from "react-router-dom";
+import { colorFromScore } from "./utils";
+import { Model } from "./user.models";
 
 type Props = {
-  userState: any
-  taskName: string
-  model: Model
-}
+  userState: any;
+  taskName: string;
+  model: Model;
+};
 
 export default class NavbarItemView extends React.Component<Props> {
   getMaxScore() {

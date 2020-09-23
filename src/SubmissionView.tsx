@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faTrash, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import ValidationView from './ValidationView';
-import FileView from './FileView';
-import ModalView from './ModalView';
+import * as React from "react";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faTrash, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import ValidationView from "./ValidationView";
+import FileView from "./FileView";
+import ModalView from "./ModalView";
 import "./SubmissionView.css";
-import PromiseView from './PromiseView';
-import { WithTranslation } from 'react-i18next';
-import { Submission } from './user.models';
+import PromiseView from "./PromiseView";
+import { Submission } from "./user.models";
+import { Trans } from "@lingui/macro";
 
 type Props = {
-  submission: Submission
-} & WithTranslation & RouteComponentProps<any>
+  submission: Submission;
+} & RouteComponentProps<any>;
 
 export default class SubmissionView extends React.Component<Props> {
   componentDidMount() {
@@ -32,12 +32,20 @@ export default class SubmissionView extends React.Component<Props> {
   }
 
   renderSourceSelector() {
-    const { t } = this.props;
     if (!this.props.submission.source) {
       return (
-        <div key="absent" className="custom-file mb-3 col-4">
-          <input ref="source" name="source" type="file" id="source-file" className="custom-file-input" onChange={(_e) => this.props.submission.setSource((this.refs.source as any).files[0])} />
-          <label className="custom-file-label" htmlFor="source-file">File sorgente...</label>
+        <div key="absent" className="custom-file mb-3">
+          <input
+            ref="source"
+            name="source"
+            type="file"
+            id="source-file"
+            className="custom-file-input"
+            onChange={(_e) => this.props.submission.setSource((this.refs.source as any).files[0])}
+          />
+          <label className="custom-file-label" htmlFor="source-file">
+            <Trans>Source file...</Trans>
+          </label>
         </div>
       );
     } else {
@@ -45,19 +53,36 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
-            <h5 className="modal-subtitle">{t("submission.submit.source info")}</h5>
-            <button key="present" className="terry-submission-object-drop btn btn-primary" onClick={() => this.props.submission.resetSource()}>
-              <FontAwesomeIcon icon={faTrash} /> {t("submission.submit.change source")}
+            <h5 className="modal-subtitle">
+              <Trans>Source file info</Trans>
+            </h5>
+            <button
+              key="present"
+              className="terry-submission-object-drop btn btn-primary"
+              onClick={() => this.props.submission.resetSource()}
+            >
+              <FontAwesomeIcon icon={faTrash} /> <Trans>Change source</Trans>
             </button>
           </div>
           <div className="card-body">
             <FileView {...this.props} file={source.file} />
-            <PromiseView promise={this.props.submission.source.uploadPromise}
-              renderFulfilled={(uploadedSource) => <React.Fragment>
-                {uploadedSource.data.validation.alerts.map((a: any, i: number) => this.renderSourceAlert(a, i))}
-              </React.Fragment>}
-              renderRejected={() => <p>{t("error")}</p>}
-              renderPending={() => <p>{t("submission.submit.processing")}</p>}
+            <PromiseView
+              promise={this.props.submission.source.uploadPromise}
+              renderFulfilled={(uploadedSource) => (
+                <React.Fragment>
+                  {uploadedSource.data.validation.alerts.map((a: any, i: number) => this.renderSourceAlert(a, i))}
+                </React.Fragment>
+              )}
+              renderRejected={() => (
+                <p>
+                  <Trans>Error</Trans>
+                </p>
+              )}
+              renderPending={() => (
+                <p>
+                  <Trans>Processing...</Trans>
+                </p>
+              )}
             />
           </div>
         </div>
@@ -66,12 +91,20 @@ export default class SubmissionView extends React.Component<Props> {
   }
 
   renderOutputSelector() {
-    const { t } = this.props;
     if (!this.props.submission.output) {
       return (
-        <div key="absent" className="custom-file col-4">
-          <input ref="output" name="output" type="file" id="output-file" className="custom-file-input" onChange={() => this.props.submission.setOutput((this.refs.output as any).files[0])} />
-          <label className="custom-file-label" htmlFor="output-file">File di output...</label>
+        <div key="absent" className="custom-file">
+          <input
+            ref="output"
+            name="output"
+            type="file"
+            id="output-file"
+            className="custom-file-input"
+            onChange={() => this.props.submission.setOutput((this.refs.output as any).files[0])}
+          />
+          <label className="custom-file-label" htmlFor="output-file">
+            File di output...
+          </label>
         </div>
       );
     } else {
@@ -79,17 +112,34 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="present" className="card card-outline-primary w-100">
           <div className="card-header terry-submission-object-card">
-            <h5 className="modal-subtitle">{t("submission.submit.output info")}</h5>
-            <button key="present" className="btn btn-primary terry-submission-object-drop" onClick={() => this.props.submission.resetOutput()}>
-              <FontAwesomeIcon icon={faTrash} /> {t("submission.submit.change output")}
+            <h5 className="modal-subtitle">
+              <Trans>Output file info</Trans>
+            </h5>
+            <button
+              key="present"
+              className="btn btn-primary terry-submission-object-drop"
+              onClick={() => this.props.submission.resetOutput()}
+            >
+              <FontAwesomeIcon icon={faTrash} /> <Trans>Change output</Trans>
             </button>
           </div>
           <div className="card-body">
             <FileView {...this.props} file={output.file} />
-            <PromiseView promise={this.props.submission.output.uploadPromise}
-              renderFulfilled={(uploadedOutput) => <ValidationView {...this.props} result={uploadedOutput.data.validation} />}
-              renderRejected={() => <p>{t("error")}</p>}
-              renderPending={() => <p>{t("submission.submit.processing")}</p>}
+            <PromiseView
+              promise={this.props.submission.output.uploadPromise}
+              renderFulfilled={(uploadedOutput) => (
+                <ValidationView {...this.props} result={uploadedOutput.data.validation} />
+              )}
+              renderRejected={() => (
+                <p>
+                  <Trans>Error</Trans>
+                </p>
+              )}
+              renderPending={() => (
+                <p>
+                  <Trans>Processing...</Trans>
+                </p>
+              )}
             />
           </div>
         </div>
@@ -107,17 +157,21 @@ export default class SubmissionView extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
     return (
       <ModalView contentLabel="Submission creation" returnUrl={"/task/" + this.props.submission.input.task}>
         <form
-          className="submissionForm" ref="form" onSubmit={(e) => { e.preventDefault(); this.submit() }}
-        // FIXME: after typescript switch, the following was shown to be wrong
-        // disabled={!this.props.submission.canSubmit()}
+          className="submissionForm"
+          ref="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.submit();
+          }}
+          // FIXME: after typescript switch, the following was shown to be wrong
+          // disabled={!this.props.submission.canSubmit()}
         >
           <div className="modal-header">
             <h5 className="modal-title">
-              {t("submission.submit.title")} <strong>{this.props.submission.input.id.slice(0, 6)}</strong>
+              <Trans>Submission for input</Trans> <strong>{this.props.submission.input.id.slice(0, 6)}</strong>
             </h5>
             <Link to={"/task/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -128,12 +182,12 @@ export default class SubmissionView extends React.Component<Props> {
             <div className="input-group">{this.renderOutputSelector()}</div>
           </div>
           <div className="modal-footer">
-            {this.props.submission.isSubmitted() ? t("submission.submit.processing") : null}
+            {this.props.submission.isSubmitted() ? <Trans>Processing...</Trans> : null}
             <Link to={"/task/" + this.props.submission.input.task} role="button" className="btn btn-danger">
-              <FontAwesomeIcon icon={faTimes} /> {t("cancel")}
+              <FontAwesomeIcon icon={faTimes} /> <Trans>Cancel</Trans>
             </Link>
             <button type="submit" className="btn btn-success" disabled={!this.props.submission.canSubmit()}>
-              <FontAwesomeIcon icon={faPaperPlane} /> {t("submission.submit.submit")}
+              <FontAwesomeIcon icon={faPaperPlane} /> <Trans>Submit</Trans>
             </button>
           </div>
         </form>

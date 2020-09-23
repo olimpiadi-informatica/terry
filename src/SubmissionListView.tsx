@@ -1,23 +1,24 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { DateView } from './datetime.views';
-import { DateTime } from 'luxon';
-import client from './TerryClient';
-import ModalView from './ModalView';
-import ReactTooltip from 'react-tooltip';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { DateView } from "./datetime.views";
+import { DateTime } from "luxon";
+import client from "./TerryClient";
+import ModalView from "./ModalView";
+import ReactTooltip from "react-tooltip";
 import { colorFromScore } from "./utils";
 import "./SubmissionListView.css";
-import ScoreView from './ScoreView';
-import PromiseView from './PromiseView';
-import { WithTranslation } from 'react-i18next';
+import ScoreView from "./ScoreView";
+import PromiseView from "./PromiseView";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
 
 type Props = {
-  userState: any
-  taskName: string
-  model: any
-} & WithTranslation
+  userState: any;
+  taskName: string;
+  model: any;
+};
 
 export default class SubmissionListView extends React.Component<Props> {
   getTask() {
@@ -29,7 +30,6 @@ export default class SubmissionListView extends React.Component<Props> {
   }
 
   renderSubmissionList(list: any) {
-    const { t } = this.props;
     const submissionList = [];
 
     for (let submission of list.items) {
@@ -44,10 +44,11 @@ export default class SubmissionListView extends React.Component<Props> {
             <DateView
               {...this.props}
               clock={() => this.props.model.serverTime()}
-              date={DateTime.fromISO(submission.date)} />
+              date={DateTime.fromISO(submission.date)}
+            />
             <br />
             <Link to={"/task/" + submission.task + "/submission/" + submission.id}>
-              {t("submission.list.view details")}
+              <Trans>view details</Trans>
             </Link>
           </td>
           <td>
@@ -62,37 +63,49 @@ export default class SubmissionListView extends React.Component<Props> {
             </ReactTooltip>
 
             <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
-              <a role="button" className="btn btn-light"
+              <a
+                role="button"
+                className="btn btn-light"
                 aria-label={submission.input.basename}
                 href={client.filesBaseURI + submission.input.path}
                 download
                 data-tip
-                data-for={"input-" + submission.id}>
-                <FontAwesomeIcon icon={faDownload} />
-                {' '}
-                <span className="hidden-md-down">{t("submission.list.input")}</span>
+                data-for={"input-" + submission.id}
+              >
+                <FontAwesomeIcon icon={faDownload} />{" "}
+                <span className="hidden-md-down">
+                  <Trans>Input file</Trans>
+                </span>
               </a>
 
-              <a role="button" className="btn btn-light"
+              <a
+                role="button"
+                className="btn btn-light"
                 aria-label={submission.source.basename}
                 href={client.filesBaseURI + submission.source.path}
                 download
                 data-tip
-                data-for={"source-" + submission.id}>
-                <FontAwesomeIcon icon={faDownload} />
-                {' '}
-                <span className="hidden-md-down">{t("submission.list.source")}</span>
+                data-for={"source-" + submission.id}
+              >
+                <FontAwesomeIcon icon={faDownload} />{" "}
+                <span className="hidden-md-down">
+                  <Trans>Source file</Trans>
+                </span>
               </a>
 
-              <a role="button" className="btn btn-light"
+              <a
+                role="button"
+                className="btn btn-light"
                 aria-label={submission.output.basename}
                 href={client.filesBaseURI + submission.output.path}
                 download
                 data-tip
-                data-for={"output-" + submission.id}>
-                <FontAwesomeIcon icon={faDownload} />
-                {' '}
-                <span className="hidden-md-down">{t("submission.list.output")}</span>
+                data-for={"output-" + submission.id}
+              >
+                <FontAwesomeIcon icon={faDownload} />{" "}
+                <span className="hidden-md-down">
+                  <Trans>Output file</Trans>
+                </span>
               </a>
             </div>
           </td>
@@ -107,23 +120,32 @@ export default class SubmissionListView extends React.Component<Props> {
   }
 
   renderBody(list: any) {
-    const { t } = this.props;
     if (list.items.length === 0)
-      return <div className="modal-body"><em>{t("submission.list.no submissions")}</em></div>;
+      return (
+        <div className="modal-body">
+          <em>
+            <Trans>You have not submitted yet.</Trans>
+          </em>
+        </div>
+      );
 
     return (
       <div className="modal-body no-padding">
         <table className="table terry-table">
           <thead>
             <tr>
-              <th>{t("submission.list.date")}</th>
-              <th>{t("submission.list.download")}</th>
-              <th>{t("submission.list.score")}</th>
+              <th>
+                <Trans>Date</Trans>
+              </th>
+              <th>
+                <Trans>Download</Trans>
+              </th>
+              <th>
+                <Trans>Score</Trans>
+              </th>
             </tr>
           </thead>
-          <tbody>
-            {this.renderSubmissionList(list)}
-          </tbody>
+          <tbody>{this.renderSubmissionList(list)}</tbody>
         </table>
       </div>
     );
@@ -131,12 +153,11 @@ export default class SubmissionListView extends React.Component<Props> {
 
   render() {
     const taskName = this.props.taskName;
-    const { t } = this.props;
     return (
-      <ModalView contentLabel={t("submission.list.title")} returnUrl={"/task/" + this.props.taskName}>
+      <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={"/task/" + this.props.taskName}>
         <div className="modal-header">
           <h5 className="modal-title">
-            {t("submission.list.title")} <strong className="text-uppercase">{taskName}</strong>
+            <Trans>Submission for</Trans> <strong className="text-uppercase">{taskName}</strong>
           </h5>
           <Link to={"/task/" + this.props.taskName} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -144,13 +165,19 @@ export default class SubmissionListView extends React.Component<Props> {
         </div>
         <PromiseView
           promise={this.getListPromise()}
-          renderPending={() => <div className="modal-body"><em>{t("loading")}</em></div>}
-          renderRejected={() => t("error")}
+          renderPending={() => (
+            <div className="modal-body">
+              <em>
+                <Trans>Loading...</Trans>
+              </em>
+            </div>
+          )}
+          renderRejected={() => i18n._(t`Error`)}
           renderFulfilled={(list) => this.renderBody(list)}
         />
         <div className="modal-footer">
           <Link to={"/task/" + this.props.taskName} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> {t("close")}
+            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
           </Link>
         </div>
       </ModalView>

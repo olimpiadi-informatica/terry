@@ -2,23 +2,22 @@ html {
   min-height: 100%;
 }
 
-html, body, #root, .terry-body {
+html,
+body,
+#root,
+.terry-body {
   flex: 1 0 100%;
   display: flex;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   flex-direction: column;
 }
 
 .striped-background {
-  background: repeating-linear-gradient(
-    45deg,
-    #eeeeee,
-    #eeeeee 10px,
-    #fefefe 10px,
-    #fefefe 20px
-  );
+  background: repeating-linear-gradient(45deg, #eeeeee, #eeeeee 10px, #fefefe 10px, #fefefe 20px);
 }
 
 .bordered-group > a.btn {
@@ -57,7 +56,8 @@ html, body, #root {
   margin-right: 1em;
 }
 
-.terry-admin-logout-button, .terry-user-name {
+.terry-admin-logout-button,
+.terry-user-name {
   margin-left: auto;
 }
 
@@ -84,7 +84,7 @@ a.tasklist-item {
 }
 
 h5.modal-subtitle {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 
 /**
@@ -122,10 +122,10 @@ h5.modal-subtitle {
 }
 
 .divider-vertical {
-  width: calc( 100% - 32px );
+  width: calc(100% - 32px);
   margin: auto;
   border-top: 1px solid #424242;
-  border-bottom: 1px solid #FFF;
+  border-bottom: 1px solid #fff;
   margin-bottom: 8px;
   display: none;
 }
@@ -146,7 +146,7 @@ main {
 
 .task-score-badge {
   float: right;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
 }
 
 .task-list-item {
@@ -163,7 +163,7 @@ main {
 /* Base styles (regardless of theme) */
 .card-header {
   background-color: #0275d8;
-  color: #FFF;
+  color: #fff;
 }
 
 .card-header h5 {
@@ -192,4 +192,8 @@ blockquote > ul {
 
 body.ReactModal__Body--open {
   overflow-y: hidden;
+}
+
+.language-selector {
+  max-width: 10em;
 }

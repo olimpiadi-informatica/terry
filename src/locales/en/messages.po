@@ -1,0 +1,511 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2020-09-12 16:06+0200\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/AdminUsersView.tsx:73
+#: src/ContestExtraTimeView.tsx:54
+msgid "(in minutes)"
+msgstr "(in minutes)"
+
+#: src/AdminView.tsx:32
+#: src/UploadPackView.tsx:16
+msgid "Admin"
+msgstr "Admin"
+
+#: src/AdminLoginView.tsx:30
+#: src/AdminLoginView.tsx:32
+msgid "Admin token"
+msgstr "Admin token"
+
+#: src/AdminSummaryView.tsx:235
+#: src/AdminUsersView.tsx:11
+#: src/ContestExtraTimeView.tsx:17
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+#: src/ContestView.tsx:104
+msgid "C/C++ Documentation"
+msgstr "C/C++ Documentation"
+
+#: src/SubmissionView.tsx:104
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/CreateSubmissionView.tsx:17
+msgid "Cannot submit for this input."
+msgstr "Cannot submit for this input."
+
+#: src/AdminLogsView.tsx:120
+msgid "Category"
+msgstr "Category"
+
+#: src/AdminLogsView.tsx:109
+msgid "Category filter"
+msgstr "Category filter"
+
+#: src/SubmissionView.tsx:65
+msgid "Change output"
+msgstr "Change output"
+
+#: src/SubmissionView.tsx:38
+msgid "Change source"
+msgstr "Change source"
+
+#: src/AdminLogsView.tsx:174
+#: src/AdminUsersView.tsx:82
+#: src/ContestExtraTimeView.tsx:60
+#: src/SubmissionListView.tsx:107
+#: src/SubmissionReportView.tsx:32
+#: src/SubmissionReportView.tsx:38
+msgid "Close"
+msgstr "Close"
+
+#: src/AdminSummaryView.tsx:125
+msgid "Contest ended at"
+msgstr "Contest ended at"
+
+#: src/AdminSummaryView.tsx:133
+msgid "Contest ended for everyone at"
+msgstr "Contest ended for everyone at"
+
+#: src/datetime.views.tsx:49
+msgid "Contest finished"
+msgstr "Contest finished"
+
+#: src/AdminSummaryView.tsx:100
+msgid "Contest started at"
+msgstr "Contest started at"
+
+#: src/AdminSummaryView.tsx:150
+msgid "Contest status"
+msgstr "Contest status"
+
+#: src/AdminSummaryView.tsx:45
+msgid "Contest was successfully started"
+msgstr "Contest was successfully started"
+
+#: src/AdminUsersView.tsx:57
+#: src/AdminUsersView.tsx:59
+msgid "Contestants"
+msgstr "Contestants"
+
+#: src/DownloadResultsView.tsx:30
+msgid "Creating final zip..."
+msgstr "Creating final zip..."
+
+#: src/AdminSummaryView.tsx:225
+msgid "Danger zone"
+msgstr "Danger zone"
+
+#: src/AdminLogsView.tsx:117
+#: src/FeedbackView.tsx:19
+#: src/SubmissionListView.tsx:82
+msgid "Date"
+msgstr "Date"
+
+#: src/ContestView.tsx:95
+#: src/SidebarView.tsx:48
+msgid "Documentation"
+msgstr "Documentation"
+
+#: src/SubmissionListView.tsx:83
+msgid "Download"
+msgstr "Download"
+
+#: src/AdminSummaryView.tsx:76
+#: src/DownloadResultsView.tsx:33
+#: src/DownloadResultsView.tsx:40
+msgid "Download contest results"
+msgstr "Download contest results"
+
+#: src/TaskView.tsx:50
+msgid "Download input"
+msgstr "Download input"
+
+#: src/DownloadResultsView.tsx:37
+msgid "Download results"
+msgstr "Download results"
+
+#: src/AdminLogsView.tsx:165
+#: src/AdminSummaryView.tsx:182
+#: src/AdminView.tsx:48
+#: src/AdminView.tsx:58
+#: src/AppView.tsx:26
+#: src/LoginView.tsx:35
+#: src/SubmissionListView.tsx:104
+#: src/SubmissionView.tsx:45
+#: src/SubmissionView.tsx:70
+#: src/TaskView.tsx:62
+msgid "Error"
+msgstr "Error"
+
+#: src/AdminSummaryView.tsx:190
+#: src/AdminUsersView.tsx:73
+#: src/ContestExtraTimeView.tsx:28
+#: src/ContestExtraTimeView.tsx:35
+#: src/ContestExtraTimeView.tsx:50
+msgid "Extra time"
+msgstr "Extra time"
+
+#: src/ContestExtraTimeView.tsx:22
+msgid "Extra time successfully updated"
+msgstr "Extra time successfully updated"
+
+#: src/AdminUsersView.tsx:16
+msgid "Extra time successfully updated for the user"
+msgstr "Extra time successfully updated for the user"
+
+#: src/ContestView.tsx:88
+msgid "FAQ"
+msgstr "FAQ"
+
+#: src/TaskView.tsx:74
+msgid "Failed to load task statement. Try reloading the page."
+msgstr "Failed to load task statement. Try reloading the page."
+
+#: src/UploadPackView.tsx:25
+msgid "File"
+msgstr "File"
+
+#: src/FileView.tsx:10
+msgid "File:"
+msgstr "File:"
+
+#: src/ContestView.tsx:78
+msgid "How to use Codeblocks for programming in C/C++"
+msgstr "How to use Codeblocks for programming in C/C++"
+
+#: src/ContestView.tsx:83
+msgid "How to use Lazarus for programming in Pascal"
+msgstr "How to use Lazarus for programming in Pascal"
+
+#: src/AdminUsersView.tsx:71
+msgid "IP"
+msgstr "IP"
+
+#: src/ContestView.tsx:133
+msgid "If you want to submit more than one source code file, please create a zip file containing them."
+msgstr "If you want to submit more than one source code file, please create a zip file containing them."
+
+#: src/SubmissionListView.tsx:52
+msgid "Input file"
+msgstr "Input file"
+
+#: src/AdminSummaryView.tsx:175
+msgid "Issue last detected"
+msgstr "Issue last detected"
+
+#: src/TaskView.tsx:86
+msgid "Last submission:"
+msgstr "Last submission:"
+
+#: src/FileView.tsx:13
+msgid "Last update:"
+msgstr "Last update:"
+
+#: src/AdminLogsView.tsx:123
+msgid "Level"
+msgstr "Level"
+
+#: src/TaskView.tsx:100
+msgid "Loading submission list failed, reload page."
+msgstr "Loading submission list failed, reload page."
+
+#: src/AdminLogsView.tsx:162
+#: src/AdminSummaryView.tsx:182
+#: src/AdminView.tsx:48
+#: src/AdminView.tsx:48
+#: src/LoginView.tsx:32
+#: src/SubmissionListView.tsx:103
+#: src/SubmissionReportView.tsx:36
+#: src/TaskView.tsx:72
+msgid "Loading..."
+msgstr "Loading..."
+
+#: src/AdminLoginView.tsx:22
+msgid "Log in"
+msgstr "Log in"
+
+#: src/AdminLoginView.tsx:34
+#: src/LoginView.tsx:30
+msgid "Login"
+msgstr "Login"
+
+#: src/AdminView.tsx:38
+#: src/ContestView.tsx:172
+msgid "Logout"
+msgstr "Logout"
+
+#: src/AdminLogsView.tsx:93
+#: src/AdminLogsView.tsx:96
+msgid "Logs"
+msgstr "Logs"
+
+#: src/AdminLogsView.tsx:126
+msgid "Message"
+msgstr "Message"
+
+#: src/AdminLogsView.tsx:110
+msgid "Message filter"
+msgstr "Message filter"
+
+#: src/AdminUsersView.tsx:68
+msgid "Name"
+msgstr "Name"
+
+#: src/AdminSummaryView.tsx:195
+msgid "No extra time set"
+msgstr "No extra time set"
+
+#: src/AdminSummaryView.tsx:169
+msgid "No issue detected"
+msgstr "No issue detected"
+
+#: src/AdminLogsView.tsx:136
+msgid "No messages yet"
+msgstr "No messages yet"
+
+#: src/ContestView.tsx:124
+msgid "On the left side of this page you can find the tasks, click on any one to open it."
+msgstr "On the left side of this page you can find the tasks, click on any one to open it."
+
+#: src/SubmissionListView.tsx:62
+msgid "Output file"
+msgstr "Output file"
+
+#: src/SubmissionView.tsx:63
+msgid "Output file info"
+msgstr "Output file info"
+
+#: src/ContestView.tsx:109
+msgid "Pascal Documentation"
+msgstr "Pascal Documentation"
+
+#: src/LoginView.tsx:18
+msgid "Please login"
+msgstr "Please login"
+
+#: src/UploadPackView.tsx:18
+msgid "Please select the contest file..."
+msgstr "Please select the contest file..."
+
+#: src/SubmissionView.tsx:45
+#: src/SubmissionView.tsx:70
+#: src/SubmissionView.tsx:102
+msgid "Processing..."
+msgstr "Processing..."
+
+#: src/AdminSummaryView.tsx:228
+msgid "RESET"
+msgstr "RESET"
+
+#: src/AppView.tsx:29
+msgid "Reload"
+msgstr "Reload"
+
+#: src/AdminSummaryView.tsx:118
+#: src/SidebarView.tsx:22
+msgid "Remaining time"
+msgstr "Remaining time"
+
+#: src/AdminSummaryView.tsx:141
+msgid "Remaining time for some participant"
+msgstr "Remaining time for some participant"
+
+#: src/TaskView.tsx:39
+msgid "Request input"
+msgstr "Request input"
+
+#: src/TaskView.tsx:39
+msgid "Request new input"
+msgstr "Request new input"
+
+#: src/TaskView.tsx:60
+msgid "Requesting..."
+msgstr "Requesting..."
+
+#: src/SidebarView.tsx:40
+msgid "Resources"
+msgstr "Resources"
+
+#: src/FeedbackView.tsx:25
+#: src/SubmissionListView.tsx:84
+msgid "Score"
+msgstr "Score"
+
+#: src/ContestView.tsx:99
+msgid "Select the documentation you want to consult:"
+msgstr "Select the documentation you want to consult:"
+
+#: src/ContestView.tsx:73
+msgid "Select the tutorial you want to consult:"
+msgstr "Select the tutorial you want to consult:"
+
+#: src/AdminUsersView.tsx:28
+msgid "Set"
+msgstr "Set"
+
+#: src/ContestExtraTimeView.tsx:63
+msgid "Set extra time"
+msgstr "Set extra time"
+
+#: src/FileView.tsx:18
+msgid "Size:"
+msgstr "Size:"
+
+#: src/SubmissionListView.tsx:57
+msgid "Source file"
+msgstr "Source file"
+
+#: src/SubmissionView.tsx:36
+msgid "Source file info"
+msgstr "Source file info"
+
+#: src/SubmissionView.tsx:28
+msgid "Source file..."
+msgstr "Source file..."
+
+#: src/AdminSummaryView.tsx:49
+msgid "Start"
+msgstr "Start"
+
+#: src/SubmissionListView.tsx:93
+#: src/SubmissionReportView.tsx:22
+msgid "Submission"
+msgstr "Submission"
+
+#: src/SubmissionListView.tsx:96
+msgid "Submission for"
+msgstr "Submission for"
+
+#: src/SubmissionView.tsx:91
+msgid "Submission for input"
+msgstr "Submission for input"
+
+#: src/SubmissionView.tsx:107
+msgid "Submit"
+msgstr "Submit"
+
+#: src/AdminUsersView.tsx:69
+msgid "Surname"
+msgstr "Surname"
+
+#: src/AdminSummaryView.tsx:164
+msgid "System status"
+msgstr "System status"
+
+#: src/SidebarView.tsx:30
+msgid "Tasks"
+msgstr "Tasks"
+
+#: src/AdminSummaryView.tsx:40
+msgid "The contest has not started yet!"
+msgstr "The contest has not started yet!"
+
+#: src/ContestView.tsx:143
+msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
+msgstr "The contest has not started yet! Refresh this page when the contest has started to be able to login."
+
+#: src/SidebarView.tsx:24
+msgid "The contest is finished"
+msgstr "The contest is finished"
+
+#: src/DownloadResultsView.tsx:48
+msgid "The contest is finished, you must now download the zip containing all the contest data. This zip must then be sent to the committee."
+msgstr "The contest is finished, you must now download the zip containing all the contest data. This zip must then be sent to the committee."
+
+#: src/AdminUsersView.tsx:70
+#: src/LoginView.tsx:26
+#: src/LoginView.tsx:28
+msgid "Token"
+msgstr "Token"
+
+#: src/UploadPackView.tsx:29
+msgid "Upload"
+msgstr "Upload"
+
+#: src/TaskView.tsx:53
+msgid "Upload solution"
+msgstr "Upload solution"
+
+#: src/ContestView.tsx:121
+msgid "Usage guide"
+msgstr "Usage guide"
+
+#: src/ContestView.tsx:69
+#: src/SidebarView.tsx:45
+msgid "Useful information"
+msgstr "Useful information"
+
+#: src/ContestExtraTimeView.tsx:43
+msgid "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <0>is logged</0> and must be justified to the committee."
+msgstr "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <0>is logged</0> and must be justified to the committee."
+
+#: src/ContestView.tsx:126
+msgid "You can submit <0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <1>remember to submit</1> them by clicking the green button!"
+msgstr "You can submit <0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <1>remember to submit</1> them by clicking the green button!"
+
+#: src/SubmissionListView.tsx:76
+msgid "You have not submitted yet."
+msgstr "You have not submitted yet."
+
+#: src/SidebarView.tsx:15
+msgid "Your score"
+msgstr "Your score"
+
+#: src/FeedbackView.tsx:45
+msgid "correct"
+msgstr "correct"
+
+#: src/AdminSummaryView.tsx:197
+#: src/AdminSummaryView.tsx:204
+msgid "set extra time"
+msgstr "set extra time"
+
+#: src/AdminSummaryView.tsx:171
+#: src/AdminSummaryView.tsx:179
+msgid "show log"
+msgstr "show log"
+
+#: src/AdminSummaryView.tsx:214
+msgid "show users"
+msgstr "show users"
+
+#: src/TaskView.tsx:91
+msgid "view all submissions"
+msgstr "view all submissions"
+
+#: src/SubmissionListView.tsx:35
+msgid "view details"
+msgstr "view details"
+
+#: src/FeedbackView.tsx:45
+msgid "wrong"
+msgstr "wrong"
+
+#: src/AdminSummaryView.tsx:211
+msgid "{0, plural, =0 {No user has extra time} one {# user has extra time} other {# users have extra time}}"
+msgstr "{0, plural, =0 {No user has extra time} one {# user has extra time} other {# users have extra time}}"
+
+#: src/AdminSummaryView.tsx:201
+msgid "{0, plural, one {Contest duration was extended by # minute} other {Contest duration was extended by # minutes}}"
+msgstr "{0, plural, one {Contest duration was extended by # minute} other {Contest duration was extended by # minutes}}"
+
+#: src/AdminSummaryView.tsx:111
+msgid "{0, plural, one {plus # extra minute for some user} other {plus # extra minutes for some user}}"
+msgstr "{0, plural, one {plus # extra minute for some user} other {plus # extra minutes for some user}}"
+
+#: src/ValidationView.tsx:25
+msgid "{0, select, parsed {parsed} missing {missing} invalid {invalid} other {?}}"
+msgstr "{0, select, parsed {parsed} missing {missing} invalid {invalid} other {?}}"

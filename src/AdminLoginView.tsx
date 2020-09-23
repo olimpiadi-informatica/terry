@@ -1,12 +1,14 @@
-import * as React from 'react';
-import { AdminSession } from './admin.models';
-import { WithTranslation } from 'react-i18next';
-const ReactMarkdown = require('react-markdown');
+import * as React from "react";
+import { AdminSession } from "./admin.models";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
+
+const ReactMarkdown = require("react-markdown");
 
 type Props = {
-  session: AdminSession
-  pack: { data: { deletable: boolean, name: string, description: string } }
-} & WithTranslation
+  session: AdminSession;
+  pack: { data: { deletable: boolean; name: string; description: string } };
+};
 
 export default class AdminLoginView extends React.Component<Props> {
   componentDidMount() {
@@ -18,25 +20,40 @@ export default class AdminLoginView extends React.Component<Props> {
   }
 
   login() {
-    const token = (this.refs.form as any).token.value
+    const token = (this.refs.form as any).token.value;
     this.props.session.login(token);
   }
 
   render() {
-    const { t } = this.props;
     return (
       <div className="jumbotron admin-jumbotron">
         <h1 className="text-center display-3">{this.props.pack.data.name}</h1>
         <ReactMarkdown source={this.props.pack.data.description} />
         <hr />
-        <h2 className="text-center">{t("login.please login")}</h2>
-        <form ref="form" action="" onSubmit={e => { e.preventDefault(); this.login(); }}>
+        <h2 className="text-center">
+          <Trans>Log in</Trans>
+        </h2>
+        <form
+          ref="form"
+          action=""
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.login();
+          }}
+        >
           <div className="form-group">
-            <label htmlFor="token" className="sr-only">{t("login.token")}</label>
-            <input name="token" id="token" className="form-control text-center" required
-              placeholder={t("login.token")} />
+            <label htmlFor="token" className="sr-only">
+              <Trans>Admin token</Trans>
+            </label>
+            <input
+              name="token"
+              id="token"
+              className="form-control text-center"
+              required
+              placeholder={i18n._(t`Admin token`)}
+            />
           </div>
-          <input type="submit" className="btn btn-danger" value={t("login.login")!} />
+          <input type="submit" className="btn btn-danger" value={i18n._(t`Login`)} />
         </form>
       </div>
     );

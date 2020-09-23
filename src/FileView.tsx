@@ -1,33 +1,43 @@
-import * as React from 'react';
-import filesize from 'filesize';
-import { DateView } from './datetime.views';
+import * as React from "react";
+import filesize from "filesize";
+import { DateView } from "./datetime.views";
 import { DateTime } from "luxon";
 import "./FileView.css";
-import { WithTranslation } from 'react-i18next';
+import { Trans } from "@lingui/macro";
 
 type Props = {
-  file: any
-} & WithTranslation
+  file: any;
+};
 
 export default class FileView extends React.Component<Props> {
   render() {
-    const { t } = this.props;
     return (
-      <dl className="terry-file-view">
-        <dt>{t("submission.file.file")}</dt>
-        <dd>{this.props.file.name}</dd>
-
-        <dt>{t("submission.file.last update")}</dt>
-        <dd>
-          <DateView
-            {...this.props}
-            clock={() => DateTime.local()}
-            date={DateTime.fromJSDate(this.props.file.lastModifiedDate)} />
-        </dd>
-
-        <dt>{t("submission.file.size")}</dt>
-        <dd>{filesize(this.props.file.size, { standard: "iec" })}</dd>
-      </dl>
+      <table className="terry-file-view">
+        <tr>
+          <th>
+            <Trans>File:</Trans>
+          </th>
+          <td>{this.props.file.name}</td>
+        </tr>
+        <tr>
+          <th>
+            <Trans>Last update:</Trans>
+          </th>
+          <td>
+            <DateView
+              {...this.props}
+              clock={() => DateTime.local()}
+              date={DateTime.fromJSDate(this.props.file.lastModifiedDate)}
+            />
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <Trans>Size:</Trans>
+          </th>
+          <td>{filesize(this.props.file.size, { standard: "iec" })}</td>
+        </tr>
+      </table>
     );
   }
 }
