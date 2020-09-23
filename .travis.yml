@@ -29,6 +29,7 @@ before_install:
   - cd $TRAVIS_BUILD_DIR
 
 install:
+  - cd backend
   - pip install -r requirements.txt
   - pip install -r test-requirements.txt
   - ./setup.py install

@@ -16,4 +16,4 @@ ratings:
   paths:
   - "**.py"
 exclude_paths:
-- test/**
+- backend/test/**
