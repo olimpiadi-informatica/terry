@@ -1,0 +1,28 @@
+/*
+ * Translation for the html components that are localized with css directives.
+ * Bootstrap uses this method, in particular the "Browse" file chooser.
+ */
+
+#source-file-span:lang(en)::after {
+  content: "Source code...";
+}
+
+#output-file-span:lang(en)::after {
+  content: "Output file...";
+}
+
+.custom-file-control:lang(en)::before {
+  content: "Choose";
+}
+
+#source-file-span:lang(it)::after {
+  content: "File sorgente...";
+}
+
+#output-file-span:lang(it)::after {
+  content: "File di output...";
+}
+
+.custom-file-control:lang(it)::before {
+  content: "Carica";
+}
