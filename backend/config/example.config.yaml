@@ -1,0 +1,35 @@
+# Address to bind the server to
+address: 0.0.0.0
+port: 1234
+
+# Databases
+logfile: log.sqlite3
+db: db.sqlite3
+
+# Store dir for files and statements
+storedir: ./files/
+statementdir: ./files/statements/secret/
+# Prefix of the public url for a task statement
+web_statementdir: /statements/secret/
+
+# Queue size for input generation
+queue_size: 64
+
+# Number of proxies
+num_proxies: 0
+
+# Path of the contest
+contest_path: ./contest/
+encrypted_file: ./zips/pack.zip.enc
+decrypted_file: ./zips/pack.zip
+
+# Log level: DEBUG INFO WARNING ERROR
+log_level: INFO
+
+# Secret for the JWT token, leave blank to disable SSO authentication
+jwt_secret: ~
+# URL to show where to login with SSO
+sso_url: ~
+
+# Secret for appending logs
+append_log_secret: secret

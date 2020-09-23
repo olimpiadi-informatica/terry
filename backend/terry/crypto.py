@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# Copyright 2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
+# Copyright 2018 - Luca Versari <veluca93@gmail.com>
+
+import base64
+
+import nacl
+import nacl.hash
+import nacl.pwhash
+import nacl.secret
+
+NACL_SALT = bytes.fromhex(
+    "5b6a78a780ea0ee560442cf5a528f0fb743d79e45a3a33af68671eba9cde0e17")
+SECRET_LEN = 3
+USERNAME_LEN = 6
+
+HASH_LEN = 32
+VERSION_LEN = 1
+METADATA_LEN = 1024
+VERSION_OFFSET = HASH_LEN
+METADATA_OFFSET = HASH_LEN + VERSION_LEN
+DATA_OFFSET = METADATA_OFFSET + METADATA_LEN
+
+
+def _sha256(data: bytes):
+    return bytes.fromhex(nacl.hash.sha256(data).decode())
+
+
+def _sha512(data: bytes):
+    return bytes.fromhex(nacl.hash.sha512(data).decode())
+
+
+def user_to_bytes(user: str):
+    if not all('A' <= x <= 'Z' or '0' <= x <= '9' or x == '_' for x in user):
+        raise ValueError("Invalid username")
+    return user.encode('ascii')
+
+
+def combine_username_password(username: str, password: str):
+    return username + "-" + password
+
+
+def encode_data(user: str, data: bytes):
+    b32data = base64.b32encode(data)
+    if b32data[-1] == ord('='):
+        raise ValueError(
+            "Invalid secret + password length: %s" % b32data.decode('ascii'))
+    return combine_username_password(user, '-'.join(
+        b32data[i:i + 4].decode('ascii') for i in range(0, len(b32data), 4)))
+
+
+def decode_data(b32data: str, secret_len: int):
+    filtered_data = "".join(filter(lambda x: x != '-', b32data))
+    data = base64.b32decode(filtered_data.encode('ascii'))
+    return (data[:secret_len], data[secret_len:])
+
+
+def gen_user_password(user: str, secret: bytes, file_password: bytes):
+    if len(secret) != SECRET_LEN:
+        raise ValueError("The len of the secret is wrong (%d should be %d)" %
+                         (len(secret), SECRET_LEN))
+    digest = _sha512(user_to_bytes(user) + secret)
+    if len(file_password) > len(digest):
+        raise ValueError("File password is too long")
+    scrambled_password = bytes(
+        [v ^ digest[i] for i, v in enumerate(file_password)])
+    return encode_data(user, secret + scrambled_password)
+
+
+def recover_file_password(user: str, secret: bytes, scrambled_password: bytes):
+    digest = _sha512(user_to_bytes(user) + secret)
+    if len(scrambled_password) > len(digest):
+        raise ValueError("Scrambled password is too long")
+    file_password = bytes(
+        [v ^ digest[i] for i, v in enumerate(scrambled_password)])
+    return file_password
+
+
+def recover_file_password_from_token(token):
+    username, password = token.split("-", 1)
+    secret, scrambled_password = decode_data(password, SECRET_LEN)
+    return recover_file_password(username, secret, scrambled_password)
+
+
+def password_to_key(password: bytes):
+    ops = nacl.pwhash.scrypt.OPSLIMIT_MODERATE
+    mem = nacl.pwhash.scrypt.MEMLIMIT_MODERATE
+    length = nacl.secret.SecretBox.KEY_SIZE
+    return nacl.pwhash.scrypt.kdf(
+        length, password, NACL_SALT, opslimit=ops, memlimit=mem)
+
+
+def encode(password: bytes, input_data: bytes, metadata: bytes):
+    key = password_to_key(password)
+    box = nacl.secret.SecretBox(key)
+    encrypted = box.encrypt(input_data)
+    if len(metadata) > METADATA_LEN:
+        raise ValueError("Metadata is too long")
+    metadata += b"\x00" * (METADATA_LEN - len(metadata))
+    sha = _sha256(b'\x00' + metadata + encrypted)
+    return sha + b'\x00' + metadata + encrypted
+
+
+def validate(input_data: bytes):
+    sha = input_data[:VERSION_OFFSET]
+    return sha == _sha256(input_data[VERSION_OFFSET:])
+
+
+def metadata(input_data: bytes):
+    return input_data[METADATA_OFFSET:DATA_OFFSET]
+
+
+def decode(password: bytes, input_data: bytes):
+    key = password_to_key(password)
+    box = nacl.secret.SecretBox(key)
+    return box.decrypt(input_data[DATA_OFFSET:])

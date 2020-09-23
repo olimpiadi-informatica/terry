@@ -1,0 +1,41 @@
+language: python
+python:
+  - 3.6
+  - 3.7
+  - 3.8
+  - pypy3
+
+before_install:
+  - cd $HOME
+  - mkdir -p bin
+  - export PATH=$HOME/bin:$PATH
+  - cd $HOME
+  - "if [[ $TRAVIS_PYTHON_VERSION == 'pypy3' ]]; then
+      deactivate &&
+      export PYPY_VERSION=pypy3.5-5.7.1-beta-linux_x86_64-portable &&
+      wget https://bitbucket.org/squeaky/portable-pypy/downloads/$PYPY_VERSION.tar.bz2 &&
+      tar -jxf $PYPY_VERSION.tar.bz2 &&
+      echo 'Setting up aliases...' &&
+      export PATH=$HOME/$PYPY_VERSION/bin/:$PATH &&
+      ln -s ~/$PYPY_VERSION/bin/pypy3.5 ~/bin/python &&
+      echo 'Setting up pip...' &&
+      $PYPY_VERSION/bin/pypy -m ensurepip &&
+      ln -s ~/$PYPY_VERSION/bin/pip3.5 ~/bin/pip &&
+      ~/$PYPY_VERSION/bin/virtualenv-pypy -p ~/$PYPY_VERSION/bin/pypy3 /tmp/venv &&
+      source /tmp/venv/bin/activate &&
+      python --version &&
+      pip --version
+    ; fi"
+  - cd $TRAVIS_BUILD_DIR
+
+install:
+  - cd backend
+  - pip install -r requirements.txt
+  - pip install -r test-requirements.txt
+  - ./setup.py install
+
+script:
+  - coverage run --source=terry --omit=terry/__main__.py,terry/utility.py ./run_tests.py
+
+after_success:
+  - coveralls

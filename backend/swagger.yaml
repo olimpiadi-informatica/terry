@@ -1,0 +1,737 @@
+swagger: '2.0'
+info:
+  description: >-
+    territoriali-backend is a Google-Code-Jam-like programming contest
+    environment designed for the territorial phase of the Italian Olympiad in
+    Informatics (OII, Olimpiadi Italiane di Informatica).
+  version: 0.0.1
+  title: territoriali-backend
+  termsOfService: 'https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE'
+  license:
+    name: Mozilla Public Licence 2.0
+    url: >-
+      https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE
+paths:
+  /contest:
+    get:
+      tags:
+        - info
+      summary: Retrieve contest information
+      operationId: getContest
+      responses:
+        '200':
+          description: Information about the contest
+          schema:
+            $ref: '#/definitions/Contest'
+  '/input/{input_id}':
+    get:
+      tags:
+        - info
+      summary: Retrieve the information about a generated input
+      operationId: getInput
+      parameters:
+      - name: input_id
+        in: path
+        description: Id of the input file
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested input
+          schema:
+            $ref: '#/definitions/Input'
+        '403':
+          description: The contest is not running or the input doesn't exist
+  '/output/{output_id}':
+    get:
+      tags:
+        - info
+      summary: Retrieve the information about an uploaded output
+      operationId: getOutput
+      parameters:
+      - name: output_id
+        in: path
+        description: Id of the output file
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested output
+          schema:
+            $ref: '#/definitions/Output'
+        '403':
+          description: The contest is not running or the output doesn't exist
+  '/source/{source_id}':
+    get:
+      tags:
+        - info
+      summary: Retrieve the information about an uploaded source
+      operationId: getSource
+      parameters:
+      - name: source_id
+        in: path
+        description: Id of the source file
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested source
+          schema:
+            $ref: '#/definitions/Source'
+        '403':
+          description: The contest is not running or the source doesn't exist
+  '/submission/{submission_id}':
+    get:
+      tags:
+        - info
+      summary: Retrieve the information about a submission
+      operationId: getSubmission
+      parameters:
+      - name: submission_id
+        in: path
+        description: Id of the submission
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested submission
+          schema:
+            $ref: '#/definitions/Submission'
+        '403':
+          description: The contest is not running or the submission doesn't exist
+  '/user/{token}':
+    get:
+      tags:
+        - info
+      summary: Retrieve the information about a user
+      operationId: getUser
+      parameters:
+      - name: token
+        in: path
+        description: Token of the user
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The requested user
+          schema:
+            $ref: '#/definitions/User'
+        '403':
+          description: The contest is not running or the user doesn't exist
+  '/user/{token}/submissions/{task}':
+    get:
+      tags:
+        - info
+      summary: Retrieve all the submissions of a user of a task
+      operationId: getSubmissions
+      parameters:
+      - name: token
+        in: path
+        description: Token of the user
+        required: true
+        type: string
+      - name: task
+        in: path
+        description: Name of the task
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The user's submissions
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/Submission'
+        '403':
+          description: The contest is not running or the user/task doesn't exist
+  '/generate_input':
+    post:
+      tags:
+        - contest
+      summary: Require a new input
+      operationId: generateInput
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: token
+        in: formData
+        description: The token of the user
+        required: true
+        type: string
+      - name: task
+        in: formData
+        description: The name of the task
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The input is generated and returned to the client
+          schema:
+            $ref: '#/definitions/Input'
+        '403':
+          description: The contest is not running, the token/task is invalid or the user already has an input
+  '/submit':
+    post:
+      tags:
+        - contest
+      summary: Confirm the uploaded source and output and create the submission
+      operationId: submit
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: output_id
+        in: formData
+        description: The id of the uploaded output
+        required: true
+        type: string
+      - name: source_id
+        in: formData
+        description: The id of the uploaded source
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The submission has been created and returned
+          schema:
+            $ref: '#/definitions/Submission'
+        '403':
+          description: The contest is not running, the input/source id isn't corrent or the input of the source is not the same of the output one.
+  '/upload_output':
+    post:
+      tags:
+      - upload
+      summary: Upload an output file relative to a generated input file
+      operationId: uploadOutput
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: input_id
+        in: formData
+        description: The id of the input
+        required: true
+        type: string
+      - name: file
+        in: formData
+        description: The file to upload
+        required: true
+        type: file
+      responses:
+        '200':
+          description: The output file is received and stored
+          schema:
+            $ref: '#/definitions/Output'
+        '403':
+          description: The input file does not exists or the contest is not running
+  '/upload_source':
+    post:
+      tags:
+      - upload
+      summary: Upload a source file relative to a generated input file
+      operationId: uploadSource
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: input_id
+        in: formData
+        description: The id of the input
+        required: true
+        type: string
+      - name: file
+        in: formData
+        description: The file to upload
+        required: true
+        type: file
+      responses:
+        '200':
+          description: The source file is received and stored
+          schema:
+            $ref: '#/definitions/Source'
+        '403':
+          description: The input file does not exists or the contest is not running
+  '/admin/extract':
+    post:
+      tags:
+      - admin
+      summary: Extract the contest zip pack and prepare the contest to be started
+      operationId: adminExtract
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      - name: filename
+        in: formData
+        description: The name of the file to be extracted, the path is relative to Config.contest_zips configuration
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: The password to use to extract the pack
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The contest is succesfully extracted and loaded, it's ready to be started
+        '403':
+          description: The admin token is invalid, the contest was already extracted, or the password is wrong
+  '/admin/drop_contest':
+    post:
+      tags:
+      - admin
+      summary: Drop a loaded but not started contest
+      operationId: adminDropContest
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The contest has been removed
+        '403':
+          description: The admin token is invalid or the contest is running
+        '404':
+          description: The contest is not extracted
+  '/admin/log':
+    post:
+      tags:
+      - admin
+      summary: Retrieve the log entries from the database
+      operationId: adminLog
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      - name: start_date
+        in: formData
+        description: The begin of the time interval of the logs to fetch
+        required: true
+        type: string
+      - name: end_date
+        in: formData
+        description: The end of the time interval of the logs to fetch
+        required: true
+        type: string
+      - name: level
+        in: formData
+        description: The minimum level of logs to fetch. The level is in human format (eg ERROR, WARING, INFO, DEBUG)
+        required: true
+        type: string
+      - name: category
+        in: formData
+        description: The category of the logs to filer with
+        required: false
+        type: string
+      responses:
+        '200':
+          description: The matching logs
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date-time
+                    category:
+                      type: string
+                    level:
+                      type: string
+                    message:
+                      type: string
+        '403':
+          description: The admin token is invalid
+        '400':
+          description: The provided log level is invalid
+  '/admin/start':
+    post:
+      tags:
+      - admin
+      summary: Start the contest for all the users
+      operationId: adminStart
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: The contest has been started succesfully
+          schema:
+            type: object
+            properties:
+              start_time:
+                type: string
+                format: date-time
+        '403':
+          description: The admin token is invalid or the contest has already been started
+  '/admin/set_extra_time':
+    post:
+      tags:
+      - admin
+      summary: Set the extra time for a user or for the entire contest
+      operationId: adminSetExtraTime
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      - name: extra_time
+        in: formData
+        description: The extra time to set in seconds
+        required: true
+        type: integer
+      - name: token
+        in: formData
+        description: If provided, set the extra time only for that user
+        required: false
+        type: string
+      responses:
+        '200':
+          description: The extra time has been set
+          schema:
+            type: object
+        '403':
+          description: The admin token is invalid or the provided user token is invalid
+  '/admin/status':
+    post:
+      tags:
+      - admin
+      summary: Fetch some basic information about the server
+      operationId: adminStatus
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Some information about the server
+          schema:
+            type: object
+            properties:
+              start_time:
+                type: string
+                format: date-time
+              extra_time:
+                type: integer
+              end_time:
+                type: string
+                format: date-time
+              loaded:
+                type: boolean
+        '403':
+          description: The admin token is invalid
+  '/admin/user_list':
+    post:
+      tags:
+      - admin
+      summary: Fetch all the users in the contest
+      operationId: adminUserList
+      consumes:
+      - multipart/form-data
+      parameters:
+      - name: admin_token
+        in: formData
+        description: The token of the admin
+        required: true
+        type: string
+      responses:
+        '200':
+          description: A list of all the users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserByAdmin'
+        '403':
+          description: The admin token is invalid
+definitions:
+  Contest:
+    type: object
+    required:
+      - has_started
+    properties:
+      has_started:
+        type: "boolean"
+        description: 'If the contest has begun'
+      start_time:
+        type: "string"
+        format: "date-time"
+        description: "The start time of the contest"
+      tasks:
+        type: array
+        items:
+          $ref: '#/definitions/Task'
+      max_total_score:
+        type: number
+        format: float
+        description: Maximum total score of the contest
+  Task:
+    type: object
+    required:
+      - name
+      - title
+      - statement_path
+      - max_score
+      - num
+    properties:
+      name:
+        type: string
+        description: Name of the task
+      title:
+        type: string
+        description: Title of the task
+      statement_path:
+        type: string
+        description: Path to the statement file
+      max_score:
+        type: number
+        format: float
+        description: Maximum score of the task
+      num:
+        type: number
+        format: int32
+        description: Ordinal number of the task
+  Input:
+    type: object
+    required:
+      - id
+      - token
+      - task
+      - attempt
+      - date
+      - path
+      - size
+    properties:
+      id:
+        type: string
+        description: The id of the input
+      token:
+        type: string
+        description: The token of the user who owns the input
+      task:
+        type: string
+        description: The name of the task
+      attempt:
+        type: number
+        format: int32
+        description: Attempt number of the user on this task
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      path:
+        type: string
+        description: Path where you can download the file
+      size:
+        type: number
+        format: int32
+        description: number of bytes of the input
+  Output:
+    type: object
+    required:
+      - id
+      - input
+      - date
+      - path
+      - size
+      - validation
+    properties:
+      id:
+        type: string
+        description: The id of the output
+      input:
+        type: string
+        description: The id of the associated input
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      path:
+        type: string
+        description: Path where you can download the file
+      size:
+        type: number
+        format: int32
+        description: number of bytes of the input
+      validation:
+        type: object
+        properties:
+          cases:
+            type: array
+            items:
+              type: object
+              properties:
+                status:
+                  type: string
+          alerts:
+            type: array
+            items:
+              type: object
+              properties:
+                severity:
+                  type: string
+                message:
+                  type: string
+  Source:
+    type: object
+    required:
+      - id
+      - input
+      - date
+      - path
+      - size
+    properties:
+      id:
+        type: string
+        description: The id of the source
+      input:
+        type: string
+        description: The id of the associated input
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      path:
+        type: string
+        description: Path where you can download the file
+      size:
+        type: number
+        format: int32
+        description: Number of bytes of the input
+      validation:
+        type: object
+        properties:
+          alerts:
+            type: array
+            items:
+              type: object
+              properties:
+                severity:
+                  type: string
+                message:
+                  type: string
+  Submission:
+    type: object
+    required:
+      - id
+      - token
+      - task
+      - score
+      - date
+      - input
+      - output
+      - source
+      - feedback
+    properties:
+      id:
+        type: string
+        description: The id of the submission
+      token:
+        type: string
+        description: The token of the user who owns the submission
+      task:
+        type: string
+        description: The name of the task
+      score:
+        type: number
+        format: float
+        description: The score of the submission
+      date:
+        type: string
+        format: date-time
+        description: Date of the generation
+      input:
+        $ref: '#/definitions/Input'
+      output:
+        $ref: '#/definitions/Output'
+      source:
+        $ref: '#/definitions/Source'
+      feedback:
+        type: object
+        properties:
+          cases:
+            type: array
+            items:
+              type: object
+              properties:
+                correct:
+                  type: boolean
+  User:
+    type: object
+    properties:
+      token:
+        type: string
+        description: The token of the user
+      name:
+        type: string
+        description: Name of the user
+      surname:
+        type: string
+        description: Surname of the user
+      end_time:
+        type: string
+        format: date-time
+        description: End time for the user
+      total_score:
+        type: number
+        format: float
+      tasks:
+        type: object
+        properties:
+          task_name:
+            type: object
+            properties:
+              name:
+                type: string
+              score:
+                type: number
+                format: float
+              current_input:
+                $ref: '#/definitions/Input'
+  UserByAdmin:
+    type: object
+    properties:
+      ip:
+        type: array
+        items:
+          type: object
+          properties:
+            ip:
+              type: string
+            first_date:
+              type: string
+              format: date-time
+      token:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
+      extra_time:
+        type: integer
