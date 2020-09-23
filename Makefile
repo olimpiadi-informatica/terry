@@ -175,6 +175,9 @@ $(TARGET)/etc/modules-load.d/tun.conf: $(TARGET)
 $(TARGET)/etc/ssh/sshd_config: $(TARGET)
 	sed -i 's/.*PermitRootLogin.*$$/PermitRootLogin yes/g' $@
 
+vm-utils/httptun/client.py:
+	git submodule update --init
+
 $(TARGET)/root/httptun: $(TARGET) vm-utils/httptun/client.py vm-utils/httptun/common.py
 	mkdir -p $@
 	cp vm-utils/httptun/client.py vm-utils/httptun/common.py $@
