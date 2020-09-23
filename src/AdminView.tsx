@@ -13,6 +13,7 @@ import PromiseView from "./PromiseView";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "./i18n";
 import Pack from "./Pack";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 type Props = {
   pack: Pack;
@@ -53,6 +54,7 @@ export default class AdminView extends React.Component<Props> {
         >
           <FontAwesomeIcon icon={faSignOutAlt} /> <Trans>Logout</Trans>
         </button>
+        <LanguageSwitcher />
       </nav>
     );
   }
