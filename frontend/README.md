@@ -16,10 +16,6 @@ curl -X POST -F admin_token=secret  http://localhost:1234/admin/start
 where `secret` is the admin token you have chosen.
 
 
-## How to build the production version
-
-Take a look at https://github.com/algorithm-ninja/terry#setup-a-production-like-environment for the complete guide.
-
 ## Internet connectivity detection and reporting
 
 Build/start the front-end with the following environment variable:

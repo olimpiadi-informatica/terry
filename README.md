@@ -14,12 +14,12 @@ You can find the specification of the format accepted by `terry` [here](https://
 ## Setup a production-like environment
 
 1. Clone recursively this repo `git clone --recurse-submodules https://github.com/algorithm-ninja/terry`
-2. Follow the instructions in `territoriali-backend/`
+2. Follow the instructions in `backend/`
 3. Place the zip of the contest in the folder set in the backend config file
 4. Setup the frontend
 
-- Inside `territoriali-frontend/`
-- export some frontend variables: `REACT_APP_API_BASE_URI` `REACT_APP_FILES_BASE_URI` `REACT_APP_STATEMENTS_BASE_URI`
+- Inside `frontend/`
+- export some frontend variables: `REACT_APP_API_BASE_URI` `REACT_APP_FILES_BASE_URI` `REACT_APP_STATEMENTS_BASE_URI` `REACT_APP_DETECT_INTERNET_TEST_ENDPOINT` `REACT_APP_DETECT_INTERNET_TEST_CONTENT`
 - `npm install`
 - `npm run build`
 
