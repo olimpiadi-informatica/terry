@@ -3,11 +3,6 @@
 **terry** is a Google-Code-Jam-like programming contest environment designed for the territorial phase of
 the Italian Olympiad in Informatics (OII, _Olimpiadi Italiane di Informatica_).
 
-This is only the backend of the project, if you are looking for the frontend please go to
-[territoriali-frontend](https://github.com/algorithm-ninja/territoriali-frontend)
-
-This is a new project, it's not stable yet! Please note that our licence does not provide any warranty.
-
 ## The goals
 
 This system was designed to run in a virtual machine running Linux, hosted by a Windows server in a high school lab.

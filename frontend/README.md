@@ -1,6 +1,4 @@
-# territoriali-frontend
-
-This is the frontend part of [Terry](https://github.com/algorithm-ninja/terry). If you are looking for the backend please go to the [correct repo](https://github.com/algorithm-ninja/territoriali-backend).
+# terry frontend
 
 ## How to run the frontend
 

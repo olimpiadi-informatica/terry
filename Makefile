@@ -30,7 +30,7 @@ build: check_root \
 	$(TARGET)/etc/mtab \
 	$(TARGET)/etc/resolv.conf \
 	$(TARGET)/usr/lib/python%/site-packages/python_pytun% \
-	$(TARGET)/app/territoriali-frontend/build \
+	$(TARGET)/app/terry-frontend/build \
 	$(TARGET)/app/terry-backend \
 	$(TARGET)/app/config.yaml \
 	$(TARGET)/etc/nginx/nginx.conf \
@@ -56,12 +56,12 @@ $(TARGET): $(WORKDIR)/pacman.conf
 $(WORKDIR):
 	mkdir -p $@
 
-$(WORKDIR)/territoriali-frontend/build: territoriali-frontend $(WORKDIR)
+$(WORKDIR)/terry-frontend/build: frontend $(WORKDIR)
 	export REACT_APP_DETECT_INTERNET_TEST_ENDPOINT=$(REACT_APP_DETECT_INTERNET_TEST_ENDPOINT) \
 		REACT_APP_DETECT_INTERNET_TEST_CONTENT=$(REACT_APP_DETECT_INTERNET_TEST_CONTENT) && \
-		cd territoriali-frontend && yarn && yarn build
-	mkdir -p $(WORKDIR)/territoriali-frontend
-	cp -r territoriali-frontend/build $(WORKDIR)/territoriali-frontend/build
+		cd frontend && yarn && yarn build
+	mkdir -p $(WORKDIR)/terry-frontend
+	cp -r frontend/build $(WORKDIR)/terry-frontend/build
 
 $(WORKDIR)/terry-backend: backend $(WORKDIR)
 	cp -r backend $(WORKDIR)/terry-backend
@@ -139,9 +139,9 @@ $(TARGET)/etc/resolv.conf: $(TARGET)
 	echo "nameserver 1.1.1.1" > $(TARGET)/etc/resolv.conf
 	echo "nameserver 8.8.8.8" >> $(TARGET)/etc/resolv.conf
 
-$(TARGET)/app/territoriali-frontend/build: $(TARGET) $(WORKDIR)/territoriali-frontend/build
+$(TARGET)/app/terry-frontend/build: $(TARGET) $(WORKDIR)/terry-frontend/build
 	mkdir -p $@
-	cp -r $(WORKDIR)/territoriali-frontend $(TARGET)/app
+	cp -r $(WORKDIR)/terry-frontend $(TARGET)/app
 
 $(TARGET)/app/terry-backend: $(TARGET) $(WORKDIR)/terry-backend
 	mkdir -p $@

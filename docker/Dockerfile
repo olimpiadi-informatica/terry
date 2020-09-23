@@ -11,7 +11,7 @@ RUN set -x && \
     cd /terry/backend && \
     pip3 install -I -r requirements.txt && \
     ./setup.py install && \
-    cd /terry/territoriali-frontend && \
+    cd /terry/frontend && \
     npm install && \
     npm run build && \
     cp -r build /app && \

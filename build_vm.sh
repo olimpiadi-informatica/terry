@@ -31,7 +31,7 @@ trap cleanup EXIT
 
 USER=$(whoami)
 
-pushd "$HERE/territoriali-frontend"
+pushd "$HERE/frontend"
 yarn
 yarn build
 popd

@@ -43,8 +43,8 @@ linux32 chroot ${OUTDIR} pacman -R --noconfirm gcc
 linux32 chroot ${OUTDIR} pacman -Scc --noconfirm
 
 # Copy data
-mkdir -p ${OUTDIR}/app/territoriali-frontend
-cp -r ${HERE}/../territoriali-frontend/build/* ${OUTDIR}/app/territoriali-frontend/
+mkdir -p ${OUTDIR}/app/terry-frontend
+cp -r ${HERE}/../frontend/build/* ${OUTDIR}/app/terry-frontend/
 cp -r ${HERE}/../backend ${OUTDIR}/app/terry-backend
 
 cp "$CONFIG_PATH" ${OUTDIR}/app/config.yaml
