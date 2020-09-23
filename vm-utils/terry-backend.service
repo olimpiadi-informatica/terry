@@ -3,7 +3,7 @@ Description=Backend per territoriali OII
 
 [Service]
 ExecStart=/usr/bin/terr-server -c /app/config.yaml
-WorkingDirectory=/app/territoriali-backend
+WorkingDirectory=/app/terry-backend
 Restart=always
 
 [Install]

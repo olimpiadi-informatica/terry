@@ -1,16 +1,16 @@
 swagger: '2.0'
 info:
   description: >-
-    territoriali-backend is a Google-Code-Jam-like programming contest
+    terry-backend is a Google-Code-Jam-like programming contest
     environment designed for the territorial phase of the Italian Olympiad in
     Informatics (OII, Olimpiadi Italiane di Informatica).
   version: 0.0.1
-  title: territoriali-backend
-  termsOfService: 'https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE'
+  title: terry-backend
+  termsOfService: 'https://github.com/algorithm-ninja/terry/blob/master/LICENSE'
   license:
     name: Mozilla Public Licence 2.0
     url: >-
-      https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE
+      https://github.com/algorithm-ninja/terry/blob/master/LICENSE
 paths:
   /contest:
     get:

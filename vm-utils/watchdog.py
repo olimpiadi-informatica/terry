@@ -179,7 +179,7 @@ class SystemWatchdog:
 
 
 class Watchdog:
-    SERVICES = ["nginx", "sshd", "territoriali-backend"]
+    SERVICES = ["nginx", "sshd", "terry-backend"]
 
     def __init__(self):
         self.max_x = 100

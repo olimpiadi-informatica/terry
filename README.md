@@ -1,4 +1,9 @@
 # terry
+[![Build Status](https://travis-ci.org/algorithm-ninja/terry.svg?branch=master)](https://travis-ci.org/algorithm-ninja/terry)
+[![Code Climate](https://codeclimate.com/github/algorithm-ninja/terry/badges/gpa.svg)](https://codeclimate.com/github/algorithm-ninja/terry)
+[![Coverage Status](https://coveralls.io/repos/github/algorithm-ninja/terry/badge.svg?branch=master)](https://coveralls.io/github/algorithm-ninja/terry?branch=master)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/algorithm-ninja/terry)
+[![license](https://img.shields.io/github/license/algorithm-ninja/terry.svg)](https://github.com/algorithm-ninja/terry/blob/master/LICENSE)
 
 **terry** is a Google-Code-Jam-like programming contest environment designed for the territorial phase of the Italian Olympiad in Informatics (OII, _Olimpiadi Italiane di Informatica_).
 

@@ -19,7 +19,7 @@ HTTPTUN_SERVER="http://cms.di.unipi.it/vpn"
 [ -f "$NGINX_PATH" ] || exit 2
 
 [ -f "$CONFIG_PATH" ] || echo "No config.yaml file. Please \
-  create one from ../territoriali-backend/config/example.config.yaml."
+  create one from ../backend/config/example.config.yaml."
 [ -f "$CONFIG_PATH" ] || exit 2
 
 clean_chroot() {
@@ -45,11 +45,11 @@ linux32 chroot ${OUTDIR} pacman -Scc --noconfirm
 # Copy data
 mkdir -p ${OUTDIR}/app/territoriali-frontend
 cp -r ${HERE}/../territoriali-frontend/build/* ${OUTDIR}/app/territoriali-frontend/
-cp -r ${HERE}/../territoriali-backend ${OUTDIR}/app/
+cp -r ${HERE}/../backend ${OUTDIR}/app/terry-backend
 
 cp "$CONFIG_PATH" ${OUTDIR}/app/config.yaml
 cp "$NGINX_PATH" ${OUTDIR}/etc/nginx/nginx.conf
-cp ${HERE}/territoriali-backend.service ${OUTDIR}/etc/systemd/system
+cp ${HERE}/terry-backend.service ${OUTDIR}/etc/systemd/system
 cp ${HERE}/watchdog.py ${OUTDIR}/root
 mkdir -p ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
 cp ${HERE}/override.conf ${OUTDIR}/etc/systemd/system/getty@tty1.service.d
@@ -79,12 +79,12 @@ EOF
 
 echo $VERSION > ${OUTDIR}/version
 
-# Install territoriali-backend
-sudo linux32 chroot ${OUTDIR} bash -c "cd /app/territoriali-backend && \
+# Install terry-backend
+sudo linux32 chroot ${OUTDIR} bash -c "cd /app/terry-backend && \
   python setup.py install"
 
 # Enable services
 linux32 chroot ${OUTDIR} systemctl enable nginx.service
 linux32 chroot ${OUTDIR} systemctl enable httptun-client.service
-linux32 chroot ${OUTDIR} systemctl enable territoriali-backend.service
+linux32 chroot ${OUTDIR} systemctl enable terry-backend.service
 linux32 chroot ${OUTDIR} systemctl enable cronie.service

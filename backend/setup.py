@@ -15,7 +15,7 @@ def read(fname):
 
 
 setup(
-    name="territoriali-backend",
+    name="terry",
     version="0.0.1",
     author="Edoardo Morassutto, Dario Ostuni, Luca Versari",
     author_email=
@@ -24,7 +24,7 @@ setup(
     "A simple to use backend for the regional phase of Olimpiadi Italiane di Informatica",
     license="MPL-2.0",
     keywords="informatics contests",
-    url="https://github.com/algorithm-ninja/territoriali-backend",
+    url="https://github.com/algorithm-ninja/terry",
     packages=find_packages(exclude="test"),
     long_description=read("README.md"),
     classifiers=[

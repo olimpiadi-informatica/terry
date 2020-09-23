@@ -31,10 +31,10 @@ build: check_root \
 	$(TARGET)/etc/resolv.conf \
 	$(TARGET)/usr/lib/python%/site-packages/python_pytun% \
 	$(TARGET)/app/territoriali-frontend/build \
-	$(TARGET)/app/territoriali-backend \
+	$(TARGET)/app/terry-backend \
 	$(TARGET)/app/config.yaml \
 	$(TARGET)/etc/nginx/nginx.conf \
-	$(TARGET)/etc/systemd/system/territoriali-backend.service \
+	$(TARGET)/etc/systemd/system/terry-backend.service \
 	$(TARGET)/root/watchdog.py \
 	$(TARGET)/etc/systemd/system/getty@tty1.service.d/override.conf \
 	$(TARGET)/root/.ssh \
@@ -63,8 +63,8 @@ $(WORKDIR)/territoriali-frontend/build: territoriali-frontend $(WORKDIR)
 	mkdir -p $(WORKDIR)/territoriali-frontend
 	cp -r territoriali-frontend/build $(WORKDIR)/territoriali-frontend/build
 
-$(WORKDIR)/territoriali-backend: territoriali-backend $(WORKDIR)
-	cp -r territoriali-backend $(WORKDIR)/territoriali-backend
+$(WORKDIR)/terry-backend: backend $(WORKDIR)
+	cp -r backend $(WORKDIR)/terry-backend
 
 $(WORKDIR)/mirrorlist: $(WORKDIR)
 	cp vm-utils/mirrorlist $(WORKDIR)/mirrorlist
@@ -143,10 +143,10 @@ $(TARGET)/app/territoriali-frontend/build: $(TARGET) $(WORKDIR)/territoriali-fro
 	mkdir -p $@
 	cp -r $(WORKDIR)/territoriali-frontend $(TARGET)/app
 
-$(TARGET)/app/territoriali-backend: $(TARGET) $(WORKDIR)/territoriali-backend
+$(TARGET)/app/terry-backend: $(TARGET) $(WORKDIR)/terry-backend
 	mkdir -p $@
-	cp -r $(WORKDIR)/territoriali-backend $(TARGET)/app
-	linux32 chroot $(TARGET) bash -c "cd /app/territoriali-backend && rm -rf build dist territoriali_backend.egg-info && python setup.py install"
+	cp -r $(WORKDIR)/terry-backend $(TARGET)/app
+	linux32 chroot $(TARGET) bash -c "cd /app/terry-backend && rm -rf build dist terry.egg-info && python setup.py install"
 
 $(TARGET)/app/config.yaml: $(TARGET) $(WORKDIR)/config.yaml
 	cp $(WORKDIR)/config.yaml $(TARGET)/app/config.yaml
@@ -154,8 +154,8 @@ $(TARGET)/app/config.yaml: $(TARGET) $(WORKDIR)/config.yaml
 $(TARGET)/etc/nginx/nginx.conf: $(TARGET) $(WORKDIR)/nginx.conf
 	cp $(WORKDIR)/nginx.conf $(TARGET)/etc/nginx/nginx.conf
 
-$(TARGET)/etc/systemd/system/territoriali-backend.service: $(TARGET) vm-utils/territoriali-backend.service
-	cp vm-utils/territoriali-backend.service $@
+$(TARGET)/etc/systemd/system/terry-backend.service: $(TARGET) vm-utils/terry-backend.service
+	cp vm-utils/terry-backend.service $@
 
 $(TARGET)/root/watchdog.py: $(TARGET) vm-utils/watchdog.py
 	cp vm-utils/watchdog.py $@
@@ -205,7 +205,7 @@ $(WORKDIR)/pasdoc.tar.gz: $(WORKDIR)
 systemd_units:
 	linux32 chroot $(TARGET) systemctl enable NetworkManager.service
 	linux32 chroot $(TARGET) systemctl enable sshd.service
-	linux32 chroot $(TARGET) systemctl enable territoriali-backend.service
+	linux32 chroot $(TARGET) systemctl enable terry-backend.service
 	linux32 chroot $(TARGET) systemctl enable httptun-client.service
 	linux32 chroot $(TARGET) systemctl enable nginx.service
 	linux32 chroot $(TARGET) systemctl enable cronie.service

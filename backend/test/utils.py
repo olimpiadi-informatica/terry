@@ -78,7 +78,7 @@ class Utils:
     def get_tmp_dir():
         if Utils.prefix is None:
             Utils.prefix = os.path.join(tempfile.gettempdir(),
-                                        "territoriali-backend-tests",
+                                        "terry-backend-tests",
                                         datetime.datetime.now().strftime(
                                             "temp-%Y-%m-%d_%H-%M-%S"))
             os.makedirs(Utils.prefix, exist_ok=True)

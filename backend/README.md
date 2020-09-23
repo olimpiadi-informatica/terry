@@ -1,11 +1,6 @@
-# territoriali-backend
-[![Build Status](https://travis-ci.org/algorithm-ninja/territoriali-backend.svg?branch=master)](https://travis-ci.org/algorithm-ninja/territoriali-backend)
-[![Code Climate](https://codeclimate.com/github/algorithm-ninja/territoriali-backend/badges/gpa.svg)](https://codeclimate.com/github/algorithm-ninja/territoriali-backend)
-[![Coverage Status](https://coveralls.io/repos/github/algorithm-ninja/territoriali-backend/badge.svg?branch=master)](https://coveralls.io/github/algorithm-ninja/territoriali-backend?branch=master)
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/algorithm-ninja/territoriali-backend)
-[![license](https://img.shields.io/github/license/algorithm-ninja/territoriali-backend.svg)](https://github.com/algorithm-ninja/territoriali-backend/blob/master/LICENSE)
+# terry backend
 
-**territoriali-backend** is a Google-Code-Jam-like programming contest environment designed for the territorial phase of
+**terry** is a Google-Code-Jam-like programming contest environment designed for the territorial phase of
 the Italian Olympiad in Informatics (OII, _Olimpiadi Italiane di Informatica_).
 
 This is only the backend of the project, if you are looking for the frontend please go to

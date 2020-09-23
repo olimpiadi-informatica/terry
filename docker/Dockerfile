@@ -8,7 +8,7 @@ RUN apk add --no-cache python3 python2 git
 RUN set -x && \
     apk add --no-cache gcc python3-dev py3-pip py3-wheel py3-numpy py3-sortedcontainers python2-dev musl-dev libffi-dev file make nginx npm && \
     git clone --recursive https://github.com/algorithm-ninja/terry /terry && \
-    cd /terry/territoriali-backend && \
+    cd /terry/backend && \
     pip3 install -I -r requirements.txt && \
     ./setup.py install && \
     cd /terry/territoriali-frontend && \
