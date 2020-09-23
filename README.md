@@ -1,5 +1,5 @@
 # terry
-[![Build Status](https://travis-ci.org/algorithm-ninja/terry.svg?branch=master)](https://travis-ci.org/algorithm-ninja/terry)
+[![Build Status](https://travis-ci.com/algorithm-ninja/terry.svg?branch=master)](https://travis-ci.com/algorithm-ninja/terry)
 [![Code Climate](https://codeclimate.com/github/algorithm-ninja/terry/badges/gpa.svg)](https://codeclimate.com/github/algorithm-ninja/terry)
 [![Coverage Status](https://coveralls.io/repos/github/algorithm-ninja/terry/badge.svg?branch=master)](https://coveralls.io/github/algorithm-ninja/terry?branch=master)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/algorithm-ninja/terry)
@@ -59,6 +59,8 @@ docker run -d -v $(pwd)/storage:/data -P edomora97/terry:latest
 ```
 
 The nginx and terr-server logs are stored inside `/data/logs`.
+
+Note that since the image uses alpine linux, it may be required to have the binaries linked with musl or be statically linked.
 
 ## Build the server VM
 

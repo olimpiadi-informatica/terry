@@ -12,15 +12,15 @@ before_install:
   - cd $HOME
   - "if [[ $TRAVIS_PYTHON_VERSION == 'pypy3' ]]; then
       deactivate &&
-      export PYPY_VERSION=pypy3.5-5.7.1-beta-linux_x86_64-portable &&
-      wget https://bitbucket.org/squeaky/portable-pypy/downloads/$PYPY_VERSION.tar.bz2 &&
+      export PYPY_VERSION=pypy3.6-7.2.0-linux_x86_64-portable &&
+      wget https://github.com/squeaky-pl/portable-pypy/releases/download/pypy3.6-7.2.0/$PYPY_VERSION.tar.bz2 &&
       tar -jxf $PYPY_VERSION.tar.bz2 &&
       echo 'Setting up aliases...' &&
       export PATH=$HOME/$PYPY_VERSION/bin/:$PATH &&
-      ln -s ~/$PYPY_VERSION/bin/pypy3.5 ~/bin/python &&
+      ln -s ~/$PYPY_VERSION/bin/pypy3 ~/bin/python &&
       echo 'Setting up pip...' &&
       $PYPY_VERSION/bin/pypy -m ensurepip &&
-      ln -s ~/$PYPY_VERSION/bin/pip3.5 ~/bin/pip &&
+      ln -s ~/$PYPY_VERSION/bin/pip3 ~/bin/pip &&
       ~/$PYPY_VERSION/bin/virtualenv-pypy -p ~/$PYPY_VERSION/bin/pypy3 /tmp/venv &&
       source /tmp/venv/bin/activate &&
       python --version &&
