@@ -1,6 +1,3 @@
-[submodule "territoriali-cli"]
-	path = territoriali-cli
-	url = https://github.com/algorithm-ninja/territoriali-cli
 [submodule "vm-utils/httptun"]
 	path = vm-utils/httptun
 	url = https://github.com/veluca93/httptun
