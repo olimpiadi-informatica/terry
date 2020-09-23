@@ -21,7 +21,7 @@ import gevent.subprocess
 import nacl.exceptions
 import yaml
 from contextlib import suppress
-from werkzeug.exceptions import NotFound, Forbidden, InternalServerError
+from werkzeug.exceptions import NotFound, Forbidden, InternalServerError, UnprocessableEntity
 
 from terry.config import Config
 from terry.crypto import decode_data, recover_file_password, decode, SECRET_LEN
@@ -159,9 +159,8 @@ class ContestManager:
         try:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
-            Logger.info(
-                "CONTEST", "Contest not found, you probably need to "
-                "unzip it. Missing file %s" % ex.filename)
+            error = "Contest not found, you probably need to unzip it. Missing file %s" % ex.filename
+            Logger.warning("CONTEST", error)
             shutil.rmtree(Config.statementdir, ignore_errors=True)
             shutil.rmtree(Config.web_statementdir, ignore_errors=True)
             shutil.rmtree(Config.contest_path, ignore_errors=True)
@@ -171,7 +170,7 @@ class ContestManager:
             with suppress(Exception):
                 os.remove(Config.decrypted_file)
             Database.del_meta("admin_token")
-            return
+            BaseHandler.raise_exc(UnprocessableEntity, "CONTEST", error)
 
         if not Database.get_meta("contest_imported", default=False, type=bool):
             Database.begin()

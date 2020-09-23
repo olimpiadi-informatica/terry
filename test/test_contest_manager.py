@@ -12,7 +12,7 @@ from unittest.mock import patch, call
 
 import gevent
 from gevent import queue
-from werkzeug.exceptions import Forbidden, NotFound, InternalServerError
+from werkzeug.exceptions import Forbidden, NotFound, InternalServerError, UnprocessableEntity
 
 from terry import crypto
 from terry.config import Config
@@ -145,7 +145,8 @@ class TestContestManager(unittest.TestCase):
         Logger.LOG_LEVEL = Logger.DEBUG
         with Utils.nostderr() as stderr:
             Config.contest_path = "/not/existing/path"
-            ContestManager.read_from_disk()
+            with self.assertRaises(UnprocessableEntity):
+                ContestManager.read_from_disk()
 
         self.assertIn("Contest not found", stderr.buffer)
 

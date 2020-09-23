@@ -30,7 +30,10 @@ def main():
     Logger.set_log_level(Config.log_level)
     Logger.connect_to_database()
     Database.connect_to_database()
-    ContestManager.read_from_disk(remove_enc=False)
+    try:
+        ContestManager.read_from_disk(remove_enc=False)
+    except:
+        Logger.warning("CONTEST", "Failed to read the contest from disk...")
     server = Server()
     server.run()
 
