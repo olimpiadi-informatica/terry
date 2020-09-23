@@ -17,14 +17,6 @@ export default class DownloadResultsView extends React.Component<Props> {
   loadPromise?: Promise<void>;
 
   componentDidMount() {
-    this.props.session.pushObserver(this);
-  }
-
-  componentWillUnmount() {
-    this.props.session.popObserver(this);
-  }
-
-  componentWillMount() {
     this.loadPromise = client.adminApi(this.props.session.adminToken(), "/download_results").then(
       (response) => {
         this.data = response.data;
@@ -37,10 +29,15 @@ export default class DownloadResultsView extends React.Component<Props> {
         return Promise.reject(response);
       }
     );
+    this.props.session.pushObserver(this);
+  }
+
+  componentWillUnmount() {
+    this.props.session.popObserver(this);
   }
 
   renderDownloadButton() {
-    if (this.loadPromise !== undefined)
+    if (this.data === undefined)
       return (
         <h3>
           <Trans>Creating final zip...</Trans>

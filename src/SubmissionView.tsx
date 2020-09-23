@@ -8,13 +8,24 @@ import ModalView from "./ModalView";
 import "./SubmissionView.css";
 import PromiseView from "./PromiseView";
 import { Submission } from "./user.models";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
+import { i18n } from "./i18n";
+import { ALLOWED_EXTENSIONS, checkFile } from "./submissionLimits";
 
 type Props = {
   submission: Submission;
 } & RouteComponentProps<any>;
 
 export default class SubmissionView extends React.Component<Props> {
+  sourceRef: React.RefObject<HTMLInputElement>;
+  outputRef: React.RefObject<HTMLInputElement>;
+
+  constructor(props: Props) {
+    super(props);
+    this.sourceRef = React.createRef();
+    this.outputRef = React.createRef();
+  }
+
   componentDidMount() {
     this.props.submission.pushObserver(this);
   }
@@ -31,17 +42,25 @@ export default class SubmissionView extends React.Component<Props> {
     );
   }
 
+  async selectSourceFile() {
+    // FIXME: string ref
+    const file = this.sourceRef.current!.files![0];
+    if (file !== undefined && (await checkFile(file))) {
+      this.props.submission.setSource(file);
+    }
+  }
+
   renderSourceSelector() {
     if (!this.props.submission.source) {
       return (
         <div key="absent" className="custom-file mb-3">
           <input
-            ref="source"
+            ref={this.sourceRef}
             name="source"
             type="file"
             id="source-file"
             className="custom-file-input"
-            onChange={(_e) => this.props.submission.setSource((this.refs.source as any).files[0])}
+            onChange={async () => await this.selectSourceFile()}
           />
           <label className="custom-file-label" htmlFor="source-file">
             <Trans>Source file...</Trans>
@@ -50,6 +69,18 @@ export default class SubmissionView extends React.Component<Props> {
       );
     } else {
       const source = this.props.submission.source;
+      const name = source.file.name as string;
+      const nameParts = name.split(".");
+      const extension = nameParts[nameParts.length - 1];
+      let warn = null;
+      let language = null;
+      if (extension in ALLOWED_EXTENSIONS) {
+        language = i18n._(ALLOWED_EXTENSIONS[extension]);
+      } else {
+        warn = i18n._(
+          t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`
+        );
+      }
       return (
         <div key="present" className="card card-outline-primary w-100 mb-3">
           <div className="card-header terry-submission-object-card">
@@ -66,6 +97,12 @@ export default class SubmissionView extends React.Component<Props> {
           </div>
           <div className="card-body">
             <FileView {...this.props} file={source.file} />
+            {warn && <div className={"alert alert-warning"}>{warn}</div>}
+            {language && (
+              <div className={"alert alert-primary"}>
+                <Trans>Detected language:</Trans> {language}
+              </div>
+            )}
             <PromiseView
               promise={this.props.submission.source.uploadPromise}
               renderFulfilled={(uploadedSource) => (
@@ -95,12 +132,12 @@ export default class SubmissionView extends React.Component<Props> {
       return (
         <div key="absent" className="custom-file">
           <input
-            ref="output"
+            ref={this.outputRef}
             name="output"
             type="file"
             id="output-file"
             className="custom-file-input"
-            onChange={() => this.props.submission.setOutput((this.refs.output as any).files[0])}
+            onChange={() => this.props.submission.setOutput(this.outputRef.current!.files![0])}
           />
           <label className="custom-file-label" htmlFor="output-file">
             File di output...
@@ -161,13 +198,10 @@ export default class SubmissionView extends React.Component<Props> {
       <ModalView contentLabel="Submission creation" returnUrl={"/task/" + this.props.submission.input.task}>
         <form
           className="submissionForm"
-          ref="form"
           onSubmit={(e) => {
             e.preventDefault();
             this.submit();
           }}
-          // FIXME: after typescript switch, the following was shown to be wrong
-          // disabled={!this.props.submission.canSubmit()}
         >
           <div className="modal-header">
             <h5 className="modal-title">

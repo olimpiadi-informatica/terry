@@ -31,6 +31,8 @@ export default class Pack extends Observable {
       })
       .catch((response) => {
         notifyError(response);
+        this.error = response;
+        console.log(response);
         delete this.data;
         delete this.loading;
         this.fireUpdate();
