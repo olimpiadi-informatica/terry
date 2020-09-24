@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import ValidationView from "./ValidationView";
 import FileView from "./FileView";
-import ModalView from "./ModalView";
+import ModalView from "../ModalView";
 import "./SubmissionView.css";
-import PromiseView from "./PromiseView";
+import PromiseView from "../PromiseView";
 import { Submission } from "./user.models";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 import { ALLOWED_EXTENSIONS, checkFile } from "./submissionLimits";
 
 type Props = {

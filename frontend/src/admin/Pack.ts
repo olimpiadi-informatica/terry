@@ -1,6 +1,6 @@
-import client from "./TerryClient";
-import Observable from "./Observable";
-import { notifyError } from "./utils";
+import client from "../TerryClient";
+import Observable from "../Observable";
+import { notifyError } from "../utils";
 
 export default class Pack extends Observable {
   loading?: Promise<any>;

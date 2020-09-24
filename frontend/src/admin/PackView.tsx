@@ -1,6 +1,6 @@
 import * as React from "react";
 import Pack from "./Pack";
-import LoadingView from "./LoadingView";
+import LoadingView from "../LoadingView";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
 import { RouteComponentProps } from "react-router";

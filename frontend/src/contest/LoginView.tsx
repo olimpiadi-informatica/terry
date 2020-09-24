@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Model } from "./user.models";
-import PromiseView from "./PromiseView";
+import PromiseView from "../PromiseView";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 
 type Props = {
   model: Model;

@@ -2,13 +2,13 @@ import * as React from "react";
 import { Link, Route, RouteComponentProps } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
-import client from "./TerryClient";
-import { DateView } from "./datetime.views";
+import client from "../TerryClient";
+import { DateView } from "../datetime.views";
 import { DateTime } from "luxon";
 import CreateSubmissionView from "./CreateSubmissionView";
 import SubmissionListView from "./SubmissionListView";
 import SubmissionReportView from "./SubmissionReportView";
-import PromiseView from "./PromiseView";
+import PromiseView from "../PromiseView";
 import TaskStatementView from "./TaskStatementView";
 import { Trans } from "@lingui/macro";
 

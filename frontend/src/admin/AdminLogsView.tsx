@@ -3,15 +3,15 @@ import { Object } from "core-js";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "./ModalView";
+import ModalView from "../ModalView";
 import "./AdminLogsView.css";
-import PromiseView from "./PromiseView";
-import { AbsoluteDateView } from "./datetime.views";
+import PromiseView from "../PromiseView";
+import { AbsoluteDateView } from "../datetime.views";
 import { DateTime } from "luxon";
 import { AdminSession } from "./admin.models";
-import ObservablePromise from "./ObservablePromise";
+import ObservablePromise from "../ObservablePromise";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 
 const LOG_LEVELS: any = {
   DEBUG: {

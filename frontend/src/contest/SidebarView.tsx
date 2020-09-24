@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DateTime } from "luxon";
 import { NavLink } from "react-router-dom";
-import { CountdownView } from "./datetime.views";
+import { CountdownView } from "../datetime.views";
 import NavbarItemView from "./NavbarItemView";
 import ScoreView from "./ScoreView";
 import "./SidebarView.css";

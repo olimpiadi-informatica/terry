@@ -1,6 +1,6 @@
 import * as React from "react";
 import filesize from "filesize";
-import { DateView } from "./datetime.views";
+import { DateView } from "../datetime.views";
 import { DateTime } from "luxon";
 import "./FileView.css";
 import { Trans } from "@lingui/macro";

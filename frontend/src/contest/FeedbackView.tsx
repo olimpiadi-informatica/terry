@@ -1,9 +1,9 @@
 import * as React from "react";
 import ResultView from "./ResultView";
-import { DateView } from "./datetime.views";
+import { DateView } from "../datetime.views";
 import { DateTime } from "luxon";
 import ScoreView from "./ScoreView";
-import { TestCase } from "./domain";
+import { TestCase } from "../domain";
 import { Trans } from "@lingui/macro";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { t } from "@lingui/macro";
 import { MessageDescriptor } from "@lingui/core";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 import { toast } from "react-toastify";
 
 export const MAX_SOURCE_SIZE = 30000;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import client from "./TerryClient";
+import client from "../TerryClient";
 
 import ReactMarkdown from "react-markdown";
 import "katex-all/dist/katex.min.css";

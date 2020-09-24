@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TestCase } from "./domain";
+import { TestCase } from "../domain";
 
 type Props = {
   result: any;

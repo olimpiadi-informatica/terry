@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 import client from "./TerryClient";
-import ContestView from "./ContestView";
+import ContestView from "./contest/ContestView";
 import LoadingView from "./LoadingView";
 import PromiseView from "./PromiseView";
-import { Model } from "./user.models";
+import { Model } from "./contest/user.models";
 import ObservablePromise from "./ObservablePromise";
 import { Trans } from "@lingui/macro";
 

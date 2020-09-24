@@ -7,10 +7,10 @@ import ReactMarkdown from "react-markdown";
 import TaskView from "./TaskView";
 import SidebarView from "./SidebarView";
 import { Model } from "./user.models";
-import client from "./TerryClient";
+import client from "../TerryClient";
 import LoginView from "./LoginView";
 import { Trans } from "@lingui/macro";
-import LanguageSwitcher from "./LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 type Props = {
   userState: any;

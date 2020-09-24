@@ -1,9 +1,9 @@
-import client from "./TerryClient";
+import client from "../TerryClient";
 import Cookies from "universal-cookie";
-import Observable from "./Observable";
+import Observable from "../Observable";
 import { DateTime } from "luxon";
-import ObservablePromise from "./ObservablePromise";
-import { notifyError } from "./utils";
+import ObservablePromise from "../ObservablePromise";
+import { notifyError } from "../utils";
 
 type AdminStatusData = {
   extra_time: number;

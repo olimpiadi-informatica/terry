@@ -11,7 +11,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import { TransProvider } from "./i18n";
 
-import PackView from "./PackView";
+import PackView from "./admin/PackView";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";

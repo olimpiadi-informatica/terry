@@ -1,7 +1,7 @@
 import * as React from "react";
 import Pack from "./Pack";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 
 type Props = {
   pack: Pack;

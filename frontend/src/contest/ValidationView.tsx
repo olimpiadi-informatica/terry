@@ -1,6 +1,6 @@
 import * as React from "react";
 import ResultView from "./ResultView";
-import { TestCase } from "./domain";
+import { TestCase } from "../domain";
 import { Select } from "@lingui/macro";
 
 type Props = {

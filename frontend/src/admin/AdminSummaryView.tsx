@@ -2,17 +2,17 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
-import { CountdownView } from "./datetime.views";
+import { CountdownView } from "../datetime.views";
 import { DateTime } from "luxon";
-import { DateView } from "./datetime.views";
-import client from "./TerryClient";
-import PromiseView from "./PromiseView";
-import { notifyError } from "./utils";
+import { DateView } from "../datetime.views";
+import client from "../TerryClient";
+import PromiseView from "../PromiseView";
+import { notifyError } from "../utils";
 import { toast } from "react-toastify";
 import { AdminSession } from "./admin.models";
-import ObservablePromise from "./ObservablePromise";
+import ObservablePromise from "../ObservablePromise";
 import { Trans, t, Plural } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 
 type User = {
   extra_time: number;

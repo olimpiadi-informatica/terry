@@ -2,17 +2,17 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { DateView } from "./datetime.views";
+import { DateView } from "../datetime.views";
 import { DateTime } from "luxon";
-import client from "./TerryClient";
-import ModalView from "./ModalView";
+import client from "../TerryClient";
+import ModalView from "../ModalView";
 import ReactTooltip from "react-tooltip";
-import { colorFromScore } from "./utils";
+import { colorFromScore } from "../utils";
 import "./SubmissionListView.css";
 import ScoreView from "./ScoreView";
-import PromiseView from "./PromiseView";
+import PromiseView from "../PromiseView";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 
 type Props = {
   userState: any;

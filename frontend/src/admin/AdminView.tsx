@@ -9,11 +9,11 @@ import AdminSummaryView from "./AdminSummaryView";
 import AdminUsersView from "./AdminUsersView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
-import PromiseView from "./PromiseView";
+import PromiseView from "../PromiseView";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "./i18n";
+import { i18n } from "../i18n";
 import Pack from "./Pack";
-import LanguageSwitcher from "./LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 type Props = {
   pack: Pack;
