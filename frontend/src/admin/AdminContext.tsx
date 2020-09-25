@@ -1,11 +1,11 @@
 import React, { useState, ReactNode, useEffect, useContext, useMemo } from "react";
 import client from "../TerryClient";
-import Cookies from "universal-cookie";
 import { DateTime, Duration } from "luxon";
 import { AxiosResponse } from "axios";
 import { notifyError } from "../utils";
 import Loadable from "./Loadable";
 import useTriggerUpdate from "../triggerUpdate.hook";
+import { useLogin } from "../useLogin.hook";
 
 export type StatusData = {
   loaded: boolean;
@@ -69,25 +69,17 @@ type AdminContextProps = {
 
 export function AdminContextProvider({ children }: AdminContextProps) {
   const cookieName = "adminToken";
-  const cookies = new Cookies();
-  const tokenFromCookie = cookies.get(cookieName);
 
-  const [token, setToken] = useState(tokenFromCookie);
+  const [token, login, logout] = useLogin(cookieName);
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
   const [status, setStatus] = useState<Loadable<StatusData>>(Loadable.loading());
   const [statusUpdate, triggerStatusUpdate] = useTriggerUpdate();
   const [pack, setPack] = useState<Loadable<Pack>>(Loadable.loading());
   const [packUpdate, triggerPackUpdate] = useTriggerUpdate();
 
-  const login = (token: string) => {
-    cookies.set(cookieName, token);
-    setToken(token);
-  };
-  const logout = () => {
-    cookies.remove(cookieName);
-    setToken(null);
-  };
   const startContest = () => {
+    if (!token) throw new Error("You are not logged in");
+
     return client
       .adminApi(token, "/start")
       .then(() => {
@@ -98,6 +90,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   };
   const resetContest = () => {
+    if (!token) throw new Error("You are not logged in");
     return client
       .adminApi(token, "/drop_contest")
       .then(() => {
@@ -109,6 +102,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   };
   const setExtraTime = (extraTime: number, userToken?: string) => {
+    if (!token) throw new Error("You are not logged in");
     const options = {
       extra_time: extraTime,
       token: userToken,
@@ -154,11 +148,11 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       })
       .catch((response: AxiosResponse) => {
         notifyError(response);
-        setToken(null);
+        logout();
         setServerTimeSkew(Loadable.loading());
         setStatus(Loadable.loading());
       });
-  }, [token, statusUpdate]);
+  }, [token, statusUpdate, logout]);
 
   // handle the pack status
   useEffect(() => {
@@ -179,7 +173,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       value={{
         data: {
           token,
-          serverTimeSkew: serverTimeSkew,
+          serverTimeSkew,
           status,
           pack,
         },

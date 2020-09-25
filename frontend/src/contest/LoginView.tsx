@@ -1,83 +1,59 @@
-import * as React from "react";
-import { Model } from "./user.models";
-import PromiseView from "../PromiseView";
+import React, { createRef, useState } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
+import { useActions, useContest } from "./ContestContext";
 
-type Props = {
-  model: Model;
-};
+export default function LoginView() {
+  const tokenRef = createRef<HTMLInputElement>();
+  const { login } = useActions();
+  const contest = useContest();
+  const [isLoading, setIsLoading] = useState(false);
 
-export default class LoginView extends React.Component<Props> {
-  tokenRef: React.RefObject<HTMLInputElement>;
+  const doLogin = () => {
+    if (!tokenRef.current) return;
+    setIsLoading(true);
+    login(tokenRef.current.value);
+  };
 
-  constructor(props: Props) {
-    super(props);
-    this.tokenRef = React.createRef();
-  }
-
-  componentDidMount() {
-    this.props.model.pushObserver(this);
-  }
-
-  componentWillUnmount() {
-    this.props.model.popObserver(this);
-  }
-
-  login() {
-    this.props.model.login(this.tokenRef.current!.value);
-  }
-
-  render() {
-    return (
-      <div className="jumbotron">
-        <h1 className={"text-center"}>
-          <Trans>Please login</Trans>
-        </h1>
-        <form
-          action=""
-          onSubmit={(e) => {
-            e.preventDefault();
-            this.login();
-          }}
-        >
-          <div className="form-group">
-            <label htmlFor="token" className="sr-only">
-              <Trans>Token</Trans>
-            </label>
-            <input
-              autoComplete="off"
-              name="token"
-              id="token"
-              ref={this.tokenRef}
-              className="form-control text-center"
-              required
-              placeholder={i18n._(t`Token`)}
-              type="text"
-            />
+  return (
+    <div className="jumbotron">
+      <h1 className={"text-center"}>
+        <Trans>Please login</Trans>
+      </h1>
+      <form
+        action=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          doLogin();
+        }}
+      >
+        <div className="form-group">
+          <label htmlFor="token" className="sr-only">
+            <Trans>Token</Trans>
+          </label>
+          <input
+            autoComplete="off"
+            name="token"
+            id="token"
+            ref={tokenRef}
+            className="form-control text-center"
+            required
+            placeholder={i18n._(t`Token`)}
+            type="text"
+          />
+        </div>
+        <input type="submit" className="btn btn-primary" value={i18n._(t`Login`)} />
+        {contest.isError() ? (
+          <div className="alert alert-danger mt-2" role="alert">
+            <strong>
+              <Trans>Error</Trans>
+            </strong>{" "}
+            {contest.error().response?.data.message}
           </div>
-          <input type="submit" className="btn btn-primary" value={i18n._(t`Login`)} />
-          {this.props.model.lastLoginAttempt && (
-            <PromiseView
-              promise={this.props.model.lastLoginAttempt}
-              renderPending={() => (
-                <span>
-                  <Trans>Loading...</Trans>
-                </span>
-              )}
-              renderRejected={(error) => (
-                <div className="alert alert-danger" role="alert">
-                  <strong>
-                    <Trans>Error</Trans>
-                  </strong>{" "}
-                  {error.response && error.response.data.message}
-                </div>
-              )}
-              renderFulfilled={() => null}
-            />
-          )}
-        </form>
-      </div>
-    );
-  }
+        ) : isLoading ? (
+          <Trans>Loading...</Trans>
+        ) : null}
+      </form>
+    </div>
+  );
 }

@@ -1,39 +1,28 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 import { colorFromScore } from "../utils";
-import { Model } from "./user.models";
+import { useContest, StartedContest } from "./ContestContext";
 
 type Props = {
-  userState: any;
   taskName: string;
-  model: Model;
 };
 
-export default class NavbarItemView extends React.Component<Props> {
-  getMaxScore() {
-    return this.props.userState.getTask(this.props.taskName).data.max_score;
-  }
+export default function NavbarItemView({ taskName }: Props) {
+  const contest = useContest().value() as StartedContest;
+  const task = contest.contest.tasks.find((t) => t.name === taskName);
+  if (!task) throw new Error("Task not found: " + taskName);
 
-  componentDidMount() {
-    this.props.model.pushObserver(this);
-  }
+  const score = contest.tasks[taskName].score;
+  const color = colorFromScore(score, task.max_score);
 
-  componentWillUnmount() {
-    this.props.model.popObserver(this);
-  }
-
-  render() {
-    const score = this.props.userState.data.tasks[this.props.taskName].score;
-    const color = colorFromScore(score, this.getMaxScore());
-    return (
-      <li className="nav-item">
-        <NavLink to={"/task/" + this.props.taskName} className="nav-link tasklist-item" activeClassName="active">
-          <div className={"task-score-badge badge badge-pill badge-" + color}>
-            {score}/{this.getMaxScore()}
-          </div>
-          <div className="task-list-item">{this.props.taskName}</div>
-        </NavLink>
-      </li>
-    );
-  }
+  return (
+    <li className="nav-item">
+      <NavLink to={"/task/" + taskName} className="nav-link tasklist-item" activeClassName="active">
+        <div className={"task-score-badge badge badge-pill badge-" + color}>
+          {score}/{task.max_score}
+        </div>
+        <div className="task-list-item">{taskName}</div>
+      </NavLink>
+    </li>
+  );
 }

@@ -19,12 +19,15 @@ export const defaultLanguage = (navigator.languages ? navigator.languages[0] : n
 
 export const i18n = setupI18n({ catalogs, language: defaultLanguage });
 
+export type LanguageContextType = {
+  lang: string;
+  changeLanguage: (lang: string) => void;
+};
+
 export const LanguageContext = React.createContext({
   lang: defaultLanguage,
-  changeLanguage: (lang: string) => {
-    return;
-  },
-});
+  changeLanguage: () => {},
+} as LanguageContextType);
 
 export function TransProvider({ children }: { children: ReactNode }) {
   const [lang, setLanguage] = useState(defaultLanguage);

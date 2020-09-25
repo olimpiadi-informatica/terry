@@ -10,7 +10,7 @@ import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useServerTime } from "./AdminContext";
-import { useLogs, LogLevel, LogEntry, defaultLogsOptions } from "./logs.hook";
+import { useLogs, LogLevel, LogEntry, defaultLogsOptions, LogsOptions } from "./logs.hook";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {
@@ -47,8 +47,8 @@ export default function AdminLogsView() {
 
   // react to option changes asking the context to reload the logs only when the options really changed
   useEffect(() => {
-    const newOptions = { ...options, level, category };
-    if (newOptions.category === "") delete newOptions.category;
+    const newOptions: LogsOptions = { ...options, level };
+    if (category !== "") newOptions.category = category;
     const changed =
       level !== options.level ||
       (category === "" && options.category !== undefined) ||
