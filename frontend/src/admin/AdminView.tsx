@@ -14,6 +14,7 @@ import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import Pack from "./Pack";
 import LanguageSwitcher from "../LanguageSwitcher";
+import { AdminContextProvider } from "./AdminContext";
 
 type Props = {
   pack: Pack;
@@ -57,53 +58,57 @@ export default class AdminView extends React.Component<Props> {
   }
 
   render() {
-    if (!this.session.isLoggedIn()) return <AdminLoginView session={this.session} {...this.props} />;
+    if (!this.session.isLoggedIn())
+      return (
+        <AdminContextProvider>
+          <AdminLoginView session={this.session} {...this.props} />
+        </AdminContextProvider>
+      );
 
     return (
-      <React.Fragment>
-        {this.renderNavBar()}
-        <main>
-          <PromiseView
-            promise={this.session.statusPromise}
-            renderPending={() => i18n._(t`Loading...`)}
-            renderRejected={() => i18n._(t`Error`)}
-            renderFulfilled={(status) =>
-              this.session.usersPromise && (
-                <PromiseView
-                  promise={this.session.usersPromise}
-                  renderPending={() => i18n._(t`Loading...`)}
-                  renderFulfilled={(users) => (
-                    <React.Fragment>
-                      <AdminSummaryView {...this.props} session={this.session} status={status} users={users} />
+      <AdminContextProvider>
+        <React.Fragment>
+          {this.renderNavBar()}
+          <main>
+            <PromiseView
+              promise={this.session.statusPromise}
+              renderPending={() => i18n._(t`Loading...`)}
+              renderRejected={() => i18n._(t`Error`)}
+              renderFulfilled={(status) =>
+                this.session.usersPromise && (
+                  <PromiseView
+                    promise={this.session.usersPromise}
+                    renderPending={() => i18n._(t`Loading...`)}
+                    renderFulfilled={(users) => (
+                      <React.Fragment>
+                        <AdminSummaryView {...this.props} session={this.session} status={status} users={users} />
 
-                      <Route
-                        path="/admin/logs"
-                        render={() => <AdminLogsView {...this.props} session={this.session} />}
-                      />
+                        <Route path="/admin/logs" render={() => <AdminLogsView />} />
 
-                      <Route
-                        path="/admin/extra_time"
-                        render={() => <ContestExtraTimeView {...this.props} status={status} session={this.session} />}
-                      />
+                        <Route
+                          path="/admin/extra_time"
+                          render={() => <ContestExtraTimeView {...this.props} status={status} session={this.session} />}
+                        />
 
-                      <Route
-                        path="/admin/users"
-                        render={() => <AdminUsersView {...this.props} session={this.session} users={users} />}
-                      />
+                        <Route
+                          path="/admin/users"
+                          render={() => <AdminUsersView {...this.props} session={this.session} users={users} />}
+                        />
 
-                      <Route
-                        path="/admin/download_results"
-                        render={() => <DownloadResultsView {...this.props} session={this.session} />}
-                      />
-                    </React.Fragment>
-                  )}
-                  renderRejected={() => i18n._(t`Error`)}
-                />
-              )
-            }
-          />
-        </main>
-      </React.Fragment>
+                        <Route
+                          path="/admin/download_results"
+                          render={() => <DownloadResultsView {...this.props} session={this.session} />}
+                        />
+                      </React.Fragment>
+                    )}
+                    renderRejected={() => i18n._(t`Error`)}
+                  />
+                )
+              }
+            />
+          </main>
+        </React.Fragment>
+      </AdminContextProvider>
     );
   }
 }

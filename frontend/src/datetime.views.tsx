@@ -8,7 +8,7 @@ function useAutoRefresh(rate: number) {
   useEffect(() => {
     const timer = setInterval(() => setCount(count + 1), rate);
     return () => clearInterval(timer);
-  });
+  }, [rate, count]);
 }
 
 type DateViewProps = {

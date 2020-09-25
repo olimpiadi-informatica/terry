@@ -1,19 +1,17 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { Object } from "core-js";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import ModalView from "../Modal";
 import "./AdminLogsView.css";
-import PromiseView from "../PromiseView";
 import { AbsoluteDateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
-import { AdminSession } from "./admin.models";
-import ObservablePromise from "../ObservablePromise";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
+import { useLogs, LogLevel, LogEntry, useActions, useServerTime, defaultLogsOptions } from "./AdminContext";
 
-const LOG_LEVELS: any = {
+const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {
     color: "secondary",
   },
@@ -28,223 +26,158 @@ const LOG_LEVELS: any = {
   },
 };
 
-type LogItem = {
-  level: string;
-  category: string;
-  message: string;
-  date: string;
-};
+export default function AdminLogsView() {
+  const [level, setLevel] = useState(LogLevel.INFO);
+  const [category, setCategory] = useState("");
+  const [filter, setFilter] = useState("");
+  const [options, setOptions] = useState(defaultLogsOptions);
 
-type Props = {
-  session: AdminSession;
-};
+  const logs = useLogs();
+  const { changeLogsOptions, reloadLogs } = useActions();
+  const serverTime = useServerTime();
 
-type State = {
-  level: string;
-  category: string;
-  filter: string;
-};
+  // auto reload the logs
+  useEffect(() => {
+    const LOG_REFRESH_INTERVAL = 5000;
+    const interval = setInterval(() => {
+      reloadLogs();
+    }, LOG_REFRESH_INTERVAL);
+    return () => clearInterval(interval);
+  }, [reloadLogs]);
 
-export default class AdminLogsView extends React.Component<Props, State> {
-  logsPromise: any;
-  refreshLogsPromise?: ObservablePromise;
-  interval?: NodeJS.Timer;
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      level: "INFO",
-      category: "",
-      filter: "",
-    };
-  }
-
-  componentDidMount() {
-    this.loadLogs();
-    this.interval = setInterval(() => this.refreshLogs(), 5000);
-  }
-
-  componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      delete this.interval;
+  // react to option changes asking the context to reload the logs only when the options really changed
+  useEffect(() => {
+    const newOptions = { ...options, level, category };
+    if (newOptions.category === "") delete newOptions.category;
+    const changes =
+      level !== options.level ||
+      (category === "" && options.category !== undefined) ||
+      (category !== "" && options.category === undefined);
+    if (changes) {
+      setOptions(newOptions);
+      changeLogsOptions(newOptions);
     }
-  }
+  }, [level, category, options, changeLogsOptions]);
 
-  loadLogs() {
-    this.refreshLogsPromise = undefined;
-    this.logsPromise = this.doLoadLogs();
-    this.forceUpdate();
-  }
-
-  doLoadLogs() {
-    const options: any = {
-      start_date: "2000-01-01T00:00:00.000",
-      end_date: "2030-01-01T00:00:00.000",
-      level: this.state.level,
-    };
-    if (this.state.category) {
-      options.category = this.state.category;
-    }
-    return this.props.session.loadLogs(options);
-  }
-
-  refreshLogs() {
-    const promise = (this.refreshLogsPromise = this.doLoadLogs());
-    this.refreshLogsPromise.delegate.then(() => {
-      if (this.refreshLogsPromise !== promise) return;
-      this.logsPromise = promise;
-      this.forceUpdate();
-    });
-  }
-
-  componentDidUpdate(_props: Props, state: State) {
-    if (state.level !== this.state.level || state.category !== this.state.category) this.loadLogs();
-  }
-
-  changeLevel(level: string) {
-    this.setState({ level });
-  }
-
-  changeCategory(category: string) {
-    this.setState({ category });
-  }
-
-  changeFilter(filter: string) {
-    this.setState({ filter });
-  }
-
-  filter(log: LogItem) {
-    const filter = this.state.filter.toLowerCase();
+  const filterLog = (log: LogEntry) => {
     if (!filter) return true;
-    return log.message.toLowerCase().indexOf(filter) !== -1;
-  }
+    return log.message.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+  };
 
-  render() {
-    return (
-      <ModalView contentLabel={i18n._(t`Logs`)} returnUrl={"/admin"}>
-        <div className="modal-header">
-          <h5 className="modal-title">
-            <Trans>Logs</Trans>
-          </h5>
-          <Link to={"/admin"} role="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </Link>
-        </div>
-        <div className="modal-body no-padding">
-          <div className="form-group p-2 mb-0">
-            <div className="btn-group mb-1" role="group" aria-label="Choose log level">
-              {Object.entries(LOG_LEVELS).map(([level, obj]) => (
-                <button
-                  key={level}
-                  className={["btn", this.state.level === level ? "active" : "", "btn-" + obj.color].join(" ")}
-                  onClick={() => this.changeLevel(level)}
-                >
-                  {level}
-                </button>
-              ))}
-            </div>
-            <input
-              placeholder={i18n._(t`Category filter`)}
-              className="form-control mb-1"
-              value={this.state.category}
-              onChange={(e) => this.changeCategory(e.target.value)}
+  const renderLogs = () => {
+    if (logs.isLoading()) {
+      return (
+        <tr>
+          <td colSpan={4}>{<Trans>Loading...</Trans>}</td>
+        </tr>
+      );
+    } else if (logs.isReady()) {
+      const items = logs.value().items.filter((l) => filterLog(l));
+      if (items.length === 0)
+        return (
+          <tr>
+            <td colSpan={4}>
+              <Trans>No messages yet</Trans>
+            </td>
+          </tr>
+        );
+      return items.map((log, i) => (
+        <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
+          <td>
+            <AbsoluteDateComponent
+              clock={() => serverTime.valueOr(DateTime.local())}
+              date={DateTime.fromISO(log.date)}
             />
-            <input
-              placeholder={i18n._(t`Message filter`)}
-              className="form-control"
-              value={this.state.filter}
-              onChange={(e) => this.changeFilter(e.target.value)}
-            />
+          </td>
+          <td>
+            <button className="btn btn-link" onClick={() => setCategory(log.category)}>
+              {log.category}
+            </button>
+          </td>
+          <td>
+            <button className="btn btn-link" onClick={() => setLevel(log.level)}>
+              {log.level}
+            </button>
+          </td>
+          <td>
+            <pre>{log.message}</pre>
+          </td>
+        </tr>
+      ));
+    } else if (logs.isError()) {
+      return (
+        <tr>
+          <td colSpan={4}>
+            <Trans>Error</Trans>
+          </td>
+        </tr>
+      );
+    }
+  };
+
+  return (
+    <ModalView contentLabel={i18n._(t`Logs`)} returnUrl={"/admin"}>
+      <div className="modal-header">
+        <h5 className="modal-title">
+          <Trans>Logs</Trans>
+        </h5>
+        <Link to={"/admin"} role="button" className="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </Link>
+      </div>
+      <div className="modal-body no-padding">
+        <div className="form-group p-2 mb-0">
+          <div className="btn-group mb-1" role="group" aria-label="Choose log level">
+            {Object.entries(LOG_LEVELS).map(([lvl, obj]) => (
+              <button
+                key={lvl}
+                className={["btn", level === lvl ? "active" : "", "btn-" + obj.color].join(" ")}
+                onClick={() => setLevel(lvl)}
+              >
+                {lvl}
+              </button>
+            ))}
           </div>
-          <div className="terry-log-table no-padding">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>
-                    <Trans>Date</Trans>
-                  </th>
-                  <th>
-                    <Trans>Category</Trans>
-                  </th>
-                  <th>
-                    <Trans>Level</Trans>
-                  </th>
-                  <th>
-                    <Trans>Message</Trans>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <PromiseView
-                  promise={this.logsPromise}
-                  renderFulfilled={(logs: { items: LogItem[] }) => {
-                    const items = logs.items.filter((l) => this.filter(l));
-                    if (items.length === 0)
-                      return (
-                        <tr>
-                          <td colSpan={4}>
-                            <Trans>No messages yet</Trans>
-                          </td>
-                        </tr>
-                      );
-                    return items.map((log, i) => (
-                      <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
-                        <td>
-                          <AbsoluteDateComponent
-                            clock={() => this.props.session.serverTime()}
-                            date={DateTime.fromISO(log.date)}
-                          />
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-link"
-                            onClick={() => {
-                              this.changeCategory(log.category);
-                            }}
-                          >
-                            {log.category}
-                          </button>
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-link"
-                            onClick={() => {
-                              this.changeLevel(log.level);
-                            }}
-                          >
-                            {log.level}
-                          </button>
-                        </td>
-                        <td>
-                          <pre>{log.message}</pre>
-                        </td>
-                      </tr>
-                    ));
-                  }}
-                  renderPending={() => (
-                    <tr>
-                      <td colSpan={4}>{<Trans>Loading...</Trans>}</td>
-                    </tr>
-                  )}
-                  renderRejected={() => (
-                    <tr>
-                      <td colSpan={4}>
-                        <Trans>Error</Trans>
-                      </td>
-                    </tr>
-                  )}
-                />
-              </tbody>
-            </table>
-          </div>
+          <input
+            placeholder={i18n._(t`Category filter`)}
+            className="form-control mb-1"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+          <input
+            placeholder={i18n._(t`Message filter`)}
+            className="form-control"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          />
         </div>
-        <div className="modal-footer">
-          <Link to={"/admin"} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
-          </Link>
+        <div className="terry-log-table no-padding">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>
+                  <Trans>Date</Trans>
+                </th>
+                <th>
+                  <Trans>Category</Trans>
+                </th>
+                <th>
+                  <Trans>Level</Trans>
+                </th>
+                <th>
+                  <Trans>Message</Trans>
+                </th>
+              </tr>
+            </thead>
+            <tbody>{renderLogs()}</tbody>
+          </table>
         </div>
-      </ModalView>
-    );
-  }
+      </div>
+      <div className="modal-footer">
+        <Link to={"/admin"} role="button" className="btn btn-primary">
+          <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
+        </Link>
+      </div>
+    </ModalView>
+  );
 }
