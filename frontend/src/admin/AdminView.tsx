@@ -2,42 +2,20 @@ import * as React from "react";
 import { Link, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { AdminSession } from "./admin.models";
 import AdminLoginView from "./AdminLoginView";
 import AdminLogsView from "./AdminLogsView";
 import AdminSummaryView from "./AdminSummaryView";
 import AdminUsersView from "./AdminUsersView";
 import ContestExtraTimeView from "./ContestExtraTimeView";
 import DownloadResultsView from "./DownloadResultsView";
-import PromiseView from "../PromiseView";
-import { Trans, t } from "@lingui/macro";
-import { i18n } from "../i18n";
-import Pack from "./Pack";
+import { Trans } from "@lingui/macro";
 import LanguageSwitcher from "../LanguageSwitcher";
-import { AdminContextProvider } from "./AdminContext";
+import { useActions } from "./AdminContext";
 
-type Props = {
-  pack: Pack;
-};
+export default function AdminView() {
+  const { isLoggedIn, logout } = useActions();
 
-export default class AdminView extends React.Component<Props> {
-  session: AdminSession;
-
-  constructor(props: Props) {
-    super(props);
-    this.session = new AdminSession();
-  }
-
-  componentDidMount() {
-    this.session.onAppStart();
-    this.session.pushObserver(this);
-  }
-
-  componentWillUnmount() {
-    this.session.popObserver(this);
-  }
-
-  renderNavBar() {
+  const renderNavBar = () => {
     return (
       <nav className="terry-navbar">
         <Link to="/admin" className="navbar-brand">
@@ -47,7 +25,7 @@ export default class AdminView extends React.Component<Props> {
           className="terry-admin-logout-button btn btn-sm btn-light"
           onClick={(e) => {
             e.preventDefault();
-            this.session.logout();
+            logout();
           }}
         >
           <FontAwesomeIcon icon={faSignOutAlt} /> <Trans>Logout</Trans>
@@ -55,60 +33,25 @@ export default class AdminView extends React.Component<Props> {
         <LanguageSwitcher />
       </nav>
     );
-  }
+  };
 
-  render() {
-    if (!this.session.isLoggedIn())
-      return (
-        <AdminContextProvider>
-          <AdminLoginView session={this.session} {...this.props} />
-        </AdminContextProvider>
-      );
-
-    return (
-      <AdminContextProvider>
+  if (!isLoggedIn()) return <AdminLoginView />;
+  return (
+    <React.Fragment>
+      {renderNavBar()}
+      <main>
         <React.Fragment>
-          {this.renderNavBar()}
-          <main>
-            <PromiseView
-              promise={this.session.statusPromise}
-              renderPending={() => i18n._(t`Loading...`)}
-              renderRejected={() => i18n._(t`Error`)}
-              renderFulfilled={(status) =>
-                this.session.usersPromise && (
-                  <PromiseView
-                    promise={this.session.usersPromise}
-                    renderPending={() => i18n._(t`Loading...`)}
-                    renderFulfilled={(users) => (
-                      <React.Fragment>
-                        <AdminSummaryView {...this.props} session={this.session} status={status} users={users} />
+          <AdminSummaryView />
 
-                        <Route path="/admin/logs" render={() => <AdminLogsView />} />
+          <Route path="/admin/logs" render={() => <AdminLogsView />} />
 
-                        <Route
-                          path="/admin/extra_time"
-                          render={() => <ContestExtraTimeView {...this.props} status={status} session={this.session} />}
-                        />
+          {/* <Route path="/admin/extra_time" render={() => <ContestExtraTimeView />} /> TODO
 
-                        <Route
-                          path="/admin/users"
-                          render={() => <AdminUsersView {...this.props} session={this.session} users={users} />}
-                        />
+          <Route path="/admin/users" render={() => <AdminUsersView />} />
 
-                        <Route
-                          path="/admin/download_results"
-                          render={() => <DownloadResultsView {...this.props} session={this.session} />}
-                        />
-                      </React.Fragment>
-                    )}
-                    renderRejected={() => i18n._(t`Error`)}
-                  />
-                )
-              }
-            />
-          </main>
+          <Route path="/admin/download_results" render={() => <DownloadResultsView />} /> */}
         </React.Fragment>
-      </AdminContextProvider>
-    );
-  }
+      </main>
+    </React.Fragment>
+  );
 }

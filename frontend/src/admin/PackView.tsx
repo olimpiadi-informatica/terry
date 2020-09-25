@@ -1,34 +1,28 @@
-import * as React from "react";
-import Pack from "./Pack";
+import React from "react";
 import Loading from "../Loading";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
-import { RouteComponentProps } from "react-router";
+import { AdminContextProvider, usePack } from "./AdminContext";
 
-type Props = RouteComponentProps<any>;
+function PackViewInner() {
+  const pack = usePack();
 
-export default class PackView extends React.Component<Props> {
-  pack: Pack | null = null;
+  if (pack.isLoading()) return <Loading />;
+  // FIXME: use a proper ErrorView or similar
+  if (pack.isError()) return <p>An error occurred: {pack.error()}</p>;
 
-  componentDidMount() {
-    this.pack = new Pack();
-    this.pack.onAppStart();
-    this.pack.pushObserver(this);
+  if (pack.value().uploaded) {
+    return <AdminView />;
+  } else {
+    // return <UploadPackView />;
+    throw new Error("TODO");
   }
+}
 
-  componentWillUnmount() {
-    this.pack!.popObserver(this);
-  }
-
-  render() {
-    if (!this.pack || this.pack.isLoading()) return <Loading />;
-    // FIXME: use a proper ErrorView or similar
-    if (!this.pack.isLoaded()) return <p>An error occurred: {this.pack.error.message}</p>;
-
-    if (this.pack.data.uploaded) {
-      return <AdminView {...this.props} pack={this.pack} />;
-    } else {
-      return <UploadPackView {...this.props} pack={this.pack} />;
-    }
-  }
+export default function PackView() {
+  return (
+    <AdminContextProvider>
+      <PackViewInner />
+    </AdminContextProvider>
+  );
 }

@@ -1,30 +1,29 @@
 import * as React from "react";
-import { AdminSession } from "./admin.models";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 
 import ReactMarkdown from "react-markdown";
-import { useActions } from "./AdminContext";
+import { useActions, usePack } from "./AdminContext";
 
-type Props = {
-  session: AdminSession;
-  pack: { data: { deletable: boolean; name: string; description: string } };
-};
-
-export default function AdminLoginView({ session, pack }: Props) {
+export default function AdminLoginView() {
   const tokenRef = React.createRef<HTMLInputElement>();
   const { login } = useActions();
+  const pack = usePack().value();
+
   const doLogin = () => {
     if (tokenRef.current) {
-      session.login(tokenRef.current.value);
       login(tokenRef.current.value);
     }
   };
 
+  if (!pack.uploaded) {
+    throw new Error("AdminLoginView requires the pack to be uploaded");
+  }
+
   return (
     <div className="jumbotron admin-jumbotron">
-      <h1 className="text-center display-3">{pack.data.name}</h1>
-      <ReactMarkdown source={pack.data.description} />
+      <h1 className="text-center display-3">{pack.name}</h1>
+      <ReactMarkdown source={pack.description} />
       <hr />
       <h2 className="text-center">
         <Trans>Log in</Trans>

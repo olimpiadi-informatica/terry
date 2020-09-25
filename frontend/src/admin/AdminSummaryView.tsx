@@ -5,59 +5,26 @@ import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { CountdownComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import { DateComponent } from "../datetime.views";
-import client from "../TerryClient";
-import PromiseView from "../PromiseView";
-import { notifyError } from "../utils";
 import { toast } from "react-toastify";
-import { AdminSession } from "./admin.models";
-import ObservablePromise from "../ObservablePromise";
 import { Trans, t, Plural } from "@lingui/macro";
 import { i18n } from "../i18n";
+import { useStatus, usePack, useLogs, useUsers, useActions, useServerTime } from "./AdminContext";
 
-type User = {
-  extra_time: number;
-};
+export default function AdminSummaryView() {
+  const status = useStatus().value();
+  const pack = usePack().value();
+  const logs = useLogs();
+  const users = useUsers();
+  const serverTime = useServerTime();
+  const { startContest, resetContest } = useActions();
 
-type Props = {
-  session: AdminSession;
-  users: { data: { items: User[] } };
-  status: {
-    data: { start_time: string; end_time: string };
-    extraTimeMinutes: () => number;
-  };
-  pack: { data: { deletable: boolean } };
-};
-
-export default class AdminSummaryView extends React.Component<Props> {
-  timer?: NodeJS.Timer;
-  logsPromise?: ObservablePromise;
-
-  componentDidMount() {
-    this.logsPromise = this.props.session.loadLogs({
-      start_date: "2000-01-01T00:00:00.000",
-      end_date: "2030-01-01T00:00:00.000",
-      level: "WARNING",
-    });
-    this.props.session.pushObserver(this);
-
-    const tickrate = 1000;
-    this.timer = setInterval(() => this.forceUpdate(), tickrate);
+  if (!pack.uploaded) {
+    throw new Error("AdminSummaryView requires the pack to be uploaded");
   }
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      delete this.timer;
-    }
+  // TODO: reload logs
 
-    this.props.session.popObserver(this);
-  }
-
-  serverTime() {
-    return DateTime.local().minus(this.props.session.timeDelta);
-  }
-
-  renderNotStarted() {
+  const renderNotStarted = () => {
     return (
       <React.Fragment>
         <p>
@@ -66,9 +33,7 @@ export default class AdminSummaryView extends React.Component<Props> {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            this.props.session.startContest().then(() => {
-              toast.success(i18n._(t`Contest was successfully started`));
-            });
+            startContest().then(() => toast.success(i18n._(t`Contest was successfully started`)));
           }}
         >
           <button type="submit" className="btn btn-primary">
@@ -77,34 +42,34 @@ export default class AdminSummaryView extends React.Component<Props> {
         </form>
       </React.Fragment>
     );
-  }
+  };
 
-  renderRunning() {
+  const renderRunning = () => {
     return (
       <ul className="mb-0">
-        <li>{this.renderStartTime()}</li>
-        <li>{this.renderCountdown()}</li>
+        <li>{renderStartTime()}</li>
+        <li>{renderCountdown()}</li>
       </ul>
     );
-  }
+  };
 
-  renderRunningExtraTime() {
+  const renderRunningExtraTime = () => {
     return (
       <ul className="mb-0">
-        <li>{this.renderStartTime()}</li>
-        <li>{this.renderEndTime()}</li>
-        <li>{this.renderExtraTimeCountdown()}</li>
+        <li>{renderStartTime()}</li>
+        <li>{renderEndTime()}</li>
+        <li>{renderExtraTimeCountdown()}</li>
       </ul>
     );
-  }
+  };
 
-  renderFinished() {
+  const renderFinished = () => {
     return (
       <React.Fragment>
         <ul>
-          <li>{this.renderStartTime()}</li>
-          <li>{this.renderEndTime()}</li>
-          {this.renderExtraTimeEndTime()}
+          <li>{renderStartTime()}</li>
+          <li>{renderEndTime()}</li>
+          {renderExtraTimeEndTime()}
         </ul>
 
         <Link to={"/admin/download_results"} className="btn btn-primary">
@@ -112,46 +77,50 @@ export default class AdminSummaryView extends React.Component<Props> {
         </Link>
       </React.Fragment>
     );
-  }
+  };
 
-  countUsersWithExtraTime() {
-    return this.props.users.data.items.filter((user) => user.extra_time !== 0).length;
-  }
+  const countUsersWithExtraTime = () => {
+    if (!users.isReady()) return 0;
+    return users.value().items.filter((user) => user.extra_time !== 0).length;
+  };
 
-  getStartTime() {
-    return DateTime.fromISO(this.props.status.data.start_time);
-  }
+  const getStartTime = () => {
+    if (!status.start_time) throw new Error("Unknown start time");
+    return DateTime.fromISO(status.start_time);
+  };
 
-  getEndTime() {
-    return DateTime.fromISO(this.props.status.data.end_time);
-  }
+  const getEndTime = () => {
+    if (!status.end_time) throw new Error("Unknown end time");
+    return DateTime.fromISO(status.end_time);
+  };
 
-  getUsersExtraTime() {
+  const getUsersExtraTime = () => {
+    if (!users.isReady()) return 0;
     return Math.max.apply(
       null,
-      this.props.users.data.items.map((user) => user.extra_time)
+      users.value().items.map((user) => user.extra_time)
     );
-  }
+  };
 
-  getExtraTimeEndTime() {
-    return this.getEndTime().plus({ seconds: this.getUsersExtraTime() });
-  }
+  const getExtraTimeEndTime = () => {
+    return getEndTime().plus({ seconds: getUsersExtraTime() });
+  };
 
-  isDeletable() {
-    return this.props.pack.data.deletable;
-  }
+  const isDeletable = () => {
+    return pack.deletable;
+  };
 
-  renderStartTime() {
+  const renderStartTime = () => {
     return (
       <React.Fragment>
         <Trans>Contest started at</Trans>{" "}
-        {this.getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+        {getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </React.Fragment>
     );
-  }
+  };
 
-  renderCountdownExtra() {
-    if (this.countUsersWithExtraTime() === 0) return;
+  const renderCountdownExtra = () => {
+    if (countUsersWithExtraTime() === 0) return;
 
     return (
       <React.Fragment>
@@ -159,7 +128,7 @@ export default class AdminSummaryView extends React.Component<Props> {
         (
         <span>
           <Plural
-            value={this.getUsersExtraTime() / 60}
+            value={getUsersExtraTime() / 60}
             one="plus # extra minute for some user"
             other="plus # extra minutes for some user"
           />
@@ -167,184 +136,150 @@ export default class AdminSummaryView extends React.Component<Props> {
         )
       </React.Fragment>
     );
-  }
+  };
 
-  renderCountdown() {
+  const renderCountdown = () => {
     return (
       <React.Fragment>
         <Trans>Remaining time</Trans>{" "}
-        <CountdownComponent clock={() => this.props.session.serverTime()} end={this.getEndTime()} afterEnd={() => ""} />
-        {this.renderCountdownExtra()}
+        <CountdownComponent clock={() => serverTime()} end={getEndTime()} afterEnd={() => ""} />
+        {renderCountdownExtra()}
       </React.Fragment>
     );
-  }
+  };
 
-  renderEndTime() {
+  const renderEndTime = () => {
     return (
       <React.Fragment>
-        <Trans>Contest ended at</Trans>{" "}
-        {this.getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+        <Trans>Contest ended at</Trans> {getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </React.Fragment>
     );
-  }
+  };
 
-  renderExtraTimeEndTime() {
-    if (this.countUsersWithExtraTime() === 0) return null;
+  const renderExtraTimeEndTime = () => {
+    if (countUsersWithExtraTime() === 0) return null;
 
     return (
       <li>
         <Trans>Contest ended for everyone at</Trans>{" "}
-        {this.getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+        {getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </li>
     );
-  }
+  };
 
-  renderExtraTimeCountdown() {
-    const endTime = this.getExtraTimeEndTime();
+  const renderExtraTimeCountdown = () => {
+    const endTime = getExtraTimeEndTime();
 
     return (
       <React.Fragment>
         <Trans>Remaining time for some participant</Trans>{" "}
-        <CountdownComponent clock={() => this.props.session.serverTime()} end={endTime} afterEnd={() => ""} />
+        <CountdownComponent clock={() => serverTime()} end={endTime} afterEnd={() => ""} />
       </React.Fragment>
     );
-  }
+  };
 
-  render() {
-    return (
-      <div className="container">
-        <div className="card mb-3">
-          <div className="card-body">
-            <h3>
-              <Trans>Contest status</Trans>
-            </h3>
-            {!this.props.status.data.start_time
-              ? this.renderNotStarted()
-              : this.serverTime() < this.getEndTime()
-              ? this.renderRunning()
-              : this.serverTime() < this.getExtraTimeEndTime()
-              ? this.renderRunningExtraTime()
-              : this.renderFinished()}
-          </div>
+  const doResetContest = () => {
+    if (!window.confirm(i18n._(t`Are you sure?`))) return;
+
+    resetContest();
+  };
+
+  return (
+    <div className="container">
+      <div className="card mb-3">
+        <div className="card-body">
+          <h3>
+            <Trans>Contest status</Trans>
+          </h3>
+          {!status.start_time
+            ? renderNotStarted()
+            : serverTime() < getEndTime()
+            ? renderRunning()
+            : serverTime() < getExtraTimeEndTime()
+            ? renderRunningExtraTime()
+            : renderFinished()}
         </div>
-        <div className="card mb-3">
-          <div className="card-body">
-            <h3>
-              <Trans>System status</Trans>
-            </h3>
-            <ul className="mb-0">
-              <li>
-                {this.logsPromise && (
-                  <PromiseView
-                    promise={this.logsPromise}
-                    renderFulfilled={(logs) =>
-                      logs.items.length === 0 ? (
-                        <React.Fragment>
-                          <Trans>No issue detected</Trans> (
-                          <Link to="/admin/logs">
-                            <Trans>show log</Trans>
-                          </Link>
-                          )
-                        </React.Fragment>
-                      ) : (
-                        <React.Fragment>
-                          <Trans>Issue last detected</Trans>{" "}
-                          <DateComponent
-                            {...this.props}
-                            clock={() => this.props.session.serverTime()}
-                            date={DateTime.fromISO(logs.items[0].date)}
-                          />{" "}
-                          (
-                          <Link to="/admin/logs">
-                            <Trans>show log</Trans>
-                          </Link>
-                          )
-                        </React.Fragment>
-                      )
-                    }
-                    renderPending={() => i18n._(t`Loading...`)}
-                    renderRejected={() => i18n._(t`Error`)}
-                  />
-                )}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="card mb-3">
-          <div className="card-body">
-            <h3>
-              <Trans>Extra time</Trans>
-            </h3>
-            <ul className="mb-0">
-              <li>
-                {this.props.status.extraTimeMinutes() === 0 ? (
-                  <React.Fragment>
-                    <Trans>No extra time set</Trans> (
-                    <Link to="/admin/extra_time">
-                      <Trans>set extra time</Trans>
-                    </Link>
-                    )
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    <Plural
-                      value={this.props.status.extraTimeMinutes()}
-                      one="Contest duration was extended by # minute"
-                      other="Contest duration was extended by # minutes"
-                    />{" "}
-                    (
-                    <Link to="/admin/extra_time">
-                      <Trans>set extra time</Trans>
-                    </Link>
-                    )
-                  </React.Fragment>
-                )}
-              </li>
-              <li>
+      </div>
+      <div className="card mb-3">
+        <div className="card-body">
+          <h3>
+            <Trans>System status</Trans>
+          </h3>
+          <ul className="mb-0">
+            <li>
+              {logs.isLoading() ? (
+                i18n._(t`Loading...`)
+              ) : logs.isError() ? (
+                i18n._(t`Error`)
+              ) : logs.value().items.length === 0 ? (
                 <React.Fragment>
-                  <Plural
-                    value={this.countUsersWithExtraTime()}
-                    _0="No user has extra time"
-                    one="# user has extra time"
-                    other="# users have extra time"
-                  />{" "}
-                  (
-                  <Link to="/admin/users">
-                    <Trans>show users</Trans>
+                  <Trans>No issue detected</Trans> (
+                  <Link to="/admin/logs">
+                    <Trans>show log</Trans>
                   </Link>
                   )
                 </React.Fragment>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="card mb-3 striped-background">
-          <div className="card-body">
-            <h3>
-              <Trans>Danger zone</Trans>
-            </h3>
-            <button disabled={!this.isDeletable()} className="btn btn-danger" onClick={() => this.resetContest()}>
-              <Trans>RESET</Trans>
-            </button>
-          </div>
+              ) : (
+                <React.Fragment>
+                  <Trans>Issue last detected</Trans>{" "}
+                  <DateComponent clock={() => serverTime()} date={DateTime.fromISO(logs.value().items[0].date)} /> (
+                  <Link to="/admin/logs">
+                    <Trans>show log</Trans>
+                  </Link>
+                  )
+                </React.Fragment>
+              )}
+            </li>
+          </ul>
         </div>
       </div>
-    );
-  }
-
-  resetContest() {
-    if (!window.confirm(i18n._(t`Are you sure?`))) return;
-
-    client
-      .adminApi(this.props.session.adminToken(), "/drop_contest", {})
-      .then(() => {
-        // logout (just to delete the admin token)
-        this.props.session.logout();
-        // reload
-        window.location.reload();
-      })
-      .catch((response: any) => {
-        notifyError(response);
-      });
-  }
+      <div className="card mb-3">
+        <div className="card-body">
+          <h3>
+            <Trans>Extra time</Trans>
+          </h3>
+          <ul className="mb-0">
+            <li>
+              <Plural
+                value={Math.round((status.extra_time || 0) / 60)}
+                _0="No extra time set"
+                one="Contest duration was extended by # minute"
+                other="Contest duration was extended by # minutes"
+              />{" "}
+              (
+              <Link to="/admin/extra_time">
+                <Trans>set extra time</Trans>
+              </Link>
+              )
+            </li>
+            <li>
+              <React.Fragment>
+                <Plural
+                  value={countUsersWithExtraTime()}
+                  _0="No user has extra time"
+                  one="# user has extra time"
+                  other="# users have extra time"
+                />{" "}
+                (
+                <Link to="/admin/users">
+                  <Trans>show users</Trans>
+                </Link>
+                )
+              </React.Fragment>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="card mb-3 striped-background">
+        <div className="card-body">
+          <h3>
+            <Trans>Danger zone</Trans>
+          </h3>
+          <button disabled={!isDeletable()} className="btn btn-danger" onClick={() => doResetContest()}>
+            <Trans>RESET</Trans>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }

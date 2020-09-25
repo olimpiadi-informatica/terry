@@ -85,7 +85,7 @@ export default function AdminLogsView() {
         <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
           <td>
             <AbsoluteDateComponent
-              clock={() => serverTime.valueOr(DateTime.local())}
+              clock={() => serverTime()}
               date={DateTime.fromISO(log.date)}
             />
           </td>
