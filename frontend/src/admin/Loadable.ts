@@ -6,7 +6,9 @@ export enum LoadableState {
 
 export default class Loadable<T, E = unknown> {
   private state = LoadableState.Loading;
+
   private value_?: T;
+
   private error_?: E;
 
   private constructor(value?: T, error?: E) {
@@ -21,14 +23,20 @@ export default class Loadable<T, E = unknown> {
     }
   }
 
+  // https://github.com/typescript-eslint/typescript-eslint/issues/2592
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   static loading<T, E>() {
     return new Loadable<T, E>();
   }
 
+  // https://github.com/typescript-eslint/typescript-eslint/issues/2592
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   static of<T, E>(value: T) {
     return new Loadable<T, E>(value);
   }
 
+  // https://github.com/typescript-eslint/typescript-eslint/issues/2592
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   static error<T, E>(error: E) {
     return new Loadable<T, E>(undefined, error);
   }
@@ -46,12 +54,12 @@ export default class Loadable<T, E = unknown> {
   }
 
   value(): T {
-    if (this.value_ === undefined) throw new Error("Cannot get value, the state is " + this.state);
+    if (this.value_ === undefined) throw new Error(`Cannot get value, the state is ${this.state}`);
     return this.value_;
   }
 
   error(): E {
-    if (this.error_ === undefined) throw new Error("Cannot get error, the state is " + this.state);
+    if (this.error_ === undefined) throw new Error(`Cannot get error, the state is ${this.state}`);
     return this.error_;
   }
 

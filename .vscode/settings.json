@@ -7,5 +7,6 @@
         "javascript",
         "typescript"
     ],
-    "eslint.workingDirectories": [{ "mode": "auto" }]
+    "eslint.workingDirectories": [{ "mode": "auto" }],
+    "eslint.packageManager": "yarn"
 }
