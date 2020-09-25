@@ -22,29 +22,11 @@ export type Pack =
       description: string;
     };
 
-export type UserIp = {
-  first_date: string;
-  ip: string;
-};
-
-export type UserEntry = {
-  name: string;
-  surname: string;
-  token: string;
-  extra_time: number;
-  ip: UserIp[];
-};
-
-export type UsersData = {
-  items: UserEntry[];
-};
-
 type ContextData = {
   token: string | null;
   serverTimeSkew: Loadable<Duration>;
   status: Loadable<StatusData>;
   pack: Loadable<Pack>;
-  users: Loadable<UsersData>;
 };
 
 export type ContextActions = {
@@ -67,7 +49,6 @@ export const AdminContext = React.createContext<AdminContextType>({
     serverTimeSkew: Loadable.loading(),
     status: Loadable.loading(),
     pack: Loadable.loading(),
-    users: Loadable.loading(),
   },
   actions: {
     isLoggedIn: () => false,
@@ -93,7 +74,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [status, setStatus] = useState<Loadable<StatusData>>(Loadable.loading());
   const [statusCount, setStatusCount] = useState(0);
   const [pack, setPack] = useState<Loadable<Pack>>(Loadable.loading());
-  const [users, setUsers] = useState<Loadable<UsersData>>(Loadable.loading());
 
   const login = (token: string) => {
     cookies.set(cookieName, token);
@@ -175,22 +155,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   }, []);
 
-
-
-  // handle the users
-  useEffect(() => {
-    if (!token) return;
-    client
-      .adminApi(token, "/user_list")
-      .then((response: AxiosResponse) => {
-        setUsers(Loadable.of(response.data as UsersData));
-      })
-      .catch((response) => {
-        notifyError(response);
-        setUsers(Loadable.error(response));
-      });
-  }, [token]);
-
   const isLoggedIn = () => !status.isLoading();
   return (
     <AdminContext.Provider
@@ -200,7 +164,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
           serverTimeSkew: serverTimeSkew,
           status,
           pack,
-          users,
         },
         actions: {
           isLoggedIn,
@@ -243,13 +206,6 @@ export function usePack() {
   return useMemo(() => {
     return context.data.pack;
   }, [context.data.pack]);
-}
-
-export function useUsers() {
-  const context = useContext(AdminContext);
-  return useMemo(() => {
-    return context.data.users;
-  }, [context.data.users]);
 }
 
 export function useServerTime() {

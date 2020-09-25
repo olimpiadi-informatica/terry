@@ -8,14 +8,15 @@ import { DateComponent } from "../datetime.views";
 import { toast } from "react-toastify";
 import { Trans, t, Plural } from "@lingui/macro";
 import { i18n } from "../i18n";
-import { useStatus, usePack, useUsers, useActions, useServerTime } from "./AdminContext";
+import { useStatus, usePack, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./logs.hook";
+import { useUsers } from "./users.hook";
 
 export default function AdminSummaryView() {
   const status = useStatus().value();
   const pack = usePack().value();
   const [logs, reloadLogs] = useLogs();
-  const users = useUsers();
+  const [users, reloadUsers] = useUsers();
   const serverTime = useServerTime();
   const { startContest, resetContest } = useActions();
 
@@ -28,9 +29,10 @@ export default function AdminSummaryView() {
     const LOG_REFRESH_INTERVAL = 5000;
     const interval = setInterval(() => {
       reloadLogs();
+      reloadUsers();
     }, LOG_REFRESH_INTERVAL);
     return () => clearInterval(interval);
-  }, [reloadLogs]);
+  }, [reloadLogs, reloadUsers]);
 
   const renderNotStarted = () => {
     return (
