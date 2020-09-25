@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
 import { useToken } from "./AdminContext";
 import { notifyError } from "../utils";
+import useTriggerUpdate from "../triggerUpdate.hook";
 
 export type UserIp = {
   first_date: string;
@@ -27,9 +28,8 @@ export type ReloadUsers = () => void;
 export function useUsers(): [Loadable<UsersData>, ReloadUsers] {
   const token = useToken();
   const [users, setUsers] = useState<Loadable<UsersData>>(Loadable.loading());
-  const [count, setCount] = useState(0);
+  const [usersUpdate, triggerUsersUpdate] = useTriggerUpdate();
 
-  // handle the users
   useEffect(() => {
     if (!token) return;
     client
@@ -41,10 +41,10 @@ export function useUsers(): [Loadable<UsersData>, ReloadUsers] {
         notifyError(response);
         setUsers(Loadable.error(response));
       });
-  }, [token, count]);
+  }, [token, usersUpdate]);
 
   const reloadUsers = () => {
-    setCount(count + 1);
+    triggerUsersUpdate();
   };
 
   return [users, reloadUsers];

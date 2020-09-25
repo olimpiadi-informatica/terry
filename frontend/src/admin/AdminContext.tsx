@@ -5,6 +5,7 @@ import { DateTime, Duration } from "luxon";
 import { AxiosResponse } from "axios";
 import { notifyError } from "../utils";
 import Loadable from "./Loadable";
+import useTriggerUpdate from "../triggerUpdate.hook";
 
 export type StatusData = {
   loaded: boolean;
@@ -74,9 +75,9 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [token, setToken] = useState(tokenFromCookie);
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
   const [status, setStatus] = useState<Loadable<StatusData>>(Loadable.loading());
-  const [statusCount, setStatusCount] = useState(0);
+  const [statusUpdate, triggerStatusUpdate] = useTriggerUpdate();
   const [pack, setPack] = useState<Loadable<Pack>>(Loadable.loading());
-  const [packCount, setPackCount] = useState(0);
+  const [packUpdate, triggerPackUpdate] = useTriggerUpdate();
 
   const login = (token: string) => {
     cookies.set(cookieName, token);
@@ -90,8 +91,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
     return client
       .adminApi(token, "/start")
       .then(() => {
-        // reload the status
-        setStatusCount(statusCount + 1);
+        triggerStatusUpdate();
       })
       .catch((response) => {
         notifyError(response);
@@ -102,7 +102,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .adminApi(token, "/drop_contest")
       .then(() => {
         logout();
-        setPackCount(packCount + 1);
+        triggerPackUpdate();
       })
       .catch((response) => {
         notifyError(response);
@@ -117,7 +117,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
     return client
       .adminApi(token, "/set_extra_time", options)
       .then(() => {
-        setStatusCount(statusCount + 1);
+        triggerStatusUpdate();
       })
       .catch((response) => {
         notifyError(response);
@@ -131,7 +131,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
     return client.api
       .post("/admin/upload_pack", data)
       .then(() => {
-        setPackCount(packCount + 1);
+        triggerPackUpdate();
       })
       .catch((response) => {
         notifyError(response);
@@ -158,7 +158,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
         setServerTimeSkew(Loadable.loading());
         setStatus(Loadable.loading());
       });
-  }, [token, statusCount]);
+  }, [token, statusUpdate]);
 
   // handle the pack status
   useEffect(() => {
@@ -171,7 +171,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
         notifyError(response);
         setPack(Loadable.error(response));
       });
-  }, [packCount]);
+  }, [packUpdate]);
 
   const isLoggedIn = () => !status.isLoading();
   return (

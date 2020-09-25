@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import moment from "moment";
 import { i18n } from "./i18n";
+import useTriggerUpdate from "./triggerUpdate.hook";
 
 function useAutoRefresh(rate: number) {
-  const [count, setCount] = useState(0);
+  const [update, trigger] = useTriggerUpdate();
   useEffect(() => {
-    const timer = setInterval(() => setCount(count + 1), rate);
+    const timer = setInterval(() => trigger(), rate);
     return () => clearInterval(timer);
-  }, [rate, count]);
+  }, [rate, trigger, update]);
 }
 
 type DateViewProps = {

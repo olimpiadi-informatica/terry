@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
 import { useToken } from "./AdminContext";
 import { notifyError } from "../utils";
+import useTriggerUpdate from "../triggerUpdate.hook";
 
 export enum LogLevel {
   DEBUG = "DEBUG",
@@ -41,7 +42,7 @@ export function useLogs(): [Loadable<LogsData>, ReloadLogs] {
   const token = useToken();
   const [logs, setLogs] = useState<Loadable<LogsData>>(Loadable.loading());
   const [logsOptions, setLogsOptions] = useState(defaultLogsOptions);
-  const [logCount, setLogCount] = useState(0);
+  const [logsUpdate, triggerLogsUpdate] = useTriggerUpdate();
 
   useEffect(() => {
     if (!token) return;
@@ -54,11 +55,11 @@ export function useLogs(): [Loadable<LogsData>, ReloadLogs] {
         notifyError(response);
         setLogs(Loadable.error(response));
       });
-  }, [token, logCount, logsOptions]);
+  }, [token, logsUpdate, logsOptions]);
 
   const reloadLogs = (options?: LogsOptions) => {
     if (options) setLogsOptions(options);
-    setLogCount(logCount + 1);
+    triggerLogsUpdate();
   };
 
   return [logs, reloadLogs];
