@@ -187,7 +187,7 @@ class UserState extends Observable {
 
   getTask(taskName: string) {
     const byName: any = {};
-    for (let task of this.tasks) {
+    for (const task of this.tasks) {
       byName[task.name] = task;
     }
     return byName[taskName];

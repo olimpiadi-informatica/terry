@@ -80,7 +80,7 @@ export default class AdminUsersView extends React.Component<AdminUsersProps> {
           {ip.ip}
         </abbr>
       ))
-      .map((item: any, i: number) => (i === 0 ? [item] : [<span> - </span>, item]));
+      .map((item: any, i: number) => (i === 0 ? [item] : [<span key={`span-${i}`}> - </span>, item]));
     return (
       <tr key={i}>
         <td>{user.name}</td>

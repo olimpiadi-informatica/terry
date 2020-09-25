@@ -26,7 +26,7 @@ export default class Observable {
 
   propagateUpdate() {
     const observers = [...this.observers];
-    for (let o of observers) {
+    for (const o of observers) {
       o.forceUpdate();
     }
   }

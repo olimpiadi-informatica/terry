@@ -3,7 +3,7 @@ import { AdminSession } from "./admin.models";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 
-const ReactMarkdown = require("react-markdown");
+import ReactMarkdown from "react-markdown";
 
 type Props = {
   session: AdminSession;

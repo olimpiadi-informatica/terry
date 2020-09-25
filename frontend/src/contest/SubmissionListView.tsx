@@ -32,8 +32,8 @@ export default class SubmissionListView extends React.Component<Props> {
   renderSubmissionList(list: any) {
     const submissionList = [];
 
-    for (let submission of list.items) {
-      let cut = (s: string) => s.slice(s.lastIndexOf("/") + 1);
+    for (const submission of list.items) {
+      const cut = (s: string) => s.slice(s.lastIndexOf("/") + 1);
       submission.input.basename = cut(submission.input.path);
       submission.output.basename = cut(submission.output.path);
       submission.source.basename = cut(submission.source.path);

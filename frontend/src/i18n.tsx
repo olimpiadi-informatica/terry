@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, ReactNode } from "react";
 import { setupI18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import catalogIt from "./locales/it/messages";
@@ -19,38 +19,27 @@ export const defaultLanguage = (navigator.languages ? navigator.languages[0] : n
 
 export const i18n = setupI18n({ catalogs, language: defaultLanguage });
 
-type TransProviderState = {
-  lang: string;
-};
-
 export const LanguageContext = React.createContext({
   lang: defaultLanguage,
-  changeLanguage: (lang: string) => {},
+  changeLanguage: (lang: string) => {
+    return;
+  },
 });
 
-export class TransProvider extends Component<{}, TransProviderState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      lang: defaultLanguage,
-    };
-  }
+export function TransProvider({ children }: { children: ReactNode }) {
+  const [lang, setLanguage] = useState(defaultLanguage);
 
-  changeLanguage(lang: string) {
+  const changeLanguage = (lang: string) => {
     console.log("Change language to", lang);
-    this.setState({ lang });
+    setLanguage(lang);
     i18n.activate(lang);
     // when the language changes set the attribute so that bootstrap components can be translated via css
     document.getElementsByTagName("html")[0].setAttribute("lang", lang);
-  }
+  };
 
-  render() {
-    return (
-      <I18nProvider language={this.state.lang} i18n={i18n}>
-        <LanguageContext.Provider value={{ lang: this.state.lang, changeLanguage: this.changeLanguage.bind(this) }}>
-          {this.props.children}
-        </LanguageContext.Provider>
-      </I18nProvider>
-    );
-  }
+  return (
+    <I18nProvider language={lang} i18n={i18n}>
+      <LanguageContext.Provider value={{ lang, changeLanguage }}>{children}</LanguageContext.Provider>
+    </I18nProvider>
+  );
 }

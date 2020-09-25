@@ -5,8 +5,8 @@ export function colorFromScore(score: number, max_score: number) {
 }
 
 export function notifyError(response: any) {
-  if (response.hasOwnProperty("response") && response.response.hasOwnProperty("data")) {
-    if (response.response.data.hasOwnProperty("message")) {
+  if ("response" in response && "data" in response.response) {
+    if ("message" in response.response.data) {
       // application errors (server)
       toast.error(response.response.data.message);
     } else if (typeof response.response.data === "string") {
@@ -20,7 +20,7 @@ export function notifyError(response: any) {
     } else {
       console.error("unhandled notifyError parameter!");
     }
-  } else if (response.hasOwnProperty("message")) {
+  } else if ("message" in response) {
     // e.g. TypeError (fields: message, stack)
     toast.error(response.message);
   } else {

@@ -36,7 +36,7 @@ export default class AppView extends React.Component<Props> {
             promise={this.model.userStatePromise}
             renderPending={() => <Loading />}
             renderFulfilled={(userState) => <ContestView {...this.props} model={this.model} userState={userState} />}
-            renderRejected={(_error) => (
+            renderRejected={() => (
               <div className="alert alert-danger" role="alert">
                 <h4 className="alert-heading">
                   <Trans>Error</Trans>
@@ -58,7 +58,7 @@ export default class AppView extends React.Component<Props> {
             if (response.data.uploaded) return <ContestView {...this.props} model={this.model} userState={null} />;
             else return <Redirect to="/admin" />;
           }}
-          renderRejected={(_error) => <ContestView {...this.props} model={this.model} userState={null} />}
+          renderRejected={() => <ContestView {...this.props} model={this.model} userState={null} />}
         />
       );
     }

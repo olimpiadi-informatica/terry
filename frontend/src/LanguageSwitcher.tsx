@@ -5,7 +5,7 @@ export default function LanguageSwitcher() {
   const languageContext = useContext(LanguageContext);
 
   const changeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    let lang = event.target.value;
+    const lang = event.target.value;
     languageContext.changeLanguage(lang);
   };
 
