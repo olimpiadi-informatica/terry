@@ -2,7 +2,7 @@ import * as React from "react";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 import client from "./TerryClient";
 import ContestView from "./contest/ContestView";
-import LoadingView from "./LoadingView";
+import Loading from "./Loading";
 import PromiseView from "./PromiseView";
 import { Model } from "./contest/user.models";
 import ObservablePromise from "./ObservablePromise";
@@ -34,7 +34,7 @@ export default class AppView extends React.Component<Props> {
         this.model.userStatePromise && (
           <PromiseView
             promise={this.model.userStatePromise}
-            renderPending={() => <LoadingView />}
+            renderPending={() => <Loading />}
             renderFulfilled={(userState) => <ContestView {...this.props} model={this.model} userState={userState} />}
             renderRejected={(_error) => (
               <div className="alert alert-danger" role="alert">
@@ -53,7 +53,7 @@ export default class AppView extends React.Component<Props> {
       return (
         <PromiseView
           promise={new ObservablePromise(client.api("/admin/pack_status"))}
-          renderPending={() => <LoadingView />}
+          renderPending={() => <Loading />}
           renderFulfilled={(response) => {
             if (response.data.uploaded) return <ContestView {...this.props} model={this.model} userState={null} />;
             else return <Redirect to="/admin" />;

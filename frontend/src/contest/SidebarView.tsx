@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DateTime } from "luxon";
 import { NavLink } from "react-router-dom";
-import { CountdownView } from "../datetime.views";
+import { CountdownComponent } from "../datetime.views";
 import NavbarItemView from "./NavbarItemView";
 import ScoreView from "./ScoreView";
 import "./SidebarView.css";
@@ -39,7 +39,7 @@ export default class SidebarView extends React.Component<Props> {
                   <Trans>Remaining time</Trans>
                 </h5>
                 <p className="terry-remaining-time">
-                  <CountdownView
+                  <CountdownComponent
                     {...this.props}
                     clock={() => this.props.model.serverTime()}
                     end={DateTime.fromISO(this.props.userState.data.end_time)}

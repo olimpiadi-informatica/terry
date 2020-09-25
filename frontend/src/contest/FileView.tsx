@@ -1,6 +1,6 @@
 import * as React from "react";
 import filesize from "filesize";
-import { DateView } from "../datetime.views";
+import { DateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import "./FileView.css";
 import { Trans } from "@lingui/macro";
@@ -27,7 +27,7 @@ export default class FileView extends React.Component<Props> {
                 <Trans>Last update:</Trans>
               </th>
               <td>
-                <DateView
+                <DateComponent
                   {...this.props}
                   clock={() => DateTime.local()}
                   date={DateTime.fromMillis(file.lastModified)}

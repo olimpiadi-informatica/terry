@@ -2,9 +2,9 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
-import { CountdownView } from "../datetime.views";
+import { CountdownComponent } from "../datetime.views";
 import { DateTime } from "luxon";
-import { DateView } from "../datetime.views";
+import { DateComponent } from "../datetime.views";
 import client from "../TerryClient";
 import PromiseView from "../PromiseView";
 import { notifyError } from "../utils";
@@ -173,7 +173,7 @@ export default class AdminSummaryView extends React.Component<Props> {
     return (
       <React.Fragment>
         <Trans>Remaining time</Trans>{" "}
-        <CountdownView clock={() => this.props.session.serverTime()} end={this.getEndTime()} />
+        <CountdownComponent clock={() => this.props.session.serverTime()} end={this.getEndTime()} afterEnd={() => ""} />
         {this.renderCountdownExtra()}
       </React.Fragment>
     );
@@ -205,7 +205,7 @@ export default class AdminSummaryView extends React.Component<Props> {
     return (
       <React.Fragment>
         <Trans>Remaining time for some participant</Trans>{" "}
-        <CountdownView clock={() => this.props.session.serverTime()} end={endTime} />
+        <CountdownComponent clock={() => this.props.session.serverTime()} end={endTime} afterEnd={() => ""} />
       </React.Fragment>
     );
   }
@@ -249,7 +249,7 @@ export default class AdminSummaryView extends React.Component<Props> {
                       ) : (
                         <React.Fragment>
                           <Trans>Issue last detected</Trans>{" "}
-                          <DateView
+                          <DateComponent
                             {...this.props}
                             clock={() => this.props.session.serverTime()}
                             date={DateTime.fromISO(logs.items[0].date)}

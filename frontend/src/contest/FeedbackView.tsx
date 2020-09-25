@@ -1,6 +1,6 @@
 import * as React from "react";
 import ResultView from "./ResultView";
-import { DateView } from "../datetime.views";
+import { DateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import ScoreView from "./ScoreView";
 import { TestCase } from "../domain";
@@ -30,7 +30,7 @@ export default class FeedbackView extends React.Component<Props> {
             <Trans>Date</Trans>:
           </dt>
           <dd>
-            <DateView
+            <DateComponent
               {...this.props}
               clock={() => this.props.model.serverTime()}
               date={DateTime.fromISO(submissionData.date)}

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "../ModalView";
+import ModalView from "../Modal";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { toast } from "react-toastify";

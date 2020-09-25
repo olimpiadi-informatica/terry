@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "../ModalView";
+import ModalView from "../Modal";
 import client from "../TerryClient";
 import { AdminSession } from "./admin.models";
 import { Trans, t } from "@lingui/macro";

@@ -3,7 +3,7 @@ import { Link, Route, RouteComponentProps } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
 import client from "../TerryClient";
-import { DateView } from "../datetime.views";
+import { DateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import CreateSubmissionView from "./CreateSubmissionView";
 import SubmissionListView from "./SubmissionListView";
@@ -137,7 +137,7 @@ export default class TaskView extends React.Component<Props> {
           <strong>
             <Trans>Last submission:</Trans>
           </strong>{" "}
-          <DateView
+          <DateComponent
             {...this.props}
             clock={() => this.props.model.serverTime()}
             date={DateTime.fromISO(submission.date)}

@@ -3,10 +3,10 @@ import { Object } from "core-js";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "../ModalView";
+import ModalView from "../Modal";
 import "./AdminLogsView.css";
 import PromiseView from "../PromiseView";
-import { AbsoluteDateView } from "../datetime.views";
+import { AbsoluteDateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import { AdminSession } from "./admin.models";
 import ObservablePromise from "../ObservablePromise";
@@ -191,7 +191,7 @@ export default class AdminLogsView extends React.Component<Props, State> {
                     return items.map((log, i) => (
                       <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
                         <td>
-                          <AbsoluteDateView
+                          <AbsoluteDateComponent
                             clock={() => this.props.session.serverTime()}
                             date={DateTime.fromISO(log.date)}
                           />

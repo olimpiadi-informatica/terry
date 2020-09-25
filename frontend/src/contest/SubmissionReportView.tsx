@@ -2,7 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "../ModalView";
+import ModalView from "../Modal";
 import FeedbackView from "./FeedbackView";
 import PromiseView from "../PromiseView";
 import ObservablePromise from "../ObservablePromise";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Pack from "./Pack";
-import LoadingView from "../LoadingView";
+import Loading from "../Loading";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
 import { RouteComponentProps } from "react-router";
@@ -21,7 +21,7 @@ export default class PackView extends React.Component<Props> {
   }
 
   render() {
-    if (!this.pack || this.pack.isLoading()) return <LoadingView />;
+    if (!this.pack || this.pack.isLoading()) return <Loading />;
     // FIXME: use a proper ErrorView or similar
     if (!this.pack.isLoaded()) return <p>An error occurred: {this.pack.error.message}</p>;
 

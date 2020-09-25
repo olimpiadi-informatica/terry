@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import ValidationView from "./ValidationView";
 import FileView from "./FileView";
-import ModalView from "../ModalView";
+import ModalView from "../Modal";
 import "./SubmissionView.css";
 import PromiseView from "../PromiseView";
 import { Submission } from "./user.models";

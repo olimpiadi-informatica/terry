@@ -2,10 +2,10 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { DateView } from "../datetime.views";
+import { DateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import client from "../TerryClient";
-import ModalView from "../ModalView";
+import ModalView from "../Modal";
 import ReactTooltip from "react-tooltip";
 import { colorFromScore } from "../utils";
 import "./SubmissionListView.css";
@@ -41,7 +41,7 @@ export default class SubmissionListView extends React.Component<Props> {
       submissionList.push(
         <tr key={submission.id}>
           <td>
-            <DateView
+            <DateComponent
               {...this.props}
               clock={() => this.props.model.serverTime()}
               date={DateTime.fromISO(submission.date)}
