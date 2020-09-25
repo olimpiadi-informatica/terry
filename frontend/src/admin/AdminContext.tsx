@@ -22,37 +22,6 @@ export type Pack =
       description: string;
     };
 
-export enum LogLevel {
-  DEBUG = "DEBUG",
-  INFO = "INFO",
-  WARNING = "WARNING",
-  ERROR = "ERROR",
-}
-
-export type LogEntry = {
-  date: string;
-  category: string;
-  level: LogLevel;
-  message: string;
-};
-
-export type LogsData = {
-  items: LogEntry[];
-};
-
-export type LogsOptions = {
-  start_date: string;
-  end_date: string;
-  level: LogLevel;
-  category?: string;
-};
-export const defaultLogsOptions: LogsOptions = {
-  start_date: "2000-01-01T00:00:00.000",
-  end_date: "2030-01-01T00:00:00.000",
-  level: LogLevel.WARNING,
-  category: undefined,
-};
-
 export type UserIp = {
   first_date: string;
   ip: string;
@@ -75,7 +44,6 @@ type ContextData = {
   serverTimeSkew: Loadable<Duration>;
   status: Loadable<StatusData>;
   pack: Loadable<Pack>;
-  logs: Loadable<LogsData>;
   users: Loadable<UsersData>;
 };
 
@@ -83,8 +51,6 @@ export type ContextActions = {
   isLoggedIn: () => boolean;
   login: (token: string) => void;
   logout: () => void;
-  changeLogsOptions: (options: LogsOptions) => void;
-  reloadLogs: () => void;
   startContest: () => Promise<void>;
   resetContest: () => Promise<void>;
   setExtraTime: (extraTime: number) => Promise<void>;
@@ -101,15 +67,12 @@ export const AdminContext = React.createContext<AdminContextType>({
     serverTimeSkew: Loadable.loading(),
     status: Loadable.loading(),
     pack: Loadable.loading(),
-    logs: Loadable.loading(),
     users: Loadable.loading(),
   },
   actions: {
     isLoggedIn: () => false,
     login: () => {},
     logout: () => {},
-    changeLogsOptions: () => {},
-    reloadLogs: () => {},
     startContest: () => Promise.reject(),
     resetContest: () => Promise.reject(),
     setExtraTime: () => Promise.reject(),
@@ -130,9 +93,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [status, setStatus] = useState<Loadable<StatusData>>(Loadable.loading());
   const [statusCount, setStatusCount] = useState(0);
   const [pack, setPack] = useState<Loadable<Pack>>(Loadable.loading());
-  const [logs, setLogs] = useState<Loadable<LogsData>>(Loadable.loading());
-  const [logsOptions, setLogsOptions] = useState(defaultLogsOptions);
-  const [logCount, setLogCount] = useState(0);
   const [users, setUsers] = useState<Loadable<UsersData>>(Loadable.loading());
 
   const login = (token: string) => {
@@ -142,12 +102,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const logout = () => {
     cookies.remove(cookieName);
     setToken(null);
-  };
-  const changeLogsOptions = (options: LogsOptions) => {
-    setLogsOptions(options);
-  };
-  const reloadLogs = () => {
-    setLogCount(logCount + 1);
   };
   const startContest = () => {
     return client
@@ -191,7 +145,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
     if (!token) {
       setServerTimeSkew(Loadable.loading());
       setStatus(Loadable.loading());
-      setLogs(Loadable.loading());
       return;
     }
     client
@@ -222,19 +175,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   }, []);
 
-  // handle the logs
-  useEffect(() => {
-    if (!token) return;
-    client
-      .adminApi(token, "/log", logsOptions)
-      .then((response: AxiosResponse) => {
-        setLogs(Loadable.of(response.data as LogsData));
-      })
-      .catch((response) => {
-        notifyError(response);
-        setLogs(Loadable.error(response));
-      });
-  }, [token, logCount, logsOptions]);
+
 
   // handle the users
   useEffect(() => {
@@ -259,15 +200,12 @@ export function AdminContextProvider({ children }: AdminContextProps) {
           serverTimeSkew: serverTimeSkew,
           status,
           pack,
-          logs,
           users,
         },
         actions: {
           isLoggedIn,
           login,
           logout,
-          changeLogsOptions,
-          reloadLogs,
           startContest,
           resetContest,
           setExtraTime,
@@ -305,13 +243,6 @@ export function usePack() {
   return useMemo(() => {
     return context.data.pack;
   }, [context.data.pack]);
-}
-
-export function useLogs() {
-  const context = useContext(AdminContext);
-  return useMemo(() => {
-    return context.data.logs;
-  }, [context.data.logs]);
 }
 
 export function useUsers() {

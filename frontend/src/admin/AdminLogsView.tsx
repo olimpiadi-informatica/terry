@@ -9,7 +9,8 @@ import { AbsoluteDateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
-import { useLogs, LogLevel, LogEntry, useActions, useServerTime, defaultLogsOptions } from "./AdminContext";
+import { useActions, useServerTime } from "./AdminContext";
+import { useLogs, LogLevel, LogEntry, defaultLogsOptions } from "./logs.hook";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {
@@ -32,8 +33,7 @@ export default function AdminLogsView() {
   const [filter, setFilter] = useState("");
   const [options, setOptions] = useState(defaultLogsOptions);
 
-  const logs = useLogs();
-  const { changeLogsOptions, reloadLogs } = useActions();
+  const [logs, reloadLogs] = useLogs();
   const serverTime = useServerTime();
 
   // auto reload the logs
@@ -49,15 +49,15 @@ export default function AdminLogsView() {
   useEffect(() => {
     const newOptions = { ...options, level, category };
     if (newOptions.category === "") delete newOptions.category;
-    const changes =
+    const changed =
       level !== options.level ||
       (category === "" && options.category !== undefined) ||
       (category !== "" && options.category === undefined);
-    if (changes) {
+    if (changed) {
       setOptions(newOptions);
-      changeLogsOptions(newOptions);
+      reloadLogs(newOptions);
     }
-  }, [level, category, options, changeLogsOptions]);
+  }, [level, category, options, reloadLogs]);
 
   const filterLog = (log: LogEntry) => {
     if (!filter) return true;
@@ -84,10 +84,7 @@ export default function AdminLogsView() {
       return items.map((log, i) => (
         <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
           <td>
-            <AbsoluteDateComponent
-              clock={() => serverTime()}
-              date={DateTime.fromISO(log.date)}
-            />
+            <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date)} />
           </td>
           <td>
             <button className="btn btn-link" onClick={() => setCategory(log.category)}>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
@@ -8,12 +8,13 @@ import { DateComponent } from "../datetime.views";
 import { toast } from "react-toastify";
 import { Trans, t, Plural } from "@lingui/macro";
 import { i18n } from "../i18n";
-import { useStatus, usePack, useLogs, useUsers, useActions, useServerTime } from "./AdminContext";
+import { useStatus, usePack, useUsers, useActions, useServerTime } from "./AdminContext";
+import { useLogs } from "./logs.hook";
 
 export default function AdminSummaryView() {
   const status = useStatus().value();
   const pack = usePack().value();
-  const logs = useLogs();
+  const [logs, reloadLogs] = useLogs();
   const users = useUsers();
   const serverTime = useServerTime();
   const { startContest, resetContest } = useActions();
@@ -22,7 +23,14 @@ export default function AdminSummaryView() {
     throw new Error("AdminSummaryView requires the pack to be uploaded");
   }
 
-  // TODO: reload logs
+  // auto reload the logs
+  useEffect(() => {
+    const LOG_REFRESH_INTERVAL = 5000;
+    const interval = setInterval(() => {
+      reloadLogs();
+    }, LOG_REFRESH_INTERVAL);
+    return () => clearInterval(interval);
+  }, [reloadLogs]);
 
   const renderNotStarted = () => {
     return (
