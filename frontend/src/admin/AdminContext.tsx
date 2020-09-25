@@ -36,6 +36,7 @@ export type ContextActions = {
   startContest: () => Promise<void>;
   resetContest: () => Promise<void>;
   setExtraTime: (extraTime: number, userToken?: string) => Promise<void>;
+  uploadPack: (file: File) => void;
 };
 
 type AdminContextType = {
@@ -57,6 +58,7 @@ export const AdminContext = React.createContext<AdminContextType>({
     startContest: () => Promise.reject(),
     resetContest: () => Promise.reject(),
     setExtraTime: () => Promise.reject(),
+    uploadPack: () => {},
   },
 });
 
@@ -74,6 +76,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [status, setStatus] = useState<Loadable<StatusData>>(Loadable.loading());
   const [statusCount, setStatusCount] = useState(0);
   const [pack, setPack] = useState<Loadable<Pack>>(Loadable.loading());
+  const [packCount, setPackCount] = useState(0);
 
   const login = (token: string) => {
     cookies.set(cookieName, token);
@@ -99,6 +102,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .adminApi(token, "/drop_contest")
       .then(() => {
         logout();
+        setPackCount(packCount + 1);
       })
       .catch((response) => {
         notifyError(response);
@@ -114,6 +118,20 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .adminApi(token, "/set_extra_time", options)
       .then(() => {
         setStatusCount(statusCount + 1);
+      })
+      .catch((response) => {
+        notifyError(response);
+      });
+  };
+  const uploadPack = (file: File) => {
+    const data = new FormData();
+
+    data.append("file", file);
+
+    return client.api
+      .post("/admin/upload_pack", data)
+      .then(() => {
+        setPackCount(packCount + 1);
       })
       .catch((response) => {
         notifyError(response);
@@ -153,7 +171,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
         notifyError(response);
         setPack(Loadable.error(response));
       });
-  }, []);
+  }, [packCount]);
 
   const isLoggedIn = () => !status.isLoading();
   return (
@@ -172,6 +190,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
           startContest,
           resetContest,
           setExtraTime,
+          uploadPack,
         },
       }}
     >

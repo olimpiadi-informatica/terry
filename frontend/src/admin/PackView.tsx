@@ -14,8 +14,7 @@ function PackViewInner() {
   if (pack.value().uploaded) {
     return <AdminView />;
   } else {
-    // return <UploadPackView />;
-    throw new Error("TODO");
+    return <UploadPackView />;
   }
 }
 
