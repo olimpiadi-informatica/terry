@@ -45,9 +45,9 @@ export default function AdminView() {
 
           <Route path="/admin/logs" render={() => <AdminLogsView />} />
 
-          {/* <Route path="/admin/extra_time" render={() => <ContestExtraTimeView />} /> TODO
+          <Route path="/admin/extra_time" render={() => <ContestExtraTimeView />} />
 
-          <Route path="/admin/users" render={() => <AdminUsersView />} />
+          {/* <Route path="/admin/users" render={() => <AdminUsersView />} />
 
           <Route path="/admin/download_results" render={() => <DownloadResultsView />} /> */}
         </React.Fragment>

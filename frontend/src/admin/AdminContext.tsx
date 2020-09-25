@@ -87,6 +87,7 @@ export type ContextActions = {
   reloadLogs: () => void;
   startContest: () => Promise<void>;
   resetContest: () => Promise<void>;
+  setExtraTime: (extraTime: number) => Promise<void>;
 };
 
 type AdminContextType = {
@@ -111,6 +112,7 @@ export const AdminContext = React.createContext<AdminContextType>({
     reloadLogs: () => {},
     startContest: () => Promise.reject(),
     resetContest: () => Promise.reject(),
+    setExtraTime: () => Promise.reject(),
   },
 });
 
@@ -168,6 +170,21 @@ export function AdminContextProvider({ children }: AdminContextProps) {
         notifyError(response);
       });
   };
+  const setExtraTime = (extraTime: number, userToken?: string) => {
+    const options = {
+      extra_time: extraTime,
+      token: userToken,
+    };
+    if (options.token === undefined) delete options.token;
+    return client
+      .adminApi(token, "/set_extra_time", options)
+      .then(() => {
+        setStatusCount(statusCount + 1);
+      })
+      .catch((response) => {
+        notifyError(response);
+      });
+  };
 
   // handle the login
   useEffect(() => {
@@ -219,7 +236,9 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   }, [token, logCount, logsOptions]);
 
+  // handle the users
   useEffect(() => {
+    if (!token) return;
     client
       .adminApi(token, "/user_list")
       .then((response: AxiosResponse) => {
@@ -251,6 +270,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
           reloadLogs,
           startContest,
           resetContest,
+          setExtraTime,
         },
       }}
     >
