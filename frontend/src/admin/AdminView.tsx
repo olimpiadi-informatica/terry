@@ -49,7 +49,7 @@ export default function AdminView() {
 
           <Route path="/admin/users" render={() => <AdminUsersView />} />
 
-          {/* <Route path="/admin/download_results" render={() => <DownloadResultsView />} /> */}
+          <Route path="/admin/download_results" render={() => <DownloadResultsView />} />
         </React.Fragment>
       </main>
     </React.Fragment>
