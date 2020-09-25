@@ -1,5 +1,4 @@
-import React, { useState, createRef } from "react";
-import Pack from "./Pack";
+import React, { createRef } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useActions } from "./AdminContext";
