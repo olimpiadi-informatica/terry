@@ -9,7 +9,7 @@ import { AbsoluteDateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
-import { useActions, useServerTime } from "./AdminContext";
+import { useServerTime } from "./AdminContext";
 import { useLogs, LogLevel, LogEntry, defaultLogsOptions } from "./logs.hook";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {

@@ -35,7 +35,7 @@ export type ContextActions = {
   logout: () => void;
   startContest: () => Promise<void>;
   resetContest: () => Promise<void>;
-  setExtraTime: (extraTime: number) => Promise<void>;
+  setExtraTime: (extraTime: number, userToken?: string) => Promise<void>;
 };
 
 type AdminContextType = {

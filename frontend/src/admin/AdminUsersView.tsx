@@ -1,86 +1,72 @@
-import * as React from "react";
+import React, { createRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import ModalView from "../Modal";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AdminSession } from "./admin.models";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
+import { useActions } from "./AdminContext";
+import { UserEntry, useUsers } from "./users.hook";
+import Loading from "../Loading";
 
 type UserExtraTimeProps = {
-  session: AdminSession;
-  user: any;
+  user: UserEntry;
 };
 
-class UserExtraTimeView extends React.Component<UserExtraTimeProps> {
-  minutesRef: React.RefObject<HTMLInputElement>;
+function UserExtraTimeView({ user }: UserExtraTimeProps) {
+  const minutesRef = createRef<HTMLInputElement>();
+  const { setExtraTime } = useActions();
 
-  constructor(props: UserExtraTimeProps) {
-    super(props);
-    this.minutesRef = React.createRef();
-  }
-
-  setExtraTime() {
+  const doSetExtraTime = () => {
+    if (!minutesRef.current) return;
     if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
-    const minutes = parseInt(this.minutesRef.current!.value);
-    this.props.session.setExtraTime(minutes * 60, this.props.user.token);
-
-    // show success
+    const minutes = parseInt(minutesRef.current.value);
+    setExtraTime(minutes * 60, user.token);
     toast.success(i18n._(t`Extra time successfully updated for the user`));
-  }
+  };
 
-  extraTimeMinutes() {
-    return Math.round(this.props.user.extra_time / 60);
-  }
+  const extraTimeMinutes = () => {
+    return Math.round(user.extra_time / 60);
+  };
 
-  render() {
-    return (
-      <form
-        className="form-inline"
-        onSubmit={(e) => {
-          e.preventDefault();
-          this.setExtraTime();
-        }}
-      >
-        <input
-          name="minutes"
-          type="number"
-          ref={this.minutesRef}
-          className="form-control mr-sm-2"
-          defaultValue={"" + this.extraTimeMinutes()}
-        />
-        <button type="submit" className="btn btn-warning">
-          <FontAwesomeIcon icon={faHourglassStart} /> <Trans>Set</Trans>
-        </button>
-      </form>
-    );
-  }
+  return (
+    <form
+      className="form-inline"
+      onSubmit={(e) => {
+        e.preventDefault();
+        doSetExtraTime();
+      }}
+    >
+      <input
+        name="minutes"
+        type="number"
+        ref={minutesRef}
+        className="form-control mr-sm-2"
+        defaultValue={"" + extraTimeMinutes()}
+      />
+      <button type="submit" className="btn btn-warning">
+        <FontAwesomeIcon icon={faHourglassStart} /> <Trans>Set</Trans>
+      </button>
+    </form>
+  );
 }
 
-type AdminUsersProps = {
-  session: AdminSession;
-  users: { data: { items: any[] } };
-};
+export default function AdminUsersView() {
+  const [users] = useUsers();
+  if (users.isLoading()) return <Loading />;
+  if (users.isError()) return <Trans>Error</Trans>;
 
-export default class AdminUsersView extends React.Component<AdminUsersProps> {
-  componentDidMount() {
-    this.props.session.pushObserver(this);
-  }
-
-  componentWillUnmount() {
-    this.props.session.popObserver(this);
-  }
-
-  renderUser(user: any, i: number) {
+  const renderUserRow = (user: UserEntry, i: number) => {
     const ips = user.ip
-      .map((ip: any, i: number) => (
+      .map((ip, i) => (
         <abbr key={i} title={new Date(ip.first_date).toLocaleString()}>
           {ip.ip}
         </abbr>
       ))
-      .map((item: any, i: number) => (i === 0 ? [item] : [<span key={`span-${i}`}> - </span>, item]));
+      // join with a separator
+      .map((item, i) => (i === 0 ? [item] : [<span key={`span-${i}`}> - </span>, item]));
     return (
       <tr key={i}>
         <td>{user.name}</td>
@@ -88,54 +74,52 @@ export default class AdminUsersView extends React.Component<AdminUsersProps> {
         <td>{user.token}</td>
         <td>{ips}</td>
         <td>
-          <UserExtraTimeView session={this.props.session} user={user} />
+          <UserExtraTimeView user={user} />
         </td>
       </tr>
     );
-  }
+  };
 
-  render() {
-    return (
-      <ModalView contentLabel={i18n._(t`Contestants`)} returnUrl={"/admin"}>
-        <div className="modal-header">
-          <h5 className="modal-title">{i18n._(t`Contestants`)}</h5>
-          <Link to={"/admin"} role="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </Link>
-        </div>
-        <div className="modal-body no-padding">
-          <table className="table terry-table">
-            <thead>
-              <tr>
-                <th>
-                  <Trans>Name</Trans>
-                </th>
-                <th>
-                  <Trans>Surname</Trans>
-                </th>
-                <th>
-                  <Trans>Token</Trans>
-                </th>
-                <th>
-                  <Trans>IP</Trans>
-                </th>
-                <th>
-                  <Trans>Extra time</Trans>{" "}
-                  <small>
-                    <Trans>(in minutes)</Trans>
-                  </small>
-                </th>
-              </tr>
-            </thead>
-            <tbody>{this.props.users.data.items.map((user, i) => this.renderUser(user, i))}</tbody>
-          </table>
-        </div>
-        <div className="modal-footer">
-          <Link to={"/admin"} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
-          </Link>
-        </div>
-      </ModalView>
-    );
-  }
+  return (
+    <ModalView contentLabel={i18n._(t`Contestants`)} returnUrl={"/admin"}>
+      <div className="modal-header">
+        <h5 className="modal-title">{i18n._(t`Contestants`)}</h5>
+        <Link to={"/admin"} role="button" className="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </Link>
+      </div>
+      <div className="modal-body no-padding">
+        <table className="table terry-table">
+          <thead>
+            <tr>
+              <th>
+                <Trans>Name</Trans>
+              </th>
+              <th>
+                <Trans>Surname</Trans>
+              </th>
+              <th>
+                <Trans>Token</Trans>
+              </th>
+              <th>
+                <Trans>IP</Trans>
+              </th>
+              <th>
+                <Trans>Extra time</Trans>{" "}
+                <small>
+                  <Trans>(in minutes)</Trans>
+                </small>
+              </th>
+            </tr>
+          </thead>
+          <tbody>{users.value().items.map((user, i) => renderUserRow(user, i))}</tbody>
+        </table>
+      </div>
+      <div className="modal-footer">
+        <Link to={"/admin"} role="button" className="btn btn-primary">
+          <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
+        </Link>
+      </div>
+    </ModalView>
+  );
 }
