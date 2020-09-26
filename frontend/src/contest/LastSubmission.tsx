@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
-import { DateComponent } from "../datetime.views";
+import { DateComponent } from "src/datetime.views";
 import { TaskData, useServerTime } from "./ContestContext";
 import { Submission } from "./hooks/useSubmission";
 

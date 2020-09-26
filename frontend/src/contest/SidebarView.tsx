@@ -2,7 +2,7 @@ import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
-import { CountdownComponent } from "../datetime.views";
+import { CountdownComponent } from "src/datetime.views";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";

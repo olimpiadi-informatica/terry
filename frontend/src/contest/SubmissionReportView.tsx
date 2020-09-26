@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import { ModalView } from "../Modal";
+import { ModalView } from "src/Modal";
+import { Loading } from "src/Loading";
 import { FeedbackView } from "./FeedbackView";
 import { TaskData } from "./ContestContext";
 import { useSubmission } from "./hooks/useSubmission";
-import { Loading } from "../Loading";
 
 type Props = {
   submissionId: string;

@@ -3,7 +3,7 @@ import filesize from "filesize";
 import { DateTime } from "luxon";
 import "./FileView.css";
 import { Trans } from "@lingui/macro";
-import { DateComponent } from "../datetime.views";
+import { DateComponent } from "src/datetime.views";
 
 type Props = {
   file: File;

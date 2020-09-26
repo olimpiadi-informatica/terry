@@ -5,16 +5,16 @@ import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import ReactTooltip from "react-tooltip";
 import { Trans, t } from "@lingui/macro";
-import { DateComponent } from "../datetime.views";
-import { client } from "../TerryClient";
-import { ModalView } from "../Modal";
-import { colorFromScore } from "../utils";
+import { DateComponent } from "src/datetime.views";
+import { client } from "src/TerryClient";
+import { ModalView } from "src/Modal";
+import { colorFromScore } from "src/utils";
 import "./SubmissionListView.css";
+import { i18n } from "src/i18n";
+import { Loading } from "src/Loading";
 import { ScoreView } from "./ScoreView";
-import { i18n } from "../i18n";
 import { TaskData, useServerTime } from "./ContestContext";
 import { useSubmissionList, SubmissionList } from "./hooks/useSubmissionList";
-import { Loading } from "../Loading";
 import { Submission } from "./hooks/useSubmission";
 
 type Props = {

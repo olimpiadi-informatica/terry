@@ -1,8 +1,8 @@
 import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
+import { DateComponent } from "src/datetime.views";
 import { ResultView } from "./ResultView";
-import { DateComponent } from "../datetime.views";
 import { ScoreView } from "./ScoreView";
 import { FeedbackCaseInfo, Submission } from "./hooks/useSubmission";
 import { useServerTime, TaskData } from "./ContestContext";

@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
+import { client } from "src/TerryClient";
+import { Loadable } from "src/Loadable";
+import { notifyError } from "src/utils";
 import {
   TaskData, UserTaskData, InputData, useToken, useActions,
 } from "./ContestContext";
-import { client } from "../TerryClient";
-import { Loadable } from "../Loadable";
-import { notifyError } from "../utils";
 import { SubmissionList } from "./hooks/useSubmissionList";
 
 type Props = {

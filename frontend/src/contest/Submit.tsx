@@ -3,14 +3,14 @@ import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import { client } from "../TerryClient";
-import { ModalView } from "../Modal";
+import { client } from "src/TerryClient";
+import { ModalView } from "src/Modal";
 import "./Submit.css";
+import { Loadable } from "src/Loadable";
+import { notifyError } from "src/utils";
 import { SourceSelector, UploadedSource } from "./SourceSelector";
 import { TaskData, useActions } from "./ContestContext";
 import { OutputSelector, UploadedOutput } from "./OutputSelector";
-import { Loadable } from "../Loadable";
-import { notifyError } from "../utils";
 
 type Props = {
   inputId: string;
