@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export function colorFromScore(score: number, maxScore: number) {
   if (score === maxScore) return "success";
@@ -7,26 +8,26 @@ export function colorFromScore(score: number, maxScore: number) {
   return "warning";
 }
 
-export function notifyError(response: any) {
-  if ("response" in response && "data" in response.response) {
-    if (typeof response.response.data === "string") {
-      if (!response.response.data.startsWith("<html>")) {
-        // application errors (client)
-        toast.error(response.response.data);
+export function notifyError(error: AxiosError) {
+  if (error.response) {
+    if (error.response.data) {
+      if (typeof error.response.data === "string") {
+        if (error.response.data.startsWith("<html>")) {
+          // e.g. nginx errors (fields: status, statusText)
+          toast.error(`${error.response.status} ${error.response.statusText}`);
+        } else {
+          // application errors (client)
+          toast.error(error.response.data);
+        }
+      } else if ("message" in error.response.data) {
+        // application errors (server)
+        toast.error(error.response.data.message);
       } else {
-        // e.g. nginx errors (fields: status, statusText)
-        toast.error(`${response.response.status} ${response.response.statusText}`);
+        console.error("unhandled notifyError parameter!", error);
       }
-    } else if ("message" in response.response.data) {
-      // application errors (server)
-      toast.error(response.response.data.message);
-    } else {
-      console.error("unhandled notifyError parameter!", response);
     }
-  } else if ("message" in response) {
-    // e.g. TypeError (fields: message, stack)
-    toast.error(response.message);
   } else {
-    console.error("unhandled notifyError parameter!", response);
+    // e.g. TypeError (fields: message, stack)
+    toast.error(error.message);
   }
 }
