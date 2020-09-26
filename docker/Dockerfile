@@ -1,12 +1,33 @@
-FROM alpine
+FROM python:3.8
 
 EXPOSE 80
 
-RUN apk add --no-cache python3 python2 git
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+
+RUN apt-get update
+
+# Dependencies to keep
+RUN apt-get install -y \
+  python \
+  python-wheel \
+  python-pip \
+  python-numpy \
+  python-sortedcontainers \
+  python3 \
+  python3-wheel \
+  python3-pip \
+  python3-numpy \
+  python3-sortedcontainers \
+  nginx
+
+# Dependencies to later delete
+RUN apt-get install -y \
+  git \
+  libffi-dev \
+  nodejs
 
 # build terry
 RUN set -x && \
-    apk add --no-cache gcc python3-dev py3-pip py3-wheel py3-numpy py3-sortedcontainers python2-dev musl-dev libffi-dev file make nginx npm && \
     git clone --recursive https://github.com/algorithm-ninja/terry /terry && \
     cd /terry/backend && \
     pip3 install -I -r requirements.txt && \
@@ -17,9 +38,7 @@ RUN set -x && \
     cp -r build /app && \
     cd / && \
     rm -rf /terry && \
-    python2 -m ensurepip && \
-    pip2 install sortedcontainers numpy && \
-    apk del gcc python3-dev python2-dev musl-dev libffi-dev file make npm git
+    apt-get purge -y git libffi-dev nodejs
 
 ADD start.sh /
 ADD nginx.conf /etc/nginx/nginx.conf

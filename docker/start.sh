@@ -2,7 +2,7 @@
 
 mkdir -p /run/nginx
 mkdir -p /data/logs/nginx
-chown -R nginx:nginx /data/logs/nginx
+chown -R www-data:www-data /data/logs/nginx
 
 cd /data
 
