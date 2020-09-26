@@ -17,10 +17,10 @@ export default function ContestExtraTimeView() {
 
   const doSetExtraTime = () => {
     if (!minutesRef.current) return;
-
+    // eslint-disable-next-line no-alert
     if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
-    const minutes = parseInt(minutesRef.current.value);
+    const minutes = parseInt(minutesRef.current.value, 10);
     setExtraTime(minutes * 60).then(() => {
       toast.success(i18n._(t`Extra time successfully updated`));
       history.push("/admin");

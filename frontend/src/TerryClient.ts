@@ -13,10 +13,13 @@ class Client {
 
   statements = axios.create({ baseURL: this.statementsBaseURI });
 
-  adminApi(token: string, path: string, options: any = {}) {
-    options.admin_token = token;
+  adminApi(token: string, path: string, options: { [key: string]: string | undefined } = {}) {
     const data = new FormData();
-    for (const key in options) data.append(key, options[key]);
+    Object.entries(options).forEach(([key, value]) => {
+      if (value) data.set(key, value);
+    });
+    data.set("admin_token", token);
+
     return this.api.post(`/admin/${path}`, data);
   }
 }

@@ -43,7 +43,7 @@ export type ReloadLogs = (options?: LogsOptions) => void;
 export function useLogs(): [Loadable<LogsData>, ReloadLogs] {
   const token = useToken();
   const [logs, setLogs] = useState<Loadable<LogsData>>(Loadable.loading());
-  const [logsOptions, setLogsOptions] = useState(defaultLogsOptions);
+  const [logsOptions, setLogsOptions] = useState<LogsOptions>(defaultLogsOptions);
   const [logsUpdate, triggerLogsUpdate] = useTriggerUpdate();
 
   useEffect(() => {

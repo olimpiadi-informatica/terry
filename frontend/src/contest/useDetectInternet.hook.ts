@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useMemo, useEffect } from "react";
 import client from "../TerryClient";
 import { useToken } from "./ContestContext";

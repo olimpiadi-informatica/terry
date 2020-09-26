@@ -8,7 +8,6 @@ function PackViewInner() {
   const pack = usePack();
 
   if (pack.isLoading()) return <Loading />;
-  // FIXME: use a proper ErrorView or similar
   if (pack.isError()) {
     return (
       <p>

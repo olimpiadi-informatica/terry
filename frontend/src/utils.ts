@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { toast } from "react-toastify";
 
 export function colorFromScore(score: number, maxScore: number) {
@@ -20,12 +21,12 @@ export function notifyError(response: any) {
       // application errors (server)
       toast.error(response.response.data.message);
     } else {
-      console.error("unhandled notifyError parameter!");
+      console.error("unhandled notifyError parameter!", response);
     }
   } else if ("message" in response) {
     // e.g. TypeError (fields: message, stack)
     toast.error(response.message);
   } else {
-    console.error("unhandled notifyError parameter!");
+    console.error("unhandled notifyError parameter!", response);
   }
 }

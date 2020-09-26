@@ -33,12 +33,11 @@ export const LanguageContext = React.createContext({
 export function TransProvider({ children }: { children: ReactNode }) {
   const [lang, setLanguage] = useState(defaultLanguage);
 
-  const changeLanguage = (lang: string) => {
-    console.log("Change language to", lang);
-    setLanguage(lang);
-    i18n.activate(lang);
+  const changeLanguage = (newLang: string) => {
+    setLanguage(newLang);
+    i18n.activate(newLang);
     // when the language changes set the attribute so that bootstrap components can be translated via css
-    document.getElementsByTagName("html")[0].setAttribute("lang", lang);
+    document.getElementsByTagName("html")[0].setAttribute("lang", newLang);
   };
 
   return (

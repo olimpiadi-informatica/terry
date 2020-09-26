@@ -4,7 +4,7 @@ import React, {
 import { Duration, DateTime } from "luxon";
 import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
-import { useLogin } from "../useLogin.hook";
+import useLogin from "../useLogin.hook";
 import Loadable from "../Loadable";
 import client from "../TerryClient";
 import useTriggerUpdate from "../useTriggerUpdate.hook";

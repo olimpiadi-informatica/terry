@@ -36,6 +36,99 @@ export default function AdminSummaryView() {
     return () => clearInterval(interval);
   }, [reloadLogs, reloadUsers]);
 
+  const getStartTime = () => {
+    if (!status.start_time) throw new Error("Unknown start time");
+    return DateTime.fromISO(status.start_time);
+  };
+
+  const getEndTime = () => {
+    if (!status.end_time) throw new Error("Unknown end time");
+    return DateTime.fromISO(status.end_time);
+  };
+
+  const getUsersExtraTime = () => {
+    if (!users.isReady()) return 0;
+    return Math.max.apply(
+      null,
+      users.value().items.map((user) => user.extra_time),
+    );
+  };
+
+  const renderStartTime = () => (
+    <>
+      <Trans>Contest started at</Trans>
+      {" "}
+      {getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+    </>
+  );
+
+  const countUsersWithExtraTime = () => {
+    if (!users.isReady()) return 0;
+    return users.value().items.filter((user) => user.extra_time !== 0).length;
+  };
+
+  const renderCountdownExtra = () => {
+    if (countUsersWithExtraTime() === 0) return <></>;
+
+    return (
+      <>
+        {" "}
+        (
+        <span>
+          <Plural
+            value={getUsersExtraTime() / 60}
+            one="plus # extra minute for some user"
+            other="plus # extra minutes for some user"
+          />
+        </span>
+        )
+      </>
+    );
+  };
+
+  const renderCountdown = () => (
+    <>
+      <Trans>Remaining time</Trans>
+      {" "}
+      <CountdownComponent clock={() => serverTime()} end={getEndTime()} afterEnd={() => ""} />
+      {renderCountdownExtra()}
+    </>
+  );
+
+  const renderEndTime = () => (
+    <>
+      <Trans>Contest ended at</Trans>
+      {" "}
+      {getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+    </>
+  );
+
+  const getExtraTimeEndTime = () => getEndTime().plus({ seconds: getUsersExtraTime() });
+
+  const renderExtraTimeCountdown = () => {
+    const endTime = getExtraTimeEndTime();
+
+    return (
+      <>
+        <Trans>Remaining time for some participant</Trans>
+        {" "}
+        <CountdownComponent clock={() => serverTime()} end={endTime} afterEnd={() => ""} />
+      </>
+    );
+  };
+
+  const renderExtraTimeEndTime = () => {
+    if (countUsersWithExtraTime() === 0) return null;
+
+    return (
+      <li>
+        <Trans>Contest ended for everyone at</Trans>
+        {" "}
+        {getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+      </li>
+    );
+  };
+
   const renderNotStarted = () => (
     <>
       <p>
@@ -87,102 +180,10 @@ export default function AdminSummaryView() {
     </>
   );
 
-  const countUsersWithExtraTime = () => {
-    if (!users.isReady()) return 0;
-    return users.value().items.filter((user) => user.extra_time !== 0).length;
-  };
-
-  const getStartTime = () => {
-    if (!status.start_time) throw new Error("Unknown start time");
-    return DateTime.fromISO(status.start_time);
-  };
-
-  const getEndTime = () => {
-    if (!status.end_time) throw new Error("Unknown end time");
-    return DateTime.fromISO(status.end_time);
-  };
-
-  const getUsersExtraTime = () => {
-    if (!users.isReady()) return 0;
-    return Math.max.apply(
-      null,
-      users.value().items.map((user) => user.extra_time),
-    );
-  };
-
-  const getExtraTimeEndTime = () => getEndTime().plus({ seconds: getUsersExtraTime() });
-
   const isDeletable = () => pack.deletable;
 
-  const renderStartTime = () => (
-    <>
-      <Trans>Contest started at</Trans>
-      {" "}
-      {getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-    </>
-  );
-
-  const renderCountdownExtra = () => {
-    if (countUsersWithExtraTime() === 0) return;
-
-    return (
-      <>
-        {" "}
-        (
-        <span>
-          <Plural
-            value={getUsersExtraTime() / 60}
-            one="plus # extra minute for some user"
-            other="plus # extra minutes for some user"
-          />
-        </span>
-        )
-      </>
-    );
-  };
-
-  const renderCountdown = () => (
-    <>
-      <Trans>Remaining time</Trans>
-      {" "}
-      <CountdownComponent clock={() => serverTime()} end={getEndTime()} afterEnd={() => ""} />
-      {renderCountdownExtra()}
-    </>
-  );
-
-  const renderEndTime = () => (
-    <>
-      <Trans>Contest ended at</Trans>
-      {" "}
-      {getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-    </>
-  );
-
-  const renderExtraTimeEndTime = () => {
-    if (countUsersWithExtraTime() === 0) return null;
-
-    return (
-      <li>
-        <Trans>Contest ended for everyone at</Trans>
-        {" "}
-        {getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-      </li>
-    );
-  };
-
-  const renderExtraTimeCountdown = () => {
-    const endTime = getExtraTimeEndTime();
-
-    return (
-      <>
-        <Trans>Remaining time for some participant</Trans>
-        {" "}
-        <CountdownComponent clock={() => serverTime()} end={endTime} afterEnd={() => ""} />
-      </>
-    );
-  };
-
   const doResetContest = () => {
+    // eslint-disable-next-line no-alert
     if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
     resetContest();
@@ -211,33 +212,32 @@ export default function AdminSummaryView() {
           </h3>
           <ul className="mb-0">
             <li>
-              {logs.isLoading() ? (
-                i18n._(t`Loading...`)
-              ) : logs.isError() ? (
-                i18n._(t`Error`)
-              ) : logs.value().items.length === 0 ? (
-                <>
-                  <Trans>No issue detected</Trans>
-                  {" "}
-                  (
-                  <Link to="/admin/logs">
-                    <Trans>show log</Trans>
-                  </Link>
-                  )
-                </>
-              ) : (
-                <>
-                  <Trans>Issue last detected</Trans>
-                  {" "}
-                  <DateComponent clock={() => serverTime()} date={DateTime.fromISO(logs.value().items[0].date)} />
-                  {" "}
-                  (
-                  <Link to="/admin/logs">
-                    <Trans>show log</Trans>
-                  </Link>
-                  )
-                </>
-              )}
+              {logs.isLoading() && i18n._(t`Loading...`)}
+              {logs.isError() && i18n._(t`Error`)}
+              {logs.isReady()
+                && (logs.value().items.length === 0 ? (
+                  <>
+                    <Trans>No issue detected</Trans>
+                    {" "}
+                    (
+                    <Link to="/admin/logs">
+                      <Trans>show log</Trans>
+                    </Link>
+                    )
+                  </>
+                ) : (
+                  <>
+                    <Trans>Issue last detected</Trans>
+                    {" "}
+                    <DateComponent clock={() => serverTime()} date={DateTime.fromISO(logs.value().items[0].date)} />
+                    {" "}
+                    (
+                    <Link to="/admin/logs">
+                      <Trans>show log</Trans>
+                    </Link>
+                    )
+                  </>
+                ))}
             </li>
           </ul>
         </div>
@@ -286,7 +286,7 @@ export default function AdminSummaryView() {
           <h3>
             <Trans>Danger zone</Trans>
           </h3>
-          <button disabled={!isDeletable()} className="btn btn-danger" onClick={() => doResetContest()}>
+          <button disabled={!isDeletable()} type="button" className="btn btn-danger" onClick={() => doResetContest()}>
             <Trans>RESET</Trans>
           </button>
         </div>

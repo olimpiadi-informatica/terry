@@ -20,9 +20,10 @@ function UserExtraTimeView({ user }: UserExtraTimeProps) {
 
   const doSetExtraTime = () => {
     if (!minutesRef.current) return;
+    // eslint-disable-next-line no-alert
     if (!window.confirm(i18n._(t`Are you sure?`))) return;
 
-    const minutes = parseInt(minutesRef.current.value);
+    const minutes = parseInt(minutesRef.current.value, 10);
     setExtraTime(minutes * 60, user.token);
     toast.success(i18n._(t`Extra time successfully updated for the user`));
   };
@@ -60,13 +61,13 @@ export default function AdminUsersView() {
 
   const renderUserRow = (user: UserEntry, i: number) => {
     const ips = user.ip
-      .map((ip, i) => (
-        <abbr key={i} title={new Date(ip.first_date).toLocaleString()}>
+      .map((ip) => (
+        <abbr key={ip.ip} title={new Date(ip.first_date).toLocaleString()}>
           {ip.ip}
         </abbr>
       ))
       // join with a separator
-      .map((item, i) => (i === 0 ? [item] : [<span key={`span-${i}`}> - </span>, item]));
+      .map((item, j) => (j === 0 ? [item] : [<span key={`span-${item.key}`}> - </span>, item]));
     return (
       <tr key={i}>
         <td>{user.name}</td>

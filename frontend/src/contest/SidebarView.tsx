@@ -15,7 +15,7 @@ export default function SidebarView() {
   const serverTime = useServerTime();
   const contest = contestL.isReady() ? contestL.value() : null;
 
-  const renderStarted = (contest: StartedContest) => (
+  const renderStarted = (startedContest: StartedContest) => (
     <>
       <li className="nav-item title">
         <h5 className="text-uppercase">
@@ -23,8 +23,8 @@ export default function SidebarView() {
         </h5>
         <ScoreView
           style={{ textAlign: "right", marginRight: "1rem" }}
-          score={contest.total_score}
-          max={contest.contest.max_total_score}
+          score={startedContest.total_score}
+          max={startedContest.contest.max_total_score}
           size={2}
         />
       </li>
@@ -38,7 +38,7 @@ export default function SidebarView() {
         <p className="terry-remaining-time">
           <CountdownComponent
             clock={() => serverTime()}
-            end={DateTime.fromISO(contest.end_time)}
+            end={DateTime.fromISO(startedContest.end_time)}
             afterEnd={() => (
               <span>
                 <Trans>The contest is finished</Trans>
@@ -56,7 +56,7 @@ export default function SidebarView() {
       </li>
       <li className="divider-vertical" />
 
-      {contest.contest.tasks.map((task: TaskData) => (
+      {startedContest.contest.tasks.map((task: TaskData) => (
         <NavbarItemView key={task.name} taskName={task.name} />
       ))}
 

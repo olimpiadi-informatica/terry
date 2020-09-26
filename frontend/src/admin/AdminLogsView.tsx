@@ -3,11 +3,11 @@ import { Object } from "core-js";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { DateTime } from "luxon";
+import { Trans, t } from "@lingui/macro";
 import ModalView from "../Modal";
 import "./AdminLogsView.css";
 import { AbsoluteDateComponent } from "../datetime.views";
-import { DateTime } from "luxon";
-import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useServerTime } from "./AdminContext";
 import {
@@ -69,10 +69,13 @@ export default function AdminLogsView() {
     if (logs.isLoading()) {
       return (
         <tr>
-          <td colSpan={4}><Trans>Loading...</Trans></td>
+          <td colSpan={4}>
+            <Trans>Loading...</Trans>
+          </td>
         </tr>
       );
-    } if (logs.isReady()) {
+    }
+    if (logs.isReady()) {
       const items = logs.value().items.filter((l) => filterLog(l));
       if (items.length === 0) {
         return (
@@ -83,18 +86,18 @@ export default function AdminLogsView() {
           </tr>
         );
       }
-      return items.map((log, i) => (
-        <tr key={i} className={`table-${LOG_LEVELS[log.level].color}`}>
+      return items.map((log) => (
+        <tr key={log.date + log.message} className={`table-${LOG_LEVELS[log.level].color}`}>
           <td>
             <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date)} />
           </td>
           <td>
-            <button className="btn btn-link" onClick={() => setCategory(log.category)}>
+            <button className="btn btn-link" type="button" onClick={() => setCategory(log.category)}>
               {log.category}
             </button>
           </td>
           <td>
-            <button className="btn btn-link" onClick={() => setLevel(log.level)}>
+            <button className="btn btn-link" type="button" onClick={() => setLevel(log.level)}>
               {log.level}
             </button>
           </td>
@@ -103,15 +106,14 @@ export default function AdminLogsView() {
           </td>
         </tr>
       ));
-    } if (logs.isError()) {
-      return (
-        <tr>
-          <td colSpan={4}>
-            <Trans>Error</Trans>
-          </td>
-        </tr>
-      );
     }
+    return (
+      <tr>
+        <td colSpan={4}>
+          <Trans>Error</Trans>
+        </td>
+      </tr>
+    );
   };
 
   return (
@@ -130,6 +132,7 @@ export default function AdminLogsView() {
             {Object.entries(LOG_LEVELS).map(([lvl, obj]) => (
               <button
                 key={lvl}
+                type="button"
                 className={["btn", level === lvl ? "active" : "", `btn-${obj.color}`].join(" ")}
                 onClick={() => setLevel(lvl)}
               >

@@ -80,6 +80,7 @@ async function isExecutable(blob: Blob): Promise<boolean> {
       }
     }
     if (valid) {
+      // eslint-disable-next-line no-console
       console.log("Source file detected to be binary file: it starts with", magic);
       return Promise.resolve(true);
     }

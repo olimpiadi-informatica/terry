@@ -12,7 +12,7 @@ export type UploadedFile = {
 
 export type Alert = {
   message: string;
-  severity: string; // TODO: enum
+  severity: "warning" | "danger" | "success";
   code?: string;
 };
 

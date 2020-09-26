@@ -7,12 +7,15 @@ import client from "../TerryClient";
 import { notifyError } from "../utils";
 import Loadable from "../Loadable";
 import useTriggerUpdate from "../useTriggerUpdate.hook";
-import { useLogin } from "../useLogin.hook";
+import useLogin from "../useLogin.hook";
 
 export type StatusData = {
   loaded: boolean;
+  // eslint-disable-next-line camelcase
   start_time?: string;
+  // eslint-disable-next-line camelcase
   end_time?: string;
+  // eslint-disable-next-line camelcase
   extra_time?: number;
 };
 
@@ -106,7 +109,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const setExtraTime = (extraTime: number, userToken?: string) => {
     if (!token) throw new Error("You are not logged in");
     const options = {
-      extra_time: extraTime,
+      extra_time: extraTime.toString(),
       token: userToken,
     };
     if (options.token === undefined) delete options.token;
@@ -218,5 +221,7 @@ export function usePack() {
 export function useServerTime() {
   const context = useContext(AdminContext);
 
-  return useMemo(() => () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0))), [context.data.serverTimeSkew]);
+  return useMemo(() => () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0))), [
+    context.data.serverTimeSkew,
+  ]);
 }

@@ -22,6 +22,7 @@ export default function AdminView() {
       </Link>
       <button
         className="terry-admin-logout-button btn btn-sm btn-light"
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           logout();

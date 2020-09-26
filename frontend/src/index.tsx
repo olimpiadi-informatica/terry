@@ -21,9 +21,12 @@ if (window.location.origin.endsWith(":3000")) window.location.replace("http://lo
 /** ****** DEVELOPMENT SPECIFIC ********* */
 
 // handle errors in promises
-window.addEventListener("unhandledrejection", (event: any) => {
+window.addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => {
   // FIXME: dirty trick to avoid alerts in development
-  if (!window.location.origin.endsWith(":9000")) window.alert(`An error occurred. Please reload the page. (${event.reason || "<no reason>"})`);
+  if (!window.location.origin.endsWith(":9000")) {
+    // eslint-disable-next-line no-alert
+    window.alert(`An error occurred. Please reload the page. (${event.reason || "<no reason>"})`);
+  }
 });
 
 ReactDOM.render(

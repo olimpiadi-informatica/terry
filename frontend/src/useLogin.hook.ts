@@ -3,13 +3,13 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-export function useLogin(cookieName: string) {
+export default function useLogin(cookieName: string) {
   const tokenFromCookie = cookies.get(cookieName);
   const [token, setToken] = useState<string | null>(tokenFromCookie || null);
   const login = useMemo(
-    () => (token: string) => {
-      cookies.set(cookieName, token);
-      setToken(token);
+    () => (newToken: string) => {
+      cookies.set(cookieName, newToken);
+      setToken(newToken);
     },
     [cookieName],
   );
