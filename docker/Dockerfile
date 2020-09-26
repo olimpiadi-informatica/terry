@@ -4,10 +4,8 @@ EXPOSE 80
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
-RUN apt-get update
-
 # Dependencies to keep
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
   python \
   python-wheel \
   python-pip \
@@ -20,25 +18,9 @@ RUN apt-get install -y \
   python3-sortedcontainers \
   nginx
 
-# Dependencies to later delete
-RUN apt-get install -y \
-  git \
-  libffi-dev \
-  nodejs
-
-# build terry
-RUN set -x && \
-    git clone --recursive https://github.com/algorithm-ninja/terry /terry && \
-    cd /terry/backend && \
-    pip3 install -I -r requirements.txt && \
-    ./setup.py install && \
-    cd /terry/frontend && \
-    npm install && \
-    npm run build && \
-    cp -r build /app && \
-    cd / && \
-    rm -rf /terry && \
-    apt-get purge -y git libffi-dev nodejs
+# Setup terry
+ADD setup.sh /
+RUN /setup.sh
 
 ADD start.sh /
 ADD nginx.conf /etc/nginx/nginx.conf
