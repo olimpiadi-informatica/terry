@@ -3,17 +3,17 @@ import { Link, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import TaskView from "./TaskView";
-import SidebarView from "./SidebarView";
+import { TaskView } from "./TaskView";
+import { SidebarView } from "./SidebarView";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { useContest, useActions, StartedContest } from "./ContestContext";
 import Loading from "../Loading";
-import UsefulInfo from "./UsefulInfo";
-import Documentation from "./Documentation";
-import ContestHome from "./ContestHome";
-import LoginView from "./LoginView";
+import { UsefulInfo } from "./UsefulInfo";
+import { Documentation } from "./Documentation";
+import { ContestHome } from "./ContestHome";
+import { LoginView } from "./LoginView";
 
-export default function ContestView() {
+export function ContestView() {
   const contestL = useContest();
   const { logout, isLoggedIn } = useActions();
   const loggedIn = isLoggedIn();

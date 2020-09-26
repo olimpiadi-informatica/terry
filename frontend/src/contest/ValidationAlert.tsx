@@ -1,11 +1,11 @@
 import React from "react";
-import { Alert } from "./useUpload.hook";
+import { Alert } from "./hooks/useUpload";
 
 type Props = {
     alert: Alert
 }
 
-export default function ValidationAlert({ alert }: Props) {
+export function ValidationAlert({ alert }: Props) {
   return (
     <div className={`alert alert-${alert.severity}`}>
       {alert.message}

@@ -1,21 +1,21 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
 import { Route } from "react-router-dom";
-import TaskStatementView from "./TaskStatementView";
+import { TaskStatementView } from "./TaskStatementView";
 import { TaskData, UserTaskData } from "./ContestContext";
-import TaskCommands from "./TaskCommands";
-import LastSubmission from "./LastSubmission";
-import useStatement from "./useStatement.hook";
-import CreateSubmissionView from "./CreateSubmissionView";
-import SubmissionReportView from "./SubmissionReportView";
-import SubmissionListView from "./SubmissionListView";
+import { TaskCommands } from "./TaskCommands";
+import { LastSubmission } from "./LastSubmission";
+import { useStatement } from "./hooks/useStatement";
+import { CreateSubmissionView } from "./CreateSubmissionView";
+import { SubmissionReportView } from "./SubmissionReportView";
+import { SubmissionListView } from "./SubmissionListView";
 
 type Props = {
   task: TaskData;
   userTask: UserTaskData;
 };
 
-export default function TaskView({ task, userTask }: Props) {
+export function TaskView({ task, userTask }: Props) {
   const statement = useStatement(task.statement_path);
 
   const renderTaskStatement = () => {

@@ -4,11 +4,11 @@ import { i18n } from "@lingui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
-import FileView from "./FileView";
-import useUpload, {
-  UploadType, UploadedFile, Alert,
-} from "./useUpload.hook";
-import ValidationAlert from "./ValidationAlert";
+import { FileView } from "./FileView";
+import {
+  useUpload, UploadType, UploadedFile, Alert,
+} from "./hooks/useUpload";
+import { ValidationAlert } from "./ValidationAlert";
 
 export type UploadedSource = UploadedFile & {
   validation: {
@@ -21,7 +21,7 @@ type Props = {
   setSource: (source: UploadedSource | null) => void;
 };
 
-export default function SourceSelector({ inputId, setSource }: Props) {
+export function SourceSelector({ inputId, setSource }: Props) {
   const sourceRef = createRef<HTMLInputElement>();
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, upload] = useUpload<UploadedSource>(inputId, UploadType.Source);

@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { useMemo, useEffect } from "react";
-import client from "../TerryClient";
-import { useToken } from "./ContestContext";
+import client from "../../TerryClient";
+import { useToken } from "../ContestContext";
 
 const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;
 const DETECT_INTERNET_TEST_CONTENT = process.env.REACT_APP_DETECT_INTERNET_TEST_CONTENT || null;
 const DETECT_INTERNET_INTERVAL = 10 * 60 * 1000;
 
-export default function useDetectInternet() {
+export function useDetectInternet() {
   const token = useToken();
   const detectInternet = useMemo(
     () => async (endpoint: string) => {

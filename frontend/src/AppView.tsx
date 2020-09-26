@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Trans } from "@lingui/macro";
 import { Redirect } from "react-router-dom";
-import ContestView from "./contest/ContestView";
+import { ContestView } from "./contest/ContestView";
 import { ContestContextProvider } from "./contest/ContestContext";
 import { PackContextProvider } from "./admin/PackContext";
 import { usePack } from "./admin/hooks/usePack";

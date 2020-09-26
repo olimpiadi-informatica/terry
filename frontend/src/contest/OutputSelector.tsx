@@ -2,10 +2,12 @@ import React, { createRef, useEffect, useState } from "react";
 import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import FileView from "./FileView";
-import useUpload, { UploadType, UploadedFile, Alert } from "./useUpload.hook";
-import ValidationView from "./ValidationView";
-import { ValidationCaseInfo } from "./useSubmission.hook";
+import { FileView } from "./FileView";
+import {
+  useUpload, UploadType, UploadedFile, Alert,
+} from "./hooks/useUpload";
+import { ValidationView } from "./ValidationView";
+import { ValidationCaseInfo } from "./hooks/useSubmission";
 
 export type UploadedOutput = UploadedFile & {
   validation: {
@@ -19,7 +21,7 @@ type Props = {
   setOutput: (output: UploadedOutput | null) => void;
 };
 
-export default function OutputSelector({ inputId, setOutput }: Props) {
+export function OutputSelector({ inputId, setOutput }: Props) {
   const outputRef = createRef<HTMLInputElement>();
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, upload] = useUpload<UploadedOutput>(inputId, UploadType.Output);

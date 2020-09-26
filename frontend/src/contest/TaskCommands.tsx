@@ -9,14 +9,14 @@ import {
 import client from "../TerryClient";
 import Loadable from "../Loadable";
 import { notifyError } from "../utils";
-import useSubmissionList from "./useSubmissionList.hook";
+import { useSubmissionList } from "./hooks/useSubmissionList";
 
 type Props = {
   task: TaskData;
   userTask: UserTaskData;
 };
 
-export default function TaskCommands({ task, userTask }: Props) {
+export function TaskCommands({ task, userTask }: Props) {
   const [input, setInput] = useState<Loadable<InputData> | null>(null);
   const token = useToken();
   const submissions = useSubmissionList(task.name);

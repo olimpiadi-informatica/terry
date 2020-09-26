@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Trans } from "@lingui/macro";
-import { Alert } from "./useUpload.hook";
+import { Alert } from "./hooks/useUpload";
 
 type Props<T> = {
   cases: T[];
@@ -9,7 +9,7 @@ type Props<T> = {
   renderCaseSummary: (c: T, i: number) => React.ReactNode;
 };
 
-export default function ResultView<T>({
+export function ResultView<T>({
   cases, alerts, renderCase, renderCaseSummary,
 }: Props<T>) {
   return (

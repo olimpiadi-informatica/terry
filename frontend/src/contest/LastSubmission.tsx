@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { DateComponent } from "../datetime.views";
 import { TaskData, useServerTime } from "./ContestContext";
-import useSubmissionList from "./useSubmissionList.hook";
+import { useSubmissionList } from "./hooks/useSubmissionList";
 
 type Props = {
   task: TaskData;
 };
 
-export default function LastSubmission({ task }: Props) {
+export function LastSubmission({ task }: Props) {
   const serverTime = useServerTime();
   const subs = useSubmissionList(task.name);
 

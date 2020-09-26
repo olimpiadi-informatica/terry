@@ -13,7 +13,7 @@ type Props = {
   source: string;
 };
 
-export default function TaskStatementView({ task, source }: Props) {
+export function TaskStatementView({ task, source }: Props) {
   const transformUri = (url: string) => {
     const taskBaseUri = task.statement_path.match(/.*\//)?.[0];
     return client.statementsBaseURI + taskBaseUri + url;

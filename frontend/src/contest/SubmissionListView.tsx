@@ -10,18 +10,18 @@ import client from "../TerryClient";
 import ModalView from "../Modal";
 import { colorFromScore } from "../utils";
 import "./SubmissionListView.css";
-import ScoreView from "./ScoreView";
+import { ScoreView } from "./ScoreView";
 import { i18n } from "../i18n";
 import { TaskData, useServerTime } from "./ContestContext";
-import useSubmissionList, { SubmissionList } from "./useSubmissionList.hook";
+import { useSubmissionList, SubmissionList } from "./hooks/useSubmissionList";
 import Loading from "../Loading";
-import { Submission } from "./useSubmission.hook";
+import { Submission } from "./hooks/useSubmission";
 
 type Props = {
   task: TaskData;
 };
 
-export default function SubmissionListView({ task }: Props) {
+export function SubmissionListView({ task }: Props) {
   const submissions = useSubmissionList(task.name);
   const serverTime = useServerTime();
 

@@ -6,9 +6,9 @@ import { Trans } from "@lingui/macro";
 import client from "../TerryClient";
 import ModalView from "../Modal";
 import "./Submit.css";
-import SourceSelector, { UploadedSource } from "./SourceSelector";
+import { SourceSelector, UploadedSource } from "./SourceSelector";
 import { TaskData, useActions } from "./ContestContext";
-import OutputSelector, { UploadedOutput } from "./OutputSelector";
+import { OutputSelector, UploadedOutput } from "./OutputSelector";
 import Loadable from "../Loadable";
 import { notifyError } from "../utils";
 
@@ -17,7 +17,7 @@ type Props = {
   task: TaskData;
 };
 
-export default function Submit({ inputId, task }: Props) {
+export function Submit({ inputId, task }: Props) {
   const [source, setSource] = useState<UploadedSource | null>(null);
   const [output, setOutput] = useState<UploadedOutput | null>(null);
   const [submission, setSubmission] = useState<Loadable<unknown> | null>(null);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
 
-export default function UsefulInfo() {
+export function UsefulInfo() {
   return (
     <>
       <h1>

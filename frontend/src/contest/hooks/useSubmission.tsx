@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { InputData } from "./ContestContext";
-import { UploadedOutput } from "./OutputSelector";
-import { UploadedSource } from "./SourceSelector";
-import { Alert } from "./useUpload.hook";
-import client from "../TerryClient";
-import Loadable from "../Loadable";
-import { notifyError } from "../utils";
+import { InputData } from "../ContestContext";
+import { UploadedOutput } from "../OutputSelector";
+import { UploadedSource } from "../SourceSelector";
+import { Alert } from "./useUpload";
+import client from "../../TerryClient";
+import Loadable from "../../Loadable";
+import { notifyError } from "../../utils";
 
 export type ValidationCaseInfo =
   | {
@@ -19,7 +19,7 @@ export type FeedbackCaseInfo = {
   message?: string;
 };
 
-export type FeedbackData = {
+type FeedbackData = {
   alerts: Alert[];
   cases: FeedbackCaseInfo[];
 };
@@ -36,8 +36,9 @@ export type Submission = {
   feedback: FeedbackData;
 };
 
-export default function useSubmission(id: string) {
+export function useSubmission(id: string) {
   const [submission, setSubmission] = useState<Loadable<Submission>>(Loadable.loading());
+
   useEffect(() => {
     client.api
       .get(`/submission/${id}`)
@@ -49,5 +50,6 @@ export default function useSubmission(id: string) {
         setSubmission(Loadable.error(response));
       });
   }, [id]);
+
   return submission;
 }

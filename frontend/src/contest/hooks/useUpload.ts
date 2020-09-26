@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import Loadable from "../Loadable";
-import client from "../TerryClient";
+import Loadable from "../../Loadable";
+import client from "../../TerryClient";
 
 export type UploadedFile = {
   date: string;
@@ -21,7 +21,7 @@ export enum UploadType {
   Output,
 }
 
-export default function useUpload<T>(inputId: string, type: UploadType) {
+export function useUpload<T>(inputId: string, type: UploadType) {
   const [upload, setUpload] = useState<Loadable<T>>(Loadable.loading());
 
   const doUpload = useMemo(

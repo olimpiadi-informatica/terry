@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactMarkdown from "react-markdown";
 import { useContest } from "./ContestContext";
 
-export default function UserGuide() {
+export function ContestHome() {
   const contest = useContest().value();
 
   return (

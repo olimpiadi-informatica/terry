@@ -3,14 +3,14 @@ import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
 import { CountdownComponent } from "../datetime.views";
-import NavbarItemView from "./NavbarItemView";
-import ScoreView from "./ScoreView";
+import { NavbarItemView } from "./NavbarItemView";
+import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
 import {
   useContest, TaskData, StartedContest, useServerTime,
 } from "./ContestContext";
 
-export default function SidebarView() {
+export function SidebarView() {
   const contestL = useContest();
   const serverTime = useServerTime();
   const contest = contestL.isReady() ? contestL.value() : null;

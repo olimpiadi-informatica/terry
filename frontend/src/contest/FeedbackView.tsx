@@ -1,10 +1,10 @@
 import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
-import ResultView from "./ResultView";
+import { ResultView } from "./ResultView";
 import { DateComponent } from "../datetime.views";
-import ScoreView from "./ScoreView";
-import { FeedbackCaseInfo, Submission } from "./useSubmission.hook";
+import { ScoreView } from "./ScoreView";
+import { FeedbackCaseInfo, Submission } from "./hooks/useSubmission";
 import { useServerTime, TaskData } from "./ContestContext";
 import "./GridList.css";
 
@@ -13,7 +13,7 @@ type Props = {
   submission: Submission;
 };
 
-export default function FeedbackView({ submission, task }: Props) {
+export function FeedbackView({ submission, task }: Props) {
   const serverTime = useServerTime();
 
   const getColor = (c: FeedbackCaseInfo) => (c.correct ? "success" : "danger");

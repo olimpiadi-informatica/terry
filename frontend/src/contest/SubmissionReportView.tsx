@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import ModalView from "../Modal";
-import FeedbackView from "./FeedbackView";
+import { FeedbackView } from "./FeedbackView";
 import { TaskData } from "./ContestContext";
-import useSubmission from "./useSubmission.hook";
+import { useSubmission } from "./hooks/useSubmission";
 import Loading from "../Loading";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   task: TaskData;
 };
 
-export default function SubmissionReportView({ submissionId, task }: Props) {
+export function SubmissionReportView({ submissionId, task }: Props) {
   const submission = useSubmission(submissionId);
 
   const returnUrl = `/task/${task.name}`;

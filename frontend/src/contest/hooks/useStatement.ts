@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import Loadable from "../Loadable";
-import client from "../TerryClient";
+import Loadable from "../../Loadable";
+import client from "../../TerryClient";
 
-export default function useStatement(path: string) {
+export function useStatement(path: string) {
   const [statement, setStatement] = useState<Loadable<string>>(Loadable.loading());
+
   // This is a hack that forces the statement to be immediately discarded if the path changes: without this the old
   // statement is returned, used and drawn under the context of the other task. This cause the old images to be loaded
   // using the base uri of the new task.
@@ -13,6 +14,7 @@ export default function useStatement(path: string) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
+
   useEffect(() => {
     client.statements
       .get(path)
@@ -23,5 +25,6 @@ export default function useStatement(path: string) {
         setStatement(Loadable.error(response));
       });
   }, [path]);
+
   return statement;
 }

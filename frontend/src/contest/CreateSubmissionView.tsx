@@ -1,6 +1,6 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import Submit from "./Submit";
+import { Submit } from "./Submit";
 import { TaskData, UserTaskData } from "./ContestContext";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   userTask: UserTaskData;
 };
 
-export default function CreateSubmissionView({ inputId, task, userTask }: Props) {
+export function CreateSubmissionView({ inputId, task, userTask }: Props) {
   if (userTask.current_input === null || userTask.current_input.id !== inputId) {
     return (
       <p>

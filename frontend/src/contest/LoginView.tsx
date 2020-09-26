@@ -4,7 +4,7 @@ import { i18n } from "../i18n";
 import { useActions, useContest } from "./ContestContext";
 import Loading from "../Loading";
 
-export default function LoginView() {
+export function LoginView() {
   const tokenRef = createRef<HTMLInputElement>();
   const { login } = useActions();
   const contest = useContest();

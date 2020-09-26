@@ -8,7 +8,7 @@ type Props = {
   style?: React.CSSProperties;
 };
 
-export default function ScoreView({
+export function ScoreView({
   size, score, max, style,
 }: Props) {
   return (

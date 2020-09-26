@@ -7,7 +7,7 @@ type Props = {
   taskName: string;
 };
 
-export default function NavbarItemView({ taskName }: Props) {
+export function NavbarItemView({ taskName }: Props) {
   const contest = useContest().value() as StartedContest;
   const task = contest.contest.tasks.find((t) => t.name === taskName);
   if (!task) throw new Error(`Task not found: ${taskName}`);

@@ -9,7 +9,7 @@ type Props = {
   file: File;
 };
 
-export default function FileView({ file }: Props) {
+export function FileView({ file }: Props) {
   return (
     <table className="terry-file-view">
       <tbody>
