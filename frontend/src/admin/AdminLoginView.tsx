@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Trans, t } from "@lingui/macro";
 import ReactMarkdown from "react-markdown";
 import { i18n } from "src/i18n";

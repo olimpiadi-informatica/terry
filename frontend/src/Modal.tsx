@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Modal from "react-modal";
 import { useHistory } from "react-router-dom";
 
@@ -10,7 +10,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function ModalView({ contentLabel, returnUrl, children }: Props) {
+export function ModalView({ contentLabel, returnUrl, children }: Props) {
   const history = useHistory();
 
   return (

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import filesize from "filesize";
 import { DateTime } from "luxon";
 import "./FileView.css";

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { InputData } from "src/contest/ContestContext";
 import { UploadedOutput } from "src/contest/OutputSelector";
 import { UploadedSource } from "src/contest/SourceSelector";
-import client from "src/TerryClient";
-import Loadable from "src/Loadable";
+import { client } from "src/TerryClient";
+import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
 import { Alert } from "./useUpload";
 

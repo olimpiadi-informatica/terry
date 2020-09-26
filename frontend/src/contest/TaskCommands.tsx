@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import {
   TaskData, UserTaskData, InputData, useToken, useActions,
 } from "./ContestContext";
-import client from "../TerryClient";
-import Loadable from "../Loadable";
+import { client } from "../TerryClient";
+import { Loadable } from "../Loadable";
 import { notifyError } from "../utils";
 import { SubmissionList } from "./hooks/useSubmissionList";
 

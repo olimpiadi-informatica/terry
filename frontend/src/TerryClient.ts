@@ -24,4 +24,4 @@ class Client {
   }
 }
 
-export default new Client();
+export const client = new Client();

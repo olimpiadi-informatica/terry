@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useMemo, useEffect } from "react";
-import client from "src/TerryClient";
+import { client } from "src/TerryClient";
 import { useToken } from "src/contest/ContestContext";
 
 const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST_ENDPOINT || null;

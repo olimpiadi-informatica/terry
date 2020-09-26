@@ -3,12 +3,12 @@ import "./index.css";
 import "./i18n.css";
 import "babel-polyfill";
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import AppView from "./AppView";
-import Loading from "./Loading";
+import { AppView } from "./AppView";
+import { Loading } from "./Loading";
 
 import { TransProvider } from "./i18n";
 

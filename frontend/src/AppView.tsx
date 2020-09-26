@@ -1,11 +1,11 @@
-import * as React from "react";
+import React from "react";
 import { Trans } from "@lingui/macro";
 import { Redirect } from "react-router-dom";
 import { ContestView } from "./contest/ContestView";
 import { ContestContextProvider } from "./contest/ContestContext";
 import { PackContextProvider } from "./admin/PackContext";
 import { usePack } from "./admin/hooks/usePack";
-import Loading from "./Loading";
+import { Loading } from "./Loading";
 
 function AppViewInternal() {
   const pack = usePack();
@@ -15,7 +15,7 @@ function AppViewInternal() {
   return <Redirect to="/admin" />;
 }
 
-export default function AppView() {
+export function AppView() {
   return (
     <PackContextProvider>
       <ContestContextProvider>

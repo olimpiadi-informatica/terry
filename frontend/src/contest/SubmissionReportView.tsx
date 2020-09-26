@@ -1,13 +1,13 @@
-import * as React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import ModalView from "../Modal";
+import { ModalView } from "../Modal";
 import { FeedbackView } from "./FeedbackView";
 import { TaskData } from "./ContestContext";
 import { useSubmission } from "./hooks/useSubmission";
-import Loading from "../Loading";
+import { Loading } from "../Loading";
 
 type Props = {
   submissionId: string;

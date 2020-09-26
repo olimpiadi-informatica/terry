@@ -2,7 +2,7 @@ import React, { createRef, useState } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useActions, useContest } from "./ContestContext";
-import Loading from "../Loading";
+import { Loading } from "../Loading";
 
 export function LoginView() {
   const tokenRef = createRef<HTMLInputElement>();

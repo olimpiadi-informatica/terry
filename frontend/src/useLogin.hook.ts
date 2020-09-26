@@ -3,7 +3,7 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-export default function useLogin(cookieName: string) {
+export function useLogin(cookieName: string) {
   const tokenFromCookie = cookies.get(cookieName);
   const [token, setToken] = useState<string | null>(tokenFromCookie || null);
   const login = useMemo(

@@ -4,7 +4,7 @@ export enum LoadableState {
   Error,
 }
 
-export default class Loadable<T, E = unknown> {
+export class Loadable<T, E = unknown> {
   private state = LoadableState.Loading;
 
   private value_?: T;

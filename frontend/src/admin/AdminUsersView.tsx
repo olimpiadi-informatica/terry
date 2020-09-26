@@ -4,9 +4,9 @@ import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Trans, t } from "@lingui/macro";
-import ModalView from "src/Modal";
+import { ModalView } from "src/Modal";
 import { i18n } from "src/i18n";
-import Loading from "src/Loading";
+import { Loading } from "src/Loading";
 import { useActions } from "./AdminContext";
 import { UserEntry, useUsers } from "./hooks/useUsers";
 

@@ -1,9 +1,9 @@
 import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
-import Loadable from "src/Loadable";
-import client from "src/TerryClient";
+import { Loadable } from "src/Loadable";
+import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
-import useTriggerUpdate from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
 import { useToken } from "src/admin/AdminContext";
 
 export enum LogLevel {

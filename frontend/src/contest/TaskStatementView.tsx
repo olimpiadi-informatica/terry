@@ -3,7 +3,7 @@ import RemarkMathPlugin from "remark-math";
 import { BlockMath, InlineMath } from "react-katex";
 import ReactMarkdown from "react-markdown";
 import { TaskData } from "./ContestContext";
-import client from "../TerryClient";
+import { client } from "../TerryClient";
 import "./TaskStatementView.css";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "katex/dist/katex.min.css";

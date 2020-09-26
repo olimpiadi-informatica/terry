@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import "./Loading.css";
 
-export default function Loading() {
+export function Loading() {
   return (
     <div className="sk-folding-cube">
       <div className="sk-cube1 sk-cube" />

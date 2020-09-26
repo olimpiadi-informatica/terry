@@ -1,11 +1,11 @@
-import * as React from "react";
+import React from "react";
 import { Link, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import LanguageSwitcher from "src/LanguageSwitcher";
+import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { AdminLoginView } from "./AdminLoginView";
-import AdminLogsView from "./AdminLogsView";
+import { AdminLogsView } from "./AdminLogsView";
 import { AdminSummaryView } from "./AdminSummaryView";
 import { AdminUsersView } from "./AdminUsersView";
 import { ContestExtraTimeView } from "./ContestExtraTimeView";

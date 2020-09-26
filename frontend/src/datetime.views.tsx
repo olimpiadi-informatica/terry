@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { DateTime } from "luxon";
 import moment from "moment";
 import { i18n } from "./i18n";
-import useTriggerUpdate from "./useTriggerUpdate.hook";
+import { useTriggerUpdate } from "./useTriggerUpdate.hook";
 
 function useAutoRefresh(rate: number) {
   const [update, trigger] = useTriggerUpdate();

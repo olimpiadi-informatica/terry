@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { LanguageContext, supportedLanguages } from "./i18n";
 
-export default function LanguageSwitcher() {
+export function LanguageSwitcher() {
   const languageContext = useContext(LanguageContext);
 
   const changeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {

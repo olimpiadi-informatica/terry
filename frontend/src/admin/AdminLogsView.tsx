@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
-import ModalView from "src/Modal";
+import { ModalView } from "src/Modal";
 import "./AdminLogsView.css";
 import { AbsoluteDateComponent } from "src/datetime.views";
 import { i18n } from "src/i18n";
@@ -29,7 +29,7 @@ const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   },
 };
 
-export default function AdminLogsView() {
+export function AdminLogsView() {
   const [level, setLevel] = useState(LogLevel.INFO);
   const [category, setCategory] = useState("");
   const [filter, setFilter] = useState("");

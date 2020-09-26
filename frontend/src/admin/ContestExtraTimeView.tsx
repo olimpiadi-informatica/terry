@@ -1,10 +1,10 @@
-import * as React from "react";
+import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
 import { toast } from "react-toastify";
-import ModalView from "src/Modal";
+import { ModalView } from "src/Modal";
 import { i18n } from "src/i18n";
 import { useStatus, useActions } from "./AdminContext";
 
