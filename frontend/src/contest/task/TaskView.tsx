@@ -7,6 +7,7 @@ import { CreateSubmissionView } from "src/contest/submission/submit/CreateSubmis
 import { SubmissionReportView } from "src/contest/submission/SubmissionReportView";
 import { SubmissionListView } from "src/contest/submission/SubmissionListView";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
+import { Loading } from "src/Loading";
 import { TaskCommands } from "./TaskCommands";
 import { TaskStatementView } from "./TaskStatementView";
 import { LastSubmission } from "./LastSubmission";
@@ -22,11 +23,7 @@ export function TaskView({ task, userTask }: Props) {
 
   const renderTaskStatement = () => {
     if (statement.isLoading()) {
-      return (
-        <p>
-          <Trans>Loading...</Trans>
-        </p>
-      );
+      return <Loading />;
     }
     if (statement.isError()) {
       return (
