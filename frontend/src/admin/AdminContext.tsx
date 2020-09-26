@@ -2,7 +2,7 @@ import React, {
   useState, ReactNode, useEffect, useContext, useMemo,
 } from "react";
 import { DateTime, Duration } from "luxon";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import client from "../TerryClient";
 import { notifyError } from "../utils";
 import Loadable from "../Loadable";
@@ -140,7 +140,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
         setServerTimeSkew(Loadable.of(DateTime.local().diff(serverDate)));
         setStatus(Loadable.of(response.data));
       })
-      .catch((response: AxiosResponse) => {
+      .catch((response: AxiosError) => {
         notifyError(response);
         logout();
         setServerTimeSkew(Loadable.loading());
