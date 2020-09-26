@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -11,118 +11,103 @@ import ModalView from "../Modal";
 import { colorFromScore } from "../utils";
 import "./SubmissionListView.css";
 import ScoreView from "./ScoreView";
-import PromiseView from "../PromiseView";
 import { i18n } from "../i18n";
+import { TaskData, useServerTime } from "./ContestContext";
+import useSubmissionList, { SubmissionList } from "./useSubmissionList.hook";
+import Loading from "../Loading";
+import { Submission } from "./useSubmission.hook";
 
 type Props = {
-  userState: any;
-  taskName: string;
-  model: any;
+  task: TaskData;
 };
 
-export default class SubmissionListView extends React.Component<Props> {
-  getTask() {
-    return this.props.userState.getTask(this.props.taskName);
-  }
+export default function SubmissionListView({ task }: Props) {
+  const submissions = useSubmissionList(task.name);
+  const serverTime = useServerTime();
 
-  getListPromise() {
-    return this.props.userState.getTaskState(this.props.taskName).submissionListPromise;
-  }
+  const renderSubmission = (submission: Submission) => {
+    const cut = (s: string) => s.slice(s.lastIndexOf("/") + 1);
+    const inputBasename = cut(submission.input.path);
+    const outputBasename = cut(submission.output.path);
+    const sourceBasename = cut(submission.source.path);
+    return (
+      <tr key={submission.id}>
+        <td>
+          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date)} />
+          <br />
+          <Link to={`/task/${submission.task}/submission/${submission.id}`}>
+            <Trans>view details</Trans>
+          </Link>
+        </td>
+        <td>
+          <ReactTooltip id={`input-${submission.id}`} place="top" type="dark" effect="solid">
+            {inputBasename}
+          </ReactTooltip>
+          <ReactTooltip id={`source-${submission.id}`} place="top" type="dark" effect="solid">
+            {sourceBasename}
+          </ReactTooltip>
+          <ReactTooltip id={`output-${submission.id}`} place="top" type="dark" effect="solid">
+            {outputBasename}
+          </ReactTooltip>
 
-  renderSubmissionList(list: any) {
-    const submissionList = [];
+          <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
+            <a
+              role="button"
+              className="btn btn-light"
+              aria-label={inputBasename}
+              href={client.filesBaseURI + submission.input.path}
+              download
+              data-tip
+              data-for={`input-${submission.id}`}
+            >
+              <FontAwesomeIcon icon={faDownload} />
+              {" "}
+              <span className="hidden-md-down">
+                <Trans>Input file</Trans>
+              </span>
+            </a>
 
-    for (const submission of list.items) {
-      const cut = (s: string) => s.slice(s.lastIndexOf("/") + 1);
-      submission.input.basename = cut(submission.input.path);
-      submission.output.basename = cut(submission.output.path);
-      submission.source.basename = cut(submission.source.path);
+            <a
+              role="button"
+              className="btn btn-light"
+              aria-label={sourceBasename}
+              href={client.filesBaseURI + submission.source.path}
+              download
+              data-tip
+              data-for={`source-${submission.id}`}
+            >
+              <FontAwesomeIcon icon={faDownload} />
+              {" "}
+              <span className="hidden-md-down">
+                <Trans>Source file</Trans>
+              </span>
+            </a>
 
-      submissionList.push(
-        <tr key={submission.id}>
-          <td>
-            <DateComponent
-              {...this.props}
-              clock={() => this.props.model.serverTime()}
-              date={DateTime.fromISO(submission.date)}
-            />
-            <br />
-            <Link to={`/task/${submission.task}/submission/${submission.id}`}>
-              <Trans>view details</Trans>
-            </Link>
-          </td>
-          <td>
-            <ReactTooltip id={`input-${submission.id}`} place="top" type="dark" effect="solid">
-              {submission.input.basename}
-            </ReactTooltip>
-            <ReactTooltip id={`source-${submission.id}`} place="top" type="dark" effect="solid">
-              {submission.source.basename}
-            </ReactTooltip>
-            <ReactTooltip id={`output-${submission.id}`} place="top" type="dark" effect="solid">
-              {submission.output.basename}
-            </ReactTooltip>
+            <a
+              role="button"
+              className="btn btn-light"
+              aria-label={outputBasename}
+              href={client.filesBaseURI + submission.output.path}
+              download
+              data-tip
+              data-for={`output-${submission.id}`}
+            >
+              <FontAwesomeIcon icon={faDownload} />
+              {" "}
+              <span className="hidden-md-down">
+                <Trans>Output file</Trans>
+              </span>
+            </a>
+          </div>
+        </td>
+        <td className={`alert-${colorFromScore(submission.score, task.max_score)}`}>
+          <ScoreView score={submission.score} max={task.max_score} size={1} />
+        </td>
+      </tr>
+    );
+  };
 
-            <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
-              <a
-                role="button"
-                className="btn btn-light"
-                aria-label={submission.input.basename}
-                href={client.filesBaseURI + submission.input.path}
-                download
-                data-tip
-                data-for={`input-${submission.id}`}
-              >
-                <FontAwesomeIcon icon={faDownload} />
-                {" "}
-                <span className="hidden-md-down">
-                  <Trans>Input file</Trans>
-                </span>
-              </a>
-
-              <a
-                role="button"
-                className="btn btn-light"
-                aria-label={submission.source.basename}
-                href={client.filesBaseURI + submission.source.path}
-                download
-                data-tip
-                data-for={`source-${submission.id}`}
-              >
-                <FontAwesomeIcon icon={faDownload} />
-                {" "}
-                <span className="hidden-md-down">
-                  <Trans>Source file</Trans>
-                </span>
-              </a>
-
-              <a
-                role="button"
-                className="btn btn-light"
-                aria-label={submission.output.basename}
-                href={client.filesBaseURI + submission.output.path}
-                download
-                data-tip
-                data-for={`output-${submission.id}`}
-              >
-                <FontAwesomeIcon icon={faDownload} />
-                {" "}
-                <span className="hidden-md-down">
-                  <Trans>Output file</Trans>
-                </span>
-              </a>
-            </div>
-          </td>
-          <td className={`alert-${colorFromScore(submission.score, this.getTask().data.max_score)}`}>
-            <ScoreView score={submission.score} max={this.getTask().data.max_score} size={1} />
-          </td>
-        </tr>,
-      );
-    }
-
-    return submissionList.reverse();
-  }
-
-  renderBody(list: any) {
+  const renderBody = (list: SubmissionList) => {
     if (list.items.length === 0) {
       return (
         <div className="modal-body">
@@ -149,46 +134,34 @@ export default class SubmissionListView extends React.Component<Props> {
               </th>
             </tr>
           </thead>
-          <tbody>{this.renderSubmissionList(list)}</tbody>
+          <tbody>{list.items.map(renderSubmission).reverse()}</tbody>
         </table>
       </div>
     );
-  }
+  };
 
-  render() {
-    const { taskName } = this.props;
-    return (
-      <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${this.props.taskName}`}>
-        <div className="modal-header">
-          <h5 className="modal-title">
-            <Trans>Submission for</Trans>
-            {" "}
-            <strong className="text-uppercase">{taskName}</strong>
-          </h5>
-          <Link to={`/task/${this.props.taskName}`} role="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </Link>
-        </div>
-        <PromiseView
-          promise={this.getListPromise()}
-          renderPending={() => (
-            <div className="modal-body">
-              <em>
-                <Trans>Loading...</Trans>
-              </em>
-            </div>
-          )}
-          renderRejected={() => i18n._(t`Error`)}
-          renderFulfilled={(list) => this.renderBody(list)}
-        />
-        <div className="modal-footer">
-          <Link to={`/task/${this.props.taskName}`} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} />
-            {" "}
-            <Trans>Close</Trans>
-          </Link>
-        </div>
-      </ModalView>
-    );
-  }
+  return (
+    <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${task.name}`}>
+      <div className="modal-header">
+        <h5 className="modal-title">
+          <Trans>Submission for</Trans>
+          {" "}
+          <strong className="text-uppercase">{task.name}</strong>
+        </h5>
+        <Link to={`/task/${task.name}`} role="button" className="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </Link>
+      </div>
+      {submissions.isLoading() && <Loading />}
+      {submissions.isError() && <Trans>Error</Trans>}
+      {submissions.isReady() && renderBody(submissions.value())}
+      <div className="modal-footer">
+        <Link to={`/task/${task.name}`} role="button" className="btn btn-primary">
+          <FontAwesomeIcon icon={faTimes} />
+          {" "}
+          <Trans>Close</Trans>
+        </Link>
+      </div>
+    </ModalView>
+  );
 }

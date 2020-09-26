@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { DateTime } from "luxon";
 import moment from "moment";
 import { i18n } from "./i18n";
