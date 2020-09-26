@@ -48,8 +48,10 @@ export function useLogs(): [Loadable<LogsData>, ReloadLogs] {
 
   useEffect(() => {
     if (!token) return;
+    const options = { ...logsOptions };
+    if (!options.category) delete options.category;
     client
-      .adminApi(token, "/log", logsOptions)
+      .adminApi(token, "/log", options)
       .then((response: AxiosResponse) => {
         setLogs(Loadable.of(response.data as LogsData));
       })

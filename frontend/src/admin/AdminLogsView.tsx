@@ -49,12 +49,8 @@ export function AdminLogsView() {
 
   // react to option changes asking the context to reload the logs only when the options really changed
   useEffect(() => {
-    const newOptions: LogsOptions = { ...options, level };
-    if (category !== "") newOptions.category = category;
-    const changed = level !== options.level
-      || (category === "" && options.category !== undefined)
-      || (category !== "" && options.category === undefined);
-    if (changed) {
+    const newOptions: LogsOptions = { ...options, level, category };
+    if (newOptions.level !== options.level || newOptions.category !== options.category) {
       setOptions(newOptions);
       reloadLogs(newOptions);
     }
@@ -86,8 +82,9 @@ export function AdminLogsView() {
           </tr>
         );
       }
-      return items.map((log) => (
-        <tr key={log.date + log.message} className={`table-${LOG_LEVELS[log.level].color}`}>
+      return items.map((log, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <tr key={i} className={`table-${LOG_LEVELS[log.level].color}`}>
           <td>
             <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date)} />
           </td>
