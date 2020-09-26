@@ -42,6 +42,7 @@
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others \"react-scripts start\" \"node --loader ts-node/esm proxy.ts\"",
+    "start-bare": "BARE_BACKEND=true npm run start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",

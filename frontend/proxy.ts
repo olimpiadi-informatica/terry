@@ -4,7 +4,18 @@
 import http from "http";
 import httpProxy from "http-proxy";
 
-const DOCKER_PORT = Boolean(process.env.BARE_BACKEND) && 2000;
+const bareBackend = process.env.BARE_BACKEND !== undefined;
+const siteEndpoint = "http://127.0.0.1:3000";
+const apiEndpoint = bareBackend ? "http://127.0.0.1:1234" : "http://127.0.0.1:2000/api";
+const filesEndpoint = bareBackend ? "http://127.0.0.1:1235" : "http://127.0.0.1:2000/files";
+
+if (bareBackend) {
+  console.log("\x1b[1mUsing bare backend\x1b[0m");
+} else {
+  console.log("\x1b[1mUsing docker backend\x1b[0m");
+}
+console.log(`  - API endpoint: ${apiEndpoint}`);
+console.log(`  - Files endpoint: ${filesEndpoint}`);
 
 const proxy = httpProxy.createProxyServer({ xfwd: true });
 
@@ -15,25 +26,15 @@ const server = http.createServer((req, res) => {
 
   if (req.url.startsWith("/api/")) {
     console.log(`API: ${req.url}`);
-
-    if (DOCKER_PORT) {
-      proxy.web(req, res, { target: `http://127.0.0.1:${DOCKER_PORT}` });
-    } else {
-      req.url = req.url.slice(4); // remove "/api"
-      proxy.web(req, res, { target: "http://127.0.0.1:1234" });
-    }
+    req.url = req.url.slice(4); // remove "/api"
+    proxy.web(req, res, { target: apiEndpoint });
   } else if (req.url.startsWith("/files/")) {
     console.log(`FILES: ${req.url}`);
-
-    if (DOCKER_PORT) {
-      proxy.web(req, res, { target: `http://127.0.0.1:${DOCKER_PORT}` });
-    } else {
-      req.url = req.url.slice(6); // remove "/files"
-      proxy.web(req, res, { target: "http://127.0.0.1:1235" });
-    }
+    req.url = req.url.slice(6); // remove "/files"
+    proxy.web(req, res, { target: filesEndpoint });
   } else {
     console.log(`SITE: ${req.url}`);
-    proxy.web(req, res, { target: "http://127.0.0.1:3000" });
+    proxy.web(req, res, { target: siteEndpoint });
   }
 });
 
