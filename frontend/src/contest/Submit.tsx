@@ -9,7 +9,7 @@ import "./Submit.css";
 import SourceSelector, { UploadedSource } from "./SourceSelector";
 import { TaskData, useActions } from "./ContestContext";
 import OutputSelector, { UploadedOutput } from "./OutputSelector";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import { notifyError } from "../utils";
 
 type Props = {

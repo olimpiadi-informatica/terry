@@ -5,7 +5,7 @@ import TaskStatementView from "./TaskStatementView";
 import { TaskData, UserTaskData } from "./ContestContext";
 import TaskCommands from "./TaskCommands";
 import LastSubmission from "./LastSubmission";
-import { useStatement } from "./useStatement.hook";
+import useStatement from "./useStatement.hook";
 import CreateSubmissionView from "./CreateSubmissionView";
 import SubmissionReportView from "./SubmissionReportView";
 import SubmissionListView from "./SubmissionListView";

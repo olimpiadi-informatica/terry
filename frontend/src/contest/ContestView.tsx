@@ -45,6 +45,7 @@ export default function ContestView() {
         {contest && (
           <button
             className="terry-logout-button btn btn-sm btn-light"
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               logout();

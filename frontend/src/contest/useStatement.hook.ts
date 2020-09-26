@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import client from "../TerryClient";
 
-export function useStatement(path: string) {
+export default function useStatement(path: string) {
   const [statement, setStatement] = useState<Loadable<string>>(Loadable.loading());
   useEffect(() => {
     client.statements

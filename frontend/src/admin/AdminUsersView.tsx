@@ -7,7 +7,7 @@ import { Trans, t } from "@lingui/macro";
 import ModalView from "../Modal";
 import { i18n } from "../i18n";
 import { useActions } from "./AdminContext";
-import { UserEntry, useUsers } from "./users.hook";
+import { UserEntry, useUsers } from "./useUsers.hook";
 import Loading from "../Loading";
 
 type UserExtraTimeProps = {

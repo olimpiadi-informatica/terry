@@ -1,11 +1,11 @@
 import * as React from "react";
 import { DateTime } from "luxon";
+import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
 import { CountdownComponent } from "../datetime.views";
 import NavbarItemView from "./NavbarItemView";
 import ScoreView from "./ScoreView";
 import "./SidebarView.css";
-import { Trans } from "@lingui/macro";
 import {
   useContest, TaskData, StartedContest, useServerTime,
 } from "./ContestContext";
@@ -56,8 +56,8 @@ export default function SidebarView() {
       </li>
       <li className="divider-vertical" />
 
-      {contest.contest.tasks.map((task: TaskData, i: number) => (
-        <NavbarItemView key={i} taskName={task.name} />
+      {contest.contest.tasks.map((task: TaskData) => (
+        <NavbarItemView key={task.name} taskName={task.name} />
       ))}
 
       <li className="divider-vertical" />

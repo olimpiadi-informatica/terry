@@ -1,12 +1,13 @@
 import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
-import Loadable from "./Loadable";
+import Loadable from "../Loadable";
 import client from "../TerryClient";
 import { useToken } from "./AdminContext";
 import { notifyError } from "../utils";
-import useTriggerUpdate from "../triggerUpdate.hook";
+import useTriggerUpdate from "../useTriggerUpdate.hook";
 
 export type UserIp = {
+  // eslint-disable-next-line camelcase
   first_date: string;
   ip: string;
 };
@@ -15,6 +16,7 @@ export type UserEntry = {
   name: string;
   surname: string;
   token: string;
+  // eslint-disable-next-line camelcase
   extra_time: number;
   ip: UserIp[];
 };

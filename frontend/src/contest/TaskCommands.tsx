@@ -7,7 +7,7 @@ import {
   TaskData, UserTaskData, InputData, useToken, useActions,
 } from "./ContestContext";
 import client from "../TerryClient";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import { notifyError } from "../utils";
 
 type Props = {

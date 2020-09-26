@@ -1,23 +1,29 @@
-import * as React from "react";
+import React from "react";
 import "./ScoreView.css";
 
 type Props = {
-  score: any;
+  score: number;
   max: number;
-  size: any;
+  size: number;
   style?: React.CSSProperties;
 };
 
-const ScoreView = (props: Props) => (
-  <div className="terry-score" style={{ fontSize: `${props.size}rem`, ...props.style }}>
-    <span className="terry-score-value" style={{ fontSize: `${2 * props.size}rem` }}>
-      {props.score}
-    </span>
-    {" "}
-    /
-    {" "}
-    {props.max}
-  </div>
-);
+export default function ScoreView({
+  size, score, max, style,
+}: Props) {
+  return (
+    <div className="terry-score" style={{ fontSize: `${size}rem`, ...style }}>
+      <span className="terry-score-value" style={{ fontSize: `${2 * size}rem` }}>
+        {score}
+      </span>
+      {" "}
+      /
+      {" "}
+      {max}
+    </div>
+  );
+}
 
-export default ScoreView;
+ScoreView.defaultProps = {
+  style: {},
+};

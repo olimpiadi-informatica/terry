@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import client from "../TerryClient";
 import { useToken } from "./ContestContext";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import { Submission } from "./useSubmission.hook";
 import { notifyError } from "../utils";
 

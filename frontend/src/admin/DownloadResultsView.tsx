@@ -8,7 +8,7 @@ import client from "../TerryClient";
 import { notifyError } from "../utils";
 import { i18n } from "../i18n";
 import { useToken } from "./AdminContext";
-import Loadable from "./Loadable";
+import Loadable from "../Loadable";
 
 export type ZipData = {
   path: string;

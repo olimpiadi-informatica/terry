@@ -6,7 +6,7 @@ const DETECT_INTERNET_TEST_ENDPOINT = process.env.REACT_APP_DETECT_INTERNET_TEST
 const DETECT_INTERNET_TEST_CONTENT = process.env.REACT_APP_DETECT_INTERNET_TEST_CONTENT || null;
 const DETECT_INTERNET_INTERVAL = 10 * 60 * 1000;
 
-export function useDetectInternet() {
+export default function useDetectInternet() {
   const token = useToken();
   const detectInternet = useMemo(
     () => async (endpoint: string) => {
@@ -36,7 +36,7 @@ export function useDetectInternet() {
   );
 
   useEffect(() => {
-    if (!DETECT_INTERNET_TEST_ENDPOINT) return;
+    if (!DETECT_INTERNET_TEST_ENDPOINT) return () => {};
 
     const interval = setInterval(() => detectInternet(DETECT_INTERNET_TEST_ENDPOINT), DETECT_INTERNET_INTERVAL);
     return () => clearInterval(interval);

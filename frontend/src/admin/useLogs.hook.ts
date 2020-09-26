@@ -1,10 +1,10 @@
 import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
-import Loadable from "./Loadable";
+import Loadable from "../Loadable";
 import client from "../TerryClient";
 import { useToken } from "./AdminContext";
 import { notifyError } from "../utils";
-import useTriggerUpdate from "../triggerUpdate.hook";
+import useTriggerUpdate from "../useTriggerUpdate.hook";
 
 export enum LogLevel {
   DEBUG = "DEBUG",
@@ -25,7 +25,9 @@ export type LogsData = {
 };
 
 export type LogsOptions = {
+  // eslint-disable-next-line camelcase
   start_date: string;
+  // eslint-disable-next-line camelcase
   end_date: string;
   level: LogLevel;
   category?: string;

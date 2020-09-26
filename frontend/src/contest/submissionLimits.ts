@@ -67,6 +67,26 @@ const FORBIDDEN_MAGIC_NUMBERS = [
   "\x7F\x45\x4C\x46\x02", // ELF 64 bit
 ];
 
+async function isExecutable(blob: Blob): Promise<boolean> {
+  const buffer = await blob.slice(0, 5).arrayBuffer();
+  const view = new Uint8Array(buffer);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const magic of FORBIDDEN_MAGIC_NUMBERS) {
+    let valid = true;
+    for (let i = 0; i < magic.length && i < view.length; i += 1) {
+      if (view[i] !== magic.charCodeAt(i)) {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      console.log("Source file detected to be binary file: it starts with", magic);
+      return Promise.resolve(true);
+    }
+  }
+  return Promise.resolve(false);
+}
+
 export async function checkFile(file: File) {
   const name = file.name as string;
   const nameParts = name.split(".");
@@ -99,23 +119,4 @@ export async function checkFile(file: File) {
     return true;
   }
   return false;
-}
-
-async function isExecutable(blob: Blob): Promise<boolean> {
-  const buffer = await blob.slice(0, 5).arrayBuffer();
-  const view = new Uint8Array(buffer);
-  for (const magic of FORBIDDEN_MAGIC_NUMBERS) {
-    let valid = true;
-    for (let i = 0; i < magic.length && i < view.length; i++) {
-      if (view[i] !== magic.charCodeAt(i)) {
-        valid = false;
-        break;
-      }
-    }
-    if (valid) {
-      console.log("Source file detected to be binary file: it starts with", magic);
-      return Promise.resolve(true);
-    }
-  }
-  return Promise.resolve(false);
 }

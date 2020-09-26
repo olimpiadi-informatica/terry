@@ -1,7 +1,9 @@
 import { toast } from "react-toastify";
 
-export function colorFromScore(score: number, max_score: number) {
-  return score === max_score ? "success" : score === 0 ? "danger" : "warning";
+export function colorFromScore(score: number, maxScore: number) {
+  if (score === maxScore) return "success";
+  if (score === 0) return "danger";
+  return "warning";
 }
 
 export function notifyError(response: any) {

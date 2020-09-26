@@ -2,6 +2,7 @@ import React, { createRef, useState } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useActions, useContest } from "./ContestContext";
+import Loading from "../Loading";
 
 export default function LoginView() {
   const tokenRef = createRef<HTMLInputElement>();
@@ -43,7 +44,7 @@ export default function LoginView() {
           />
         </div>
         <input type="submit" className="btn btn-primary" value={i18n._(t`Login`)} />
-        {contest.isError() ? (
+        {contest.isError() && (
           <div className="alert alert-danger mt-2" role="alert">
             <strong>
               <Trans>Error</Trans>
@@ -51,9 +52,8 @@ export default function LoginView() {
             {" "}
             {contest.error().response?.data.message}
           </div>
-        ) : isLoading ? (
-          <Trans>Loading...</Trans>
-        ) : null}
+        )}
+        {isLoading && <Loading />}
       </form>
     </div>
   );

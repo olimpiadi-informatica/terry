@@ -4,9 +4,9 @@ import React, {
 import { Duration, DateTime } from "luxon";
 import { AxiosError } from "axios";
 import { useLogin } from "../useLogin.hook";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import client from "../TerryClient";
-import useTriggerUpdate from "../triggerUpdate.hook";
+import useTriggerUpdate from "../useTriggerUpdate.hook";
 
 export type NotStartedContestData = {
   name: string;

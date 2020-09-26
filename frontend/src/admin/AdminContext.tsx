@@ -5,8 +5,8 @@ import { DateTime, Duration } from "luxon";
 import { AxiosResponse } from "axios";
 import client from "../TerryClient";
 import { notifyError } from "../utils";
-import Loadable from "./Loadable";
-import useTriggerUpdate from "../triggerUpdate.hook";
+import Loadable from "../Loadable";
+import useTriggerUpdate from "../useTriggerUpdate.hook";
 import { useLogin } from "../useLogin.hook";
 
 export type StatusData = {

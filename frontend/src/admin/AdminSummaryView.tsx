@@ -11,8 +11,8 @@ import { i18n } from "../i18n";
 import {
   useStatus, usePack, useActions, useServerTime,
 } from "./AdminContext";
-import { useLogs } from "./logs.hook";
-import { useUsers } from "./users.hook";
+import { useLogs } from "./useLogs.hook";
+import { useUsers } from "./useUsers.hook";
 
 export default function AdminSummaryView() {
   const status = useStatus().value();

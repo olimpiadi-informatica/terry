@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import client from "../TerryClient";
 
 export type UploadedFile = {

@@ -4,7 +4,7 @@ import { UploadedOutput } from "./OutputSelector";
 import { UploadedSource } from "./SourceSelector";
 import { Alert } from "./useUpload.hook";
 import client from "../TerryClient";
-import Loadable from "../admin/Loadable";
+import Loadable from "../Loadable";
 import { notifyError } from "../utils";
 
 export type ValidationCaseInfo =
