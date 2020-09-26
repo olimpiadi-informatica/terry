@@ -13,11 +13,15 @@ export type UploadedFile = {
 export type Alert = {
   message: string;
   severity: string; // TODO: enum
+  code?: string;
 };
 
-export type CaseInfo = {
-  status: "missing";
-};
+export type ValidationCaseInfo =
+  | {
+      status: "missing";
+    }
+  | { status: "parsed"; message: string }
+  | { status: "invalid"; message: string };
 
 export enum UploadType {
   Source,

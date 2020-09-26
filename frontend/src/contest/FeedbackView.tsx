@@ -45,7 +45,7 @@ export default class FeedbackView extends React.Component<Props> {
             <ScoreView score={score} max={max_score} size={1} />
           </dd>
         </dl>
-        <ResultView result={submissionData.feedback} {...this.props} {...ops} />
+        {/* <ResultView result={submissionData.feedback} {...this.props} {...ops} /> */}
       </div>
     );
   }

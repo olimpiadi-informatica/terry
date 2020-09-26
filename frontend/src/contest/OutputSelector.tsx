@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import FileView from "./FileView";
 import useUpload, {
-  UploadType, UploadedFile, Alert, CaseInfo,
+  UploadType, UploadedFile, Alert, ValidationCaseInfo,
 } from "./useUpload.hook";
-import ValidationAlert from "./ValidationAlert";
+import ValidationView from "./ValidationView";
 
 export type UploadedOutput = UploadedFile & {
   validation: {
     alerts: Alert[];
-    cases: CaseInfo[];
+    cases: ValidationCaseInfo[];
   };
 };
 
@@ -96,8 +96,7 @@ export default function OutputSelector({ inputId, setOutput }: Props) {
             <Trans>Error</Trans>
           </p>
         )}
-        {uploadStatus.isReady()
-          && uploadStatus.value().validation.alerts.map((a) => <ValidationAlert alert={a} key={a.message} />)}
+        {uploadStatus.isReady() && <ValidationView output={uploadStatus.value()} />}
       </div>
     </div>
   );
