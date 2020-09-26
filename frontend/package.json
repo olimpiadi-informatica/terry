@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-regular-svg-icons": "^5.14.0",
@@ -39,7 +40,7 @@
     "universal-cookie": "^2.1.2"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others \"react-scripts start\" \"node proxy.js\"",
+    "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others \"react-scripts start\" \"node --loader ts-node/esm proxy.ts\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -53,6 +54,7 @@
     "@babel/core": "^7.11.6",
     "@lingui/cli": "^2.9.2",
     "@lingui/macro": "^2.9.2",
+    "@types/http-proxy": "^1.17.4",
     "@types/lingui__core": "^2.7.0",
     "@types/lingui__macro": "^2.7.3",
     "@types/lingui__react": "^2.8.2",
@@ -65,7 +67,9 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.21.2",
-    "eslint-plugin-react-hooks": "^4.1.2"
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "http-proxy": "^1.18.1",
+    "ts-node": "^9.0.0"
   },
   "browserslist": {
     "production": [

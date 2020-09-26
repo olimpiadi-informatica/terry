@@ -22,7 +22,7 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "import", "react"],
+  plugins: ["@typescript-eslint", "import", "jsx-a11y", "react"],
   rules: {
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-module-boundary-types.md
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -82,16 +82,8 @@ module.exports = {
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-filename-extension.md
     "react/jsx-filename-extension": [1, { extensions: [".jsx", ".tsx"] }],
 
+    // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-associated-control.md
     "jsx-a11y/label-has-associated-control": [
-      "error",
-      {
-        required: {
-          some: ["nesting", "id"],
-        },
-      },
-    ],
-
-    "jsx-a11y/label-has-for": [
       "error",
       {
         required: {
