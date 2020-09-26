@@ -4,32 +4,20 @@ import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { DateComponent } from "../datetime.views";
 import { TaskData, useServerTime } from "./ContestContext";
-import { useSubmissionList } from "./hooks/useSubmissionList";
+import { Submission } from "./hooks/useSubmission";
 
 type Props = {
   task: TaskData;
+  submissions: Submission[];
 };
 
-export function LastSubmission({ task }: Props) {
+export function LastSubmission({ task, submissions }: Props) {
   const serverTime = useServerTime();
-  const subs = useSubmissionList(task.name);
 
-  if (subs.isError()) {
-    return (
-      <div className="terry-submission-list-button">
-        <em>
-          <Trans>Loading submission list failed, reload page.</Trans>
-        </em>
-      </div>
-    );
-  }
-  if (subs.isLoading()) return null;
-
-  const { items } = subs.value();
-  if (items.length === 0) {
+  if (submissions.length === 0) {
     return null;
   }
-  const submission = items[items.length - 1];
+  const submission = submissions[submissions.length - 1];
   return (
     <div className="terry-submission-list-button mt-2">
       <strong>

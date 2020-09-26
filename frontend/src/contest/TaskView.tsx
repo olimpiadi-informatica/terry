@@ -9,6 +9,7 @@ import { useStatement } from "./hooks/useStatement";
 import { CreateSubmissionView } from "./CreateSubmissionView";
 import { SubmissionReportView } from "./SubmissionReportView";
 import { SubmissionListView } from "./SubmissionListView";
+import { useSubmissionList } from "./hooks/useSubmissionList";
 
 type Props = {
   task: TaskData;
@@ -17,6 +18,7 @@ type Props = {
 
 export function TaskView({ task, userTask }: Props) {
   const statement = useStatement(task.statement_path);
+  const submissions = useSubmissionList(task.name);
 
   const renderTaskStatement = () => {
     if (statement.isLoading()) {
@@ -38,7 +40,7 @@ export function TaskView({ task, userTask }: Props) {
   return (
     <>
       <h1>{task.title}</h1>
-      <TaskCommands task={task} userTask={userTask} />
+      <TaskCommands task={task} userTask={userTask} submissions={submissions} />
 
       <Route
         path="/task/:taskName/submit/:inputId"
@@ -50,7 +52,7 @@ export function TaskView({ task, userTask }: Props) {
         render={({ match }) => <SubmissionReportView submissionId={match.params.submissionId} task={task} />}
       />
 
-      <LastSubmission task={task} />
+      {submissions.isReady() && <LastSubmission task={task} submissions={submissions.value().items} />}
 
       <hr />
 
