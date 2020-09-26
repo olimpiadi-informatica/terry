@@ -7,6 +7,7 @@ import TaskCommands from "./TaskCommands";
 import LastSubmission from "./LastSubmission";
 import { useStatement } from "./useStatement.hook";
 import CreateSubmissionView from "./CreateSubmissionView";
+import SubmissionReportView from "./SubmissionReportView";
 
 type Props = {
   task: TaskData;
@@ -46,16 +47,10 @@ export default function TaskView({ task, userTask }: Props) {
         path="/task/:taskName/submissions"
         render={({ match }) => <SubmissionListView {...this.props} taskName={match.params.taskName} />}
       /> */}
-      {/* <Route
+      <Route
         path="/task/:taskName/submission/:submissionId"
-        render={({ match }) => (
-          <SubmissionReportView
-            {...this.props}
-            submissionId={match.params.submissionId}
-            taskName={match.params.taskName}
-          />
-        )}
-      /> */}
+        render={({ match }) => <SubmissionReportView submissionId={match.params.submissionId} task={task} />}
+      />
 
       <LastSubmission task={task} userTask={userTask} />
 

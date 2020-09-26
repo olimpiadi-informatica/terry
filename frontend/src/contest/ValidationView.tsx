@@ -2,7 +2,7 @@ import * as React from "react";
 import { Select } from "@lingui/macro";
 import ResultView from "./ResultView";
 import { UploadedOutput } from "./OutputSelector";
-import { ValidationCaseInfo } from "./useUpload.hook";
+import { ValidationCaseInfo } from "./useSubmission.hook";
 
 type Props = {
   output: UploadedOutput;
@@ -10,7 +10,6 @@ type Props = {
 
 export default function ValidationView({ output }: Props) {
   const getColor = (c: ValidationCaseInfo) => {
-    if (!("status" in c)) return "danger";
     switch (c.status) {
     case "parsed":
       return "info";

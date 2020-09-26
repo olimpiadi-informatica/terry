@@ -1,17 +1,17 @@
 import * as React from "react";
 import { Trans } from "@lingui/macro";
-import { ValidationCaseInfo, Alert } from "./useUpload.hook";
+import { Alert } from "./useUpload.hook";
 
-type Props = {
-  cases: ValidationCaseInfo[];
+type Props<T> = {
+  cases: T[];
   alerts: Alert[];
-  renderCase: (c: ValidationCaseInfo, i: number) => React.ReactNode;
-  renderCaseSummary: (c: ValidationCaseInfo, i: number) => React.ReactNode;
+  renderCase: (c: T, i: number) => React.ReactNode;
+  renderCaseSummary: (c: T, i: number) => React.ReactNode;
 };
 
-export default function ResultView({
+export default function ResultView<T>({
   cases, alerts, renderCase, renderCaseSummary,
-}: Props) {
+}: Props<T>) {
   return (
     <>
       <ul className="list-unstyled">
@@ -28,14 +28,14 @@ export default function ResultView({
           </li>
         ))}
       </ul>
-      <dl className="terry-file-view">
+      <dl className="terry-grid-list">
         <dt>
           <Trans>Details</Trans>
           :
         </dt>
         <dd>
           <ul className="list-inline mb-0">
-            {cases.map((c: ValidationCaseInfo, i: number) => (
+            {cases.map((c: T, i: number) => (
               // eslint-disable-next-line react/no-array-index-key
               <li className="list-inline-item" key={i}>
                 {renderCaseSummary(c, i + 1)}
@@ -45,9 +45,7 @@ export default function ResultView({
         </dd>
       </dl>
       <div className="result-detail">
-        <ul className="list-group">
-          {cases.map((c: ValidationCaseInfo, i: number) => renderCase(c, i + 1))}
-        </ul>
+        <ul className="list-group">{cases.map((c: T, i: number) => renderCase(c, i + 1))}</ul>
       </div>
     </>
   );

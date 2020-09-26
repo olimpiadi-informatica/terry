@@ -1,0 +1,19 @@
+dl.terry-grid-list {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+dl.terry-grid-list > dt {
+  margin-bottom: 0px;
+  min-width: 6rem;
+}
+
+dl.terry-grid-list > dd {
+  margin-bottom: 0px;
+  margin-left: -6rem;
+  padding-left: 8rem;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
+}

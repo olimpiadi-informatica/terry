@@ -38,7 +38,7 @@ export type UserData = {
   contest_start_delay: number | null; // eslint-disable-line camelcase
 };
 
-export type CurrentInput = {
+export type InputData = {
   id: string;
   attempt: number;
   date: number;
@@ -51,7 +51,7 @@ export type CurrentInput = {
 export type UserTaskData = {
   name: string;
   score: number;
-  current_input: CurrentInput | null; // eslint-disable-line camelcase
+  current_input: InputData | null; // eslint-disable-line camelcase
 };
 
 export type NotStartedContest = {

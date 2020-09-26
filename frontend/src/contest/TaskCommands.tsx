@@ -4,7 +4,7 @@ import { faPlus, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons"
 import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import {
-  TaskData, UserTaskData, CurrentInput, useToken, useActions,
+  TaskData, UserTaskData, InputData, useToken, useActions,
 } from "./ContestContext";
 import client from "../TerryClient";
 import Loadable from "../admin/Loadable";
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default function TaskCommands({ task, userTask }: Props) {
-  const [input, setInput] = useState<Loadable<CurrentInput> | null>(null);
+  const [input, setInput] = useState<Loadable<InputData> | null>(null);
   const token = useToken();
   const { reloadContest } = useActions();
   if (!token) throw new Error("You have to be logged in to see the Task Commands");

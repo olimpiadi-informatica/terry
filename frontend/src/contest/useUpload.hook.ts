@@ -16,13 +16,6 @@ export type Alert = {
   code?: string;
 };
 
-export type ValidationCaseInfo =
-  | {
-      status: "missing";
-    }
-  | { status: "parsed"; message: string }
-  | { status: "invalid"; message: string };
-
 export enum UploadType {
   Source,
   Output,

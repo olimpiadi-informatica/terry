@@ -3,10 +3,9 @@ import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import FileView from "./FileView";
-import useUpload, {
-  UploadType, UploadedFile, Alert, ValidationCaseInfo,
-} from "./useUpload.hook";
+import useUpload, { UploadType, UploadedFile, Alert } from "./useUpload.hook";
 import ValidationView from "./ValidationView";
+import { ValidationCaseInfo } from "./useSubmission.hook";
 
 export type UploadedOutput = UploadedFile & {
   validation: {
