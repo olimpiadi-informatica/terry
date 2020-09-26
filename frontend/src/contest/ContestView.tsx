@@ -35,6 +35,7 @@ export default function ContestView() {
         <Link to="/" className="navbar-brand">
           {contest ? contest.contest.name : "Home"}
         </Link>
+        <div className="justify-right" />
         {contest && (
           <span className="terry-user-name">
             {contest.name}
@@ -44,7 +45,7 @@ export default function ContestView() {
         )}
         {contest && (
           <button
-            className="terry-logout-button btn btn-sm btn-light"
+            className="btn btn-sm btn-light"
             type="button"
             onClick={(e) => {
               e.preventDefault();

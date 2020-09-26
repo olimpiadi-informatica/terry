@@ -137,7 +137,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
       });
   }, [token, logout, reloadContestHandle]);
 
-  const isLoggedIn = () => token !== null && contest.isReady();
+  const isLoggedIn = () => token !== null;
 
   return (
     <ContestContext.Provider
