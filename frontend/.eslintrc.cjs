@@ -41,7 +41,7 @@ module.exports = {
 
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-use-before-define": "error",
 
     // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/extensions.md
     "import/extensions": ["error", "never"],
@@ -64,7 +64,7 @@ module.exports = {
     ],
 
     // https://eslint.org/docs/rules/no-multi-spaces
-    "no-multi-spaces": ["error"],
+    "no-multi-spaces": "error",
 
     // https://eslint.org/docs/rules/no-underscore-dangle
     "no-underscore-dangle": [
@@ -98,14 +98,23 @@ module.exports = {
 
     // https://eslint.org/docs/rules/semi
     semi: ["error", "always"],
+
+    // https://eslint.org/docs/rules/no-restricted-imports
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": ["../*"]
+      }
+    ],
   },
   settings: {
     react: {
       version: "detect",
     },
     "import/resolver": {
-      node: {
-        extensions: [".js", ".ts", ".jsx", ".tsx"],
+      "typescript": {
+        // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+        "alwaysTryTypes": true,
       },
     },
     "import/core-modules": ["@lingui/macro", "@lingui/core"],
