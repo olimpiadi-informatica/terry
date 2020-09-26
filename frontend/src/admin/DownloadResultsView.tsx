@@ -9,10 +9,7 @@ import { notifyError } from "src/utils";
 import { i18n } from "src/i18n";
 import { Loadable } from "src/Loadable";
 import { useToken } from "./AdminContext";
-
-export type ZipData = {
-  path: string;
-};
+import { ZipData } from "./types";
 
 export function DownloadResultsView() {
   const token = useToken();

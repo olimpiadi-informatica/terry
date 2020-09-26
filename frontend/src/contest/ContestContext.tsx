@@ -8,65 +8,7 @@ import { useLogin } from "src/useLogin.hook";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
-
-export type NotStartedContestData = {
-  name: string;
-  description: string;
-  has_started: false; // eslint-disable-line camelcase
-};
-
-export type TaskData = {
-  name: string;
-  title: string;
-  max_score: number; // eslint-disable-line camelcase
-  statement_path: string; // eslint-disable-line camelcase
-};
-
-export type StartedContestData = {
-  name: string;
-  description: string;
-  has_started: true; // eslint-disable-line camelcase
-  start_time: string; // eslint-disable-line camelcase
-  max_total_score: number; // eslint-disable-line camelcase
-  tasks: TaskData[];
-};
-
-export type UserData = {
-  name: string;
-  surname: string;
-  token: string;
-  sso_user: number; // eslint-disable-line camelcase
-  contest_start_delay: number | null; // eslint-disable-line camelcase
-};
-
-export type InputData = {
-  id: string;
-  attempt: number;
-  date: number;
-  path: string;
-  size: number;
-  task: string;
-  token: string;
-};
-
-export type UserTaskData = {
-  name: string;
-  score: number;
-  current_input: InputData | null; // eslint-disable-line camelcase
-};
-
-export type NotStartedContest = {
-  contest: NotStartedContestData;
-} & UserData;
-
-export type StartedContest = {
-  contest: StartedContestData;
-  end_time: string; // eslint-disable-line camelcase
-  total_score: number; // eslint-disable-line camelcase
-  tasks: { [name: string]: UserTaskData };
-} & UserData;
-
-export type ContestData = NotStartedContest | StartedContest;
+import { ContestData } from "./types";
 
 export type ContextData = {
   token: string | null;

@@ -2,19 +2,10 @@ import React, { createRef, useEffect, useState } from "react";
 import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import {
-  useUpload, UploadType, UploadedFile, Alert,
-} from "src/contest/hooks/useUpload";
-import { ValidationCaseInfo } from "src/contest/hooks/useSubmission";
+import { useUpload, UploadType } from "src/contest/hooks/useUpload";
 import { ValidationView } from "src/contest/submission/ValidationView";
+import { UploadedOutput } from "src/contest/types";
 import { FileView } from "./FileView";
-
-export type UploadedOutput = UploadedFile & {
-  validation: {
-    alerts: Alert[];
-    cases: ValidationCaseInfo[];
-  };
-};
 
 type Props = {
   inputId: string;

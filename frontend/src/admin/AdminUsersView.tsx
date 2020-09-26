@@ -8,7 +8,8 @@ import { ModalView } from "src/Modal";
 import { i18n } from "src/i18n";
 import { Loading } from "src/Loading";
 import { useActions } from "./AdminContext";
-import { UserEntry, useUsers } from "./hooks/useUsers";
+import { useUsers } from "./hooks/useUsers";
+import { UserEntry } from "./types";
 
 type UserExtraTimeProps = {
   user: UserEntry;

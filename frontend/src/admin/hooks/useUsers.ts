@@ -5,25 +5,7 @@ import { client } from "src/TerryClient";
 import { useToken } from "src/admin/AdminContext";
 import { notifyError } from "src/utils";
 import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
-
-export type UserIp = {
-  // eslint-disable-next-line camelcase
-  first_date: string;
-  ip: string;
-};
-
-export type UserEntry = {
-  name: string;
-  surname: string;
-  token: string;
-  // eslint-disable-next-line camelcase
-  extra_time: number;
-  ip: UserIp[];
-};
-
-export type UsersData = {
-  items: UserEntry[];
-};
+import { UsersData } from "src/admin/types";
 
 export type ReloadUsers = () => void;
 

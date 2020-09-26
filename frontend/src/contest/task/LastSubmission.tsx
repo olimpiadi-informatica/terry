@@ -3,8 +3,8 @@ import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { DateComponent } from "src/datetime.views";
-import { TaskData, useServerTime } from "src/contest/ContestContext";
-import { Submission } from "src/contest/hooks/useSubmission";
+import { useServerTime } from "src/contest/ContestContext";
+import { Submission, TaskData } from "src/contest/types";
 
 type Props = {
   task: TaskData;

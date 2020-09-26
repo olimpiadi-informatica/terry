@@ -5,33 +5,8 @@ import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
 import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
 import { useToken } from "src/admin/AdminContext";
+import { LogsOptions, LogLevel, LogsData } from "src/admin/types";
 
-export enum LogLevel {
-  DEBUG = "DEBUG",
-  INFO = "INFO",
-  WARNING = "WARNING",
-  ERROR = "ERROR",
-}
-
-export type LogEntry = {
-  date: string;
-  category: string;
-  level: LogLevel;
-  message: string;
-};
-
-export type LogsData = {
-  items: LogEntry[];
-};
-
-export type LogsOptions = {
-  // eslint-disable-next-line camelcase
-  start_date: string;
-  // eslint-disable-next-line camelcase
-  end_date: string;
-  level: LogLevel;
-  category?: string;
-};
 export const defaultLogsOptions: LogsOptions = {
   start_date: "2000-01-01T00:00:00.000",
   end_date: "2030-01-01T00:00:00.000",

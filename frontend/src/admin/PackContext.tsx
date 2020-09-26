@@ -5,15 +5,7 @@ import { client } from "src/TerryClient";
 import { Loadable } from "src/Loadable";
 import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
 import { notifyError } from "src/utils";
-
-export type Pack =
-  | { uploaded: false }
-  | {
-      uploaded: true;
-      deletable: boolean;
-      name: string;
-      description: string;
-    };
+import { Pack } from "./types";
 
 type PackContextType = {
   pack: Loadable<Pack>;
@@ -41,9 +33,5 @@ export function PackContextProvider({ children }: { children: ReactNode }) {
       });
   }, [packUpdate]);
 
-  return (
-    <PackContext.Provider value={{ pack, reloadPack }}>
-      {children}
-    </PackContext.Provider>
-  );
+  return <PackContext.Provider value={{ pack, reloadPack }}>{children}</PackContext.Provider>;
 }

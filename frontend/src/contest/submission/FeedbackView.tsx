@@ -3,8 +3,8 @@ import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { DateComponent } from "src/datetime.views";
 import { ScoreView } from "src/contest/ScoreView";
-import { FeedbackCaseInfo, Submission } from "src/contest/hooks/useSubmission";
-import { useServerTime, TaskData } from "src/contest/ContestContext";
+import { useServerTime } from "src/contest/ContestContext";
+import { Submission, FeedbackCaseInfo, TaskData } from "src/contest/types";
 import { ResultView } from "./ResultView";
 import "./GridList.css";
 

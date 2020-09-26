@@ -1,7 +1,7 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
 import { Route } from "react-router-dom";
-import { TaskData, UserTaskData } from "src/contest/ContestContext";
+import { TaskData, UserTaskData } from "src/contest/types";
 import { useStatement } from "src/contest/hooks/useStatement";
 import { CreateSubmissionView } from "src/contest/submission/submit/CreateSubmissionView";
 import { SubmissionReportView } from "src/contest/submission/SubmissionReportView";

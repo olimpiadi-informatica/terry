@@ -13,9 +13,9 @@ import "./SubmissionListView.css";
 import { i18n } from "src/i18n";
 import { Loading } from "src/Loading";
 import { ScoreView } from "src/contest/ScoreView";
-import { TaskData, useServerTime } from "src/contest/ContestContext";
-import { useSubmissionList, SubmissionList } from "src/contest/hooks/useSubmissionList";
-import { Submission } from "src/contest/hooks/useSubmission";
+import { useServerTime } from "src/contest/ContestContext";
+import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
+import { Submission, SubmissionList, TaskData } from "src/contest/types";
 
 type Props = {
   task: TaskData;

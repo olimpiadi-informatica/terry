@@ -9,16 +9,7 @@ import { Loadable } from "src/Loadable";
 import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
 import { useLogin } from "src/useLogin.hook";
 import { PackContext } from "./PackContext";
-
-export type StatusData = {
-  loaded: boolean;
-  // eslint-disable-next-line camelcase
-  start_time?: string;
-  // eslint-disable-next-line camelcase
-  end_time?: string;
-  // eslint-disable-next-line camelcase
-  extra_time?: number;
-};
+import { StatusData } from "./types";
 
 type ContextData = {
   token: string | null;

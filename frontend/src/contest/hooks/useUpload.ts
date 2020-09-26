@@ -2,20 +2,6 @@ import { useState, useMemo } from "react";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 
-export type UploadedFile = {
-  date: string;
-  id: string;
-  input: string;
-  path: string;
-  size: number;
-};
-
-export type Alert = {
-  message: string;
-  severity: "warning" | "danger" | "success";
-  code?: string;
-};
-
 export enum UploadType {
   Source,
   Output,

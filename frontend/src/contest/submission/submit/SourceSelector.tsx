@@ -4,17 +4,12 @@ import { i18n } from "@lingui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import {
-  useUpload, UploadType, UploadedFile, Alert,
+  useUpload, UploadType,
 } from "src/contest/hooks/useUpload";
 import { ValidationAlert } from "src/contest/submission/ValidationAlert";
+import { UploadedSource } from "src/contest/types";
 import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
 import { FileView } from "./FileView";
-
-export type UploadedSource = UploadedFile & {
-  validation: {
-    alerts: Alert[];
-  };
-};
 
 type Props = {
   inputId: string;

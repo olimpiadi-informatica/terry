@@ -6,9 +6,8 @@ import { CountdownComponent } from "src/datetime.views";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
-import {
-  useContest, TaskData, StartedContest, useServerTime,
-} from "./ContestContext";
+import { useContest, useServerTime } from "./ContestContext";
+import { TaskData, StartedContest } from "./types";
 
 export function SidebarView() {
   const contestL = useContest();

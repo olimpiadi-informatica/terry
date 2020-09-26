@@ -6,15 +6,15 @@ import { Link } from "react-router-dom";
 import { client } from "src/TerryClient";
 import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
+import { useToken, useActions } from "src/contest/ContestContext";
 import {
-  TaskData, UserTaskData, InputData, useToken, useActions,
-} from "src/contest/ContestContext";
-import { SubmissionList } from "src/contest/hooks/useSubmissionList";
+  SubmissionList, TaskData, UserTaskData, InputData,
+} from "src/contest/types";
 
 type Props = {
   task: TaskData;
   userTask: UserTaskData;
-  submissions: Loadable<SubmissionList>
+  submissions: Loadable<SubmissionList>;
 };
 
 export function TaskCommands({ task, userTask, submissions }: Props) {

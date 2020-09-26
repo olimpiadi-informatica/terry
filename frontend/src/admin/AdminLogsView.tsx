@@ -10,9 +10,8 @@ import "./AdminLogsView.css";
 import { AbsoluteDateComponent } from "src/datetime.views";
 import { i18n } from "src/i18n";
 import { useServerTime } from "./AdminContext";
-import {
-  useLogs, LogLevel, LogEntry, defaultLogsOptions, LogsOptions,
-} from "./hooks/useLogs";
+import { useLogs, defaultLogsOptions } from "./hooks/useLogs";
+import { LogLevel, LogsOptions, LogEntry } from "./types";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {

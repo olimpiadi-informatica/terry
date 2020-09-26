@@ -3,11 +3,7 @@ import { client } from "src/TerryClient";
 import { useToken } from "src/contest/ContestContext";
 import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
-import { Submission } from "./useSubmission";
-
-export type SubmissionList = {
-  items: Submission[];
-};
+import { SubmissionList } from "src/contest/types";
 
 export function useSubmissionList(taskName: string) {
   const token = useToken();
