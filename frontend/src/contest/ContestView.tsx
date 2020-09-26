@@ -15,11 +15,13 @@ import { UsefulInfo } from "./help/UsefulInfo";
 import { Documentation } from "./help/Documentation";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
+import { useDetectInternet } from "./hooks/useDetectInternet";
 
 function ContestViewInternal() {
   const pack = usePack();
   const contestLoadable = useContest();
   const { logout, isLoggedIn } = useActions();
+  useDetectInternet();
 
   if (pack.isLoading()) return <Loading />;
   if (pack.isError()) return <Trans>Error</Trans>;
