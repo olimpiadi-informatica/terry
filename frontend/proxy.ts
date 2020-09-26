@@ -4,7 +4,8 @@
 import http from "http";
 import httpProxy from "http-proxy";
 
-const USING_DOCKER = true;
+// Set this to 'null' if you don't use docker!
+const DOCKER_PORT: number | null = 2000;
 
 const proxy = httpProxy.createProxyServer({ xfwd: true });
 
@@ -16,8 +17,8 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith("/api/")) {
     console.log(`API: ${req.url}`);
 
-    if (USING_DOCKER) {
-      proxy.web(req, res, { target: "http://127.0.0.1" });
+    if (DOCKER_PORT) {
+      proxy.web(req, res, { target: `http://127.0.0.1:${DOCKER_PORT}` });
     } else {
       req.url = req.url.slice(4); // remove "/api"
       proxy.web(req, res, { target: "http://127.0.0.1:1234" });
@@ -25,8 +26,8 @@ const server = http.createServer((req, res) => {
   } else if (req.url.startsWith("/files/")) {
     console.log(`FILES: ${req.url}`);
 
-    if (USING_DOCKER) {
-      proxy.web(req, res, { target: "http://127.0.0.1" });
+    if (DOCKER_PORT) {
+      proxy.web(req, res, { target: `http://127.0.0.1:${DOCKER_PORT}` });
     } else {
       req.url = req.url.slice(6); // remove "/files"
       proxy.web(req, res, { target: "http://127.0.0.1:1235" });
