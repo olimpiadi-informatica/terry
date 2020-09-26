@@ -1,25 +1,33 @@
 import React from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, Redirect } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { Loading } from "src/Loading";
 import { TaskView } from "src/contest/task/TaskView";
+import { PackContextProvider } from "src/admin/PackContext";
+import { usePack } from "src/admin/hooks/usePack";
 import { SidebarView } from "./SidebarView";
-import { useContest, useActions } from "./ContestContext";
+import { useContest, useActions, ContestContextProvider } from "./ContestContext";
 import { StartedContest } from "./types";
 import { UsefulInfo } from "./help/UsefulInfo";
 import { Documentation } from "./help/Documentation";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
 
-export function ContestView() {
-  const contestL = useContest();
+function ContestViewInternal() {
+  const pack = usePack();
+  const contestLoadable = useContest();
   const { logout, isLoggedIn } = useActions();
+
+  if (pack.isLoading()) return <Loading />;
+  if (pack.isError()) return <Trans>Error</Trans>;
+  if (!pack.value().uploaded) return <Redirect to="/admin" />;
+
   const loggedIn = isLoggedIn();
-  if (loggedIn && contestL.isLoading()) return <Loading />;
-  const contest = contestL.isReady() ? contestL.value() : null;
+  if (loggedIn && contestLoadable.isLoading()) return <Loading />;
+  const contest = contestLoadable.isReady() ? contestLoadable.value() : null;
 
   const renderTask = (taskName: string) => {
     const startedContest = contest as StartedContest;
@@ -65,7 +73,7 @@ export function ContestView() {
         <SidebarView />
         <main>
           {contest && <Route exact path="/" component={ContestHome} />}
-          {(!loggedIn || contestL.isError()) && <LoginView />}
+          {(!loggedIn || contestLoadable.isError()) && <Route exact path="/" component={LoginView} />}
           <Route exact path="/useful-info" component={UsefulInfo} />
           <Route exact path="/documentation" component={Documentation} />
 
@@ -75,5 +83,15 @@ export function ContestView() {
         </main>
       </div>
     </>
+  );
+}
+
+export function ContestView() {
+  return (
+    <PackContextProvider>
+      <ContestContextProvider>
+        <ContestViewInternal />
+      </ContestContextProvider>
+    </PackContextProvider>
   );
 }

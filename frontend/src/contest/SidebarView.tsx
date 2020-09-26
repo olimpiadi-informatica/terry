@@ -6,12 +6,13 @@ import { CountdownComponent } from "src/datetime.views";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
-import { useContest, useServerTime } from "./ContestContext";
+import { useContest, useServerTime, useActions } from "./ContestContext";
 import { TaskData, StartedContest } from "./types";
 
 export function SidebarView() {
   const contestL = useContest();
   const serverTime = useServerTime();
+  const { isLoggedIn } = useActions();
   const contest = contestL.isReady() ? contestL.value() : null;
 
   const renderStarted = (startedContest: StartedContest) => (
@@ -67,6 +68,13 @@ export function SidebarView() {
     <nav className="bg-light sidebar">
       <ul className="nav nav-pills flex-column">
         {contest && contest.contest.has_started && renderStarted(contest as StartedContest)}
+        {!isLoggedIn() && (
+          <li className="nav-item">
+            <NavLink exact to="/" className="nav-link tasklist-item" activeClassName="active">
+              <Trans>Login</Trans>
+            </NavLink>
+          </li>
+        )}
 
         <li className="nav-item title mt-3">
           <h5 className="text-uppercase">

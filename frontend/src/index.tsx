@@ -7,7 +7,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { AppView } from "./AppView";
 import { Loading } from "./Loading";
 
 import { TransProvider } from "./i18n";
@@ -15,6 +14,7 @@ import { TransProvider } from "./i18n";
 import { PackView } from "./admin/PackView";
 
 import "react-toastify/dist/ReactToastify.min.css";
+import { ContestView } from "./contest/ContestView";
 
 /** ****** DEVELOPMENT SPECIFIC ********* */
 if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:9000");
@@ -37,7 +37,7 @@ ReactDOM.render(
         <Router>
           <Switch>
             <Route path="/admin" component={PackView} />
-            <Route component={AppView} />
+            <Route component={ContestView} />
           </Switch>
         </Router>
       </React.Suspense>
