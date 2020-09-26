@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import client from "../../TerryClient";
-import { useToken } from "../ContestContext";
-import Loadable from "../../Loadable";
+import client from "src/TerryClient";
+import { useToken } from "src/contest/ContestContext";
+import Loadable from "src/Loadable";
+import { notifyError } from "src/utils";
 import { Submission } from "./useSubmission";
-import { notifyError } from "../../utils";
 
 export type SubmissionList = {
   items: Submission[];

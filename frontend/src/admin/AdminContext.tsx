@@ -3,11 +3,11 @@ import React, {
 } from "react";
 import { DateTime, Duration } from "luxon";
 import { AxiosResponse, AxiosError } from "axios";
-import client from "../TerryClient";
-import { notifyError } from "../utils";
-import Loadable from "../Loadable";
-import useTriggerUpdate from "../useTriggerUpdate.hook";
-import useLogin from "../useLogin.hook";
+import client from "src/TerryClient";
+import { notifyError } from "src/utils";
+import Loadable from "src/Loadable";
+import useTriggerUpdate from "src/useTriggerUpdate.hook";
+import useLogin from "src/useLogin.hook";
 import { PackContext } from "./PackContext";
 
 export type StatusData = {

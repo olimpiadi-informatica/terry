@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
 import { toast } from "react-toastify";
-import ModalView from "../Modal";
-import { i18n } from "../i18n";
+import ModalView from "src/Modal";
+import { i18n } from "src/i18n";
 import { useStatus, useActions } from "./AdminContext";
 
 export function ContestExtraTimeView() {

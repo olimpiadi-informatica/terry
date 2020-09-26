@@ -5,9 +5,8 @@ import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
 import { Trans, t, Plural } from "@lingui/macro";
-import { DateComponent, CountdownComponent } from "../datetime.views";
-
-import { i18n } from "../i18n";
+import { DateComponent, CountdownComponent } from "src/datetime.views";
+import { i18n } from "src/i18n";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./hooks/useLogs";
 import { useUsers } from "./hooks/useUsers";

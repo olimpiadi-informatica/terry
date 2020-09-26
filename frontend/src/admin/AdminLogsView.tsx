@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
-import ModalView from "../Modal";
+import ModalView from "src/Modal";
 import "./AdminLogsView.css";
-import { AbsoluteDateComponent } from "../datetime.views";
-import { i18n } from "../i18n";
+import { AbsoluteDateComponent } from "src/datetime.views";
+import { i18n } from "src/i18n";
 import { useServerTime } from "./AdminContext";
 import {
   useLogs, LogLevel, LogEntry, defaultLogsOptions, LogsOptions,

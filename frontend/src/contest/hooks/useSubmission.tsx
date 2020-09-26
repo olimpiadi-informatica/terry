@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { InputData } from "../ContestContext";
-import { UploadedOutput } from "../OutputSelector";
-import { UploadedSource } from "../SourceSelector";
+import { InputData } from "src/contest/ContestContext";
+import { UploadedOutput } from "src/contest/OutputSelector";
+import { UploadedSource } from "src/contest/SourceSelector";
+import client from "src/TerryClient";
+import Loadable from "src/Loadable";
+import { notifyError } from "src/utils";
 import { Alert } from "./useUpload";
-import client from "../../TerryClient";
-import Loadable from "../../Loadable";
-import { notifyError } from "../../utils";
 
 export type ValidationCaseInfo =
   | {

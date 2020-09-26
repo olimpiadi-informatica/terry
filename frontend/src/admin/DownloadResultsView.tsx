@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
-import ModalView from "../Modal";
-import client from "../TerryClient";
-import { notifyError } from "../utils";
-import { i18n } from "../i18n";
+import ModalView from "src/Modal";
+import client from "src/TerryClient";
+import { notifyError } from "src/utils";
+import { i18n } from "src/i18n";
+import Loadable from "src/Loadable";
 import { useToken } from "./AdminContext";
-import Loadable from "../Loadable";
 
 export type ZipData = {
   path: string;
