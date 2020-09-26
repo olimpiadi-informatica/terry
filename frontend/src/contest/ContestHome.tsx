@@ -1,8 +1,8 @@
 import React from "react";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
-import ReactMarkdown from "react-markdown";
 import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReactMarkdown from "react-markdown";
 import { useContest } from "./ContestContext";
 
 export default function UserGuide() {

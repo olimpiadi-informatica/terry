@@ -1,13 +1,12 @@
-import React, { createRef, useLayoutEffect } from "react";
+import React from "react";
+import RemarkMathPlugin from "remark-math";
+import { BlockMath, InlineMath } from "react-katex";
 import ReactMarkdown from "react-markdown";
-import client from "../TerryClient";
-
-import "katex-all/dist/katex.min.css";
-import "./TaskStatementView.css";
 import { TaskData } from "./ContestContext";
-
-const katex = require("katex-all/dist/katex.min.js");
-const renderMathInElement = require("katex-all/dist/contrib/auto-render.min.js");
+import client from "../TerryClient";
+import "./TaskStatementView.css";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "katex/dist/katex.min.css";
 
 type Props = {
   task: TaskData;
@@ -15,28 +14,21 @@ type Props = {
 };
 
 export default function TaskStatementView({ task, source }: Props) {
-  const statementRef = createRef<HTMLDivElement>();
-
-  useLayoutEffect(() => {
-    if (!statementRef.current) return;
-    (window as any).katex = katex;
-    renderMathInElement(statementRef.current, {
-      delimiters: [
-        { left: "$", right: "$", display: false },
-        { left: "$$", right: "$$", display: true },
-        { left: "\\[", right: "\\]", display: true },
-      ],
-    });
-  });
-
   const transformUri = (url: string) => {
     const taskBaseUri = task.statement_path.match(/.*\//)?.[0];
     return client.statementsBaseURI + taskBaseUri + url;
   };
 
   return (
-    <div ref={statementRef} className="task-statement">
-      <ReactMarkdown source={source} transformImageUri={transformUri} transformLinkUri={transformUri} />
-    </div>
+    <ReactMarkdown
+      source={source}
+      transformImageUri={transformUri}
+      transformLinkUri={transformUri}
+      plugins={[RemarkMathPlugin]}
+      renderers={{
+        math: ({ value }: { value: string }) => <BlockMath>{value}</BlockMath>,
+        inlineMath: ({ value }: { value: string }) => <InlineMath>{value}</InlineMath>,
+      }}
+    />
   );
 }
