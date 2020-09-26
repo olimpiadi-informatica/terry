@@ -82,6 +82,24 @@ module.exports = {
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-filename-extension.md
     "react/jsx-filename-extension": [1, { extensions: [".jsx", ".tsx"] }],
 
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"],
+        },
+      },
+    ],
+
+    "jsx-a11y/label-has-for": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"],
+        },
+      },
+    ],
+
     // https://eslint.org/docs/rules/semi
     semi: ["error", "always"],
   },
@@ -94,5 +112,6 @@ module.exports = {
         extensions: [".js", ".ts", ".jsx", ".tsx"],
       },
     },
+    "import/core-modules": ["@lingui/macro", "@lingui/core"],
   },
 };

@@ -1,10 +1,12 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
+import { Route } from "react-router-dom";
 import TaskStatementView from "./TaskStatementView";
 import { TaskData, UserTaskData } from "./ContestContext";
 import TaskCommands from "./TaskCommands";
 import LastSubmission from "./LastSubmission";
 import { useStatement } from "./useStatement.hook";
+import CreateSubmissionView from "./CreateSubmissionView";
 
 type Props = {
   task: TaskData;
@@ -36,12 +38,10 @@ export default function TaskView({ task, userTask }: Props) {
       <h1>{task.title}</h1>
       <TaskCommands task={task} userTask={userTask} />
 
-      {/* <Route
+      <Route
         path="/task/:taskName/submit/:inputId"
-        render={({ match }) => (
-          <CreateSubmissionView {...this.props} inputId={match.params.inputId} taskName={match.params.taskName} />
-        )}
-      ></Route> */}
+        render={({ match }) => <CreateSubmissionView inputId={match.params.inputId} task={task} userTask={userTask} />}
+      />
       {/* <Route
         path="/task/:taskName/submissions"
         render={({ match }) => <SubmissionListView {...this.props} taskName={match.params.taskName} />}

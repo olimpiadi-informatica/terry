@@ -21,7 +21,7 @@ export default function TaskCommands({ task, userTask }: Props) {
 
   const renderGenerateInputButton = () => {
     const button = (already: boolean) => (
-      <button className="btn btn-success" onClick={() => generateInput()}>
+      <button className="btn btn-success" type="button" onClick={() => generateInput()}>
         <FontAwesomeIcon icon={faPlus} />
         {" "}
         {already ? <Trans>Request new input</Trans> : <Trans>Request input</Trans>}
@@ -52,7 +52,7 @@ export default function TaskCommands({ task, userTask }: Props) {
   }
   if (generating) {
     return (
-      <button disabled className="btn btn-success">
+      <button disabled className="btn btn-success" type="button">
         <FontAwesomeIcon icon={faPlus} />
         {" "}
         <Trans>Requesting...</Trans>

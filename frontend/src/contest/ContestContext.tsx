@@ -10,22 +10,22 @@ import client from "../TerryClient";
 export type NotStartedContestData = {
   name: string;
   description: string;
-  has_started: false;
+  has_started: false; // eslint-disable-line camelcase
 };
 
 export type TaskData = {
   name: string;
   title: string;
-  max_score: number;
-  statement_path: string;
+  max_score: number; // eslint-disable-line camelcase
+  statement_path: string; // eslint-disable-line camelcase
 };
 
 export type StartedContestData = {
   name: string;
   description: string;
-  has_started: true;
-  start_time: string;
-  max_total_score: number;
+  has_started: true; // eslint-disable-line camelcase
+  start_time: string; // eslint-disable-line camelcase
+  max_total_score: number; // eslint-disable-line camelcase
   tasks: TaskData[];
 };
 
@@ -33,8 +33,8 @@ export type UserData = {
   name: string;
   surname: string;
   token: string;
-  sso_user: number;
-  contest_start_delay: number | null;
+  sso_user: number; // eslint-disable-line camelcase
+  contest_start_delay: number | null; // eslint-disable-line camelcase
 };
 
 export type CurrentInput = {
@@ -50,7 +50,7 @@ export type CurrentInput = {
 export type UserTaskData = {
   name: string;
   score: number;
-  current_input: CurrentInput | null;
+  current_input: CurrentInput | null; // eslint-disable-line camelcase
 };
 
 export type NotStartedContest = {
@@ -59,8 +59,8 @@ export type NotStartedContest = {
 
 export type StartedContest = {
   contest: StartedContestData;
-  end_time: string;
-  total_score: number;
+  end_time: string; // eslint-disable-line camelcase
+  total_score: number; // eslint-disable-line camelcase
   tasks: { [name: string]: UserTaskData };
 } & UserData;
 
@@ -166,5 +166,7 @@ export function useContest() {
 export function useServerTime() {
   const context = useContext(ContestContext);
 
-  return useMemo(() => () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0))), [context.data.serverTimeSkew]);
+  return useMemo(() => () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0))), [
+    context.data.serverTimeSkew,
+  ]);
 }
