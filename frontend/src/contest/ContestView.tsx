@@ -5,11 +5,11 @@ import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { Loading } from "src/Loading";
-import { TaskView } from "./TaskView";
+import { TaskView } from "src/contest/task/TaskView";
 import { SidebarView } from "./SidebarView";
 import { useContest, useActions, StartedContest } from "./ContestContext";
-import { UsefulInfo } from "./UsefulInfo";
-import { Documentation } from "./Documentation";
+import { UsefulInfo } from "./help/UsefulInfo";
+import { Documentation } from "./help/Documentation";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
 

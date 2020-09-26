@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "./hooks/useUpload";
+import { Alert } from "src/contest/hooks/useUpload";
 
 type Props = {
     alert: Alert

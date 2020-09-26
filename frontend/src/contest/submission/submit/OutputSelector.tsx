@@ -2,12 +2,12 @@ import React, { createRef, useEffect, useState } from "react";
 import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FileView } from "./FileView";
 import {
   useUpload, UploadType, UploadedFile, Alert,
-} from "./hooks/useUpload";
-import { ValidationView } from "./ValidationView";
-import { ValidationCaseInfo } from "./hooks/useSubmission";
+} from "src/contest/hooks/useUpload";
+import { ValidationCaseInfo } from "src/contest/hooks/useSubmission";
+import { ValidationView } from "src/contest/submission/ValidationView";
+import { FileView } from "./FileView";
 
 export type UploadedOutput = UploadedFile & {
   validation: {

@@ -8,8 +8,8 @@ import { ModalView } from "src/Modal";
 import "./Submit.css";
 import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
+import { TaskData, useActions } from "src/contest/ContestContext";
 import { SourceSelector, UploadedSource } from "./SourceSelector";
-import { TaskData, useActions } from "./ContestContext";
 import { OutputSelector, UploadedOutput } from "./OutputSelector";
 
 type Props = {

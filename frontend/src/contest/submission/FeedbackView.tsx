@@ -2,10 +2,10 @@ import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { DateComponent } from "src/datetime.views";
+import { ScoreView } from "src/contest/ScoreView";
+import { FeedbackCaseInfo, Submission } from "src/contest/hooks/useSubmission";
+import { useServerTime, TaskData } from "src/contest/ContestContext";
 import { ResultView } from "./ResultView";
-import { ScoreView } from "./ScoreView";
-import { FeedbackCaseInfo, Submission } from "./hooks/useSubmission";
-import { useServerTime, TaskData } from "./ContestContext";
 import "./GridList.css";
 
 type Props = {

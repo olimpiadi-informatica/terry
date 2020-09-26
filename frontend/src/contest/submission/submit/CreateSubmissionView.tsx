@@ -1,7 +1,7 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
+import { TaskData, UserTaskData } from "src/contest/ContestContext";
 import { Submit } from "./Submit";
-import { TaskData, UserTaskData } from "./ContestContext";
 
 type Props = {
   inputId: string;

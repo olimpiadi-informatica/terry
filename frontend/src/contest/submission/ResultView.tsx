@@ -1,6 +1,6 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import { Alert } from "./hooks/useUpload";
+import { Alert } from "src/contest/hooks/useUpload";
 
 type Props<T> = {
   cases: T[];

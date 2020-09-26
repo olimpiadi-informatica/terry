@@ -1,8 +1,8 @@
 import React from "react";
 import { Select } from "@lingui/macro";
+import { ValidationCaseInfo } from "src/contest/hooks/useSubmission";
 import { ResultView } from "./ResultView";
-import { UploadedOutput } from "./OutputSelector";
-import { ValidationCaseInfo } from "./hooks/useSubmission";
+import { UploadedOutput } from "./submit/OutputSelector";
 
 type Props = {
   output: UploadedOutput;

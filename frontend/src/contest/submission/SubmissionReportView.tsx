@@ -5,9 +5,9 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { ModalView } from "src/Modal";
 import { Loading } from "src/Loading";
+import { TaskData } from "src/contest/ContestContext";
+import { useSubmission } from "src/contest/hooks/useSubmission";
 import { FeedbackView } from "./FeedbackView";
-import { TaskData } from "./ContestContext";
-import { useSubmission } from "./hooks/useSubmission";
 
 type Props = {
   submissionId: string;

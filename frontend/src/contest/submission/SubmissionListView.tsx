@@ -12,10 +12,10 @@ import { colorFromScore } from "src/utils";
 import "./SubmissionListView.css";
 import { i18n } from "src/i18n";
 import { Loading } from "src/Loading";
-import { ScoreView } from "./ScoreView";
-import { TaskData, useServerTime } from "./ContestContext";
-import { useSubmissionList, SubmissionList } from "./hooks/useSubmissionList";
-import { Submission } from "./hooks/useSubmission";
+import { ScoreView } from "src/contest/ScoreView";
+import { TaskData, useServerTime } from "src/contest/ContestContext";
+import { useSubmissionList, SubmissionList } from "src/contest/hooks/useSubmissionList";
+import { Submission } from "src/contest/hooks/useSubmission";
 
 type Props = {
   task: TaskData;

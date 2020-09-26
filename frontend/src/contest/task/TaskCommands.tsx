@@ -8,8 +8,8 @@ import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
 import {
   TaskData, UserTaskData, InputData, useToken, useActions,
-} from "./ContestContext";
-import { SubmissionList } from "./hooks/useSubmissionList";
+} from "src/contest/ContestContext";
+import { SubmissionList } from "src/contest/hooks/useSubmissionList";
 
 type Props = {
   task: TaskData;

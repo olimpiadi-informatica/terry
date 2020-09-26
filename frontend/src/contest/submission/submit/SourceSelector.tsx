@@ -3,12 +3,12 @@ import { Trans, t } from "@lingui/macro";
 import { i18n } from "@lingui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
-import { FileView } from "./FileView";
 import {
   useUpload, UploadType, UploadedFile, Alert,
-} from "./hooks/useUpload";
-import { ValidationAlert } from "./ValidationAlert";
+} from "src/contest/hooks/useUpload";
+import { ValidationAlert } from "src/contest/submission/ValidationAlert";
+import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
+import { FileView } from "./FileView";
 
 export type UploadedSource = UploadedFile & {
   validation: {
