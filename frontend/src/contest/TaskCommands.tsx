@@ -9,6 +9,7 @@ import {
 import client from "../TerryClient";
 import Loadable from "../Loadable";
 import { notifyError } from "../utils";
+import useSubmissionList from "./useSubmissionList.hook";
 
 type Props = {
   task: TaskData;
@@ -18,6 +19,7 @@ type Props = {
 export default function TaskCommands({ task, userTask }: Props) {
   const [input, setInput] = useState<Loadable<InputData> | null>(null);
   const token = useToken();
+  const submissions = useSubmissionList(task.name);
   const { reloadContest } = useActions();
   if (!token) throw new Error("You have to be logged in to see the Task Commands");
 
@@ -50,8 +52,7 @@ export default function TaskCommands({ task, userTask }: Props) {
       </button>
     );
 
-    // TODO: pass subs.length > 0
-    return button(false);
+    return button(submissions.isReady() && submissions.value().items.length > 0);
   };
 
   if (userTask.current_input) {
