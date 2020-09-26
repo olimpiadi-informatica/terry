@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import "./i18n.css";
-import "babel-polyfill";
 
 import React from "react";
 import ReactDOM from "react-dom";

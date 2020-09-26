@@ -18,7 +18,6 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-tooltip": "^3.3.4",
     "axios": "^0.18.0",
-    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.1.0",
     "core-js": "^2.5.5",
     "filesize": "^4.1.2",
