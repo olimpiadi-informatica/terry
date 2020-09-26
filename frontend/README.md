@@ -10,7 +10,11 @@
 
 4. Start the frontend: `npx yarn start`
 
-5. Finally, point your browser to http://localhost:9000
+5. Point your browser to http://localhost:9000/admin
+
+6. Upload a contest pack. You can find a sample in https://github.com/algorithm-ninja/terry-sample-contest
+
+7. Start the contest by clicking on the button.
 
 If for some weird reason you need to start the contest _without using a browser_ you can issue:
 ```
