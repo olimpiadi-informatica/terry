@@ -2,14 +2,17 @@
 
 ## How to run the frontend
 
-First of all you need to install all the dependencies of this project: `npm install`
+1. First of all you need to install all the dependencies of this project: `npx yarn install`
 
-1. Setup the backend, see its readme for a quick start guide
-2. Start a simple webserver (port 1235) in the `contest/files` folder in the backend. You may want to run `python3 -m http.server 1235`.
-3. Run `npm start` to start a simple proxy that links everything together.
-4. Go to http://localhost:5050/
+2. Build the docker image for the backend: `docker build -t terry ./docker/`
 
-Remember to start the contest! For example you can issue
+3. Start the backend: `docker run -p 2000:80 terry`
+
+4. Start the frontend: `npx yarn start`
+
+5. Finally, point your browser to http://localhost:9000
+
+If for some weird reason you need to start the contest _without using a browser_ you can issue:
 ```
 curl -X POST -F admin_token=secret  http://localhost:1234/admin/start
 ```

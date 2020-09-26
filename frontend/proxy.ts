@@ -4,8 +4,7 @@
 import http from "http";
 import httpProxy from "http-proxy";
 
-// Set this to 'null' if you don't use docker!
-const DOCKER_PORT: number | null = 2000;
+const DOCKER_PORT = Boolean(process.env.BARE_BACKEND) && 2000;
 
 const proxy = httpProxy.createProxyServer({ xfwd: true });
 
@@ -48,5 +47,5 @@ server.on("upgrade", (req, res) => {
   proxy.ws(req, res, { target: "ws://127.0.0.1:3000", ws: true });
 });
 
-console.log("listening on port 9000");
+console.log("Listening on port 9000");
 server.listen(9000);
