@@ -8,6 +8,7 @@ import { notifyError } from "../utils";
 import Loadable from "../Loadable";
 import useTriggerUpdate from "../useTriggerUpdate.hook";
 import useLogin from "../useLogin.hook";
+import { PackContext } from "./usePack.hook";
 
 export type StatusData = {
   loaded: boolean;
@@ -19,20 +20,10 @@ export type StatusData = {
   extra_time?: number;
 };
 
-export type Pack =
-  | { uploaded: false }
-  | {
-      uploaded: true;
-      deletable: boolean;
-      name: string;
-      description: string;
-    };
-
 type ContextData = {
   token: string | null;
   serverTimeSkew: Loadable<Duration>;
   status: Loadable<StatusData>;
-  pack: Loadable<Pack>;
 };
 
 export type ContextActions = {
@@ -55,7 +46,6 @@ export const AdminContext = React.createContext<AdminContextType>({
     token: null,
     serverTimeSkew: Loadable.loading(),
     status: Loadable.loading(),
-    pack: Loadable.loading(),
   },
   actions: {
     isLoggedIn: () => false,
@@ -79,8 +69,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
   const [status, setStatus] = useState<Loadable<StatusData>>(Loadable.loading());
   const [statusUpdate, triggerStatusUpdate] = useTriggerUpdate();
-  const [pack, setPack] = useState<Loadable<Pack>>(Loadable.loading());
-  const [packUpdate, triggerPackUpdate] = useTriggerUpdate();
+  const { reloadPack } = useContext(PackContext);
 
   const startContest = () => {
     if (!token) throw new Error("You are not logged in");
@@ -100,7 +89,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .adminApi(token, "/drop_contest")
       .then(() => {
         logout();
-        triggerPackUpdate();
+        reloadPack();
       })
       .catch((response) => {
         notifyError(response);
@@ -130,7 +119,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
     return client.api
       .post("/admin/upload_pack", data)
       .then(() => {
-        triggerPackUpdate();
+        reloadPack();
       })
       .catch((response) => {
         notifyError(response);
@@ -159,19 +148,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   }, [token, statusUpdate, logout]);
 
-  // handle the pack status
-  useEffect(() => {
-    client
-      .api("/admin/pack_status")
-      .then((response) => {
-        setPack(Loadable.of(response.data as Pack));
-      })
-      .catch((response) => {
-        notifyError(response);
-        setPack(Loadable.error(response));
-      });
-  }, [packUpdate]);
-
   const isLoggedIn = () => !status.isLoading();
   return (
     <AdminContext.Provider
@@ -180,7 +156,6 @@ export function AdminContextProvider({ children }: AdminContextProps) {
           token,
           serverTimeSkew,
           status,
-          pack,
         },
         actions: {
           isLoggedIn,
@@ -211,11 +186,6 @@ export function useToken() {
 export function useStatus() {
   const context = useContext(AdminContext);
   return useMemo(() => context.data.status, [context.data.status]);
-}
-
-export function usePack() {
-  const context = useContext(AdminContext);
-  return useMemo(() => context.data.pack, [context.data.pack]);
 }
 
 export function useServerTime() {

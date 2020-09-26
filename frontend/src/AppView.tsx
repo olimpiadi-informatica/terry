@@ -1,16 +1,25 @@
 import * as React from "react";
+import { Trans } from "@lingui/macro";
+import { Redirect } from "react-router-dom";
 import ContestView from "./contest/ContestView";
 import { ContestContextProvider } from "./contest/ContestContext";
+import usePack, { PackContextProvider } from "./admin/usePack.hook";
+import Loading from "./Loading";
 
 function AppViewInternal() {
-  // TODO: is the pack is not uploaded, redirect to /admin
-  return <ContestView />;
+  const pack = usePack();
+  if (pack.isLoading()) return <Loading />;
+  if (pack.isError()) return <Trans>Error</Trans>;
+  if (pack.value().uploaded) return <ContestView />;
+  return <Redirect to="/admin" />;
 }
 
 export default function AppView() {
   return (
-    <ContestContextProvider>
-      <AppViewInternal />
-    </ContestContextProvider>
+    <PackContextProvider>
+      <ContestContextProvider>
+        <AppViewInternal />
+      </ContestContextProvider>
+    </PackContextProvider>
   );
 }

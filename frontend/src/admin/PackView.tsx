@@ -2,11 +2,11 @@ import React from "react";
 import Loading from "../Loading";
 import UploadPackView from "./UploadPackView";
 import AdminView from "./AdminView";
-import { AdminContextProvider, usePack } from "./AdminContext";
+import { AdminContextProvider } from "./AdminContext";
+import usePack, { PackContextProvider } from "./usePack.hook";
 
 function PackViewInner() {
   const pack = usePack();
-
   if (pack.isLoading()) return <Loading />;
   if (pack.isError()) {
     return (
@@ -25,8 +25,10 @@ function PackViewInner() {
 
 export default function PackView() {
   return (
-    <AdminContextProvider>
-      <PackViewInner />
-    </AdminContextProvider>
+    <PackContextProvider>
+      <AdminContextProvider>
+        <PackViewInner />
+      </AdminContextProvider>
+    </PackContextProvider>
   );
 }

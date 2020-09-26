@@ -8,11 +8,10 @@ import { Trans, t, Plural } from "@lingui/macro";
 import { DateComponent, CountdownComponent } from "../datetime.views";
 
 import { i18n } from "../i18n";
-import {
-  useStatus, usePack, useActions, useServerTime,
-} from "./AdminContext";
+import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./useLogs.hook";
 import { useUsers } from "./useUsers.hook";
+import usePack from "./usePack.hook";
 
 export default function AdminSummaryView() {
   const status = useStatus().value();
@@ -180,6 +179,13 @@ export default function AdminSummaryView() {
     </>
   );
 
+  const renderStatus = () => {
+    if (!status.start_time) return renderNotStarted();
+    if (serverTime() < getEndTime()) return renderRunning();
+    if (serverTime() < getExtraTimeEndTime()) return renderRunningExtraTime();
+    return renderFinished();
+  };
+
   const isDeletable = () => pack.deletable;
 
   const doResetContest = () => {
@@ -196,13 +202,7 @@ export default function AdminSummaryView() {
           <h3>
             <Trans>Contest status</Trans>
           </h3>
-          {!status.start_time
-            ? renderNotStarted()
-            : serverTime() < getEndTime()
-              ? renderRunning()
-              : serverTime() < getExtraTimeEndTime()
-                ? renderRunningExtraTime()
-                : renderFinished()}
+          {renderStatus()}
         </div>
       </div>
       <div className="card mb-3">
