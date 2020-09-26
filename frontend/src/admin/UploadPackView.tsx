@@ -3,7 +3,7 @@ import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useActions } from "./AdminContext";
 
-export default function UploadPackView() {
+export function UploadPackView() {
   const inputRef = createRef<HTMLInputElement>();
   const { uploadPack } = useActions();
 

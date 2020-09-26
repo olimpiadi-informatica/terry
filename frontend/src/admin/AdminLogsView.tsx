@@ -12,7 +12,7 @@ import { i18n } from "../i18n";
 import { useServerTime } from "./AdminContext";
 import {
   useLogs, LogLevel, LogEntry, defaultLogsOptions, LogsOptions,
-} from "./useLogs.hook";
+} from "./hooks/useLogs";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {

@@ -9,11 +9,11 @@ import { DateComponent, CountdownComponent } from "../datetime.views";
 
 import { i18n } from "../i18n";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
-import { useLogs } from "./useLogs.hook";
-import { useUsers } from "./useUsers.hook";
-import usePack from "./usePack.hook";
+import { useLogs } from "./hooks/useLogs";
+import { useUsers } from "./hooks/useUsers";
+import { usePack } from "./hooks/usePack";
 
-export default function AdminSummaryView() {
+export function AdminSummaryView() {
   const status = useStatus().value();
   const pack = usePack().value();
   const [logs, reloadLogs] = useLogs();

@@ -7,7 +7,7 @@ import { Trans, t } from "@lingui/macro";
 import ModalView from "../Modal";
 import { i18n } from "../i18n";
 import { useActions } from "./AdminContext";
-import { UserEntry, useUsers } from "./useUsers.hook";
+import { UserEntry, useUsers } from "./hooks/useUsers";
 import Loading from "../Loading";
 
 type UserExtraTimeProps = {
@@ -54,7 +54,7 @@ function UserExtraTimeView({ user }: UserExtraTimeProps) {
   );
 }
 
-export default function AdminUsersView() {
+export function AdminUsersView() {
   const [users] = useUsers();
   if (users.isLoading()) return <Loading />;
   if (users.isError()) return <Trans>Error</Trans>;

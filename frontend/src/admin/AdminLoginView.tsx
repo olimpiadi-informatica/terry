@@ -3,9 +3,9 @@ import { Trans, t } from "@lingui/macro";
 import ReactMarkdown from "react-markdown";
 import { i18n } from "../i18n";
 import { useActions } from "./AdminContext";
-import usePack from "./usePack.hook";
+import { usePack } from "./hooks/usePack";
 
-export default function AdminLoginView() {
+export function AdminLoginView() {
   const tokenRef = React.createRef<HTMLInputElement>();
   const { login } = useActions();
   const pack = usePack().value();

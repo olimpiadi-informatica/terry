@@ -14,7 +14,7 @@ export type ZipData = {
   path: string;
 };
 
-export default function DownloadResultsView() {
+export function DownloadResultsView() {
   const token = useToken();
   const [zip, setZip] = useState<Loadable<ZipData>>(Loadable.loading());
 

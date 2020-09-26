@@ -8,7 +8,7 @@ import { notifyError } from "../utils";
 import Loadable from "../Loadable";
 import useTriggerUpdate from "../useTriggerUpdate.hook";
 import useLogin from "../useLogin.hook";
-import { PackContext } from "./usePack.hook";
+import { PackContext } from "./PackContext";
 
 export type StatusData = {
   loaded: boolean;

@@ -27,6 +27,10 @@ module.exports = {
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/explicit-module-boundary-types.md
     "@typescript-eslint/explicit-module-boundary-types": "off",
 
+    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-default-export.md
+    "import/no-default-export": "warn",
+    "import/prefer-default-export": "off",
+
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-empty-function.md
     "no-empty-function": "off",
     "@typescript-eslint/no-empty-function": "off",

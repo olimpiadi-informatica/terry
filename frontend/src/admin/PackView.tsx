@@ -1,9 +1,10 @@
 import React from "react";
 import Loading from "../Loading";
-import UploadPackView from "./UploadPackView";
-import AdminView from "./AdminView";
+import { UploadPackView } from "./UploadPackView";
+import { AdminView } from "./AdminView";
 import { AdminContextProvider } from "./AdminContext";
-import usePack, { PackContextProvider } from "./usePack.hook";
+import { usePack } from "./hooks/usePack";
+import { PackContextProvider } from "./PackContext";
 
 function PackViewInner() {
   const pack = usePack();
@@ -23,7 +24,7 @@ function PackViewInner() {
   return <UploadPackView />;
 }
 
-export default function PackView() {
+export function PackView() {
   return (
     <PackContextProvider>
       <AdminContextProvider>

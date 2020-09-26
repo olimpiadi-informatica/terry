@@ -12,7 +12,7 @@ import Loading from "./Loading";
 
 import { TransProvider } from "./i18n";
 
-import PackView from "./admin/PackView";
+import { PackView } from "./admin/PackView";
 
 import "react-toastify/dist/ReactToastify.min.css";
 

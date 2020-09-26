@@ -3,7 +3,8 @@ import { Trans } from "@lingui/macro";
 import { Redirect } from "react-router-dom";
 import ContestView from "./contest/ContestView";
 import { ContestContextProvider } from "./contest/ContestContext";
-import usePack, { PackContextProvider } from "./admin/usePack.hook";
+import { PackContextProvider } from "./admin/PackContext";
+import { usePack } from "./admin/hooks/usePack";
 import Loading from "./Loading";
 
 function AppViewInternal() {

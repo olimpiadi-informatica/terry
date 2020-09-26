@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, createContext, ReactNode, useContext, useMemo,
+  useState, useEffect, createContext, ReactNode,
 } from "react";
 import client from "../TerryClient";
 import Loadable from "../Loadable";
@@ -46,9 +46,4 @@ export function PackContextProvider({ children }: { children: ReactNode }) {
       {children}
     </PackContext.Provider>
   );
-}
-
-export default function usePack() {
-  const context = useContext(PackContext);
-  return useMemo(() => context.pack, [context.pack]);
 }

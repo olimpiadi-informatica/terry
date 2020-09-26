@@ -3,16 +3,16 @@ import { Link, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import AdminLoginView from "./AdminLoginView";
+import { AdminLoginView } from "./AdminLoginView";
 import AdminLogsView from "./AdminLogsView";
-import AdminSummaryView from "./AdminSummaryView";
-import AdminUsersView from "./AdminUsersView";
-import ContestExtraTimeView from "./ContestExtraTimeView";
-import DownloadResultsView from "./DownloadResultsView";
+import { AdminSummaryView } from "./AdminSummaryView";
+import { AdminUsersView } from "./AdminUsersView";
+import { ContestExtraTimeView } from "./ContestExtraTimeView";
+import { DownloadResultsView } from "./DownloadResultsView";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { useActions } from "./AdminContext";
 
-export default function AdminView() {
+export function AdminView() {
   const { isLoggedIn, logout } = useActions();
 
   const renderNavBar = () => (

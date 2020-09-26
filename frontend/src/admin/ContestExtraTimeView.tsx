@@ -8,7 +8,7 @@ import ModalView from "../Modal";
 import { i18n } from "../i18n";
 import { useStatus, useActions } from "./AdminContext";
 
-export default function ContestExtraTimeView() {
+export function ContestExtraTimeView() {
   const minutesRef = React.createRef<HTMLInputElement>();
 
   const history = useHistory();
