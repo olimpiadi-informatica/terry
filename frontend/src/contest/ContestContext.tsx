@@ -1,8 +1,9 @@
 import React, {
-  ReactNode, useState, createContext, useContext, useMemo, useEffect,
+  ReactNode, useState, createContext, useContext, useMemo, useEffect, useCallback,
 } from "react";
 import { Duration, DateTime } from "luxon";
 import { AxiosError } from "axios";
+import { useHistory } from "react-router-dom";
 import { useLogin } from "../useLogin.hook";
 import Loadable from "../Loadable";
 import client from "../TerryClient";
@@ -105,10 +106,16 @@ type ContestContextProps = {
 
 export function ContestContextProvider({ children }: ContestContextProps) {
   const cookieName = "userToken";
-  const [token, login, logout] = useLogin(cookieName);
+  const [token, login, doLogout] = useLogin(cookieName);
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
   const [contest, setContest] = useState<Loadable<ContestData, AxiosError>>(Loadable.loading());
   const [reloadContestHandle, reloadContest] = useTriggerUpdate();
+  const history = useHistory();
+
+  const logout = useCallback(() => {
+    doLogout();
+    history.push("/");
+  }, [doLogout, history]);
 
   useEffect(() => {
     if (!token) {
