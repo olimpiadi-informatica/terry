@@ -40,10 +40,10 @@ export const defaultLogsOptions: LogsOptions = {
 
 export type ReloadLogs = (options?: LogsOptions) => void;
 
-export function useLogs(): [Loadable<LogsData>, ReloadLogs] {
+export function useLogs(initialOptions?: LogsOptions): [Loadable<LogsData>, ReloadLogs] {
   const token = useToken();
   const [logs, setLogs] = useState<Loadable<LogsData>>(Loadable.loading());
-  const [logsOptions, setLogsOptions] = useState<LogsOptions>(defaultLogsOptions);
+  const [logsOptions, setLogsOptions] = useState<LogsOptions>(initialOptions || defaultLogsOptions);
   const [logsUpdate, triggerLogsUpdate] = useTriggerUpdate();
 
   useEffect(() => {

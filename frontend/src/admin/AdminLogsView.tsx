@@ -33,9 +33,9 @@ export function AdminLogsView() {
   const [level, setLevel] = useState(LogLevel.INFO);
   const [category, setCategory] = useState("");
   const [filter, setFilter] = useState("");
-  const [options, setOptions] = useState(defaultLogsOptions);
+  const [options, setOptions] = useState<LogsOptions>({ ...defaultLogsOptions, level, category });
 
-  const [logs, reloadLogs] = useLogs();
+  const [logs, reloadLogs] = useLogs(options);
   const serverTime = useServerTime();
 
   // auto reload the logs
