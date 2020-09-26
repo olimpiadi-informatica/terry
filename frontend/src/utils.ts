@@ -5,7 +5,6 @@ export function colorFromScore(score: number, max_score: number) {
 }
 
 export function notifyError(response: any) {
-  console.log(response, "data" in response.response);
   if ("response" in response && "data" in response.response) {
     if (typeof response.response.data === "string") {
       if (!response.response.data.startsWith("<html>")) {

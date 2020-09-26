@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import { useLogin } from "../useLogin.hook";
 import Loadable from "../admin/Loadable";
 import client from "../TerryClient";
+import useTriggerUpdate from "../triggerUpdate.hook";
 
 export type NotStartedContestData = {
   name: string;
@@ -76,6 +77,7 @@ export type ContextActions = {
   isLoggedIn: () => boolean;
   login: (token: string) => void;
   logout: () => void;
+  reloadContest: () => void;
 };
 
 type ContestContextType = {
@@ -93,6 +95,7 @@ export const ContestContext = createContext<ContestContextType>({
     isLoggedIn: () => false,
     login: () => {},
     logout: () => {},
+    reloadContest: () => {},
   },
 });
 
@@ -105,6 +108,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
   const [token, login, logout] = useLogin(cookieName);
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
   const [contest, setContest] = useState<Loadable<ContestData, AxiosError>>(Loadable.loading());
+  const [reloadContestHandle, reloadContest] = useTriggerUpdate();
 
   useEffect(() => {
     if (!token) {
@@ -124,7 +128,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
         setServerTimeSkew(Loadable.loading());
         setContest(Loadable.error(response));
       });
-  }, [token, logout]);
+  }, [token, logout, reloadContestHandle]);
 
   const isLoggedIn = () => token !== null && contest.isReady();
 
@@ -140,6 +144,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
           isLoggedIn,
           login,
           logout,
+          reloadContest,
         },
       }}
     >

@@ -7,7 +7,7 @@ import client from "../TerryClient";
 import ModalView from "../Modal";
 import "./Submit.css";
 import SourceSelector, { UploadedSource } from "./SourceSelector";
-import { TaskData } from "./ContestContext";
+import { TaskData, useActions } from "./ContestContext";
 import OutputSelector, { UploadedOutput } from "./OutputSelector";
 import Loadable from "../admin/Loadable";
 import { notifyError } from "../utils";
@@ -21,6 +21,7 @@ export default function Submit({ inputId, task }: Props) {
   const [source, setSource] = useState<UploadedSource | null>(null);
   const [output, setOutput] = useState<UploadedOutput | null>(null);
   const [submission, setSubmission] = useState<Loadable<unknown> | null>(null);
+  const { reloadContest } = useActions();
   const history = useHistory();
 
   const submit = () => {
@@ -38,6 +39,7 @@ export default function Submit({ inputId, task }: Props) {
       .then((response) => {
         const { id } = response.data;
         history.push(`/task/${task.name}/submission/${id}`);
+        reloadContest();
       })
       .catch((response) => {
         notifyError(response);
