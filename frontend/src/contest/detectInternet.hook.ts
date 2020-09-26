@@ -32,7 +32,7 @@ export function useDetectInternet() {
 
       await client.api.post("/internet_detected", data);
     },
-    [token]
+    [token],
   );
 
   useEffect(() => {

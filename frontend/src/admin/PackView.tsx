@@ -9,13 +9,19 @@ function PackViewInner() {
 
   if (pack.isLoading()) return <Loading />;
   // FIXME: use a proper ErrorView or similar
-  if (pack.isError()) return <p>An error occurred: {pack.error()}</p>;
+  if (pack.isError()) {
+    return (
+      <p>
+        An error occurred:
+        {pack.error()}
+      </p>
+    );
+  }
 
   if (pack.value().uploaded) {
     return <AdminView />;
-  } else {
-    return <UploadPackView />;
   }
+  return <UploadPackView />;
 }
 
 export default function PackView() {

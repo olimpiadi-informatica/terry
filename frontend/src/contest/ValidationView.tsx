@@ -1,7 +1,7 @@
 import * as React from "react";
+import { Select } from "@lingui/macro";
 import ResultView from "./ResultView";
 import { TestCase } from "../domain";
-import { Select } from "@lingui/macro";
 
 type Props = {
   result: any;
@@ -22,7 +22,7 @@ export default class ValidationView extends React.Component<Props> {
 
   renderCaseSummary(c: TestCase, id: number) {
     return (
-      <a href={"#case-" + id} className={"badge badge-" + this.getColor(c)}>
+      <a href={`#case-${id}`} className={`badge badge-${this.getColor(c)}`}>
         {id}
       </a>
     );
@@ -30,9 +30,12 @@ export default class ValidationView extends React.Component<Props> {
 
   renderCase(c: TestCase, id: number) {
     return (
-      <li id={"case-" + id} key={id} className={"list-group-item list-group-item-" + this.getColor(c)}>
+      <li id={`case-${id}`} key={id} className={`list-group-item list-group-item-${this.getColor(c)}`}>
         <span>
-          Case #<samp>{id}</samp>:{" "}
+          Case #
+          <samp>{id}</samp>
+          :
+          {" "}
           <b>
             <Select value={c.status} parsed="parsed" missing="missing" invalid="invalid" other="?" />
           </b>

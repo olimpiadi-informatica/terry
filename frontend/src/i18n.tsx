@@ -3,6 +3,7 @@ import { setupI18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import catalogIt from "./locales/it/messages";
 import catalogEn from "./locales/en/messages";
+
 require("moment/locale/it");
 
 const catalogs = {

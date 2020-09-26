@@ -11,14 +11,14 @@ export function useLogin(cookieName: string) {
       cookies.set(cookieName, token);
       setToken(token);
     },
-    [cookieName]
+    [cookieName],
   );
   const logout = useMemo(
     () => () => {
       cookies.remove(cookieName);
       setToken(null);
     },
-    [cookieName]
+    [cookieName],
   );
 
   return [token, login, logout] as const;

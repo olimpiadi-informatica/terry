@@ -2,13 +2,13 @@ import * as React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faTrash, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { Trans, t } from "@lingui/macro";
 import ValidationView from "./ValidationView";
 import FileView from "./FileView";
 import ModalView from "../Modal";
 import "./SubmissionView.css";
 import PromiseView from "../PromiseView";
 import { Submission } from "./user.models";
-import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { ALLOWED_EXTENSIONS, checkFile } from "./submissionLimits";
 
@@ -18,6 +18,7 @@ type Props = {
 
 export default class SubmissionView extends React.Component<Props> {
   sourceRef: React.RefObject<HTMLInputElement>;
+
   outputRef: React.RefObject<HTMLInputElement>;
 
   constructor(props: Props) {
@@ -36,7 +37,7 @@ export default class SubmissionView extends React.Component<Props> {
 
   renderSourceAlert(alert: any, i: number) {
     return (
-      <div key={i} className={"alert alert-" + alert.severity}>
+      <div key={i} className={`alert alert-${alert.severity}`}>
         {alert.message}
       </div>
     );
@@ -67,64 +68,67 @@ export default class SubmissionView extends React.Component<Props> {
           </label>
         </div>
       );
+    }
+    const { source } = this.props.submission;
+    const name = source.file.name as string;
+    const nameParts = name.split(".");
+    const extension = nameParts[nameParts.length - 1];
+    let warn = null;
+    let language = null;
+    if (extension in ALLOWED_EXTENSIONS) {
+      language = i18n._(ALLOWED_EXTENSIONS[extension]);
     } else {
-      const source = this.props.submission.source;
-      const name = source.file.name as string;
-      const nameParts = name.split(".");
-      const extension = nameParts[nameParts.length - 1];
-      let warn = null;
-      let language = null;
-      if (extension in ALLOWED_EXTENSIONS) {
-        language = i18n._(ALLOWED_EXTENSIONS[extension]);
-      } else {
-        warn = i18n._(
-          t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`
-        );
-      }
-      return (
-        <div key="present" className="card card-outline-primary w-100 mb-3">
-          <div className="card-header terry-submission-object-card">
-            <h5 className="modal-subtitle">
-              <Trans>Source file info</Trans>
-            </h5>
-            <button
-              key="present"
-              className="terry-submission-object-drop btn btn-primary"
-              onClick={() => this.props.submission.resetSource()}
-            >
-              <FontAwesomeIcon icon={faTrash} /> <Trans>Change source</Trans>
-            </button>
-          </div>
-          <div className="card-body">
-            <FileView {...this.props} file={source.file} />
-            {warn && <div className={"alert alert-warning"}>{warn}</div>}
-            {language && (
-              <div className={"alert alert-primary"}>
-                <Trans>Detected language:</Trans> {language}
-              </div>
-            )}
-            <PromiseView
-              promise={this.props.submission.source.uploadPromise}
-              renderFulfilled={(uploadedSource) => (
-                <React.Fragment>
-                  {uploadedSource.data.validation.alerts.map((a: any, i: number) => this.renderSourceAlert(a, i))}
-                </React.Fragment>
-              )}
-              renderRejected={() => (
-                <p>
-                  <Trans>Error</Trans>
-                </p>
-              )}
-              renderPending={() => (
-                <p>
-                  <Trans>Processing...</Trans>
-                </p>
-              )}
-            />
-          </div>
-        </div>
+      warn = i18n._(
+        t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`,
       );
     }
+    return (
+      <div key="present" className="card card-outline-primary w-100 mb-3">
+        <div className="card-header terry-submission-object-card">
+          <h5 className="modal-subtitle">
+            <Trans>Source file info</Trans>
+          </h5>
+          <button
+            key="present"
+            className="terry-submission-object-drop btn btn-primary"
+            onClick={() => this.props.submission.resetSource()}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+            {" "}
+            <Trans>Change source</Trans>
+          </button>
+        </div>
+        <div className="card-body">
+          <FileView {...this.props} file={source.file} />
+          {warn && <div className="alert alert-warning">{warn}</div>}
+          {language && (
+            <div className="alert alert-primary">
+              <Trans>Detected language:</Trans>
+              {" "}
+              {language}
+            </div>
+          )}
+          <PromiseView
+            promise={this.props.submission.source.uploadPromise}
+            renderFulfilled={(uploadedSource) => (
+              <>
+                {uploadedSource.data.validation.alerts.map((a: any, i: number) => this.renderSourceAlert(a, i))}
+              </>
+            )}
+            renderRejected={() => (
+              <p>
+                <Trans>Error</Trans>
+              </p>
+            )}
+            renderPending={() => (
+              <p>
+                <Trans>Processing...</Trans>
+              </p>
+            )}
+          />
+        </div>
+      </div>
+    );
   }
 
   renderOutputSelector() {
@@ -144,58 +148,59 @@ export default class SubmissionView extends React.Component<Props> {
           </label>
         </div>
       );
-    } else {
-      const output = this.props.submission.output;
-      return (
-        <div key="present" className="card card-outline-primary w-100">
-          <div className="card-header terry-submission-object-card">
-            <h5 className="modal-subtitle">
-              <Trans>Output file info</Trans>
-            </h5>
-            <button
-              key="present"
-              className="btn btn-primary terry-submission-object-drop"
-              onClick={() => this.props.submission.resetOutput()}
-            >
-              <FontAwesomeIcon icon={faTrash} /> <Trans>Change output</Trans>
-            </button>
-          </div>
-          <div className="card-body">
-            <FileView {...this.props} file={output.file} />
-            <PromiseView
-              promise={this.props.submission.output.uploadPromise}
-              renderFulfilled={(uploadedOutput) => (
-                <ValidationView {...this.props} result={uploadedOutput.data.validation} />
-              )}
-              renderRejected={() => (
-                <p>
-                  <Trans>Error</Trans>
-                </p>
-              )}
-              renderPending={() => (
-                <p>
-                  <Trans>Processing...</Trans>
-                </p>
-              )}
-            />
-          </div>
-        </div>
-      );
     }
+    const { output } = this.props.submission;
+    return (
+      <div key="present" className="card card-outline-primary w-100">
+        <div className="card-header terry-submission-object-card">
+          <h5 className="modal-subtitle">
+            <Trans>Output file info</Trans>
+          </h5>
+          <button
+            key="present"
+            className="btn btn-primary terry-submission-object-drop"
+            onClick={() => this.props.submission.resetOutput()}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+            {" "}
+            <Trans>Change output</Trans>
+          </button>
+        </div>
+        <div className="card-body">
+          <FileView {...this.props} file={output.file} />
+          <PromiseView
+            promise={this.props.submission.output.uploadPromise}
+            renderFulfilled={(uploadedOutput) => (
+              <ValidationView {...this.props} result={uploadedOutput.data.validation} />
+            )}
+            renderRejected={() => (
+              <p>
+                <Trans>Error</Trans>
+              </p>
+            )}
+            renderPending={() => (
+              <p>
+                <Trans>Processing...</Trans>
+              </p>
+            )}
+          />
+        </div>
+      </div>
+    );
   }
 
   submit() {
     return this.props.submission.submit().delegate.then((submission: any) => {
       console.error(submission);
       const taskName = submission.data.task;
-      const id = submission.data.id;
-      this.props.history.push("/task/" + taskName + "/submission/" + id);
+      const { id } = submission.data;
+      this.props.history.push(`/task/${taskName}/submission/${id}`);
     });
   }
 
   render() {
     return (
-      <ModalView contentLabel="Submission creation" returnUrl={"/task/" + this.props.submission.input.task}>
+      <ModalView contentLabel="Submission creation" returnUrl={`/task/${this.props.submission.input.task}`}>
         <form
           className="submissionForm"
           onSubmit={(e) => {
@@ -205,9 +210,11 @@ export default class SubmissionView extends React.Component<Props> {
         >
           <div className="modal-header">
             <h5 className="modal-title">
-              <Trans>Submission for input</Trans> <strong>{this.props.submission.input.id.slice(0, 6)}</strong>
+              <Trans>Submission for input</Trans>
+              {" "}
+              <strong>{this.props.submission.input.id.slice(0, 6)}</strong>
             </h5>
-            <Link to={"/task/" + this.props.submission.input.task} role="button" className="close" aria-label="Close">
+            <Link to={`/task/${this.props.submission.input.task}`} role="button" className="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </Link>
           </div>
@@ -217,11 +224,15 @@ export default class SubmissionView extends React.Component<Props> {
           </div>
           <div className="modal-footer">
             {this.props.submission.isSubmitted() ? <Trans>Processing...</Trans> : null}
-            <Link to={"/task/" + this.props.submission.input.task} role="button" className="btn btn-danger">
-              <FontAwesomeIcon icon={faTimes} /> <Trans>Cancel</Trans>
+            <Link to={`/task/${this.props.submission.input.task}`} role="button" className="btn btn-danger">
+              <FontAwesomeIcon icon={faTimes} />
+              {" "}
+              <Trans>Cancel</Trans>
             </Link>
             <button type="submit" className="btn btn-success" disabled={!this.props.submission.canSubmit()}>
-              <FontAwesomeIcon icon={faPaperPlane} /> <Trans>Submit</Trans>
+              <FontAwesomeIcon icon={faPaperPlane} />
+              {" "}
+              <Trans>Submit</Trans>
             </button>
           </div>
         </form>

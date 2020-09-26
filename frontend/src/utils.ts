@@ -13,7 +13,7 @@ export function notifyError(response: any) {
         toast.error(response.response.data);
       } else {
         // e.g. nginx errors (fields: status, statusText)
-        toast.error(response.response.status + " " + response.response.statusText);
+        toast.error(`${response.response.status} ${response.response.statusText}`);
       }
     } else if ("message" in response.response.data) {
       // application errors (server)

@@ -2,10 +2,10 @@ import * as React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "../Modal";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "../i18n";
 import { toast } from "react-toastify";
+import ModalView from "../Modal";
+import { i18n } from "../i18n";
 import { useStatus, useActions } from "./AdminContext";
 
 export default function ContestExtraTimeView() {
@@ -28,7 +28,7 @@ export default function ContestExtraTimeView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Extra time`)} returnUrl={"/admin"}>
+    <ModalView contentLabel={i18n._(t`Extra time`)} returnUrl="/admin">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -39,20 +39,24 @@ export default function ContestExtraTimeView() {
           <h5 className="modal-title">
             <Trans>Extra time</Trans>
           </h5>
-          <Link to={"/admin"} role="button" className="close" aria-label="Close">
+          <Link to="/admin" role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
         <div className="modal-body">
           <p>
             <Trans>
-              You can set an extra time for all the contestants in case of problems that afflicts everyone. This action{" "}
-              <em>is logged</em> and must be justified to the committee.
+              You can set an extra time for all the contestants in case of problems that afflicts everyone. This action
+              {" "}
+              <em>is logged</em>
+              {" "}
+              and must be justified to the committee.
             </Trans>
           </p>
           <div className="form-group mb-0">
             <label htmlFor="minutes">
-              <Trans>Extra time</Trans>:
+              <Trans>Extra time</Trans>
+              :
             </label>
             <input
               id="minutes"
@@ -61,7 +65,7 @@ export default function ContestExtraTimeView() {
               ref={minutesRef}
               className="form-control"
               required
-              defaultValue={"" + Math.round((status.value().extra_time || 0) / 60)}
+              defaultValue={`${Math.round((status.value().extra_time || 0) / 60)}`}
             />
             <small className="form-text text-muted">
               <Trans>(in minutes)</Trans>
@@ -69,11 +73,15 @@ export default function ContestExtraTimeView() {
           </div>
         </div>
         <div className="modal-footer">
-          <Link to={"/admin"} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
+          <Link to="/admin" role="button" className="btn btn-primary">
+            <FontAwesomeIcon icon={faTimes} />
+            {" "}
+            <Trans>Close</Trans>
           </Link>
           <button type="submit" className="btn btn-warning">
-            <FontAwesomeIcon icon={faHourglassStart} /> <Trans>Set extra time</Trans>
+            <FontAwesomeIcon icon={faHourglassStart} />
+            {" "}
+            <Trans>Set extra time</Trans>
           </button>
         </div>
       </form>

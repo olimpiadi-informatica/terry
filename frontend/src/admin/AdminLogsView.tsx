@@ -10,7 +10,9 @@ import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 import { useServerTime } from "./AdminContext";
-import { useLogs, LogLevel, LogEntry, defaultLogsOptions, LogsOptions } from "./logs.hook";
+import {
+  useLogs, LogLevel, LogEntry, defaultLogsOptions, LogsOptions,
+} from "./logs.hook";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {
@@ -49,10 +51,9 @@ export default function AdminLogsView() {
   useEffect(() => {
     const newOptions: LogsOptions = { ...options, level };
     if (category !== "") newOptions.category = category;
-    const changed =
-      level !== options.level ||
-      (category === "" && options.category !== undefined) ||
-      (category !== "" && options.category === undefined);
+    const changed = level !== options.level
+      || (category === "" && options.category !== undefined)
+      || (category !== "" && options.category === undefined);
     if (changed) {
       setOptions(newOptions);
       reloadLogs(newOptions);
@@ -68,12 +69,12 @@ export default function AdminLogsView() {
     if (logs.isLoading()) {
       return (
         <tr>
-          <td colSpan={4}>{<Trans>Loading...</Trans>}</td>
+          <td colSpan={4}><Trans>Loading...</Trans></td>
         </tr>
       );
-    } else if (logs.isReady()) {
+    } if (logs.isReady()) {
       const items = logs.value().items.filter((l) => filterLog(l));
-      if (items.length === 0)
+      if (items.length === 0) {
         return (
           <tr>
             <td colSpan={4}>
@@ -81,8 +82,9 @@ export default function AdminLogsView() {
             </td>
           </tr>
         );
+      }
       return items.map((log, i) => (
-        <tr key={i} className={"table-" + LOG_LEVELS[log.level].color}>
+        <tr key={i} className={`table-${LOG_LEVELS[log.level].color}`}>
           <td>
             <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date)} />
           </td>
@@ -101,7 +103,7 @@ export default function AdminLogsView() {
           </td>
         </tr>
       ));
-    } else if (logs.isError()) {
+    } if (logs.isError()) {
       return (
         <tr>
           <td colSpan={4}>
@@ -113,12 +115,12 @@ export default function AdminLogsView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Logs`)} returnUrl={"/admin"}>
+    <ModalView contentLabel={i18n._(t`Logs`)} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Logs</Trans>
         </h5>
-        <Link to={"/admin"} role="button" className="close" aria-label="Close">
+        <Link to="/admin" role="button" className="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </Link>
       </div>
@@ -128,7 +130,7 @@ export default function AdminLogsView() {
             {Object.entries(LOG_LEVELS).map(([lvl, obj]) => (
               <button
                 key={lvl}
-                className={["btn", level === lvl ? "active" : "", "btn-" + obj.color].join(" ")}
+                className={["btn", level === lvl ? "active" : "", `btn-${obj.color}`].join(" ")}
                 onClick={() => setLevel(lvl)}
               >
                 {lvl}
@@ -171,8 +173,10 @@ export default function AdminLogsView() {
         </div>
       </div>
       <div className="modal-footer">
-        <Link to={"/admin"} role="button" className="btn btn-primary">
-          <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
+        <Link to="/admin" role="button" className="btn btn-primary">
+          <FontAwesomeIcon icon={faTimes} />
+          {" "}
+          <Trans>Close</Trans>
         </Link>
       </div>
     </ModalView>

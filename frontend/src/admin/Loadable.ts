@@ -23,22 +23,16 @@ export default class Loadable<T, E = unknown> {
     }
   }
 
-  // https://github.com/typescript-eslint/typescript-eslint/issues/2592
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  static loading<T, E>() {
-    return new Loadable<T, E>();
+  static loading<T_, E_>() {
+    return new Loadable<T_, E_>();
   }
 
-  // https://github.com/typescript-eslint/typescript-eslint/issues/2592
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  static of<T, E>(value: T) {
-    return new Loadable<T, E>(value);
+  static of<T_, E_>(value: T_) {
+    return new Loadable<T_, E_>(value);
   }
 
-  // https://github.com/typescript-eslint/typescript-eslint/issues/2592
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  static error<T, E>(error: E) {
-    return new Loadable<T, E>(undefined, error);
+  static error<T_, E_>(error: E_) {
+    return new Loadable<T_, E_>(undefined, error);
   }
 
   isLoading() {

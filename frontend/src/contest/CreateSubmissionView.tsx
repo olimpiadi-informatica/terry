@@ -1,7 +1,7 @@
 import * as React from "react";
-import SubmissionView from "./SubmissionView";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
+import SubmissionView from "./SubmissionView";
 
 type Props = {
   userState: any;
@@ -25,12 +25,13 @@ export default class CreateSubmissionView extends React.Component<Props> {
   }
 
   render() {
-    if (this.submission === undefined)
+    if (this.submission === undefined) {
       return (
         <p>
           <Trans>Cannot submit for this input.</Trans>
         </p>
       );
+    }
     return <SubmissionView {...this.props} submission={this.submission} />;
   }
 }

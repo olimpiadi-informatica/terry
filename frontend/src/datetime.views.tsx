@@ -50,5 +50,5 @@ type CountdownProps = {
 export function CountdownComponent({ end, clock, afterEnd }: CountdownProps) {
   useAutoRefresh(1000);
   const ended = end.diff(clock()).as("milliseconds") < 0;
-  return <React.Fragment>{ended ? afterEnd() : end.diff(clock()).toFormat("hh:mm:ss")}</React.Fragment>;
+  return <>{ended ? afterEnd() : end.diff(clock()).toFormat("hh:mm:ss")}</>;
 }

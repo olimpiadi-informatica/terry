@@ -1,15 +1,19 @@
-import client from "../TerryClient";
 import Cookies from "universal-cookie";
-import Observable from "../Observable";
 import { DateTime, Duration } from "luxon";
+import client from "../TerryClient";
+import Observable from "../Observable";
 import ObservablePromise from "../ObservablePromise";
 import { notifyError } from "../utils";
 
 export class Model extends Observable {
   submissions: any;
+
   lastLoginAttempt?: ObservablePromise;
+
   userStatePromise?: ObservablePromise;
+
   timeDelta?: Duration;
+
   cookies: any;
 
   static cookieName = "userToken";
@@ -46,8 +50,8 @@ export class Model extends Observable {
   doLoadUser() {
     if (!this.isLoggedIn()) throw Error("doLoadUser can only be called after a successful login");
 
-    return client.api.get("/user/" + this.userToken()).then((response) => {
-      this.setServerTime(DateTime.fromHTTP(response.headers["date"]));
+    return client.api.get(`/user/${this.userToken()}`).then((response) => {
+      this.setServerTime(DateTime.fromHTTP(response.headers.date));
       return new UserState(this, response.data);
     });
   }
@@ -58,7 +62,7 @@ export class Model extends Observable {
         console.error("Forced logout because: ", error);
         this.logout();
         return Promise.reject(error);
-      })
+      }),
     );
     this.fireUpdate();
   }
@@ -91,15 +95,18 @@ export class Model extends Observable {
 
     if (this.submissions[id] !== undefined) return this.submissions[id];
     return (this.submissions[id] = new ObservablePromise(
-      client.api.get("/submission/" + id).then((response) => new SubmissionResult(response.data))
+      client.api.get(`/submission/${id}`).then((response) => new SubmissionResult(response.data)),
     ));
   }
 }
 
 class Output {
   error: any;
+
   uploadPromise: ObservablePromise;
+
   submission: any;
+
   file: any;
 
   constructor(file: any, submission: any) {
@@ -118,18 +125,14 @@ class Output {
     let id: string;
 
     return Promise.resolve()
-      .then(() => {
-        return client.api.post("/upload_output", data).then((response) => {
-          id = response.data.id;
-          delete this.error;
-        });
-      })
+      .then(() => client.api.post("/upload_output", data).then((response) => {
+        id = response.data.id;
+        delete this.error;
+      }))
       .catch((response) => {
         notifyError(response);
       })
-      .then(() => {
-        return client.api.get("/output/" + id);
-      });
+      .then(() => client.api.get(`/output/${id}`));
   }
 
   isValidForSubmit() {
@@ -139,7 +142,9 @@ class Output {
 
 class Source {
   uploadPromise: ObservablePromise;
+
   submission: any;
+
   file: any;
 
   constructor(file: any, submission: any) {
@@ -165,8 +170,11 @@ class Source {
 
 class UserState extends Observable {
   model: Model;
+
   data: any;
+
   userTaskState: any;
+
   tasks: any;
 
   constructor(model: Model, data: any) {
@@ -200,8 +208,11 @@ class UserState extends Observable {
 
 class Task extends Observable {
   contest: any;
+
   name: any;
+
   data: any;
+
   statementPromise: ObservablePromise;
 
   constructor(contest: any, name: string, data: any) {
@@ -212,16 +223,20 @@ class Task extends Observable {
     this.data = data;
 
     this.statementPromise = new ObservablePromise(
-      client.statements.get(this.data.statement_path).then((response) => response.data)
+      client.statements.get(this.data.statement_path).then((response) => response.data),
     );
   }
 }
 
 class UserTaskState extends Observable {
   submissionListPromise?: ObservablePromise;
+
   inputGenerationPromise?: ObservablePromise;
+
   model: any;
+
   user: any;
+
   task: any;
 
   constructor(model: Model, user: any, task: any) {
@@ -264,15 +279,13 @@ class UserTaskState extends Observable {
     this.inputGenerationPromise = new ObservablePromise(
       client.api
         .post("/generate_input", data)
-        .then((response) =>
-          Promise.resolve()
-            .then(() => this.model.refreshUser())
-            .then(() => response.data)
-        )
+        .then((response) => Promise.resolve()
+          .then(() => this.model.refreshUser())
+          .then(() => response.data))
         .catch((response) => {
           notifyError(response);
           this.inputGenerationPromise = undefined;
-        })
+        }),
     );
   }
 
@@ -288,9 +301,7 @@ class UserTaskState extends Observable {
   }
 
   loadSubmissionList() {
-    return client.api.get("/user/" + this.user.data.token + "/submissions/" + this.task.name).then((response) => {
-      return response.data;
-    });
+    return client.api.get(`/user/${this.user.data.token}/submissions/${this.task.name}`).then((response) => response.data);
   }
 
   refreshSubmissionList() {
@@ -301,10 +312,15 @@ class UserTaskState extends Observable {
 
 export class Submission extends Observable {
   taskState: any;
+
   model: any;
+
   input: any;
+
   output?: Output;
+
   source?: Source;
+
   submitPromise?: ObservablePromise;
 
   constructor(input: any, taskState: any) {
@@ -360,12 +376,12 @@ export class Submission extends Observable {
 
   canSubmit() {
     return (
-      !this.isSubmitted() &&
-      this.hasOutput() &&
-      this.output &&
-      this.output.isValidForSubmit() &&
-      this.source &&
-      this.source.isValidForSubmit()
+      !this.isSubmitted()
+      && this.hasOutput()
+      && this.output
+      && this.output.isValidForSubmit()
+      && this.source
+      && this.source.isValidForSubmit()
     );
   }
 
@@ -387,12 +403,10 @@ export class Submission extends Observable {
     this.fireUpdate();
 
     return (this.submitPromise = new ObservablePromise(
-      client.api.post("/submit", data).then((response) =>
-        Promise.resolve()
-          .then(() => this.model.refreshUser())
-          .then(() => this.taskState.refreshSubmissionList())
-          .then(() => new SubmissionResult(response.data))
-      )
+      client.api.post("/submit", data).then((response) => Promise.resolve()
+        .then(() => this.model.refreshUser())
+        .then(() => this.taskState.refreshSubmissionList())
+        .then(() => new SubmissionResult(response.data))),
     ));
   }
 }

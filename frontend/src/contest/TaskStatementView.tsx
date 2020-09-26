@@ -1,7 +1,7 @@
 import React, { createRef, useLayoutEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import client from "../TerryClient";
 
-import ReactMarkdown from "react-markdown";
 import "katex-all/dist/katex.min.css";
 import "./TaskStatementView.css";
 import { TaskData } from "./ContestContext";

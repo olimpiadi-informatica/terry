@@ -2,13 +2,15 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
-import { CountdownComponent } from "../datetime.views";
 import { DateTime } from "luxon";
-import { DateComponent } from "../datetime.views";
 import { toast } from "react-toastify";
 import { Trans, t, Plural } from "@lingui/macro";
+import { DateComponent, CountdownComponent } from "../datetime.views";
+
 import { i18n } from "../i18n";
-import { useStatus, usePack, useActions, useServerTime } from "./AdminContext";
+import {
+  useStatus, usePack, useActions, useServerTime,
+} from "./AdminContext";
 import { useLogs } from "./logs.hook";
 import { useUsers } from "./users.hook";
 
@@ -34,60 +36,56 @@ export default function AdminSummaryView() {
     return () => clearInterval(interval);
   }, [reloadLogs, reloadUsers]);
 
-  const renderNotStarted = () => {
-    return (
-      <React.Fragment>
-        <p>
-          <Trans>The contest has not started yet!</Trans>
-        </p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            startContest().then(() => toast.success(i18n._(t`Contest was successfully started`)));
-          }}
-        >
-          <button type="submit" className="btn btn-primary">
-            <FontAwesomeIcon icon={faPlay} /> {i18n._(t`Start`)}
-          </button>
-        </form>
-      </React.Fragment>
-    );
-  };
+  const renderNotStarted = () => (
+    <>
+      <p>
+        <Trans>The contest has not started yet!</Trans>
+      </p>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          startContest().then(() => toast.success(i18n._(t`Contest was successfully started`)));
+        }}
+      >
+        <button type="submit" className="btn btn-primary">
+          <FontAwesomeIcon icon={faPlay} />
+          {" "}
+          {i18n._(t`Start`)}
+        </button>
+      </form>
+    </>
+  );
 
-  const renderRunning = () => {
-    return (
-      <ul className="mb-0">
-        <li>{renderStartTime()}</li>
-        <li>{renderCountdown()}</li>
-      </ul>
-    );
-  };
+  const renderRunning = () => (
+    <ul className="mb-0">
+      <li>{renderStartTime()}</li>
+      <li>{renderCountdown()}</li>
+    </ul>
+  );
 
-  const renderRunningExtraTime = () => {
-    return (
-      <ul className="mb-0">
+  const renderRunningExtraTime = () => (
+    <ul className="mb-0">
+      <li>{renderStartTime()}</li>
+      <li>{renderEndTime()}</li>
+      <li>{renderExtraTimeCountdown()}</li>
+    </ul>
+  );
+
+  const renderFinished = () => (
+    <>
+      <ul>
         <li>{renderStartTime()}</li>
         <li>{renderEndTime()}</li>
-        <li>{renderExtraTimeCountdown()}</li>
+        {renderExtraTimeEndTime()}
       </ul>
-    );
-  };
 
-  const renderFinished = () => {
-    return (
-      <React.Fragment>
-        <ul>
-          <li>{renderStartTime()}</li>
-          <li>{renderEndTime()}</li>
-          {renderExtraTimeEndTime()}
-        </ul>
-
-        <Link to={"/admin/download_results"} className="btn btn-primary">
-          <FontAwesomeIcon icon={faDownload} /> <Trans>Download contest results</Trans>
-        </Link>
-      </React.Fragment>
-    );
-  };
+      <Link to="/admin/download_results" className="btn btn-primary">
+        <FontAwesomeIcon icon={faDownload} />
+        {" "}
+        <Trans>Download contest results</Trans>
+      </Link>
+    </>
+  );
 
   const countUsersWithExtraTime = () => {
     if (!users.isReady()) return 0;
@@ -108,32 +106,27 @@ export default function AdminSummaryView() {
     if (!users.isReady()) return 0;
     return Math.max.apply(
       null,
-      users.value().items.map((user) => user.extra_time)
+      users.value().items.map((user) => user.extra_time),
     );
   };
 
-  const getExtraTimeEndTime = () => {
-    return getEndTime().plus({ seconds: getUsersExtraTime() });
-  };
+  const getExtraTimeEndTime = () => getEndTime().plus({ seconds: getUsersExtraTime() });
 
-  const isDeletable = () => {
-    return pack.deletable;
-  };
+  const isDeletable = () => pack.deletable;
 
-  const renderStartTime = () => {
-    return (
-      <React.Fragment>
-        <Trans>Contest started at</Trans>{" "}
-        {getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-      </React.Fragment>
-    );
-  };
+  const renderStartTime = () => (
+    <>
+      <Trans>Contest started at</Trans>
+      {" "}
+      {getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+    </>
+  );
 
   const renderCountdownExtra = () => {
     if (countUsersWithExtraTime() === 0) return;
 
     return (
-      <React.Fragment>
+      <>
         {" "}
         (
         <span>
@@ -144,34 +137,34 @@ export default function AdminSummaryView() {
           />
         </span>
         )
-      </React.Fragment>
+      </>
     );
   };
 
-  const renderCountdown = () => {
-    return (
-      <React.Fragment>
-        <Trans>Remaining time</Trans>{" "}
-        <CountdownComponent clock={() => serverTime()} end={getEndTime()} afterEnd={() => ""} />
-        {renderCountdownExtra()}
-      </React.Fragment>
-    );
-  };
+  const renderCountdown = () => (
+    <>
+      <Trans>Remaining time</Trans>
+      {" "}
+      <CountdownComponent clock={() => serverTime()} end={getEndTime()} afterEnd={() => ""} />
+      {renderCountdownExtra()}
+    </>
+  );
 
-  const renderEndTime = () => {
-    return (
-      <React.Fragment>
-        <Trans>Contest ended at</Trans> {getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-      </React.Fragment>
-    );
-  };
+  const renderEndTime = () => (
+    <>
+      <Trans>Contest ended at</Trans>
+      {" "}
+      {getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+    </>
+  );
 
   const renderExtraTimeEndTime = () => {
     if (countUsersWithExtraTime() === 0) return null;
 
     return (
       <li>
-        <Trans>Contest ended for everyone at</Trans>{" "}
+        <Trans>Contest ended for everyone at</Trans>
+        {" "}
         {getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
       </li>
     );
@@ -181,10 +174,11 @@ export default function AdminSummaryView() {
     const endTime = getExtraTimeEndTime();
 
     return (
-      <React.Fragment>
-        <Trans>Remaining time for some participant</Trans>{" "}
+      <>
+        <Trans>Remaining time for some participant</Trans>
+        {" "}
         <CountdownComponent clock={() => serverTime()} end={endTime} afterEnd={() => ""} />
-      </React.Fragment>
+      </>
     );
   };
 
@@ -204,10 +198,10 @@ export default function AdminSummaryView() {
           {!status.start_time
             ? renderNotStarted()
             : serverTime() < getEndTime()
-            ? renderRunning()
-            : serverTime() < getExtraTimeEndTime()
-            ? renderRunningExtraTime()
-            : renderFinished()}
+              ? renderRunning()
+              : serverTime() < getExtraTimeEndTime()
+                ? renderRunningExtraTime()
+                : renderFinished()}
         </div>
       </div>
       <div className="card mb-3">
@@ -222,22 +216,27 @@ export default function AdminSummaryView() {
               ) : logs.isError() ? (
                 i18n._(t`Error`)
               ) : logs.value().items.length === 0 ? (
-                <React.Fragment>
-                  <Trans>No issue detected</Trans> (
+                <>
+                  <Trans>No issue detected</Trans>
+                  {" "}
+                  (
                   <Link to="/admin/logs">
                     <Trans>show log</Trans>
                   </Link>
                   )
-                </React.Fragment>
+                </>
               ) : (
-                <React.Fragment>
-                  <Trans>Issue last detected</Trans>{" "}
-                  <DateComponent clock={() => serverTime()} date={DateTime.fromISO(logs.value().items[0].date)} /> (
+                <>
+                  <Trans>Issue last detected</Trans>
+                  {" "}
+                  <DateComponent clock={() => serverTime()} date={DateTime.fromISO(logs.value().items[0].date)} />
+                  {" "}
+                  (
                   <Link to="/admin/logs">
                     <Trans>show log</Trans>
                   </Link>
                   )
-                </React.Fragment>
+                </>
               )}
             </li>
           </ul>
@@ -255,7 +254,8 @@ export default function AdminSummaryView() {
                 _0="No extra time set"
                 one="Contest duration was extended by # minute"
                 other="Contest duration was extended by # minutes"
-              />{" "}
+              />
+              {" "}
               (
               <Link to="/admin/extra_time">
                 <Trans>set extra time</Trans>
@@ -263,19 +263,20 @@ export default function AdminSummaryView() {
               )
             </li>
             <li>
-              <React.Fragment>
+              <>
                 <Plural
                   value={countUsersWithExtraTime()}
                   _0="No user has extra time"
                   one="# user has extra time"
                   other="# users have extra time"
-                />{" "}
+                />
+                {" "}
                 (
                 <Link to="/admin/users">
                   <Trans>show users</Trans>
                 </Link>
                 )
-              </React.Fragment>
+              </>
             </li>
           </ul>
         </div>

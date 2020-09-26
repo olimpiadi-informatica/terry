@@ -1,10 +1,11 @@
-import React, { ReactNode, useState, createContext, useContext, useMemo, useEffect } from "react";
+import React, {
+  ReactNode, useState, createContext, useContext, useMemo, useEffect,
+} from "react";
+import { Duration, DateTime } from "luxon";
+import { AxiosError } from "axios";
 import { useLogin } from "../useLogin.hook";
 import Loadable from "../admin/Loadable";
 import client from "../TerryClient";
-import { notifyError } from "../utils";
-import { Duration, DateTime } from "luxon";
-import { AxiosError } from "axios";
 
 export type NotStartedContestData = {
   name: string;
@@ -112,9 +113,9 @@ export function ContestContextProvider({ children }: ContestContextProps) {
       return;
     }
     client.api
-      .get("/user/" + token)
+      .get(`/user/${token}`)
       .then((response) => {
-        const serverDate = DateTime.fromHTTP(response.headers["date"]);
+        const serverDate = DateTime.fromHTTP(response.headers.date);
         setServerTimeSkew(Loadable.of(DateTime.local().diff(serverDate)));
         setContest(Loadable.of(response.data));
       })
@@ -149,29 +150,21 @@ export function ContestContextProvider({ children }: ContestContextProps) {
 
 export function useActions() {
   const context = useContext(ContestContext);
-  return useMemo(() => {
-    return context.actions;
-  }, [context.actions]);
+  return useMemo(() => context.actions, [context.actions]);
 }
 
 export function useToken() {
   const context = useContext(ContestContext);
-  return useMemo(() => {
-    return context.data.token;
-  }, [context.data.token]);
+  return useMemo(() => context.data.token, [context.data.token]);
 }
 
 export function useContest() {
   const context = useContext(ContestContext);
-  return useMemo(() => {
-    return context.data.contest;
-  }, [context.data.contest]);
+  return useMemo(() => context.data.contest, [context.data.contest]);
 }
 
 export function useServerTime() {
   const context = useContext(ContestContext);
 
-  return useMemo(() => {
-    return () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0)));
-  }, [context.data.serverTimeSkew]);
+  return useMemo(() => () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0))), [context.data.serverTimeSkew]);
 }

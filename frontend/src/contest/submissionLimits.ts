@@ -1,7 +1,7 @@
 import { t } from "@lingui/macro";
 import { MessageDescriptor } from "@lingui/core";
-import { i18n } from "../i18n";
 import { toast } from "react-toastify";
+import { i18n } from "../i18n";
 
 export const MAX_SOURCE_SIZE = 30000;
 
@@ -83,17 +83,17 @@ export async function checkFile(file: File) {
     toast.error(i18n._(t`The extension cannot contain spaces`));
   } else if (extension in FORBIDDEN_EXTENSIONS) {
     toast.error(
-      i18n._(
-        t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`
-      ) +
-        " " +
-        i18n._(FORBIDDEN_EXTENSIONS[extension])
+      `${i18n._(
+        t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`,
+      )
+      } ${
+        i18n._(FORBIDDEN_EXTENSIONS[extension])}`,
     );
   } else if (await isExecutable(file)) {
     toast.error(
       i18n._(
-        t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`
-      )
+        t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`,
+      ),
     );
   } else {
     return true;

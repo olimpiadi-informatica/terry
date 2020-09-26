@@ -9,11 +9,14 @@ type Props = {
 };
 
 const ScoreView = (props: Props) => (
-  <div className="terry-score" style={{ fontSize: props.size + "rem", ...props.style }}>
-    <span className="terry-score-value" style={{ fontSize: 2 * props.size + "rem" }}>
+  <div className="terry-score" style={{ fontSize: `${props.size}rem`, ...props.style }}>
+    <span className="terry-score-value" style={{ fontSize: `${2 * props.size}rem` }}>
       {props.score}
-    </span>{" "}
-    / {props.max}
+    </span>
+    {" "}
+    /
+    {" "}
+    {props.max}
   </div>
 );
 

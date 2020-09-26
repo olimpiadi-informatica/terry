@@ -17,7 +17,7 @@ export default function LoginView() {
 
   return (
     <div className="jumbotron">
-      <h1 className={"text-center"}>
+      <h1 className="text-center">
         <Trans>Please login</Trans>
       </h1>
       <form
@@ -47,7 +47,8 @@ export default function LoginView() {
           <div className="alert alert-danger mt-2" role="alert">
             <strong>
               <Trans>Error</Trans>
-            </strong>{" "}
+            </strong>
+            {" "}
             {contest.error().response?.data.message}
           </div>
         ) : isLoading ? (

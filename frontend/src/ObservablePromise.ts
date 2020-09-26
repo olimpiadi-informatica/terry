@@ -2,8 +2,11 @@ import Observable from "./Observable";
 
 export default class ObservablePromise extends Observable {
   delegate: Promise<any>;
+
   state: string;
+
   value: any;
+
   error: any;
 
   constructor(delegate: Promise<any>) {
@@ -28,7 +31,7 @@ export default class ObservablePromise extends Observable {
         this.state = "rejected";
         this.error = error;
         this.fireUpdate();
-      }
+      },
     );
   }
 

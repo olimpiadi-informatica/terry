@@ -10,12 +10,17 @@ type Props = {
 export default class ResultView extends React.Component<Props> {
   render() {
     return (
-      <React.Fragment>
+      <>
         <ul className="list-unstyled">
           {this.props.result.alerts.map((a: any, i: number) => (
             <li key={i}>
-              <div className={"alert alert-" + a.severity} role="alert">
-                <samp>{a.code}</samp> <strong>{a.severity.toUpperCase()}</strong>: {a.message}
+              <div className={`alert alert-${a.severity}`} role="alert">
+                <samp>{a.code}</samp>
+                {" "}
+                <strong>{a.severity.toUpperCase()}</strong>
+                :
+                {" "}
+                {a.message}
               </div>
             </li>
           ))}
@@ -37,7 +42,7 @@ export default class ResultView extends React.Component<Props> {
             {this.props.result.cases.map((c: TestCase, i: number) => this.props.renderCase(c, i + 1))}
           </ul>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

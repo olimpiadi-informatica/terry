@@ -2,16 +2,16 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { DateComponent } from "../datetime.views";
 import { DateTime } from "luxon";
+import ReactTooltip from "react-tooltip";
+import { Trans, t } from "@lingui/macro";
+import { DateComponent } from "../datetime.views";
 import client from "../TerryClient";
 import ModalView from "../Modal";
-import ReactTooltip from "react-tooltip";
 import { colorFromScore } from "../utils";
 import "./SubmissionListView.css";
 import ScoreView from "./ScoreView";
 import PromiseView from "../PromiseView";
-import { Trans, t } from "@lingui/macro";
 import { i18n } from "../i18n";
 
 type Props = {
@@ -47,18 +47,18 @@ export default class SubmissionListView extends React.Component<Props> {
               date={DateTime.fromISO(submission.date)}
             />
             <br />
-            <Link to={"/task/" + submission.task + "/submission/" + submission.id}>
+            <Link to={`/task/${submission.task}/submission/${submission.id}`}>
               <Trans>view details</Trans>
             </Link>
           </td>
           <td>
-            <ReactTooltip id={"input-" + submission.id} place="top" type="dark" effect="solid">
+            <ReactTooltip id={`input-${submission.id}`} place="top" type="dark" effect="solid">
               {submission.input.basename}
             </ReactTooltip>
-            <ReactTooltip id={"source-" + submission.id} place="top" type="dark" effect="solid">
+            <ReactTooltip id={`source-${submission.id}`} place="top" type="dark" effect="solid">
               {submission.source.basename}
             </ReactTooltip>
-            <ReactTooltip id={"output-" + submission.id} place="top" type="dark" effect="solid">
+            <ReactTooltip id={`output-${submission.id}`} place="top" type="dark" effect="solid">
               {submission.output.basename}
             </ReactTooltip>
 
@@ -70,9 +70,10 @@ export default class SubmissionListView extends React.Component<Props> {
                 href={client.filesBaseURI + submission.input.path}
                 download
                 data-tip
-                data-for={"input-" + submission.id}
+                data-for={`input-${submission.id}`}
               >
-                <FontAwesomeIcon icon={faDownload} />{" "}
+                <FontAwesomeIcon icon={faDownload} />
+                {" "}
                 <span className="hidden-md-down">
                   <Trans>Input file</Trans>
                 </span>
@@ -85,9 +86,10 @@ export default class SubmissionListView extends React.Component<Props> {
                 href={client.filesBaseURI + submission.source.path}
                 download
                 data-tip
-                data-for={"source-" + submission.id}
+                data-for={`source-${submission.id}`}
               >
-                <FontAwesomeIcon icon={faDownload} />{" "}
+                <FontAwesomeIcon icon={faDownload} />
+                {" "}
                 <span className="hidden-md-down">
                   <Trans>Source file</Trans>
                 </span>
@@ -100,19 +102,20 @@ export default class SubmissionListView extends React.Component<Props> {
                 href={client.filesBaseURI + submission.output.path}
                 download
                 data-tip
-                data-for={"output-" + submission.id}
+                data-for={`output-${submission.id}`}
               >
-                <FontAwesomeIcon icon={faDownload} />{" "}
+                <FontAwesomeIcon icon={faDownload} />
+                {" "}
                 <span className="hidden-md-down">
                   <Trans>Output file</Trans>
                 </span>
               </a>
             </div>
           </td>
-          <td className={"alert-" + colorFromScore(submission.score, this.getTask().data.max_score)}>
+          <td className={`alert-${colorFromScore(submission.score, this.getTask().data.max_score)}`}>
             <ScoreView score={submission.score} max={this.getTask().data.max_score} size={1} />
           </td>
-        </tr>
+        </tr>,
       );
     }
 
@@ -120,7 +123,7 @@ export default class SubmissionListView extends React.Component<Props> {
   }
 
   renderBody(list: any) {
-    if (list.items.length === 0)
+    if (list.items.length === 0) {
       return (
         <div className="modal-body">
           <em>
@@ -128,6 +131,7 @@ export default class SubmissionListView extends React.Component<Props> {
           </em>
         </div>
       );
+    }
 
     return (
       <div className="modal-body no-padding">
@@ -152,14 +156,16 @@ export default class SubmissionListView extends React.Component<Props> {
   }
 
   render() {
-    const taskName = this.props.taskName;
+    const { taskName } = this.props;
     return (
-      <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={"/task/" + this.props.taskName}>
+      <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${this.props.taskName}`}>
         <div className="modal-header">
           <h5 className="modal-title">
-            <Trans>Submission for</Trans> <strong className="text-uppercase">{taskName}</strong>
+            <Trans>Submission for</Trans>
+            {" "}
+            <strong className="text-uppercase">{taskName}</strong>
           </h5>
-          <Link to={"/task/" + this.props.taskName} role="button" className="close" aria-label="Close">
+          <Link to={`/task/${this.props.taskName}`} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
@@ -176,8 +182,10 @@ export default class SubmissionListView extends React.Component<Props> {
           renderFulfilled={(list) => this.renderBody(list)}
         />
         <div className="modal-footer">
-          <Link to={"/task/" + this.props.taskName} role="button" className="btn btn-primary">
-            <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
+          <Link to={`/task/${this.props.taskName}`} role="button" className="btn btn-primary">
+            <FontAwesomeIcon icon={faTimes} />
+            {" "}
+            <Trans>Close</Trans>
           </Link>
         </div>
       </ModalView>

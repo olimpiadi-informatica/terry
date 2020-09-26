@@ -6,63 +6,63 @@ import NavbarItemView from "./NavbarItemView";
 import ScoreView from "./ScoreView";
 import "./SidebarView.css";
 import { Trans } from "@lingui/macro";
-import { useContest, TaskData, StartedContest, useServerTime } from "./ContestContext";
+import {
+  useContest, TaskData, StartedContest, useServerTime,
+} from "./ContestContext";
 
 export default function SidebarView() {
   const contestL = useContest();
   const serverTime = useServerTime();
   const contest = contestL.isReady() ? contestL.value() : null;
 
-  const renderStarted = (contest: StartedContest) => {
-    return (
-      <>
-        <li className="nav-item title">
-          <h5 className="text-uppercase">
-            <Trans>Your score</Trans>
-          </h5>
-          <ScoreView
-            style={{ textAlign: "right", marginRight: "1rem" }}
-            score={contest.total_score}
-            max={contest.contest.max_total_score}
-            size={2}
+  const renderStarted = (contest: StartedContest) => (
+    <>
+      <li className="nav-item title">
+        <h5 className="text-uppercase">
+          <Trans>Your score</Trans>
+        </h5>
+        <ScoreView
+          style={{ textAlign: "right", marginRight: "1rem" }}
+          score={contest.total_score}
+          max={contest.contest.max_total_score}
+          size={2}
+        />
+      </li>
+
+      <li className="divider-vertical" />
+
+      <li className="nav-item title">
+        <h5 className="text-uppercase">
+          <Trans>Remaining time</Trans>
+        </h5>
+        <p className="terry-remaining-time">
+          <CountdownComponent
+            clock={() => serverTime()}
+            end={DateTime.fromISO(contest.end_time)}
+            afterEnd={() => (
+              <span>
+                <Trans>The contest is finished</Trans>
+              </span>
+            )}
           />
-        </li>
+        </p>
+      </li>
+      <li className="divider-vertical" />
 
-        <li className="divider-vertical" />
+      <li className="nav-item title">
+        <h5 className="text-uppercase">
+          <Trans>Tasks</Trans>
+        </h5>
+      </li>
+      <li className="divider-vertical" />
 
-        <li className="nav-item title">
-          <h5 className="text-uppercase">
-            <Trans>Remaining time</Trans>
-          </h5>
-          <p className="terry-remaining-time">
-            <CountdownComponent
-              clock={() => serverTime()}
-              end={DateTime.fromISO(contest.end_time)}
-              afterEnd={() => (
-                <span>
-                  <Trans>The contest is finished</Trans>
-                </span>
-              )}
-            />
-          </p>
-        </li>
-        <li className="divider-vertical" />
+      {contest.contest.tasks.map((task: TaskData, i: number) => (
+        <NavbarItemView key={i} taskName={task.name} />
+      ))}
 
-        <li className="nav-item title">
-          <h5 className="text-uppercase">
-            <Trans>Tasks</Trans>
-          </h5>
-        </li>
-        <li className="divider-vertical" />
-
-        {contest.contest.tasks.map((task: TaskData, i: number) => (
-          <NavbarItemView key={i} taskName={task.name} />
-        ))}
-
-        <li className="divider-vertical" />
-      </>
-    );
-  };
+      <li className="divider-vertical" />
+    </>
+  );
 
   return (
     <nav className="bg-light sidebar">
@@ -76,10 +76,10 @@ export default function SidebarView() {
         </li>
 
         <li className="nav-item">
-          <NavLink to={"/useful-info"} className="nav-link tasklist-item" activeClassName="active">
+          <NavLink to="/useful-info" className="nav-link tasklist-item" activeClassName="active">
             <Trans>Useful information</Trans>
           </NavLink>
-          <NavLink to={"/documentation"} className="nav-link tasklist-item" activeClassName="active">
+          <NavLink to="/documentation" className="nav-link tasklist-item" activeClassName="active">
             <Trans>Documentation</Trans>
           </NavLink>
         </li>

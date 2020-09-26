@@ -15,7 +15,7 @@ export default function ModalView({ contentLabel, returnUrl, children }: Props) 
 
   return (
     <Modal
-      isOpen={true}
+      isOpen
       contentLabel={contentLabel}
       style={{
         overlay: {

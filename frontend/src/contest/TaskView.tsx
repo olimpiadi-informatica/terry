@@ -1,6 +1,6 @@
 import React from "react";
-import TaskStatementView from "./TaskStatementView";
 import { Trans } from "@lingui/macro";
+import TaskStatementView from "./TaskStatementView";
 import { TaskData, UserTaskData } from "./ContestContext";
 import TaskCommands from "./TaskCommands";
 import LastSubmission from "./LastSubmission";

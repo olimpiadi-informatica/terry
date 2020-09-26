@@ -1,7 +1,7 @@
-import Loadable from "./Loadable";
-import client from "../TerryClient";
 import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
+import Loadable from "./Loadable";
+import client from "../TerryClient";
 import { useToken } from "./AdminContext";
 import { notifyError } from "../utils";
 import useTriggerUpdate from "../triggerUpdate.hook";

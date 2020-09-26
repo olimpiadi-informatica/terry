@@ -1,9 +1,9 @@
 import React from "react";
-import { UserTaskData, TaskData, useServerTime } from "./ContestContext";
 import { Trans } from "@lingui/macro";
-import { DateComponent } from "../datetime.views";
 import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
+import { DateComponent } from "../datetime.views";
+import { UserTaskData, TaskData, useServerTime } from "./ContestContext";
 import Loadable from "../admin/Loadable";
 
 type Props = {
@@ -15,7 +15,7 @@ export default function LastSubmission({ task, userTask }: Props) {
   const serverTime = useServerTime();
   const subs = Loadable.loading();
 
-  if (subs.isError())
+  if (subs.isError()) {
     return (
       <div className="terry-submission-list-button">
         <em>
@@ -23,6 +23,7 @@ export default function LastSubmission({ task, userTask }: Props) {
         </em>
       </div>
     );
+  }
   if (subs.isLoading()) return null;
 
   const items = subs.value();

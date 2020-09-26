@@ -1,5 +1,5 @@
 type ForceUpdateable = {
-  //React.ComponentType<RouteComponentProps<any>>
+  // React.ComponentType<RouteComponentProps<any>>
   forceUpdate: () => void;
 };
 

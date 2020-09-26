@@ -1,10 +1,10 @@
 import React, { createRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
-import ModalView from "../Modal";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Trans, t } from "@lingui/macro";
+import ModalView from "../Modal";
 import { i18n } from "../i18n";
 import { useActions } from "./AdminContext";
 import { UserEntry, useUsers } from "./users.hook";
@@ -27,9 +27,7 @@ function UserExtraTimeView({ user }: UserExtraTimeProps) {
     toast.success(i18n._(t`Extra time successfully updated for the user`));
   };
 
-  const extraTimeMinutes = () => {
-    return Math.round(user.extra_time / 60);
-  };
+  const extraTimeMinutes = () => Math.round(user.extra_time / 60);
 
   return (
     <form
@@ -44,10 +42,12 @@ function UserExtraTimeView({ user }: UserExtraTimeProps) {
         type="number"
         ref={minutesRef}
         className="form-control mr-sm-2"
-        defaultValue={"" + extraTimeMinutes()}
+        defaultValue={`${extraTimeMinutes()}`}
       />
       <button type="submit" className="btn btn-warning">
-        <FontAwesomeIcon icon={faHourglassStart} /> <Trans>Set</Trans>
+        <FontAwesomeIcon icon={faHourglassStart} />
+        {" "}
+        <Trans>Set</Trans>
       </button>
     </form>
   );
@@ -81,10 +81,10 @@ export default function AdminUsersView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Contestants`)} returnUrl={"/admin"}>
+    <ModalView contentLabel={i18n._(t`Contestants`)} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">{i18n._(t`Contestants`)}</h5>
-        <Link to={"/admin"} role="button" className="close" aria-label="Close">
+        <Link to="/admin" role="button" className="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </Link>
       </div>
@@ -105,7 +105,8 @@ export default function AdminUsersView() {
                 <Trans>IP</Trans>
               </th>
               <th>
-                <Trans>Extra time</Trans>{" "}
+                <Trans>Extra time</Trans>
+                {" "}
                 <small>
                   <Trans>(in minutes)</Trans>
                 </small>
@@ -116,8 +117,10 @@ export default function AdminUsersView() {
         </table>
       </div>
       <div className="modal-footer">
-        <Link to={"/admin"} role="button" className="btn btn-primary">
-          <FontAwesomeIcon icon={faTimes} /> <Trans>Close</Trans>
+        <Link to="/admin" role="button" className="btn btn-primary">
+          <FontAwesomeIcon icon={faTimes} />
+          {" "}
+          <Trans>Close</Trans>
         </Link>
       </div>
     </ModalView>
