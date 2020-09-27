@@ -14,7 +14,8 @@ import nacl.pwhash
 import nacl.secret
 
 NACL_SALT = bytes.fromhex(
-    "5b6a78a780ea0ee560442cf5a528f0fb743d79e45a3a33af68671eba9cde0e17")
+    "5b6a78a780ea0ee560442cf5a528f0fb743d79e45a3a33af68671eba9cde0e17"
+)
 SECRET_LEN = 3
 USERNAME_LEN = 6
 
@@ -35,9 +36,9 @@ def _sha512(data: bytes):
 
 
 def user_to_bytes(user: str):
-    if not all('A' <= x <= 'Z' or '0' <= x <= '9' or x == '_' for x in user):
+    if not all("A" <= x <= "Z" or "0" <= x <= "9" or x == "_" for x in user):
         raise ValueError("Invalid username")
-    return user.encode('ascii')
+    return user.encode("ascii")
 
 
 def combine_username_password(username: str, password: str):
@@ -46,28 +47,32 @@ def combine_username_password(username: str, password: str):
 
 def encode_data(user: str, data: bytes):
     b32data = base64.b32encode(data)
-    if b32data[-1] == ord('='):
+    if b32data[-1] == ord("="):
         raise ValueError(
-            "Invalid secret + password length: %s" % b32data.decode('ascii'))
-    return combine_username_password(user, '-'.join(
-        b32data[i:i + 4].decode('ascii') for i in range(0, len(b32data), 4)))
+            "Invalid secret + password length: %s" % b32data.decode("ascii")
+        )
+    return combine_username_password(
+        user,
+        "-".join(b32data[i : i + 4].decode("ascii") for i in range(0, len(b32data), 4)),
+    )
 
 
 def decode_data(b32data: str, secret_len: int):
-    filtered_data = "".join(filter(lambda x: x != '-', b32data))
-    data = base64.b32decode(filtered_data.encode('ascii'))
+    filtered_data = "".join(filter(lambda x: x != "-", b32data))
+    data = base64.b32decode(filtered_data.encode("ascii"))
     return (data[:secret_len], data[secret_len:])
 
 
 def gen_user_password(user: str, secret: bytes, file_password: bytes):
     if len(secret) != SECRET_LEN:
-        raise ValueError("The len of the secret is wrong (%d should be %d)" %
-                         (len(secret), SECRET_LEN))
+        raise ValueError(
+            "The len of the secret is wrong (%d should be %d)"
+            % (len(secret), SECRET_LEN)
+        )
     digest = _sha512(user_to_bytes(user) + secret)
     if len(file_password) > len(digest):
         raise ValueError("File password is too long")
-    scrambled_password = bytes(
-        [v ^ digest[i] for i, v in enumerate(file_password)])
+    scrambled_password = bytes([v ^ digest[i] for i, v in enumerate(file_password)])
     return encode_data(user, secret + scrambled_password)
 
 
@@ -75,8 +80,7 @@ def recover_file_password(user: str, secret: bytes, scrambled_password: bytes):
     digest = _sha512(user_to_bytes(user) + secret)
     if len(scrambled_password) > len(digest):
         raise ValueError("Scrambled password is too long")
-    file_password = bytes(
-        [v ^ digest[i] for i, v in enumerate(scrambled_password)])
+    file_password = bytes([v ^ digest[i] for i, v in enumerate(scrambled_password)])
     return file_password
 
 
@@ -91,7 +95,8 @@ def password_to_key(password: bytes):
     mem = nacl.pwhash.scrypt.MEMLIMIT_MODERATE
     length = nacl.secret.SecretBox.KEY_SIZE
     return nacl.pwhash.scrypt.kdf(
-        length, password, NACL_SALT, opslimit=ops, memlimit=mem)
+        length, password, NACL_SALT, opslimit=ops, memlimit=mem
+    )
 
 
 def encode(password: bytes, input_data: bytes, metadata: bytes):
@@ -101,8 +106,8 @@ def encode(password: bytes, input_data: bytes, metadata: bytes):
     if len(metadata) > METADATA_LEN:
         raise ValueError("Metadata is too long")
     metadata += b"\x00" * (METADATA_LEN - len(metadata))
-    sha = _sha256(b'\x00' + metadata + encrypted)
-    return sha + b'\x00' + metadata + encrypted
+    sha = _sha256(b"\x00" + metadata + encrypted)
+    return sha + b"\x00" + metadata + encrypted
 
 
 def validate(input_data: bytes):

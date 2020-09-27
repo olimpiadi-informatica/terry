@@ -31,7 +31,7 @@ class TestLogger(unittest.TestCase):
         self.assertEqual("Database already loaded", ex.exception.args[0])
 
     def test_invalid_db_path(self):
-        Config.logfile = '/path/that/not/exists'
+        Config.logfile = "/path/that/not/exists"
         Logger.connected = False
         with self.assertRaises(Exception):
             Logger.connect_to_database()
@@ -39,7 +39,7 @@ class TestLogger(unittest.TestCase):
     def test_set_log_level(self):
         backup = Logger.LOG_LEVEL
 
-        Logger.set_log_level('ERROR')
+        Logger.set_log_level("ERROR")
         self.assertEqual(Logger.LOG_LEVEL, Logger.ERROR)
 
         Logger.LOG_LEVEL = backup
@@ -55,19 +55,19 @@ class TestLogger(unittest.TestCase):
     def test_log(self):
         Utils.prepare_test(connect_logger=True)
 
-        Logger.log(Logger.DEBUG, 'FOO_CAT', 'Log message')
+        Logger.log(Logger.DEBUG, "FOO_CAT", "Log message")
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'FOO_CAT'")
         row = Logger.c.fetchone()
-        self.assertEqual('FOO_CAT', row[1])
+        self.assertEqual("FOO_CAT", row[1])
         self.assertEqual(Logger.DEBUG, int(row[2]))
-        self.assertEqual('Log message', row[3])
+        self.assertEqual("Log message", row[3])
 
     def test_log_stderr(self):
         Utils.prepare_test(connect_logger=True)
 
         with Utils.nostderr() as err:
-            Logger.error('FOO_CAT', 'Log message')
+            Logger.error("FOO_CAT", "Log message")
         self.assertIn("FOO_CAT", err.buffer)
         self.assertIn("Log message", err.buffer)
 
@@ -90,7 +90,7 @@ class TestLogger(unittest.TestCase):
         start_date = datetime.datetime.now().timestamp() - 10
         end_date = datetime.datetime.now().timestamp() + 10
 
-        logs = Logger.get_logs(Logger.DEBUG, 'CATEGORY', start_date, end_date)
+        logs = Logger.get_logs(Logger.DEBUG, "CATEGORY", start_date, end_date)
         self.assertEqual(2, len(logs))
 
     def test_get_logs_by_date(self):
@@ -106,19 +106,25 @@ class TestLogger(unittest.TestCase):
     @staticmethod
     def load_logs():
         logs = [
-            (Logger.DEBUG, 'CATEGORY', 'Log message'),
-            (Logger.DEBUG, 'CATEGORY', 'An other log message'),
-            (Logger.WARNING, 'OPS', 'Something strange'),
-            (Logger.ERROR, 'WTF', 'Something is wrong')
+            (Logger.DEBUG, "CATEGORY", "Log message"),
+            (Logger.DEBUG, "CATEGORY", "An other log message"),
+            (Logger.WARNING, "OPS", "Something strange"),
+            (Logger.ERROR, "WTF", "Something is wrong"),
         ]
         Logger.c.execute("DELETE FROM logs")
         for log in logs:
             Logger.c.execute(
                 "INSERT INTO logs (level, category, message) VALUES (%d, "
-                "'%s', '%s')" % log)
+                "'%s', '%s')" % log
+            )
 
         Logger.c.execute(
             "INSERT INTO logs (date, level, category, message) VALUES (%d, "
-            "%d, '%s', '%s')" %
-            (TestLogger.VERY_FAR_IN_TIME, Logger.INFO, 'FUTURE',
-             'This message comes from the future'))
+            "%d, '%s', '%s')"
+            % (
+                TestLogger.VERY_FAR_IN_TIME,
+                Logger.INFO,
+                "FUTURE",
+                "This message comes from the future",
+            )
+        )

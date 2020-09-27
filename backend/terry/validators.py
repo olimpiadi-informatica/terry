@@ -22,7 +22,6 @@ from terry.logger import Logger
 
 
 class Validators:
-
     @staticmethod
     def during_contest(handler):
         """
@@ -44,6 +43,7 @@ class Validators:
         """
         Ensure the handler is called only when the contest has been started.
         """
+
         def handle(*args, **kwargs):
             Validators._ensure_contest_started()
             return handler(*args, **kwargs)
@@ -98,9 +98,10 @@ class Validators:
             ip = kwargs["_ip"]
             if token is not None and Database.get_user(token) is not None:
                 if Database.register_ip(token, ip):
-                    Logger.info("LOGIN",
-                                "User %s logged in from %s for the first "
-                                "time" % (token, ip))
+                    Logger.info(
+                        "LOGIN",
+                        "User %s logged in from %s for the first " "time" % (token, ip),
+                    )
             del kwargs["_ip"]
             return handler(*args, **kwargs)
 
@@ -123,8 +124,7 @@ class Validators:
                 if param in kwargs:
                     thing = getter(kwargs[param])
                     if thing is None:
-                        BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                              "No such " + name)
+                        BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "No such " + name)
                     del kwargs[param]
                 else:
                     thing = None
@@ -132,8 +132,7 @@ class Validators:
                 return handler(*args, **kwargs)
 
             HandlerParams.initialize_handler_params(handle, handler)
-            HandlerParams.add_handler_param(handle, param, str,
-                                            required=required)
+            HandlerParams.add_handler_param(handle, param, str, required=required)
             # the case when the name of the model corresponds with the param
             if name != param:
                 HandlerParams.remove_handler_param(handle, name)
@@ -146,32 +145,34 @@ class Validators:
         """
         Expects input_id in the request and provides input to the handler
         """
-        return Validators.validate_id("input_id", "input", Database.get_input)(
-            handler)
+        return Validators.validate_id("input_id", "input", Database.get_input)(handler)
 
     @staticmethod
     def validate_output_id(handler):
         """
         Expects output_id in the request and provides output to the handler
         """
-        return Validators.validate_id("output_id", "output",
-                                      Database.get_output)(handler)
+        return Validators.validate_id("output_id", "output", Database.get_output)(
+            handler
+        )
 
     @staticmethod
     def validate_source_id(handler):
         """
         Expects source_id in the request and provides source to the handler
         """
-        return Validators.validate_id("source_id", "source",
-                                      Database.get_source)(handler)
+        return Validators.validate_id("source_id", "source", Database.get_source)(
+            handler
+        )
 
     @staticmethod
     def validate_submission_id(handler):
         """
         Expects submission_id in the request and provides input to the handler
         """
-        return Validators.validate_id("submission_id", "submission",
-                                      Database.get_submission)(handler)
+        return Validators.validate_id(
+            "submission_id", "submission", Database.get_submission
+        )(handler)
 
     @staticmethod
     def validate_token(handler):
@@ -193,20 +194,23 @@ class Validators:
             elif not user and Config.jwt_secret and jwt_token:
                 kwargs["user"] = Validators._get_user_from_sso(jwt_token, token)
             elif not user and Config.jwt_secret and not jwt_token:
-                BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                      "Please login at %s" % Config.sso_url)
+                BaseHandler.raise_exc(
+                    Forbidden, "FORBIDDEN", "Please login at %s" % Config.sso_url
+                )
             elif not Config.jwt_secret and not user["sso_user"]:
                 kwargs["user"] = user
             elif not Config.jwt_secret and user["sso_user"]:
-                BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                      "No login method available for this user")
+                BaseHandler.raise_exc(
+                    Forbidden, "FORBIDDEN", "No login method available for this user"
+                )
             elif Config.jwt_secret and not user["sso_user"]:
                 kwargs["user"] = user
             elif Config.jwt_secret and user["sso_user"]:
                 kwargs["user"] = Validators._get_user_from_sso(jwt_token, token)
             else:
-                BaseHandler.raise_exc(BadRequest,  # pragma: nocover
-                                      "INTERNAL_ERROR", "Login failed")
+                BaseHandler.raise_exc(
+                    BadRequest, "INTERNAL_ERROR", "Login failed"  # pragma: nocover
+                )
             # makes sure the window starts
             if Validators._ensure_window_start(token):
                 kwargs["user"] = Database.get_user(token)
@@ -228,8 +232,7 @@ class Validators:
         Expects task (the name) in the request and provides task (the task)
         to the handler
         """
-        return Validators.validate_id("task", "task", Database.get_task)(
-            handler)
+        return Validators.validate_id("task", "task", Database.get_task)(handler)
 
     @staticmethod
     def _guess_token(**kwargs):
@@ -237,20 +240,24 @@ class Validators:
             return kwargs["token"]
         elif "input_id" in kwargs:
             input = Database.get_input(kwargs["input_id"])
-            if input: return input["token"]
+            if input:
+                return input["token"]
         elif "output_id" in kwargs:
             output = Database.get_output(kwargs["output_id"])
             if output:
                 input = Database.get_input(output["input"])
-                if input: return input["token"]
+                if input:
+                    return input["token"]
         elif "source_id" in kwargs:
             source = Database.get_source(kwargs["source_id"])
             if source:
                 input = Database.get_input(source["input"])
-                if input: return input["token"]
+                if input:
+                    return input["token"]
         elif "submission_id" in kwargs:
             submission = Database.get_submission(kwargs["submission_id"])
-            if submission: return submission["token"]
+            if submission:
+                return submission["token"]
         return None
 
     @staticmethod
@@ -268,25 +275,25 @@ class Validators:
                 extra_time = user["extra_time"]
                 start_delay = user["contest_start_delay"]
         if Database.get_meta("start_time") is None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "The contest has not started yet")
+            BaseHandler.raise_exc(
+                Forbidden, "FORBIDDEN", "The contest has not started yet"
+            )
         contest_end = BaseHandler.get_end_time(extra_time)
         window_end = BaseHandler.get_window_end_time(extra_time, start_delay)
         now = time.time()
         # check the contest is not finished
         if contest_end < now:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "The contest has ended")
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
         # if a window is present check it's not finished
         if window_end and window_end < now:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "Your window has ended")
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Your window has ended")
 
     @staticmethod
     def _ensure_contest_started():
         if Database.get_meta("start_time") is None:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "The contest has not started yet")
+            BaseHandler.raise_exc(
+                Forbidden, "FORBIDDEN", "The contest has not started yet"
+            )
 
     @staticmethod
     def _validate_admin_token(token, ip):
@@ -305,37 +312,38 @@ class Validators:
 
         if token != correct_token:
             Logger.warning("LOGIN_ADMIN", "Admin login failed from %s" % ip)
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "Invalid admin token!")
+            BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "Invalid admin token!")
         else:
             if Database.register_admin_ip(ip):
-                Logger.info("LOGIN_ADMIN",
-                            "An admin has connected from a new ip: %s" % ip)
+                Logger.info(
+                    "LOGIN_ADMIN", "An admin has connected from a new ip: %s" % ip
+                )
 
     @staticmethod
     def _get_user_from_sso(jwt_token, token):
         try:
-            data = jwt.decode(jwt_token, Config.jwt_secret,
-                              algorithms=['HS256'])
+            data = jwt.decode(jwt_token, Config.jwt_secret, algorithms=["HS256"])
             username = data["username"]
             name = data.get("firstName", username)
             surname = data.get("lastName", "")
             if username != token:
-                BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                      "Use the same username from the SSO")
+                BaseHandler.raise_exc(
+                    Forbidden, "FORBIDDEN", "Use the same username from the SSO"
+                )
             if Database.get_user(username) is None:
                 Database.begin()
-                Database.add_user(username, name, surname, sso_user=True,
-                                  autocommit=False)
+                Database.add_user(
+                    username, name, surname, sso_user=True, autocommit=False
+                )
                 for task in Database.get_tasks():
-                    Database.add_user_task(username, task["name"],
-                                           autocommit=False)
+                    Database.add_user_task(username, task["name"], autocommit=False)
                 Database.commit()
                 Logger.info("NEW_USER", "User %s created from SSO" % username)
             return Database.get_user(username)
         except jwt.exceptions.DecodeError:
-            BaseHandler.raise_exc(Forbidden, "FORBIDDEN",
-                                  "Please login at %s" % Config.sso_url)
+            BaseHandler.raise_exc(
+                Forbidden, "FORBIDDEN", "Please login at %s" % Config.sso_url
+            )
 
     @staticmethod
     def _ensure_window_start(token):

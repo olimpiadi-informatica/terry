@@ -26,8 +26,9 @@ def get_git_author():
 
 
 def get_authors(path: str) -> List[Tuple[str, datetime]]:
-    authors = subprocess.check_output(["git", "log", "--follow", "-M",
-                                       "--pretty=format:%an <%ae>#%at", path])
+    authors = subprocess.check_output(
+        ["git", "log", "--follow", "-M", "--pretty=format:%an <%ae>#%at", path]
+    )
     if not authors:
         return []
     authors = [s.split("#") for s in authors.decode().split("\n")]

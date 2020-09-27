@@ -160,5 +160,5 @@ class Schema:
         """,
         """
         ALTER TABLE users ADD COLUMN contest_start_delay INTEGER NULL DEFAULT NULL CHECK (contest_start_delay IS NULL OR contest_start_delay >= 0);
-        """
+        """,
     ]

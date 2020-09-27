@@ -81,3 +81,7 @@ If you want to run the tests, maybe because you are working on this project, you
 ```bash
 ./run_tests.py
 ```
+
+## Code style
+
+We use `black` for formatting the code, using its default settings.

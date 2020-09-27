@@ -70,8 +70,14 @@ class TestValidators(unittest.TestCase):
         return task
 
     @Validators.register_user_ip
-    def register_ip(self, token=None, input_id=None, output_id=None,
-                    source_id=None, submission_id=None):
+    def register_ip(
+        self,
+        token=None,
+        input_id=None,
+        output_id=None,
+        source_id=None,
+        submission_id=None,
+    ):
         pass
 
     def test_during_contest_not_started(self):
@@ -158,8 +164,7 @@ class TestValidators(unittest.TestCase):
 
     def test_valid_submission_id(self):
         self._insert_data()
-        Database.add_submission("submissionid", "inputid", "outputid",
-                                "sourceid", 42)
+        Database.add_submission("submissionid", "inputid", "outputid", "sourceid", 42)
         submission = self.valid_submission_id(submission_id="submissionid")
         self.assertEqual("submissionid", submission["id"])
 
@@ -251,29 +256,27 @@ class TestValidators(unittest.TestCase):
 
     def test_register_ip_submission(self):
         self._insert_data()
-        Database.add_submission("submissionid", "inputid", "outputid",
-                                "sourceid", 42)
+        Database.add_submission("submissionid", "inputid", "outputid", "sourceid", 42)
         self.register_ip(submission_id="submissionid", _ip="1.1.1.1")
         users = Database.get_users()
         self.assertEqual("1.1.1.1", users[0]["ip"][0]["ip"])
 
     def test_validate_token(self):
-        Validators._validate_admin_token('ADMIN-TOKEN', '1.2.3.4')
+        Validators._validate_admin_token("ADMIN-TOKEN", "1.2.3.4")
 
     @patch("terry.contest_manager.ContestManager.extract_contest")
     @patch("terry.contest_manager.ContestManager.read_from_disk")
     def test_validate_token_no_token(self, read, extract):
         Database.del_meta("admin_token")
-        Validators._validate_admin_token("ADMIN-TOKEN", '1.2.3.4')
+        Validators._validate_admin_token("ADMIN-TOKEN", "1.2.3.4")
         extract.assert_called_once_with("ADMIN-TOKEN")
         read.assert_called_once_with()
 
     def test_validate_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
-            Validators._validate_admin_token('wrong token', '1.2.3.4')
+            Validators._validate_admin_token("wrong token", "1.2.3.4")
 
-        self.assertIn("Invalid admin token",
-                      ex.exception.response.data.decode())
+        self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
         row = Logger.c.fetchone()
@@ -281,7 +284,7 @@ class TestValidators(unittest.TestCase):
         self.assertIn("1.2.3.4", row[3])
 
     def test_validate_token_log_ip(self):
-        Validators._validate_admin_token('ADMIN-TOKEN', '1.2.3.4')
+        Validators._validate_admin_token("ADMIN-TOKEN", "1.2.3.4")
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'LOGIN_ADMIN'")
         row = Logger.c.fetchone()

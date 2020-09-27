@@ -26,20 +26,20 @@ class Utils:
     ZIP_TOKEN = "EDOOOO-HGKU-2VPK-LBXL-B6NA"
 
     @staticmethod
-    def prepare_test(load_config=True, connect_database=True,
-                     connect_logger=True):
+    def prepare_test(load_config=True, connect_database=True, connect_logger=True):
         config_file_name = Utils.new_tmp_file()
         log_file_name = Utils.new_tmp_file()
         db_file_name = Utils.new_tmp_file()
         contest_dir = Utils.new_tmp_dir("contest", create=False)
 
-        with open(config_file_name, 'w') as file:
-            file.write("logfile: %s\n"
-                       "db: %s\n"
-                       "storedir: %s\n"
-                       "contest_path: %s\n" % (log_file_name, db_file_name,
-                                               Utils.new_tmp_dir(),
-                                               contest_dir))
+        with open(config_file_name, "w") as file:
+            file.write(
+                "logfile: %s\n"
+                "db: %s\n"
+                "storedir: %s\n"
+                "contest_path: %s\n"
+                % (log_file_name, db_file_name, Utils.new_tmp_dir(), contest_dir)
+            )
 
         if load_config:
             Config.loaded = False
@@ -62,11 +62,14 @@ class Utils:
         savestderr = sys.stderr
 
         class Devnull(object):
-            def __init__(self): self.buffer = ""
+            def __init__(self):
+                self.buffer = ""
 
-            def write(self, data): self.buffer += data
+            def write(self, data):
+                self.buffer += data
 
-            def flush(self): pass
+            def flush(self):
+                pass
 
         sys.stderr = Devnull()
         try:
@@ -77,10 +80,11 @@ class Utils:
     @staticmethod
     def get_tmp_dir():
         if Utils.prefix is None:
-            Utils.prefix = os.path.join(tempfile.gettempdir(),
-                                        "terry-backend-tests",
-                                        datetime.datetime.now().strftime(
-                                            "temp-%Y-%m-%d_%H-%M-%S"))
+            Utils.prefix = os.path.join(
+                tempfile.gettempdir(),
+                "terry-backend-tests",
+                datetime.datetime.now().strftime("temp-%Y-%m-%d_%H-%M-%S"),
+            )
             os.makedirs(Utils.prefix, exist_ok=True)
         return Utils.prefix
 
@@ -88,26 +92,29 @@ class Utils:
     def new_tmp_dir(prefix="", create=True):
         dir_name = Utils.random_string()
         path = os.path.join(Utils.get_tmp_dir(), prefix, dir_name)
-        if create: os.makedirs(path, exist_ok=True)
+        if create:
+            os.makedirs(path, exist_ok=True)
         return path
 
     @staticmethod
     def new_tmp_file(prefix="", create=True):
         file_name = Utils.random_string()
         path = os.path.join(Utils.get_tmp_dir(), prefix, file_name)
-        if create: open(path, "w").close()
+        if create:
+            open(path, "w").close()
         return path
 
     @staticmethod
-    def random_string(length=8,
-                      chars=string.ascii_uppercase + string.ascii_lowercase +
-                            string.digits):
-        return ''.join(random.choice(chars) for _ in range(length))
+    def random_string(
+        length=8, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits
+    ):
+        return "".join(random.choice(chars) for _ in range(length))
 
     @staticmethod
     def start_contest(since=5, duration=100):
-        Database.set_meta("start_time",
-                          int(datetime.datetime.now().timestamp()) - since)
+        Database.set_meta(
+            "start_time", int(datetime.datetime.now().timestamp()) - since
+        )
         Database.set_meta("contest_duration", duration)
 
     @staticmethod
@@ -116,8 +123,9 @@ class Utils:
             tempdir = Utils.new_tmp_dir()
         enc_path = os.path.join(tempdir, "pack.zip.enc")
         dec_path = os.path.join(tempdir, "pack.zip")
-        shutil.copy(os.path.join(os.path.dirname(__file__),
-                                 "./assets/pack.zip.enc"), enc_path)
+        shutil.copy(
+            os.path.join(os.path.dirname(__file__), "./assets/pack.zip.enc"), enc_path
+        )
         Config.encrypted_file = enc_path
         Config.decrypted_file = dec_path
 

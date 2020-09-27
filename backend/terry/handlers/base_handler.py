@@ -20,7 +20,6 @@ from ..logger import Logger
 
 
 class BaseHandler:
-
     @staticmethod
     def raise_exc(cls, code, message):
         """
@@ -37,10 +36,7 @@ class BaseHandler:
         response = Response()
         response.mimetype = "application/json"
         response.status_code = cls.code
-        response.data = json.dumps({
-            "code": code,
-            "message": message
-        })
+        response.data = json.dumps({"code": code, "message": message})
         Logger.warning(cls.__name__.upper(), code + ": " + message)
         raise cls(response=response)
 
@@ -55,7 +51,9 @@ class BaseHandler:
         :return: Return a Response if the request is successful, an HTTPException if an error occurred
         """
         try:
-            data = BaseHandler._call(self.__getattribute__(endpoint), route_args, request)
+            data = BaseHandler._call(
+                self.__getattribute__(endpoint), route_args, request
+            )
             response = Response()
             if data is not None:
                 response.code = 200
@@ -152,13 +150,13 @@ class BaseHandler:
         kwargs = {}
         params = HandlerParams.get_handler_params(method)
         general_attrs = {
-            '_request': request,
-            '_route_args': route_args,
-            '_file': {
+            "_request": request,
+            "_route_args": route_args,
+            "_file": {
                 "content": BaseHandler._get_file_content(request),
-                "name": BaseHandler._get_file_name(request)
+                "name": BaseHandler._get_file_name(request),
             },
-            '_ip': BaseHandler.get_ip(request)
+            "_ip": BaseHandler.get_ip(request),
         }
 
         missing_parameters = []
@@ -176,31 +174,41 @@ class BaseHandler:
                 missing_parameters.append(name)
 
         if len(missing_parameters) > 0:
-            BaseHandler.raise_exc(BadRequest, "MISSING_PARAMETERS",
-                                  "The missing parameters are: " + ", ".join(missing_parameters))
+            BaseHandler.raise_exc(
+                BadRequest,
+                "MISSING_PARAMETERS",
+                "The missing parameters are: " + ", ".join(missing_parameters),
+            )
 
         for key, value in kwargs.items():
             type = params[key]["type"]
-            if type is None: continue
+            if type is None:
+                continue
             try:
                 kwargs[key] = type(value)
             except ValueError:
-                BaseHandler.raise_exc(BadRequest, "FORMAT_ERROR",
-                                      "The parameter %s cannot be converted to %s" % (key, type.__name__))
+                BaseHandler.raise_exc(
+                    BadRequest,
+                    "FORMAT_ERROR",
+                    "The parameter %s cannot be converted to %s" % (key, type.__name__),
+                )
         Logger.debug(
             "HTTP",
-            "Received request from %s for endpoint %s%s" %
-            (
-                general_attrs['_ip'],
+            "Received request from %s for endpoint %s%s"
+            % (
+                general_attrs["_ip"],
                 method.__name__,
-                ", with parameters " + ", ".join(
-                        "=".join((kv[0], str(kv[1]))) for kv in kwargs.items()
-                            if not kv[0].startswith("_") and not kv[0] == "file"
-                ) if len(kwargs) > 0 else ""
-            )
+                ", with parameters "
+                + ", ".join(
+                    "=".join((kv[0], str(kv[1])))
+                    for kv in kwargs.items()
+                    if not kv[0].startswith("_") and not kv[0] == "file"
+                )
+                if len(kwargs) > 0
+                else "",
+            ),
         )
         return method(**kwargs)
-
 
     @staticmethod
     def _get_file_name(request):

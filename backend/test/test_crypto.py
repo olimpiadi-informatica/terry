@@ -26,7 +26,8 @@ class TestCrypto(unittest.TestCase):
         username = "FOO"
         password = "BAR"
         self.assertEqual(
-            crypto.combine_username_password(username, password), "FOO-BAR")
+            crypto.combine_username_password(username, password), "FOO-BAR"
+        )
 
     def test_encode_data(self):
         username = "FOO"
@@ -34,8 +35,7 @@ class TestCrypto(unittest.TestCase):
         assert (len(username) + len(data)) % 8 == 0
         encoded = crypto.encode_data(username, data)
         self.assertTrue(encoded.startswith(username + "-"))
-        base32 = "".join(
-            filter(lambda x: x != "-", encoded[len(username) + 1:]))
+        base32 = "".join(filter(lambda x: x != "-", encoded[len(username) + 1 :]))
         self.assertEqual(data, base64.b32decode(base32))
 
     def test_encode_data_unaligned(self):
@@ -71,11 +71,13 @@ class TestCrypto(unittest.TestCase):
 
         token = crypto.gen_user_password(username, secret, file_password)
         new_secret, encoded_password = crypto.decode_data(
-            token[len(username) + 1:], len(secret))
+            token[len(username) + 1 :], len(secret)
+        )
 
-        self.assertEqual(file_password,
-                         crypto.recover_file_password(username, new_secret,
-                                                      encoded_password))
+        self.assertEqual(
+            file_password,
+            crypto.recover_file_password(username, new_secret, encoded_password),
+        )
 
     def test_gen_password_too_long(self):
         username = "FOOO"
@@ -113,8 +115,7 @@ class TestCrypto(unittest.TestCase):
         secret = b"FFF"
         file_password = b"A" * 7
         token = crypto.gen_user_password(username, secret, file_password)
-        self.assertEqual(crypto.recover_file_password_from_token(token),
-                         file_password)
+        self.assertEqual(crypto.recover_file_password_from_token(token), file_password)
 
     def test_validate(self):
         password = b"fooobarr"
@@ -126,7 +127,7 @@ class TestCrypto(unittest.TestCase):
         password = b"fooobarr"
         data = b"#bellavita"
         encrypted = crypto.encode(password, data, b"metadata")
-        encrypted += b'('
+        encrypted += b"("
         self.assertFalse(crypto.validate(encrypted))
 
     def test_metadata(self):

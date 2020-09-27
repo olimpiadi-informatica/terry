@@ -17,7 +17,6 @@ from test.utils import Utils
 
 
 class TestServer(unittest.TestCase):
-
     def setUp(self):
         Utils.prepare_test()
         self.server = Server()
@@ -31,16 +30,14 @@ class TestServer(unittest.TestCase):
         self.assertIn("UNCAUGHT_EXCEPTION", stderr.buffer)
 
     def test_wsgi_app(self):
-        res = self.server.wsgi_app(EnvironBuilder('/contest').get_environ(),
-                                   None)
+        res = self.server.wsgi_app(EnvironBuilder("/contest").get_environ(), None)
         data = json.loads(res.data.decode())
 
         self.assertFalse(data["has_started"])
 
     def test_wsgi_app_404(self):
         Logger.set_log_level("ERROR")
-        res = self.server.wsgi_app(EnvironBuilder('/not_found').get_environ(),
-                                   None)
+        res = self.server.wsgi_app(EnvironBuilder("/not_found").get_environ(), None)
         self.assertIsInstance(res, NotFound)
 
     @patch("gevent.pywsgi.WSGIServer.init_socket", side_effect=OSError())

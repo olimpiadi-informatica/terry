@@ -21,7 +21,12 @@ import gevent.subprocess
 import nacl.exceptions
 import yaml
 from contextlib import suppress
-from werkzeug.exceptions import NotFound, Forbidden, InternalServerError, UnprocessableEntity
+from werkzeug.exceptions import (
+    NotFound,
+    Forbidden,
+    InternalServerError,
+    UnprocessableEntity,
+)
 
 from terry.config import Config
 from terry.crypto import decode_data, recover_file_password, decode, SECRET_LEN
@@ -51,17 +56,18 @@ class ContestManager:
         """
 
         if "-" not in token:
-            BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
-                                  "The provided password is malformed")
+            BaseHandler.raise_exc(
+                Forbidden, "WRONG_PASSWORD", "The provided password is malformed"
+            )
 
         try:
             username, password = token.split("-", 1)
             secret, scrambled_password = decode_data(password, SECRET_LEN)
-            file_password = recover_file_password(username, secret,
-                                                  scrambled_password)
+            file_password = recover_file_password(username, secret, scrambled_password)
         except ValueError:
-            BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
-                                  "The provided password is malformed")
+            BaseHandler.raise_exc(
+                Forbidden, "WRONG_PASSWORD", "The provided password is malformed"
+            )
         try:
             with open(Config.encrypted_file, "rb") as encrypted_file:
                 encrypted_data = encrypted_file.read()
@@ -69,11 +75,13 @@ class ContestManager:
                 with open(Config.decrypted_file, "wb") as decrypted_file:
                     decrypted_file.write(decrypted_data)
         except FileNotFoundError:
-            BaseHandler.raise_exc(NotFound, "NOT_FOUND",
-                                  "The contest pack was not uploaded yet")
+            BaseHandler.raise_exc(
+                NotFound, "NOT_FOUND", "The contest pack was not uploaded yet"
+            )
         except nacl.exceptions.CryptoError:
-            BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
-                                  "The provided password is wrong")
+            BaseHandler.raise_exc(
+                Forbidden, "WRONG_PASSWORD", "The provided password is wrong"
+            )
         except OSError as ex:
             BaseHandler.raise_exc(InternalServerError, "FAILED", str(ex))
 
@@ -84,11 +92,12 @@ class ContestManager:
             os.chdir(Config.contest_path)
             with zipfile.ZipFile(zip_abs_path) as f:
                 f.extractall()
-            real_yaml = os.path.join('__users__', username + '.yaml')
+            real_yaml = os.path.join("__users__", username + ".yaml")
             if not os.path.exists(real_yaml):
-                BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
-                                      "Invalid username for the given pack")
-            os.symlink(real_yaml, 'contest.yaml')
+                BaseHandler.raise_exc(
+                    Forbidden, "WRONG_PASSWORD", "Invalid username for the given pack"
+                )
+            os.symlink(real_yaml, "contest.yaml")
             Logger.info("CONTEST", "Contest extracted")
         except zipfile.BadZipFile as ex:
             BaseHandler.raise_exc(Forbidden, "FAILED", str(ex))
@@ -124,14 +133,14 @@ class ContestManager:
                 task_config = yaml.safe_load(f)
 
             checker = os.path.join(
-                taskdir, "managers",
-                "checker" + ContestManager.system_extension())
+                taskdir, "managers", "checker" + ContestManager.system_extension()
+            )
             generator = os.path.join(
-                taskdir, "managers",
-                "generator" + ContestManager.system_extension())
+                taskdir, "managers", "generator" + ContestManager.system_extension()
+            )
             validator = os.path.join(
-                taskdir, "managers",
-                "validator" + ContestManager.system_extension())
+                taskdir, "managers", "validator" + ContestManager.system_extension()
+            )
             task_config["checker"] = checker
             task_config["generator"] = generator
 
@@ -145,7 +154,8 @@ class ContestManager:
                 os.chmod(validator, 0o755)
 
             task_config["statement_path"] = os.path.join(
-                web_statementdir, "statement.md")
+                web_statementdir, "statement.md"
+            )
             tasks.append(task_config)
 
         contest_config["tasks"] = tasks
@@ -159,7 +169,10 @@ class ContestManager:
         try:
             contest = ContestManager.import_contest(Config.contest_path)
         except FileNotFoundError as ex:
-            error = "Contest not found, you probably need to unzip it. Missing file %s" % ex.filename
+            error = (
+                "Contest not found, you probably need to unzip it. Missing file %s"
+                % ex.filename
+            )
             Logger.warning("CONTEST", error)
             shutil.rmtree(Config.statementdir, ignore_errors=True)
             shutil.rmtree(Config.web_statementdir, ignore_errors=True)
@@ -176,20 +189,22 @@ class ContestManager:
             Database.begin()
             try:
                 Database.set_meta(
-                    "contest_duration", contest["duration"], autocommit=False)
+                    "contest_duration", contest["duration"], autocommit=False
+                )
                 Database.set_meta(
-                    "contest_name",
-                    contest.get("name", "Contest"),
-                    autocommit=False)
+                    "contest_name", contest.get("name", "Contest"), autocommit=False
+                )
                 Database.set_meta(
                     "contest_description",
                     contest.get("description", ""),
-                    autocommit=False)
+                    autocommit=False,
+                )
                 Database.set_meta(
                     "window_duration",
                     # if None the contest is not USACO-style
                     contest.get("window_duration"),
-                    autocommit=False)
+                    autocommit=False,
+                )
                 count = 0
 
                 for task in contest["tasks"]:
@@ -199,20 +214,20 @@ class ContestManager:
                         task["statement_path"],
                         task["max_score"],
                         count,
-                        autocommit=False)
+                        autocommit=False,
+                    )
                     count += 1
 
                 for user in contest["users"]:
                     Database.add_user(
-                        user["token"],
-                        user["name"],
-                        user["surname"],
-                        autocommit=False)
+                        user["token"], user["name"], user["surname"], autocommit=False
+                    )
 
                 for user in Database.get_users():
                     for task in Database.get_tasks():
                         Database.add_user_task(
-                            user["token"], task["name"], autocommit=False)
+                            user["token"], task["name"], autocommit=False
+                        )
 
                 Database.set_meta("contest_imported", True, autocommit=False)
                 Database.commit()
@@ -224,14 +239,12 @@ class ContestManager:
             pass
 
         # store the task in the ContestManager singleton
-        ContestManager.tasks = dict(
-            (task["name"], task) for task in contest["tasks"])
+        ContestManager.tasks = dict((task["name"], task) for task in contest["tasks"])
         ContestManager.has_contest = True
 
         # create the queues for the task inputs
         for task in ContestManager.tasks:
-            ContestManager.input_queue[task] = gevent.queue.Queue(
-                Config.queue_size)
+            ContestManager.input_queue[task] = gevent.queue.Queue(Config.queue_size)
             gevent.spawn(ContestManager.worker, task)
 
     @staticmethod
@@ -244,30 +257,34 @@ class ContestManager:
             try:
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
-                    os.O_WRONLY | os.O_CREAT, 0o644)
+                    os.O_WRONLY | os.O_CREAT,
+                    0o644,
+                )
 
                 try:
                     start_time = time.monotonic()
                     # generate the input and store the stdout into a file
                     retcode = gevent.subprocess.call(
-                        [task["generator"], str(seed), "0"], stdout=stdout)
+                        [task["generator"], str(seed), "0"], stdout=stdout
+                    )
                     if time.monotonic() > start_time + 1:
                         Logger.warning(
                             "TASK",
                             "Generation of input %s for task %s took %f seconds"
-                            % (seed, task_name, time.monotonic() - start_time))
+                            % (seed, task_name, time.monotonic() - start_time),
+                        )
                 finally:
                     os.close(stdout)
 
                 if retcode != 0:
                     Logger.error(
                         "TASK",
-                        "Error %d generating input %s (%d) for task %s" % \
-                        (retcode, id, seed, task_name)
+                        "Error %d generating input %s (%d) for task %s"
+                        % (retcode, id, seed, task_name),
                     )
                     # skip the input
                     continue
@@ -275,42 +292,43 @@ class ContestManager:
                 # if there is a validator in the task use it to check if the
                 # generated input is valid
                 if "validator" in task:
-                    stdin = os.open(
-                        StorageManager.get_absolute_path(path), os.O_RDONLY)
+                    stdin = os.open(StorageManager.get_absolute_path(path), os.O_RDONLY)
                     try:
                         start_time = time.monotonic()
                         # execute the validator piping the input file to stdin
                         retcode = gevent.subprocess.call(
-                            [task["validator"], "0"], stdin=stdin)
+                            [task["validator"], "0"], stdin=stdin
+                        )
                         if time.monotonic() > start_time + 1:
                             Logger.warning(
                                 "TASK",
                                 "Validation of input %s for task %s took %f "
-                                "seconds" % (seed, task_name,
-                                             time.monotonic() - start_time))
+                                "seconds"
+                                % (seed, task_name, time.monotonic() - start_time),
+                            )
                     finally:
                         os.close(stdin)
 
                     if retcode != 0:
                         Logger.error(
                             "TASK",
-                            "Error %d validating input %s (%d) for task %s" % \
-                            (retcode, id, seed, task_name)
+                            "Error %d validating input %s (%d) for task %s"
+                            % (retcode, id, seed, task_name),
                         )
                         # skip the input
                         continue
 
                 Logger.debug(
                     "TASK",
-                    "Generated input %s (%d) for task %s" % \
-                    (id, seed, task_name)
+                    "Generated input %s (%d) for task %s" % (id, seed, task_name),
                 )
                 # this method is blocking if the queue is full
                 queue.put({"id": id, "path": path})
             except:
                 Logger.error(
-                    "TASK", "Exception while creating an input file: " +
-                    traceback.format_exc())
+                    "TASK",
+                    "Exception while creating an input file: " + traceback.format_exc(),
+                )
 
     @staticmethod
     def get_input(task_name, attempt):
@@ -342,25 +360,38 @@ class ContestManager:
         try:
             # call the checker and store the output
             start_time = time.monotonic()
-            output = gevent.subprocess.check_output([
-                ContestManager.tasks[task_name]["checker"],
-                StorageManager.get_absolute_path(input_path),
-                StorageManager.get_absolute_path(output_path)
-            ])
+            output = gevent.subprocess.check_output(
+                [
+                    ContestManager.tasks[task_name]["checker"],
+                    StorageManager.get_absolute_path(input_path),
+                    StorageManager.get_absolute_path(output_path),
+                ]
+            )
             if time.monotonic() > start_time + 1:
                 Logger.warning(
-                    "TASK", "Evaluation of output %s "
+                    "TASK",
+                    "Evaluation of output %s "
                     "for task %s, with input %s, took %f "
-                    "seconds" % (output_path, task_name, input_path,
-                                 time.monotonic() - start_time))
+                    "seconds"
+                    % (
+                        output_path,
+                        task_name,
+                        input_path,
+                        time.monotonic() - start_time,
+                    ),
+                )
         except:
             # TODO log the stdout and stderr of the checker
             Logger.error(
-                "TASK", "Error while evaluating output %s "
-                "for task %s, with input %s: %s" %
-                (output_path, task_name, input_path, traceback.format_exc()))
+                "TASK",
+                "Error while evaluating output %s "
+                "for task %s, with input %s: %s"
+                % (output_path, task_name, input_path, traceback.format_exc()),
+            )
             raise
         Logger.info(
-            "TASK", "Evaluated output %s for task %s, with input %s" %
-            (output_path, task_name, input_path))
+            "TASK",
+            "Evaluated output %s for task %s, with input %s"
+            % (output_path, task_name, input_path),
+        )
         return output

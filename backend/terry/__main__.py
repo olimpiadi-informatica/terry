@@ -18,10 +18,8 @@ from terry.server import Server
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-c",
-        "--config",
-        help="Path to the config file",
-        default="config/config.yaml")
+        "-c", "--config", help="Path to the config file", default="config/config.yaml"
+    )
     args = parser.parse_args()
 
     if args.config:
@@ -38,5 +36,5 @@ def main():
     server.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -12,7 +12,12 @@ from unittest.mock import patch, call
 
 import gevent
 from gevent import queue
-from werkzeug.exceptions import Forbidden, NotFound, InternalServerError, UnprocessableEntity
+from werkzeug.exceptions import (
+    Forbidden,
+    NotFound,
+    InternalServerError,
+    UnprocessableEntity,
+)
 
 from terry import crypto
 from terry.config import Config
@@ -38,7 +43,7 @@ class TestContestManager(unittest.TestCase):
         system = platform.system().lower()
         machine = platform.machine()
 
-        self.assertEqual('.', sys_ext[0])
+        self.assertEqual(".", sys_ext[0])
         self.assertTrue(sys_ext.find(system) >= 0)
         self.assertTrue(sys_ext.find(machine) >= 0)
 
@@ -98,8 +103,8 @@ class TestContestManager(unittest.TestCase):
 
         contest = ContestManager.import_contest(path)
         self.assertTrue(
-            os.path.isfile(
-                os.path.join(Config.statementdir, "poldo", "statement.md")))
+            os.path.isfile(os.path.join(Config.statementdir, "poldo", "statement.md"))
+        )
 
         self.assertEqual(18000, contest["duration"])
         self.assertEqual(1, len(contest["tasks"]))
@@ -107,18 +112,16 @@ class TestContestManager(unittest.TestCase):
         self.assertEqual("poldo", task["name"])
         self.assertEqual("Poldo", task["description"])
         self.assertEqual(42, task["max_score"])
-        checker = os.path.join(path, "poldo", "managers",
-                               "checker.linux.x86_64")
-        validator = os.path.join(path, "poldo", "managers",
-                                 "validator.linux.x86_64")
-        generator = os.path.join(path, "poldo", "managers",
-                                 "generator.linux.x86_64")
+        checker = os.path.join(path, "poldo", "managers", "checker.linux.x86_64")
+        validator = os.path.join(path, "poldo", "managers", "validator.linux.x86_64")
+        generator = os.path.join(path, "poldo", "managers", "generator.linux.x86_64")
         self.assertEqual(checker, task["checker"])
         self.assertEqual(validator, task["validator"])
         self.assertEqual(generator, task["generator"])
         self.assertEqual(
             os.path.join(Config.web_statementdir, "poldo", "statement.md"),
-            task["statement_path"])
+            task["statement_path"],
+        )
         self.assertEqual(0o755, os.stat(checker).st_mode & 0o777)
         self.assertEqual(0o755, os.stat(validator).st_mode & 0o777)
         self.assertEqual(0o755, os.stat(generator).st_mode & 0o777)
@@ -135,11 +138,9 @@ class TestContestManager(unittest.TestCase):
         Config.statementdir = Utils.new_tmp_dir()
         self._write_file(Config.statementdir, "poldo", "foobar")
 
-        self.assertTrue(
-            os.path.isfile(os.path.join(Config.statementdir, "poldo")))
+        self.assertTrue(os.path.isfile(os.path.join(Config.statementdir, "poldo")))
         ContestManager.import_contest(path)
-        self.assertTrue(
-            os.path.isdir(os.path.join(Config.statementdir, "poldo")))
+        self.assertTrue(os.path.isdir(os.path.join(Config.statementdir, "poldo")))
 
     def test_read_from_disk_missing_dir(self):
         Logger.LOG_LEVEL = Logger.DEBUG
@@ -159,10 +160,10 @@ class TestContestManager(unittest.TestCase):
         with patch("gevent.spawn") as mock:
             ContestManager.read_from_disk()
             mock.assert_has_calls(
-                [call(ContestManager.worker, "poldo")], any_order=True)
+                [call(ContestManager.worker, "poldo")], any_order=True
+            )
 
-        self.assertEqual(18000, Database.get_meta(
-            "contest_duration", type=int))
+        self.assertEqual(18000, Database.get_meta("contest_duration", type=int))
         tasks = Database.get_tasks()
         self.assertEqual(1, len(tasks))
         self.assertEqual("poldo", tasks[0]["name"])
@@ -203,69 +204,64 @@ class TestContestManager(unittest.TestCase):
     @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._valid_subprocess_call
-        ContestManager.tasks["poldo"] = {
-            "generator": "/gen",
-            "validator": "/val"
-        }
+        ContestManager.tasks["poldo"] = {"generator": "/gen", "validator": "/val"}
+
         class FakeQueue:
             def put(self, _):
                 raise NotImplementedError("Stop loop")
+
         ContestManager.input_queue["poldo"] = FakeQueue()
 
         with patch(
-                "terry.logger.Logger.error",
-                side_effect=TestContestManager._stop_worker_loop):
+            "terry.logger.Logger.error",
+            side_effect=TestContestManager._stop_worker_loop,
+        ):
             with self.assertRaises(NotImplementedError) as ex:
                 ContestManager.worker("poldo")
 
     @patch("gevent.subprocess.call", return_value=42)
     @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker_generator_fails(self, gen_id_mock, call_mock):
-        ContestManager.tasks["poldo"] = {
-            "generator": "/gen",
-            "validator": "/val"
-        }
+        ContestManager.tasks["poldo"] = {"generator": "/gen", "validator": "/val"}
+
         class FakeQueue:
             def put(self, _):
                 raise NotImplementedError("Stop loop")
+
         ContestManager.input_queue["poldo"] = FakeQueue()
 
         with patch(
-                "terry.logger.Logger.error",
-                side_effect=TestContestManager._stop_worker_loop):
+            "terry.logger.Logger.error",
+            side_effect=TestContestManager._stop_worker_loop,
+        ):
             with self.assertRaises(Exception) as ex:
                 ContestManager.worker("poldo")
-            self.assertIn("Error 42 generating input",
-                            ex.exception.args[0])
+            self.assertIn("Error 42 generating input", ex.exception.args[0])
 
     @patch("gevent.subprocess.call")
     @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker_validator_fails(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._broken_val_subprocess_call
-        ContestManager.tasks["poldo"] = {
-            "generator": "/gen",
-            "validator": "/val"
-        }
+        ContestManager.tasks["poldo"] = {"generator": "/gen", "validator": "/val"}
+
         class FakeQueue:
             def put(self, _):
                 raise NotImplementedError("Stop loop")
+
         ContestManager.input_queue["poldo"] = FakeQueue()
 
         with patch(
-                "terry.logger.Logger.error",
-                side_effect=TestContestManager._stop_worker_loop):
+            "terry.logger.Logger.error",
+            side_effect=TestContestManager._stop_worker_loop,
+        ):
             with self.assertRaises(Exception) as ex:
                 ContestManager.worker("poldo")
-            self.assertIn("Error 42 validating input",
-                            ex.exception.args[0])
+            self.assertIn("Error 42 validating input", ex.exception.args[0])
 
     def test_get_input(self):
         input_path = Utils.new_tmp_file()
         ContestManager.input_queue["poldo"] = gevent.queue.Queue(1)
-        ContestManager.input_queue["poldo"].put({
-            "id": "inputid",
-            "path": input_path
-        })
+        ContestManager.input_queue["poldo"].put({"id": "inputid", "path": input_path})
 
         input = ContestManager.get_input("poldo", 42)
         self.assertEqual("inputid", input[0])
@@ -273,7 +269,8 @@ class TestContestManager(unittest.TestCase):
 
     @patch(
         "terry.logger.Logger.warning",
-        side_effect=lambda *args: exec("raise NotImplementedError(*args)"))
+        side_effect=lambda *args: exec("raise NotImplementedError(*args)"),
+    )
     def test_get_input_queue_underrun(self, warning_mock):
         ContestManager.input_queue["poldo"] = gevent.queue.Queue(1)
         with self.assertRaises(NotImplementedError) as ex:
@@ -286,9 +283,7 @@ class TestContestManager(unittest.TestCase):
         output = ContestManager.evaluate_output("poldo", "/input", "/output")
         self.assertEqual("yee", output)
 
-    @patch(
-        "gevent.subprocess.check_output",
-        side_effect=NotImplementedError("ops ;)"))
+    @patch("gevent.subprocess.check_output", side_effect=NotImplementedError("ops ;)"))
     def test_evaluate_output_failed(self, check_mock):
         ContestManager.tasks["poldo"] = {"checker": "/gen"}
 
@@ -324,27 +319,40 @@ class TestContestManager(unittest.TestCase):
         return 0
 
     def _prepare_contest_dir(self, path):
-        self._write_file(path, "contest.yaml", "duration: 18000\n"
-                         "tasks:\n"
-                         "    - poldo\n"
-                         "users:\n"
-                         "    - token: token\n"
-                         "      name: Test\n"
-                         "      surname: User\n")
-        self._write_file(path, "poldo/task.yaml", "name: poldo\n"
-                         "description: Poldo\n"
-                         "max_score: 42")
+        self._write_file(
+            path,
+            "contest.yaml",
+            "duration: 18000\n"
+            "tasks:\n"
+            "    - poldo\n"
+            "users:\n"
+            "    - token: token\n"
+            "      name: Test\n"
+            "      surname: User\n",
+        )
+        self._write_file(
+            path,
+            "poldo/task.yaml",
+            "name: poldo\n" "description: Poldo\n" "max_score: 42",
+        )
         self._write_file(path, "poldo/statement/statement.md", "# Poldo")
-        self._write_file(path, "poldo/managers/generator.linux.x86_64",
-                         "#!/usr/bin/bash\n"
-                         "echo 42\n")
-        self._write_file(path, "poldo/managers/validator.linux.x86_64",
-                         "#!/usr/bin/bash\n"
-                         "exit 0\n")
-        self._write_file(path, "poldo/managers/checker.linux.x86_64",
-                         "#!/usr/bin/bash\n"
-                         "echo '{\"validation\":{},\"feedback\":{},"
-                         "\"score\":0.5}'")
+        self._write_file(
+            path,
+            "poldo/managers/generator.linux.x86_64",
+            "#!/usr/bin/bash\n" "echo 42\n",
+        )
+        self._write_file(
+            path,
+            "poldo/managers/validator.linux.x86_64",
+            "#!/usr/bin/bash\n" "exit 0\n",
+        )
+        self._write_file(
+            path,
+            "poldo/managers/checker.linux.x86_64",
+            "#!/usr/bin/bash\n"
+            'echo \'{"validation":{},"feedback":{},'
+            '"score":0.5}\'',
+        )
 
     def _write_file(self, prefix, filename, content):
         path = os.path.join(prefix, filename)

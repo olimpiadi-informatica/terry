@@ -19,7 +19,6 @@ from test.utils import Utils
 
 
 class TestInfoHandler(unittest.TestCase):
-
     def setUp(self):
         Utils.prepare_test()
         self.handler = UploadHandler()
@@ -30,16 +29,20 @@ class TestInfoHandler(unittest.TestCase):
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
 
-    @patch("terry.contest_manager.ContestManager.evaluate_output",
-           return_value=b'{"validation":42}')
+    @patch(
+        "terry.contest_manager.ContestManager.evaluate_output",
+        return_value=b'{"validation":42}',
+    )
     @patch("terry.database.Database.gen_id", return_value="outputid")
     def test_upload_output(self, gen_mock, eval_mock):
         Utils.start_contest()
         self._insert_data()
 
-        res = self.handler.upload_output(input_id="inputid", _ip="1.1.1.1",
-                                         file={"content": "foobar".encode(),
-                                               "name": "output.txt"})
+        res = self.handler.upload_output(
+            input_id="inputid",
+            _ip="1.1.1.1",
+            file={"content": "foobar".encode(), "name": "output.txt"},
+        )
         self.assertEqual("outputid", res["id"])
         self.assertIn("output.txt", res["path"])
         self.assertEqual(42, res["validation"])
@@ -52,8 +55,12 @@ class TestInfoHandler(unittest.TestCase):
     def test_upload_output_invalid_input(self):
         Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.upload_output(input_id="invalid input", _ip="1.1.1.1",
-                                       _file_content="foo", _file_name="bar")
+            self.handler.upload_output(
+                input_id="invalid input",
+                _ip="1.1.1.1",
+                _file_content="foo",
+                _file_name="bar",
+            )
 
         self.assertIn("No such input", ex.exception.response.data.decode())
 
@@ -63,30 +70,38 @@ class TestInfoHandler(unittest.TestCase):
         self._insert_data()
 
         with self.assertRaises(BadRequest):
-            self.handler.upload_output(input_id="inputid", _ip="1.1.1.1",
-                                       file={"content": "foobar".encode(),
-                                             "name": ".."})
+            self.handler.upload_output(
+                input_id="inputid",
+                _ip="1.1.1.1",
+                file={"content": "foobar".encode(), "name": ".."},
+            )
 
-    @patch("terry.contest_manager.ContestManager.evaluate_output",
-           side_effect=RuntimeError())
+    @patch(
+        "terry.contest_manager.ContestManager.evaluate_output",
+        side_effect=RuntimeError(),
+    )
     @patch("terry.database.Database.gen_id", return_value="outputid")
     def test_upload_output_check_failed(self, gen_mock, eval_mock):
         Utils.start_contest()
         self._insert_data()
 
         with self.assertRaises(InternalServerError):
-            self.handler.upload_output(input_id="inputid", _ip="1.1.1.1",
-                                       file={"content": "foobar".encode(),
-                                             "name": "output.txt"})
+            self.handler.upload_output(
+                input_id="inputid",
+                _ip="1.1.1.1",
+                file={"content": "foobar".encode(), "name": "output.txt"},
+            )
 
     @patch("terry.database.Database.gen_id", return_value="sourceid")
     def test_upload_source(self, gen_mock):
         Utils.start_contest()
         self._insert_data()
 
-        res = self.handler.upload_source(input_id="inputid", _ip="1.1.1.1",
-                                         file={"content": "foobar".encode(),
-                                               "name": "source.txt"})
+        res = self.handler.upload_source(
+            input_id="inputid",
+            _ip="1.1.1.1",
+            file={"content": "foobar".encode(), "name": "source.txt"},
+        )
         self.assertEqual("sourceid", res["id"])
         self.assertIn("source.txt", res["path"])
         self.assertEqual("inputid", res["input"])
@@ -106,9 +121,11 @@ class TestInfoHandler(unittest.TestCase):
         self._insert_data()
         executable = b"\x4D\x5Adeadbaba"
 
-        res = self.handler.upload_source(input_id="inputid", _ip="1.1.1.1",
-                                         file={"content": executable,
-                                               "name": "lol.exe"})
+        res = self.handler.upload_source(
+            input_id="inputid",
+            _ip="1.1.1.1",
+            file={"content": executable, "name": "lol.exe"},
+        )
         alerts = res["validation"]["alerts"]
         self.assertEqual(1, len(alerts))
         self.assertIn("executable", alerts[0]["message"])
@@ -117,8 +134,12 @@ class TestInfoHandler(unittest.TestCase):
     def test_upload_source_invalid_input(self):
         Utils.start_contest()
         with self.assertRaises(Forbidden) as ex:
-            self.handler.upload_source(input_id="invalid input", _ip="1.1.1.1",
-                                       _file_content="foo", _file_name="bar")
+            self.handler.upload_source(
+                input_id="invalid input",
+                _ip="1.1.1.1",
+                _file_content="foo",
+                _file_name="bar",
+            )
 
         self.assertIn("No such input", ex.exception.response.data.decode())
 
@@ -128,9 +149,11 @@ class TestInfoHandler(unittest.TestCase):
         self._insert_data()
 
         with self.assertRaises(BadRequest):
-            self.handler.upload_source(input_id="inputid", _ip="1.1.1.1",
-                                       file={"content": "foobar".encode(),
-                                             "name": ".."})
+            self.handler.upload_source(
+                input_id="inputid",
+                _ip="1.1.1.1",
+                file={"content": "foobar".encode(), "name": ".."},
+            )
 
     def _insert_data(self):
         Database.add_user("token", "", "")

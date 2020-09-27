@@ -14,11 +14,17 @@ class HandlerParams:
     def initialize_handler_params(handle, handler):
         if not hasattr(handle, HandlerParams.HANDLER_PARAMS_ATTR):
             if hasattr(handler, HandlerParams.HANDLER_PARAMS_ATTR):
-                setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR,
-                        getattr(handler, HandlerParams.HANDLER_PARAMS_ATTR))
+                setattr(
+                    handle,
+                    HandlerParams.HANDLER_PARAMS_ATTR,
+                    getattr(handler, HandlerParams.HANDLER_PARAMS_ATTR),
+                )
             else:
-                setattr(handle, HandlerParams.HANDLER_PARAMS_ATTR,
-                        HandlerParams.get_handler_params(handler))
+                setattr(
+                    handle,
+                    HandlerParams.HANDLER_PARAMS_ATTR,
+                    HandlerParams.get_handler_params(handler),
+                )
         # forward the method name from the handler, useful for logging
         handle.__name__ = handler.__name__
         return handle
@@ -31,26 +37,21 @@ class HandlerParams:
         sign = inspect.signature(handle).parameters
 
         for name in sign:
-            if name == "self": continue
+            if name == "self":
+                continue
             if sign[name].annotation is not inspect._empty:
                 type = sign[name].annotation
             else:
                 type = None
             req = sign[name].default == inspect._empty
 
-            params[name] = {
-                "type": type,
-                "required": req
-            }
+            params[name] = {"type": type, "required": req}
         return params
 
     @staticmethod
     def add_handler_param(handle, param, type, required=True):
         params = getattr(handle, HandlerParams.HANDLER_PARAMS_ATTR)
-        params[param] = {
-            "type": type,
-            "required": required
-        }
+        params[param] = {"type": type, "required": required}
         return handle
 
     @staticmethod

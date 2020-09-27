@@ -18,6 +18,7 @@ class StorageManager:
     """
     Maximum length of a file name (including the extension)
     """
+
     MAX_LENGTH = 100
 
     @staticmethod
@@ -29,8 +30,9 @@ class StorageManager:
         :return: A path relative to the Config.storedir where save that file
         """
         filename = StorageManager._sanitize(filename)
-        return os.path.join("source", source_id[:2], source_id[2:4], source_id,
-                            filename)
+        return os.path.join(
+            "source", source_id[:2], source_id[2:4], source_id, filename
+        )
 
     @staticmethod
     def new_output_file(output_id, filename):
@@ -41,8 +43,9 @@ class StorageManager:
         :return: A path relative to the Config.storedir where save that file
         """
         filename = StorageManager._sanitize(filename)
-        return os.path.join("output", output_id[:2], output_id[2:4], output_id,
-                            filename)
+        return os.path.join(
+            "output", output_id[:2], output_id[2:4], output_id, filename
+        )
 
     @staticmethod
     def new_input_file(input_id, task_name, attempt):
@@ -125,13 +128,12 @@ class StorageManager:
         :param filename: filename to sanitize
         :return: the sanitized file name
         """
-        filename = re.sub(r'(?u)[^-\w.]', '',
-                          filename.strip().replace(' ', '_'))
+        filename = re.sub(r"(?u)[^-\w.]", "", filename.strip().replace(" ", "_"))
         if filename == "" or filename == "." or filename == "..":
             raise ValueError("Invalid file name")
         name, ext = os.path.splitext(filename)
         # if the extension is too long
         if len(ext) > StorageManager.MAX_LENGTH - 1:
-            return filename[0:StorageManager.MAX_LENGTH]
+            return filename[0 : StorageManager.MAX_LENGTH]
         name_len = min(len(name), StorageManager.MAX_LENGTH - len(ext))
         return name[0:name_len] + ext

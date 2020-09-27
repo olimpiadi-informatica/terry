@@ -27,7 +27,7 @@ class TestConfig(unittest.TestCase):
     def test_file_not_found(self):
         with self.assertRaises(SystemExit):
             with Utils.nostderr():
-                Config.set_config_file('/this/file/doesnt/exist')
+                Config.set_config_file("/this/file/doesnt/exist")
 
     def test_cannot_load_again(self):
         self._write_config("test: foo")
@@ -45,7 +45,7 @@ class TestConfig(unittest.TestCase):
             Config.set_config_file(self.configFilePath)
 
     def _write_config(self, config):
-        with open(self.configFilePath, 'w') as file:
+        with open(self.configFilePath, "w") as file:
             file.write(config)
 
     def tearDown(self):

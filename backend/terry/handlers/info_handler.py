@@ -22,15 +22,18 @@ class InfoHandler(BaseHandler):
         GET /contest
         """
         start_timestamp = Database.get_meta("start_time", type=int)
-        start_datetime = datetime.fromtimestamp(
-            start_timestamp) if start_timestamp is not None else None
+        start_datetime = (
+            datetime.fromtimestamp(start_timestamp)
+            if start_timestamp is not None
+            else None
+        )
         now = datetime.now()
 
         if not start_timestamp or now < start_datetime:
             return {
                 "has_started": False,
                 "name": Database.get_meta("contest_name"),
-                "description": Database.get_meta("contest_description")
+                "description": Database.get_meta("contest_description"),
             }
 
         tasks = Database.get_tasks()
@@ -40,7 +43,7 @@ class InfoHandler(BaseHandler):
             "description": Database.get_meta("contest_description"),
             "start_time": start_datetime.isoformat(),
             "tasks": tasks,
-            "max_total_score": sum(task["max_score"] for task in tasks)
+            "max_total_score": sum(task["max_score"] for task in tasks),
         }
 
     @Validators.contest_started
@@ -97,8 +100,10 @@ class InfoHandler(BaseHandler):
         if user["contest_start_delay"] is not None:
             end_time = min(
                 end_time,
-                InfoHandler.get_window_end_time(user["extra_time"],
-                                                user["contest_start_delay"]))
+                InfoHandler.get_window_end_time(
+                    user["extra_time"], user["contest_start_delay"]
+                ),
+            )
 
         user["end_time"] = end_time
         del user["extra_time"]
@@ -110,16 +115,15 @@ class InfoHandler(BaseHandler):
 
             if task["current_attempt"] is not None:
                 current_input = Database.get_input(
-                    token=token,
-                    task=task_name,
-                    attempt=task["current_attempt"])
+                    token=token, task=task_name, attempt=task["current_attempt"]
+                )
             else:
                 current_input = None
 
             user["tasks"][task_name] = {
                 "name": task_name,
                 "score": task["score"],
-                "current_input": current_input
+                "current_input": current_input,
             }
 
         user["total_score"] = sum(task["score"] for task in tasks)
@@ -152,7 +156,8 @@ class InfoHandler(BaseHandler):
         for k, v in submission.items():
             if "_" in k:
                 a, b = k.split("_")
-                if a not in result: result[a] = {}
+                if a not in result:
+                    result[a] = {}
                 result[a][b] = v
             else:
                 result[k] = v
@@ -179,7 +184,7 @@ class InfoHandler(BaseHandler):
             "date": output["date"],
             "path": output["path"],
             "size": output["size"],
-            "validation": json.loads(output["result"].decode())["validation"]
+            "validation": json.loads(output["result"].decode())["validation"],
         }
 
         if "input" in output:

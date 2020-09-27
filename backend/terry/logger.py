@@ -33,7 +33,7 @@ class Logger:
         Style.BRIGHT,
         Fore.BLUE + Style.BRIGHT,
         Fore.YELLOW + Style.BRIGHT,
-        Fore.RED + Style.BRIGHT
+        Fore.RED + Style.BRIGHT,
     ]
     FMT = "%% %ds" % max(map(len, HUMAN_MESSAGES))
 
@@ -50,9 +50,11 @@ class Logger:
             Config.logfile,
             check_same_thread=False,
             isolation_level=None,
-            detect_types=sqlite3.PARSE_DECLTYPES)
+            detect_types=sqlite3.PARSE_DECLTYPES,
+        )
         Logger.c = Logger.conn.cursor()
-        Logger.c.executescript("""
+        Logger.c.executescript(
+            """
             PRAGMA JOURNAL_MODE = WAL;
             PRAGMA SYNCHRONOUS = NORMAL;
             CREATE TABLE IF NOT EXISTS logs (
@@ -62,7 +64,8 @@ class Logger:
                 message TEXT NOT NULL);
 
             CREATE INDEX IF NOT EXISTS log_date_level ON logs (date, level);
-        """)
+        """
+        )
 
     @staticmethod
     def disconnect_database():
@@ -82,8 +85,9 @@ class Logger:
             Logger.LOG_LEVEL = lvl
         else:
             if lvl not in Logger.HUMAN_MESSAGES:
-                Logger.log_console(Logger.ERROR, "LOGGER",
-                                   "Invalid log level: %s" % lvl)
+                Logger.log_console(
+                    Logger.ERROR, "LOGGER", "Invalid log level: %s" % lvl
+                )
             else:
                 Logger.LOG_LEVEL = Logger.HUMAN_MESSAGES.index(lvl)
 
@@ -100,25 +104,25 @@ class Logger:
         if level >= Logger.LOG_LEVEL:
             Logger.log_console(level, category, message)
         c = Logger.c
-        c.execute("""
+        c.execute(
+            """
             INSERT INTO logs (level, category, message)
             VALUES (:level, :category, :message)
-        """, {
-            "level": level,
-            "category": category,
-            "message": str(message)
-        })
+        """,
+            {"level": level, "category": category, "message": str(message)},
+        )
         Logger.conn.commit()
 
     @staticmethod
     def log_console(level, category, message):
-        tag = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " "
+        tag = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " "
         tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
         cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
         print(
             Logger.COLOR[level] + tag + Style.RESET_ALL,
             "%s %s" % (cat, message),
-            file=sys.stderr)
+            file=sys.stderr,
+        )
         sys.stderr.flush()
 
     @staticmethod
@@ -150,34 +154,33 @@ class Logger:
         c = Logger.conn.cursor()
         ret = []
         if category is None:
-            c.execute("""
+            c.execute(
+                """
                 SELECT date, category, level, message FROM logs
                 WHERE level >= :level AND date >= :begin AND date <= :end
                 ORDER BY date DESC
                 LIMIT 50
-            """, {
-                "level": level,
-                "begin": begin,
-                "end": end
-            })
+            """,
+                {"level": level, "begin": begin, "end": end},
+            )
         else:
-            c.execute("""
+            c.execute(
+                """
                 SELECT date, category, level, message FROM logs
                 WHERE level >= :level AND date >= :begin AND date <= :end AND 
                 category = :category
                 ORDER BY date DESC
                 LIMIT 50
-            """, {
-                "level": level,
-                "category": category,
-                "begin": begin,
-                "end": end
-            })
+            """,
+                {"level": level, "category": category, "begin": begin, "end": end},
+            )
         for row in c.fetchall():
-            ret.append({
-                "date": row[0],
-                "category": row[1],
-                "level": Logger.HUMAN_MESSAGES[row[2]],
-                "message": row[3]
-            })
+            ret.append(
+                {
+                    "date": row[0],
+                    "category": row[1],
+                    "level": Logger.HUMAN_MESSAGES[row[2]],
+                    "message": row[3],
+                }
+            )
         return ret
