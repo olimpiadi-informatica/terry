@@ -7,7 +7,7 @@ MAKE_DEPS="curl git libffi-dev"
 apt-get update -y
 apt-get install -y --no-install-recommends \
     $MAKE_DEPS \
-    nginx '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
+    nginx procps '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
 
 # Add NodeJS and automatically run 'apt-get update'
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
