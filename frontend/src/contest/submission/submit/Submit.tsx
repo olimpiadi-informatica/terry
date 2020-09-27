@@ -10,6 +10,7 @@ import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
 import { useActions } from "src/contest/ContestContext";
 import { UploadedSource, UploadedOutput, TaskData } from "src/contest/types";
+import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { SourceSelector } from "./SourceSelector";
 import { OutputSelector } from "./OutputSelector";
 
@@ -22,6 +23,7 @@ export function Submit({ inputId, task }: Props) {
   const [source, setSource] = useState<UploadedSource | null>(null);
   const [output, setOutput] = useState<UploadedOutput | null>(null);
   const [submission, setSubmission] = useState<Loadable<unknown> | null>(null);
+  const reloadSubmissionList = useSubmissionList(task.name)[1];
   const { reloadContest } = useActions();
   const history = useHistory();
 
@@ -41,6 +43,7 @@ export function Submit({ inputId, task }: Props) {
         const { id } = response.data;
         history.push(`/task/${task.name}/submission/${id}`);
         reloadContest();
+        reloadSubmissionList();
       })
       .catch((response) => {
         notifyError(response);

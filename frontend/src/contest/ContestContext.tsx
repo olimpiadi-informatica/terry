@@ -9,6 +9,7 @@ import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
 import { ContestData } from "./types";
+import { SubmissionListContextProvider } from "./hooks/useSubmissionList";
 
 export type ContextData = {
   token: string | null;
@@ -97,7 +98,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
         },
       }}
     >
-      {children}
+      <SubmissionListContextProvider>{children}</SubmissionListContextProvider>
     </ContestContext.Provider>
   );
 }

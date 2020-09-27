@@ -19,7 +19,7 @@ type Props = {
 
 export function TaskView({ task, userTask }: Props) {
   const statement = useStatement(task.statement_path);
-  const submissions = useSubmissionList(task.name);
+  const [submissions] = useSubmissionList(task.name);
 
   const renderTaskStatement = () => {
     if (statement.isLoading()) {

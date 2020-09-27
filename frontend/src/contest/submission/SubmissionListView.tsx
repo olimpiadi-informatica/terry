@@ -22,7 +22,7 @@ type Props = {
 };
 
 export function SubmissionListView({ task }: Props) {
-  const submissions = useSubmissionList(task.name);
+  const [submissions] = useSubmissionList(task.name);
   const serverTime = useServerTime();
 
   const renderSubmission = (submission: Submission) => {
