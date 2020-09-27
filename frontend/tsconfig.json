@@ -21,7 +21,6 @@
     "jsx": "react"
   },
   "include": [
-    "proxy.ts",
     "src",
     "declarations"
   ]

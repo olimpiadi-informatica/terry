@@ -23,6 +23,7 @@ pip3 install -I -r requirements.txt
 
 # Build the frontend
 cd /terry/frontend
+export NODE_ENV=production
 npm install
 SKIP_PREFLIGHT_CHECK=true npm run build
 

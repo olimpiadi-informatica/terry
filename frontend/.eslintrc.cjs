@@ -10,6 +10,9 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "airbnb",
   ],
+  ignorePatterns: [
+    "src/locales/*/*.js",
+  ],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -103,8 +106,8 @@ module.exports = {
     "no-restricted-imports": [
       "warn",
       {
-        "patterns": ["../*"]
-      }
+        patterns: ["../*"],
+      },
     ],
   },
   settings: {
@@ -112,9 +115,9 @@ module.exports = {
       version: "detect",
     },
     "import/resolver": {
-      "typescript": {
+      typescript: {
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-        "alwaysTryTypes": true,
+        alwaysTryTypes: true,
       },
     },
     "import/core-modules": ["@lingui/macro", "@lingui/core"],
