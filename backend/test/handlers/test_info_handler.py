@@ -136,7 +136,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertIn("No such user", response)
 
     def test_get_user(self):
-        now = int(datetime.datetime.now().timestamp())
+        now = int(datetime.datetime.utcnow().timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
 
@@ -149,7 +149,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.fromtimestamp(now + 1080).strftime(
+        end_time = datetime.datetime.utcfromtimestamp(now + 1080).strftime(
             '%Y-%m-%dT%H:%M:%S')
         self.assertEqual(end_time, res["end_time"])
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
@@ -157,7 +157,7 @@ class TestInfoHandler(unittest.TestCase):
                          res["tasks"]["poldo"]["current_input"]["id"])
 
     def test_get_user_windowed(self):
-        now = int(datetime.datetime.now().timestamp())
+        now = int(datetime.datetime.utcnow().timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -170,12 +170,12 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.fromtimestamp(now + 110).strftime(
+        end_time = datetime.datetime.utcfromtimestamp(now + 110).strftime(
             '%Y-%m-%dT%H:%M:%S')
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_windowed_almost_finished(self):
-        now = int(datetime.datetime.now().timestamp())
+        now = int(datetime.datetime.utcnow().timestamp())
         Database.set_meta("start_time", now - 90)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -188,12 +188,12 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.fromtimestamp(now + 20).strftime(
+        end_time = datetime.datetime.utcfromtimestamp(now + 20).strftime(
             '%Y-%m-%dT%H:%M:%S')
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_windowed_partial_window(self):
-        now = int(datetime.datetime.now().timestamp())
+        now = int(datetime.datetime.utcnow().timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -206,7 +206,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.fromtimestamp(now + 1000).strftime(
+        end_time = datetime.datetime.utcfromtimestamp(now + 1000).strftime(
             '%Y-%m-%dT%H:%M:%S')
         self.assertEqual(end_time, res["end_time"])
 
@@ -281,7 +281,7 @@ class TestInfoHandler(unittest.TestCase):
 
         res = InfoHandler.patch_output(output)
         self.assertEqual("outputid", res["id"]),
-        self.assertEqual(datetime.datetime.fromtimestamp(1234).isoformat(),
+        self.assertEqual(datetime.datetime.utcfromtimestamp(1234).isoformat(),
                          res["date"])
         self.assertEqual("/path", res["path"])
         self.assertEqual(42, res["validation"])

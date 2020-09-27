@@ -6,7 +6,7 @@
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
-import datetime
+from datetime import datetime
 import os.path
 import subprocess
 import unittest
@@ -132,10 +132,10 @@ class TestAdminHandler(unittest.TestCase):
     def test_log_get_dates(self):
         TestLogger.load_logs()
 
-        start_date = datetime.datetime.fromtimestamp(
-            datetime.datetime.now().timestamp() - 10).isoformat()
-        end_date = datetime.datetime.fromtimestamp(
-            datetime.datetime.now().timestamp() + 10).isoformat()
+        start_date = datetime.fromtimestamp(
+            datetime.now().timestamp() - 10).isoformat()
+        end_date = datetime.fromtimestamp(
+            datetime.now().timestamp() + 10).isoformat()
 
         res = self.admin_handler.log(
             start_date=start_date,
@@ -149,10 +149,10 @@ class TestAdminHandler(unittest.TestCase):
     def test_log_category(self):
         TestLogger.load_logs()
 
-        start_date = datetime.datetime.fromtimestamp(
-            datetime.datetime.now().timestamp() - 10).isoformat()
-        end_date = datetime.datetime.fromtimestamp(
-            datetime.datetime.now().timestamp() + 10).isoformat()
+        start_date = datetime.fromtimestamp(
+            datetime.now().timestamp() - 10).isoformat()
+        end_date = datetime.fromtimestamp(
+            datetime.now().timestamp() + 10).isoformat()
 
         res = self.admin_handler.log(
             start_date=start_date,
@@ -201,11 +201,12 @@ class TestAdminHandler(unittest.TestCase):
         out = self.admin_handler.start(
             admin_token='ADMIN-TOKEN', _ip='1.2.3.4')
 
-        start_time = datetime.datetime.strptime(
+        start_time = datetime.strptime(
             out["start_time"], "%Y-%m-%dT%H:%M:%S").timestamp()
-        self.assertTrue(start_time >= datetime.datetime.now().timestamp() - 10)
+        self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
 
-        self.assertEqual(start_time, Database.get_meta('start_time', type=int))
+        start_time_db = datetime.utcfromtimestamp(Database.get_meta('start_time', type=int))
+        self.assertEqual(start_time, start_time_db.timestamp())
 
     def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:
@@ -257,11 +258,11 @@ class TestAdminHandler(unittest.TestCase):
         res = self.admin_handler.status(
             admin_token='ADMIN-TOKEN', _ip='1.2.3.4')
 
-        start_time = int(
-            datetime.datetime.strptime(res["start_time"],
-                                       "%Y-%m-%dT%H:%M:%S").timestamp())
+        start_time = datetime.strptime(res["start_time"],
+                                                "%Y-%m-%dT%H:%M:%S")
 
-        self.assertEqual(start_time, Database.get_meta('start_time', type=int))
+        start_time_db = datetime.utcfromtimestamp(Database.get_meta('start_time', type=int))
+        self.assertEqual(start_time, start_time_db)
         self.assertEqual(0, Database.get_meta('extra_time', default=0))
 
     def test_user_list_invalid_token(self):

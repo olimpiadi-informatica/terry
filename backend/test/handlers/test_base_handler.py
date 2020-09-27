@@ -139,11 +139,11 @@ class TestBaseHandler(unittest.TestCase):
             }
         }
         formatted = BaseHandler.format_dates(dct, fields=["date", "deeper"])
-        self.assertEqual(datetime.datetime.fromtimestamp(12345678).isoformat(),
+        self.assertEqual(datetime.datetime.utcfromtimestamp(12345678).isoformat(),
                          formatted["date"])
         self.assertEqual(12345678, formatted["nondate"])
         self.assertEqual(
-            datetime.datetime.fromtimestamp(1010101010).isoformat(),
+            datetime.datetime.utcfromtimestamp(1010101010).isoformat(),
             formatted["we"]["need"]["to"]["go"]["deeper"])
 
     @patch("terry.handlers.base_handler.BaseHandler.get_ip",
