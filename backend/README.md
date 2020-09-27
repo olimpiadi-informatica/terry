@@ -85,3 +85,4 @@ If you want to run the tests, maybe because you are working on this project, you
 ## Code style
 
 We use `black` for formatting the code, using its default settings.
+Run `utils/format.sh` for reformatting the codebase.
