@@ -70,7 +70,7 @@ class ContestManager:
                     decrypted_file.write(decrypted_data)
         except FileNotFoundError:
             BaseHandler.raise_exc(NotFound, "NOT_FOUND",
-                                  "The contest pack has not uploaded yet")
+                                  "The contest pack was not uploaded yet")
         except nacl.exceptions.CryptoError:
             BaseHandler.raise_exc(Forbidden, "WRONG_PASSWORD",
                                   "The provided password is wrong")
