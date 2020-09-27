@@ -1,5 +1,6 @@
 import React from "react";
 import "./ScoreView.css";
+import { round } from "src/utils";
 
 type Props = {
   score: number;
@@ -14,7 +15,7 @@ export function ScoreView({
   return (
     <div className="terry-score" style={{ fontSize: `${size}rem`, ...style }}>
       <span className="terry-score-value" style={{ fontSize: `${2 * size}rem` }}>
-        {score}
+        {round(score, 2)}
       </span>
       {" "}
       /

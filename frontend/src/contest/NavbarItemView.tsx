@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { colorFromScore } from "src/utils";
+import { colorFromScore, round } from "src/utils";
 import { useContest } from "./ContestContext";
 import { StartedContest } from "./types";
 
@@ -20,7 +20,7 @@ export function NavbarItemView({ taskName }: Props) {
     <li className="nav-item">
       <NavLink to={`/task/${taskName}`} className="nav-link tasklist-item" activeClassName="active">
         <div className={`task-score-badge badge badge-pill badge-${color}`}>
-          {score}
+          {round(score, 2)}
           /
           {task.max_score}
         </div>

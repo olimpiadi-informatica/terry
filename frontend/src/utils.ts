@@ -31,3 +31,11 @@ export function notifyError(error: AxiosError) {
     toast.error(error.message);
   }
 }
+
+export function round(value: number, maxDigits = 2) {
+  if (!Number.isInteger(maxDigits) || maxDigits < 0) {
+    throw new Error("Invalid number of digits");
+  }
+  const factor = 10 ** maxDigits;
+  return Math.round(value * factor) / factor;
+}
