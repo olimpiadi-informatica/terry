@@ -1,9 +1,17 @@
 #!/bin/sh -ex
 
 # Temporary dependencies
-DEPS="git libffi-dev nodejs"
-apt-get install -y $DEPS
+MAKE_DEPS="git libffi-dev nodejs"
 
+# Add NodeJS and automatically run 'apt-get update'
+curl -sL https://deb.nodesource.com/setup_14.x | bash -
+
+# Install all dependencies
+apt-get install -y --no-install-recommends \
+    $MAKE_DEPS \
+    nginx '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
+
+# Fetch Terry
 git clone --recursive https://github.com/algorithm-ninja/terry /terry
 
 # Build the backend
@@ -14,7 +22,7 @@ pip3 install -I -r requirements.txt
 # Build the frontend
 cd /terry/frontend
 npm install
-npm run build
+SKIP_PREFLIGHT_CHECK=true npm run build
 
 # Keep only the built files
 cp -r build /app
@@ -22,4 +30,6 @@ cp -r build /app
 # Cleanup
 cd /
 rm -rf /terry
-apt-get purge -y $DEPS
+rm -rf /root/.npm /root/.cache/pip /var/lib/apt/lists
+apt-get purge -y $MAKE_DEPS
+apt-get autoremove -y
