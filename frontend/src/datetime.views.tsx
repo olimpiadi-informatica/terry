@@ -20,7 +20,7 @@ type DateViewProps = {
 export function DateComponent({ date, clock }: DateViewProps) {
   useAutoRefresh(30000);
   const lang = i18n.language || "en";
-  const localDate = date.setLocale(lang);
+  const localDate = date.setLocale(lang).toLocal();
   const localMoment = moment(date.toISO()).locale(lang);
   return (
     <abbr title={localDate.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}>
@@ -32,7 +32,7 @@ export function DateComponent({ date, clock }: DateViewProps) {
 export function AbsoluteDateComponent({ date, clock }: DateViewProps) {
   useAutoRefresh(30000);
   const lang = i18n.language || "en";
-  const localDate = date.setLocale(lang);
+  const localDate = date.setLocale(lang).toLocal();
   const localMoment = moment(date.toISO()).locale(lang);
   return (
     <abbr title={localMoment.from(moment(clock().toISO()))}>

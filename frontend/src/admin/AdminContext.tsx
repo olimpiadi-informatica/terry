@@ -128,7 +128,8 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .adminApi(token, "/status")
       .then((response: AxiosResponse) => {
         const serverDate = DateTime.fromHTTP(response.headers.date);
-        setServerTimeSkew(Loadable.of(DateTime.local().diff(serverDate)));
+        const skew = DateTime.local().diff(serverDate);
+        setServerTimeSkew(Loadable.of(skew));
         setStatus(Loadable.of(response.data));
       })
       .catch((response: AxiosError) => {

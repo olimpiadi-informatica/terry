@@ -12,8 +12,7 @@ function PackViewInner() {
   if (pack.isError()) {
     return (
       <p>
-        An error occurred:
-        {pack.error()}
+        An error occurred
       </p>
     );
   }

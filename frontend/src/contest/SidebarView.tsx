@@ -38,7 +38,7 @@ export function SidebarView() {
         <p className="terry-remaining-time">
           <CountdownComponent
             clock={() => serverTime()}
-            end={DateTime.fromISO(startedContest.end_time)}
+            end={DateTime.fromISO(startedContest.end_time, { zone: "utc" })}
             afterEnd={() => (
               <span>
                 <Trans>The contest is finished</Trans>

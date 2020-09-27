@@ -85,7 +85,7 @@ export function AdminLogsView() {
         // eslint-disable-next-line react/no-array-index-key
         <tr key={i} className={`table-${LOG_LEVELS[log.level].color}`}>
           <td>
-            <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date)} />
+            <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date, { zone: "utc" })} />
           </td>
           <td>
             <button className="btn btn-link" type="button" onClick={() => setCategory(log.category)}>

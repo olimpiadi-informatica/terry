@@ -33,7 +33,7 @@ export function SubmissionListView({ task }: Props) {
     return (
       <tr key={submission.id}>
         <td>
-          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date)} />
+          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
           <br />
           <Link to={`/task/${submission.task}/submission/${submission.id}`}>
             <Trans>view details</Trans>

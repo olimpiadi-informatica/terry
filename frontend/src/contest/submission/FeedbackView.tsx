@@ -46,7 +46,7 @@ export function FeedbackView({ submission, task }: Props) {
           :
         </dt>
         <dd>
-          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date)} />
+          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
         </dd>
         <dt style={{ marginTop: "0.75rem" }}>
           <Trans>Score</Trans>

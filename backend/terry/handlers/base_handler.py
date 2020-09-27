@@ -128,7 +128,7 @@ class BaseHandler:
                 for item in v:
                     BaseHandler.format_dates(item, fields)
             elif k in fields and v is not None:
-                dct[k] = datetime.fromtimestamp(v).isoformat()
+                dct[k] = datetime.utcfromtimestamp(v).isoformat()
         return dct
 
     @staticmethod

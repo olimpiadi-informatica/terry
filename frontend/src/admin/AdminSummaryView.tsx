@@ -5,7 +5,7 @@ import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
 import { Trans, t, Plural } from "@lingui/macro";
-import { DateComponent, CountdownComponent } from "src/datetime.views";
+import { DateComponent, CountdownComponent, AbsoluteDateComponent } from "src/datetime.views";
 import { i18n } from "src/i18n";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./hooks/useLogs";
@@ -36,12 +36,12 @@ export function AdminSummaryView() {
 
   const getStartTime = () => {
     if (!status.start_time) throw new Error("Unknown start time");
-    return DateTime.fromISO(status.start_time);
+    return DateTime.fromISO(status.start_time, { zone: "utc" });
   };
 
   const getEndTime = () => {
     if (!status.end_time) throw new Error("Unknown end time");
-    return DateTime.fromISO(status.end_time);
+    return DateTime.fromISO(status.end_time, { zone: "utc" });
   };
 
   const getUsersExtraTime = () => {
@@ -56,7 +56,7 @@ export function AdminSummaryView() {
     <>
       <Trans>Contest started at</Trans>
       {" "}
-      {getStartTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+      <AbsoluteDateComponent clock={() => serverTime()} date={getStartTime()} />
     </>
   );
 
@@ -97,7 +97,7 @@ export function AdminSummaryView() {
     <>
       <Trans>Contest ended at</Trans>
       {" "}
-      {getEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
+      <AbsoluteDateComponent clock={() => serverTime()} date={getEndTime()} />
     </>
   );
 
@@ -228,7 +228,10 @@ export function AdminSummaryView() {
                   <>
                     <Trans>Issue last detected</Trans>
                     {" "}
-                    <DateComponent clock={() => serverTime()} date={DateTime.fromISO(logs.value().items[0].date)} />
+                    <DateComponent
+                      clock={() => serverTime()}
+                      date={DateTime.fromISO(logs.value().items[0].date, { zone: "utc" })}
+                    />
                     {" "}
                     (
                     <Link to="/admin/logs">
