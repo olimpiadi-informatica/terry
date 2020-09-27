@@ -1,15 +1,17 @@
 #!/bin/sh -ex
 
 # Temporary dependencies
-MAKE_DEPS="git libffi-dev nodejs"
-
-# Add NodeJS and automatically run 'apt-get update'
-curl -sL https://deb.nodesource.com/setup_14.x | bash -
+MAKE_DEPS="curl git libffi-dev"
 
 # Install all dependencies
+apt-get update -y
 apt-get install -y --no-install-recommends \
     $MAKE_DEPS \
     nginx '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
+
+# Add NodeJS and automatically run 'apt-get update'
+curl -sL https://deb.nodesource.com/setup_14.x | bash -
+apt-get install nodejs
 
 # Fetch Terry
 git clone --recursive https://github.com/algorithm-ninja/terry /terry
@@ -31,5 +33,5 @@ cp -r build /app
 cd /
 rm -rf /terry
 rm -rf /root/.npm /root/.cache/pip /var/lib/apt/lists
-apt-get purge -y $MAKE_DEPS
+apt-get purge -y $MAKE_DEPS nodejs
 apt-get autoremove -y
