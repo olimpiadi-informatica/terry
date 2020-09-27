@@ -4,7 +4,7 @@ import sys
 import csv
 import os
 import math
-import yaml
+import ruamel.yaml
 import random
 import argparse
 import subprocess
@@ -52,7 +52,7 @@ def main(args):
         reader = list(csv.DictReader(f, delimiter=";"))
 
     with open(args.metadata, "r") as f:
-        metadata = yaml.safe_load(f)
+        metadata = ruamel.yaml.safe_load(f)
 
     tasks = args.tasks.split(",")
 
@@ -82,7 +82,7 @@ def main(args):
             if args.window_duration:
                 contest["window_duration"] = args.window_duration
             with open(path, "w") as f:
-                f.write(yaml.dump(contest))
+                f.write(ruamel.yaml.dump(contest))
         atl_per_aula = len(atl)/num_aule[sede]
         print("%6s  %3d atleti  %2d aule  %4.1f atl/aula %s" % (sede, len(atl), num_aule[sede], atl_per_aula, "*" if atl_per_aula > STUD_AULA_TRESH else ""), file=sys.stderr)
     if args.password:

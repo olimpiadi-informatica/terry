@@ -12,7 +12,7 @@ import subprocess
 import unittest
 from unittest.mock import patch
 
-import yaml
+import ruamel.yaml
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 from terry import crypto
@@ -353,7 +353,7 @@ class TestAdminHandler(unittest.TestCase):
         Utils.setup_encrypted_file()
         Database.del_meta("admin_token")
         with open(Config.encrypted_file, "wb") as f:
-            f.write(Utils.build_pack(yaml.dump({"deletable": False})))
+            f.write(Utils.build_pack(ruamel.yaml.dump({"deletable": False})))
         with self.assertRaises(Forbidden):
             self.admin_handler.drop_contest(Utils.ZIP_TOKEN)
 
@@ -361,7 +361,7 @@ class TestAdminHandler(unittest.TestCase):
         Utils.setup_encrypted_file()
         Database.del_meta("admin_token")
         with open(Config.encrypted_file, "wb") as f:
-            f.write(Utils.build_pack(yaml.dump({"deletable": True})))
+            f.write(Utils.build_pack(ruamel.yaml.dump({"deletable": True})))
         self.admin_handler.drop_contest(Utils.ZIP_TOKEN)
         self.assertFalse(os.path.exists(Config.storedir))
         self.assertFalse(os.path.exists(Config.statementdir))

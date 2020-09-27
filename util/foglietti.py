@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import yaml
+import ruamel.yaml
 import os
 import shutil
 import tempfile
@@ -26,7 +26,7 @@ def main():
 
     args = parser.parse_args()
 
-    contest = yaml.safe_load(args.contest_yaml)
+    contest = ruamel.yaml.safe_load(args.contest_yaml)
     users = [u for u in contest["users"] if not u.get("hidden")]
     users.sort(key=lambda x: x['surname'] + ":" + x["name"])
 

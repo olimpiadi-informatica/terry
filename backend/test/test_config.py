@@ -7,7 +7,7 @@
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 import unittest
 
-import yaml.parser
+import ruamel.yaml.parser
 
 from terry.config import Config
 from test.utils import Utils
@@ -41,7 +41,7 @@ class TestConfig(unittest.TestCase):
 
     def test_invalid_yaml(self):
         self._write_config("[42")
-        with self.assertRaises(yaml.parser.ParserError):
+        with self.assertRaises(ruamel.yaml.parser.ParserError):
             Config.set_config_file(self.configFilePath)
 
     def _write_config(self, config):

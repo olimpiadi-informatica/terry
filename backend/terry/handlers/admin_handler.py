@@ -17,7 +17,7 @@ import time
 
 import gevent
 import nacl.exceptions
-import yaml
+import ruamel.yaml
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 from terry import crypto
@@ -59,7 +59,7 @@ class AdminHandler(BaseHandler):
             return {"uploaded": False}
         with open(Config.encrypted_file, "rb") as f:
             raw_meta = crypto.metadata(f.read(crypto.DATA_OFFSET))
-        metadata = yaml.safe_load(raw_meta.strip(b"\x00"))
+        metadata = ruamel.yaml.safe_load(raw_meta.strip(b"\x00"))
         if metadata is None:
             metadata = dict()
         metadata["uploaded"] = True
@@ -222,7 +222,7 @@ class AdminHandler(BaseHandler):
                 # pack password is wrong
                 self.raise_exc(Forbidden, "FORBIDDEN", "Wrong pack token")
 
-        metadata = yaml.safe_load(crypto.metadata(pack).strip(b"\x00"))
+        metadata = ruamel.yaml.safe_load(crypto.metadata(pack).strip(b"\x00"))
         if not metadata.get("deletable"):
             self.raise_exc(Forbidden, "FORBIDDEN", "Contest not deletable")
 

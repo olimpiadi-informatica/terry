@@ -7,7 +7,7 @@
 # Copyright 2017-2018 - Luca Versari <veluca93@gmail.com>
 import sys
 
-import yaml
+import ruamel.yaml
 
 
 class Config:
@@ -43,7 +43,7 @@ class Config:
 
         try:
             with open(config_file, "r") as f:
-                cfg = yaml.safe_load(f)
+                cfg = ruamel.yaml.safe_load(f)
         except FileNotFoundError:
             print(
                 "Config file %s not found, you should create it!" % config_file,
