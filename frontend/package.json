@@ -2,7 +2,6 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-regular-svg-icons": "^5.14.0",
@@ -41,8 +40,10 @@
     "universal-cookie": "^2.1.2"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others \"react-scripts start\" \"node --loader ts-node/esm proxy.ts\"",
-    "start-bare": "BARE_BACKEND=true npm run start",
+    "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others 'react-scripts start' 'yarn-or-npm run proxy'",
+    "start-bare": "BARE_BACKEND=true yarn-or-npm run start",
+    "start-nobrowser": "BROWSER=none yarn-or-npm run start",
+    "proxy": "ts-node -O '{\"module\":\"commonjs\"}' proxy.ts",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -72,7 +73,8 @@
     "eslint-plugin-react": "^7.21.2",
     "eslint-plugin-react-hooks": "^4.1.2",
     "http-proxy": "^1.18.1",
-    "ts-node": "^9.0.0"
+    "ts-node": "^9.0.0",
+    "yarn-or-npm": "^3.0.1"
   },
   "browserslist": {
     "production": [
