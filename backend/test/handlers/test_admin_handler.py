@@ -6,12 +6,13 @@
 # Copyright 2017-2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
-from datetime import datetime
+from datetime import datetime, timezone
 import os.path
 import subprocess
+
 import unittest
 from unittest.mock import patch
-
+import dateutil.parser
 import ruamel.yaml
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
@@ -182,32 +183,82 @@ class TestAdminHandler(unittest.TestCase):
 
     def test_start_invalid_token(self):
         with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.start(admin_token="invalid token", _ip=None)
+            self.admin_handler.start(
+                start_time="reset", admin_token="invalid token", _ip=None
+            )
 
         self.assertIn("Invalid admin token", ex.exception.response.data.decode())
 
-    def test_start_already_started(self):
-        Database.set_meta("start_time", 12345)
+    def test_start_reset_already_started(self):
+        Utils.start_contest()
 
         with self.assertRaises(Forbidden) as ex:
-            self.admin_handler.start(admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
+            self.admin_handler.start(
+                start_time="reset", admin_token="ADMIN-TOKEN", _ip="1.2.3.4"
+            )
 
         self.assertIn(
             "Contest has already been started", ex.exception.response.data.decode()
         )
 
-    def test_start_ok(self):
-        out = self.admin_handler.start(admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
+    def test_start_now_already_started(self):
+        Utils.start_contest()
 
-        start_time = datetime.strptime(
-            out["start_time"], "%Y-%m-%dT%H:%M:%S"
-        ).timestamp()
+        with self.assertRaises(Forbidden) as ex:
+            self.admin_handler.start(
+                start_time="now", admin_token="ADMIN-TOKEN", _ip="1.2.3.4"
+            )
+
+        self.assertIn(
+            "Contest has already been started", ex.exception.response.data.decode()
+        )
+
+    def test_start_now(self):
+        out = self.admin_handler.start("now", admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
+
+        start_time = dateutil.parser.parse(out["start_time"]).timestamp()
         self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
 
-        start_time_db = datetime.utcfromtimestamp(
-            Database.get_meta("start_time", type=int)
+        start_time_db = datetime.fromtimestamp(
+            Database.get_meta("start_time", type=int), timezone.utc
         )
         self.assertEqual(start_time, start_time_db.timestamp())
+
+    def test_start_now_but_started_in_future(self):
+        Utils.start_contest(since=-100)
+        out = self.admin_handler.start("now", admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
+
+        start_time = dateutil.parser.parse(out["start_time"]).timestamp()
+        self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
+
+        start_time_db = datetime.fromtimestamp(
+            Database.get_meta("start_time", type=int), timezone.utc
+        )
+        self.assertEqual(start_time, start_time_db.timestamp())
+
+    def test_start_reset(self):
+        Utils.start_contest(since=-100)
+        out = self.admin_handler.start(
+            "reset", admin_token="ADMIN-TOKEN", _ip="1.2.3.4"
+        )
+
+        self.assertIsNone(out["start_time"])
+        self.assertIsNone(Database.get_meta("start_time"))
+
+    def test_start_scheduled(self):
+        start_time_str = "2020-01-01T13:13:13.0Z"
+        out = self.admin_handler.start(
+            start_time_str, admin_token="ADMIN-TOKEN", _ip="1.2.3.4"
+        )
+
+        start_time = dateutil.parser.parse(out["start_time"])
+        expected_start_time = dateutil.parser.parse(start_time_str)
+        self.assertEqual(start_time, expected_start_time)
+
+        start_time_db = datetime.fromtimestamp(
+            Database.get_meta("start_time", type=int), timezone.utc
+        )
+        self.assertEqual(start_time, start_time_db)
 
     def test_set_extra_time_invalid_admin_token(self):
         with self.assertRaises(Forbidden) as ex:
@@ -255,10 +306,10 @@ class TestAdminHandler(unittest.TestCase):
         Database.set_meta("start_time", 1234)
         res = self.admin_handler.status(admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
 
-        start_time = datetime.strptime(res["start_time"], "%Y-%m-%dT%H:%M:%S")
+        start_time = dateutil.parser.parse(res["start_time"])
 
-        start_time_db = datetime.utcfromtimestamp(
-            Database.get_meta("start_time", type=int)
+        start_time_db = datetime.fromtimestamp(
+            Database.get_meta("start_time", type=int), timezone.utc
         )
         self.assertEqual(start_time, start_time_db)
         self.assertEqual(0, Database.get_meta("extra_time", default=0))

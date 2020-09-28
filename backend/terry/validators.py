@@ -9,7 +9,7 @@
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import jwt
 from werkzeug.exceptions import Forbidden, BadRequest
@@ -294,11 +294,11 @@ class Validators:
     def _ensure_contest_started():
         start_timestamp = Database.get_meta("start_time", type=int)
         start_datetime = (
-            datetime.utcfromtimestamp(start_timestamp)
+            datetime.fromtimestamp(start_timestamp, timezone.utc)
             if start_timestamp is not None
             else None
         )
-        if not start_datetime or start_datetime > datetime.utcnow():
+        if not start_datetime or start_datetime > datetime.now(timezone.utc):
             BaseHandler.raise_exc(
                 Forbidden, "FORBIDDEN", "The contest has not started yet"
             )

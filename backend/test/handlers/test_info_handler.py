@@ -5,7 +5,7 @@
 #
 # Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
-import datetime
+from datetime import datetime, timezone
 import unittest
 from unittest.mock import patch
 
@@ -40,7 +40,7 @@ class TestInfoHandler(unittest.TestCase):
         res = self.handler.get_contest()
         self.assertTrue(res["has_started"])
         self.assertEqual(
-            datetime.datetime.utcfromtimestamp(1234).isoformat(), res["start_time"]
+            datetime.fromtimestamp(1234, timezone.utc).isoformat(), res["start_time"]
         )
         self.assertEqual(1, len(res["tasks"]))
         self.assertEqual("poldo", res["tasks"][0]["name"])
@@ -138,7 +138,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertIn("No such user", response)
 
     def test_get_user(self):
-        now = int(datetime.datetime.utcnow().timestamp())
+        now = int(datetime.utcnow().timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
 
@@ -151,15 +151,13 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.utcfromtimestamp(now + 1080).strftime(
-            "%Y-%m-%dT%H:%M:%S"
-        )
+        end_time = datetime.fromtimestamp(now + 1080, timezone.utc).isoformat()
         self.assertEqual(end_time, res["end_time"])
         self.assertEqual("poldo", res["tasks"]["poldo"]["name"])
         self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
 
     def test_get_user_windowed(self):
-        now = int(datetime.datetime.utcnow().timestamp())
+        now = int(datetime.utcnow().timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -172,13 +170,11 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.utcfromtimestamp(now + 110).strftime(
-            "%Y-%m-%dT%H:%M:%S"
-        )
+        end_time = datetime.fromtimestamp(now + 110, timezone.utc).isoformat()
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_windowed_almost_finished(self):
-        now = int(datetime.datetime.utcnow().timestamp())
+        now = int(datetime.utcnow().timestamp())
         Database.set_meta("start_time", now - 90)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -191,13 +187,11 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.utcfromtimestamp(now + 20).strftime(
-            "%Y-%m-%dT%H:%M:%S"
-        )
+        end_time = datetime.fromtimestamp(now + 20, timezone.utc).isoformat()
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_windowed_partial_window(self):
-        now = int(datetime.datetime.utcnow().timestamp())
+        now = int(datetime.utcnow().timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -210,9 +204,7 @@ class TestInfoHandler(unittest.TestCase):
         Database.set_user_attempt("token", "poldo", 1)
 
         res = self.handler.get_user(token="token", _ip="1.1.1.1")
-        end_time = datetime.datetime.utcfromtimestamp(now + 1000).strftime(
-            "%Y-%m-%dT%H:%M:%S"
-        )
+        end_time = datetime.fromtimestamp(now + 1000, timezone.utc).isoformat()
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_no_current_attempt(self):
@@ -291,7 +283,7 @@ class TestInfoHandler(unittest.TestCase):
         res = InfoHandler.patch_output(output)
         self.assertEqual("outputid", res["id"]),
         self.assertEqual(
-            datetime.datetime.utcfromtimestamp(1234).isoformat(), res["date"]
+            datetime.fromtimestamp(1234, timezone.utc).isoformat(), res["date"]
         )
         self.assertEqual("/path", res["path"])
         self.assertEqual(42, res["validation"])

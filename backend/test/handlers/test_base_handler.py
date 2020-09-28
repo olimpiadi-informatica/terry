@@ -6,7 +6,7 @@
 # Copyright 2017-2019 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 import _io
-import datetime
+from datetime import datetime, timezone
 import json
 import unittest
 from unittest.mock import patch
@@ -130,11 +130,12 @@ class TestBaseHandler(unittest.TestCase):
         }
         formatted = BaseHandler.format_dates(dct, fields=["date", "deeper"])
         self.assertEqual(
-            datetime.datetime.utcfromtimestamp(12345678).isoformat(), formatted["date"]
+            datetime.fromtimestamp(12345678, timezone.utc).isoformat(),
+            formatted["date"],
         )
         self.assertEqual(12345678, formatted["nondate"])
         self.assertEqual(
-            datetime.datetime.utcfromtimestamp(1010101010).isoformat(),
+            datetime.fromtimestamp(1010101010, timezone.utc).isoformat(),
             formatted["we"]["need"]["to"]["go"]["deeper"],
         )
 

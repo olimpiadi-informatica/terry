@@ -8,7 +8,7 @@
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
@@ -126,7 +126,7 @@ class BaseHandler:
                 for item in v:
                     BaseHandler.format_dates(item, fields)
             elif k in fields and v is not None:
-                dct[k] = datetime.utcfromtimestamp(v).isoformat()
+                dct[k] = datetime.fromtimestamp(v, timezone.utc).isoformat()
         return dct
 
     @staticmethod

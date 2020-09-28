@@ -9,7 +9,7 @@
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 from terry.handlers.base_handler import BaseHandler
 from terry.database import Database
@@ -23,11 +23,11 @@ class InfoHandler(BaseHandler):
         """
         start_timestamp = Database.get_meta("start_time", type=int)
         start_datetime = (
-            datetime.utcfromtimestamp(start_timestamp)
+            datetime.fromtimestamp(start_timestamp, timezone.utc)
             if start_timestamp is not None
             else None
         )
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
 
         if not start_timestamp or now < start_datetime:
             return {

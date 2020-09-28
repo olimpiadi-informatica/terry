@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import time
 
+import dateutil.parser
 import gevent
 import nacl.exceptions
 import ruamel.yaml
@@ -125,12 +126,8 @@ class AdminHandler(BaseHandler):
         level = Logger.HUMAN_MESSAGES.index(level)
 
         try:
-            start_date = datetime.datetime.strptime(
-                start_date, "%Y-%m-%dT%H:%M:%S.%f"
-            ).timestamp()
-            end_date = datetime.datetime.strptime(
-                end_date, "%Y-%m-%dT%H:%M:%S.%f"
-            ).timestamp()
+            start_date = dateutil.parser.parse(start_date).timestamp()
+            end_date = dateutil.parser.parse(end_date).timestamp()
         except ValueError as e:
             BaseHandler.raise_exc(BadRequest, "INVALID_PARAMETER", str(e))
         return BaseHandler.format_dates(
@@ -138,20 +135,29 @@ class AdminHandler(BaseHandler):
         )
 
     @Validators.admin_only
-    def start(self):
+    def start(self, start_time: str):
         """
         POST /admin/start
         """
-        if Database.get_meta("start_time", default=None, type=int) is not None:
+        previous_start = Database.get_meta("start_time", type=int)
+        now = int(time.time())
+        if previous_start and now > previous_start:
             BaseHandler.raise_exc(
                 Forbidden, "FORBIDDEN", "Contest has already been started!"
             )
 
-        start_time = int(time.time())
-        Database.set_meta("start_time", start_time)
-        Logger.info("CONTEST", "Contest started")
+        actual_start = None
+        if start_time == "reset":
+            Database.del_meta("start_time")
+            return {"start_time": None}
+        elif start_time == "now":
+            actual_start = now
+        else:
+            actual_start = dateutil.parser.parse(start_time).timestamp()
+        Database.set_meta("start_time", int(actual_start))
+        Logger.info("CONTEST", "Contest starts at " + str(actual_start))
         return BaseHandler.format_dates(
-            {"start_time": start_time}, fields=["start_time"]
+            {"start_time": actual_start}, fields=["start_time"]
         )
 
     @Validators.admin_only
