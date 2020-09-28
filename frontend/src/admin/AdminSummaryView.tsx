@@ -1,16 +1,14 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
-import { toast } from "react-toastify";
 import { Trans, t, Plural } from "@lingui/macro";
-import { DateComponent, CountdownComponent, AbsoluteDateComponent } from "src/datetime.views";
+import { DateComponent } from "src/datetime.views";
 import { i18n } from "src/i18n";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./hooks/useLogs";
 import { useUsers } from "./hooks/useUsers";
 import { usePack } from "./hooks/usePack";
+import { AdminContestStatus } from "./AdminContestStatus";
 
 export function AdminSummaryView() {
   const status = useStatus().value();
@@ -18,7 +16,7 @@ export function AdminSummaryView() {
   const [logs, reloadLogs] = useLogs();
   const [users, reloadUsers] = useUsers();
   const serverTime = useServerTime();
-  const { startContest, resetContest } = useActions();
+  const { resetContest } = useActions();
 
   if (!pack.uploaded) {
     throw new Error("AdminSummaryView requires the pack to be uploaded");
@@ -34,155 +32,9 @@ export function AdminSummaryView() {
     return () => clearInterval(interval);
   }, [reloadLogs, reloadUsers]);
 
-  const getStartTime = () => {
-    if (!status.start_time) throw new Error("Unknown start time");
-    return DateTime.fromISO(status.start_time, { zone: "utc" });
-  };
-
-  const getEndTime = () => {
-    if (!status.end_time) throw new Error("Unknown end time");
-    return DateTime.fromISO(status.end_time, { zone: "utc" });
-  };
-
-  const getUsersExtraTime = () => {
-    if (!users.isReady()) return 0;
-    return Math.max.apply(
-      null,
-      users.value().items.map((user) => user.extra_time),
-    );
-  };
-
-  const renderStartTime = () => (
-    <>
-      <Trans>Contest started at</Trans>
-      {" "}
-      <AbsoluteDateComponent clock={() => serverTime()} date={getStartTime()} />
-    </>
-  );
-
   const countUsersWithExtraTime = () => {
     if (!users.isReady()) return 0;
     return users.value().items.filter((user) => user.extra_time !== 0).length;
-  };
-
-  const renderCountdownExtra = () => {
-    if (countUsersWithExtraTime() === 0) return <></>;
-
-    return (
-      <>
-        {" "}
-        (
-        <span>
-          <Plural
-            value={getUsersExtraTime() / 60}
-            one="plus # extra minute for some user"
-            other="plus # extra minutes for some user"
-          />
-        </span>
-        )
-      </>
-    );
-  };
-
-  const renderCountdown = () => (
-    <>
-      <Trans>Remaining time</Trans>
-      {" "}
-      <CountdownComponent clock={() => serverTime()} end={getEndTime()} afterEnd={() => ""} />
-      {renderCountdownExtra()}
-    </>
-  );
-
-  const renderEndTime = () => (
-    <>
-      <Trans>Contest ended at</Trans>
-      {" "}
-      <AbsoluteDateComponent clock={() => serverTime()} date={getEndTime()} />
-    </>
-  );
-
-  const getExtraTimeEndTime = () => getEndTime().plus({ seconds: getUsersExtraTime() });
-
-  const renderExtraTimeCountdown = () => {
-    const endTime = getExtraTimeEndTime();
-
-    return (
-      <>
-        <Trans>Remaining time for some participant</Trans>
-        {" "}
-        <CountdownComponent clock={() => serverTime()} end={endTime} afterEnd={() => ""} />
-      </>
-    );
-  };
-
-  const renderExtraTimeEndTime = () => {
-    if (countUsersWithExtraTime() === 0) return null;
-
-    return (
-      <li>
-        <Trans>Contest ended for everyone at</Trans>
-        {" "}
-        {getExtraTimeEndTime().setLocale(i18n.language).toLocaleString(DateTime.DATETIME_SHORT)}
-      </li>
-    );
-  };
-
-  const renderNotStarted = () => (
-    <>
-      <p>
-        <Trans>The contest has not started yet!</Trans>
-      </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          startContest().then(() => toast.success(i18n._(t`Contest was successfully started`)));
-        }}
-      >
-        <button type="submit" className="btn btn-primary">
-          <FontAwesomeIcon icon={faPlay} />
-          {" "}
-          {i18n._(t`Start`)}
-        </button>
-      </form>
-    </>
-  );
-
-  const renderRunning = () => (
-    <ul className="mb-0">
-      <li>{renderStartTime()}</li>
-      <li>{renderCountdown()}</li>
-    </ul>
-  );
-
-  const renderRunningExtraTime = () => (
-    <ul className="mb-0">
-      <li>{renderStartTime()}</li>
-      <li>{renderEndTime()}</li>
-      <li>{renderExtraTimeCountdown()}</li>
-    </ul>
-  );
-
-  const renderFinished = () => (
-    <>
-      <ul>
-        <li>{renderStartTime()}</li>
-        <li>{renderEndTime()}</li>
-        {renderExtraTimeEndTime()}
-      </ul>
-
-      <Link to="/admin/download_results" className="btn btn-primary">
-        <FontAwesomeIcon icon={faDownload} />
-        {" "}
-        <Trans>Download contest results</Trans>
-      </Link>
-    </>
-  );
-
-  const renderStatus = () => {
-    if (!status.start_time) return renderNotStarted();
-    if (serverTime() < getEndTime()) return renderRunning();
-    if (serverTime() < getExtraTimeEndTime()) return renderRunningExtraTime();
-    return renderFinished();
   };
 
   const isDeletable = () => pack.deletable;
@@ -196,14 +48,7 @@ export function AdminSummaryView() {
 
   return (
     <div className="container">
-      <div className="card mb-3">
-        <div className="card-body">
-          <h3>
-            <Trans>Contest status</Trans>
-          </h3>
-          {renderStatus()}
-        </div>
-      </div>
+      <AdminContestStatus users={users} />
       <div className="card mb-3">
         <div className="card-body">
           <h3>

@@ -8,8 +8,8 @@ import { useToken } from "src/admin/AdminContext";
 import { LogsOptions, LogLevel, LogsData } from "src/admin/types";
 
 export const defaultLogsOptions: LogsOptions = {
-  start_date: "2000-01-01T00:00:00.000",
-  end_date: "2030-01-01T00:00:00.000",
+  start_date: "2000-01-01T00:00:00.000Z",
+  end_date: "2030-01-01T00:00:00.000Z",
   level: LogLevel.WARNING,
 };
 

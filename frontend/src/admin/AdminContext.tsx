@@ -17,11 +17,13 @@ type ContextData = {
   status: Loadable<StatusData>;
 };
 
+export type StartContestCommand = "reset" | "now" | DateTime;
+
 export type ContextActions = {
   isLoggedIn: () => boolean;
   login: (token: string) => void;
   logout: () => void;
-  startContest: () => Promise<void>;
+  startContest: (startTime: StartContestCommand) => Promise<void>;
   resetContest: () => Promise<void>;
   setExtraTime: (extraTime: number, userToken?: string) => Promise<void>;
   uploadPack: (file: File) => void;
@@ -62,16 +64,18 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [statusUpdate, triggerStatusUpdate] = useTriggerUpdate();
   const { reloadPack } = useContext(PackContext);
 
-  const startContest = () => {
+  const startContest = (startTime: StartContestCommand) => {
     if (!token) throw new Error("You are not logged in");
 
+    const when = typeof startTime === "string" ? startTime : startTime.toUTC().toISO();
     return client
-      .adminApi(token, "/start")
+      .adminApi(token, "/start", { start_time: when })
       .then(() => {
         triggerStatusUpdate();
       })
       .catch((response) => {
         notifyError(response);
+        throw response;
       });
   };
   const resetContest = () => {
