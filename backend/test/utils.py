@@ -7,6 +7,7 @@
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 import contextlib
 import datetime
+import time
 import os
 import random
 import shutil
@@ -83,7 +84,7 @@ class Utils:
             Utils.prefix = os.path.join(
                 tempfile.gettempdir(),
                 "terry-backend-tests",
-                datetime.datetime.now().strftime("temp-%Y-%m-%d_%H-%M-%S"),
+                datetime.datetime.utcnow().strftime("temp-%Y-%m-%d_%H-%M-%S"),
             )
             os.makedirs(Utils.prefix, exist_ok=True)
         return Utils.prefix
@@ -112,9 +113,7 @@ class Utils:
 
     @staticmethod
     def start_contest(since=5, duration=100):
-        Database.set_meta(
-            "start_time", int(datetime.datetime.now().timestamp()) - since
-        )
+        Database.set_meta("start_time", int(time.time()) - since)
         Database.set_meta("contest_duration", duration)
 
     @staticmethod

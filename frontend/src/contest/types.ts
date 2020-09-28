@@ -64,6 +64,7 @@ export type NotStartedContestData = {
   name: string;
   description: string;
   has_started: false;
+  start_time: string | null;
 };
 
 export type TaskData = {

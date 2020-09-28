@@ -53,7 +53,7 @@ msgstr "C++"
 msgid "C/C++ Documentation"
 msgstr "C/C++ Documentation"
 
-#: src/contest/submission/submit/Submit.tsx:69
+#: src/contest/submission/submit/Submit.tsx:72
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -61,11 +61,11 @@ msgstr "Cancel"
 msgid "Cannot submit for this input."
 msgstr "Cannot submit for this input."
 
-#: src/admin/AdminLogsView.tsx:127
+#: src/admin/AdminLogsView.tsx:128
 msgid "Category"
 msgstr "Category"
 
-#: src/admin/AdminLogsView.tsx:116
+#: src/admin/AdminLogsView.tsx:117
 msgid "Category filter"
 msgstr "Category filter"
 
@@ -77,7 +77,7 @@ msgstr "Change output"
 msgid "Change source"
 msgstr "Change source"
 
-#: src/admin/AdminLogsView.tsx:145
+#: src/admin/AdminLogsView.tsx:146
 #: src/admin/AdminUsersView.tsx:100
 #: src/admin/ContestExtraTimeView.tsx:65
 #: src/contest/submission/SubmissionListView.tsx:121
@@ -153,7 +153,7 @@ msgstr "Creating final zip..."
 msgid "Danger zone"
 msgstr "Danger zone"
 
-#: src/admin/AdminLogsView.tsx:124
+#: src/admin/AdminLogsView.tsx:125
 #: src/contest/submission/FeedbackView.tsx:29
 #: src/contest/submission/SubmissionListView.tsx:89
 msgid "Date"
@@ -167,7 +167,7 @@ msgstr "Details"
 msgid "Detected language:"
 msgstr "Detected language:"
 
-#: src/contest/SidebarView.tsx:62
+#: src/contest/SidebarView.tsx:68
 #: src/contest/help/Documentation.tsx:6
 msgid "Documentation"
 msgstr "Documentation"
@@ -190,12 +190,12 @@ msgstr "Download input"
 msgid "Download results"
 msgstr "Download results"
 
-#: src/AppView.tsx:14
-#: src/admin/AdminLogsView.tsx:96
+#: src/admin/AdminLogsView.tsx:97
 #: src/admin/AdminSummaryView.tsx:169
 #: src/admin/AdminUsersView.tsx:43
 #: src/admin/DownloadResultsView.tsx:32
-#: src/contest/LoginView.tsx:35
+#: src/contest/ContestView.tsx:26
+#: src/contest/LoginView.tsx:44
 #: src/contest/submission/SubmissionListView.tsx:115
 #: src/contest/submission/SubmissionReportView.tsx:26
 #: src/contest/submission/submit/OutputSelector.tsx:48
@@ -226,7 +226,7 @@ msgstr "Extra time successfully updated for the user"
 msgid "FAQ"
 msgstr "FAQ"
 
-#: src/contest/task/TaskView.tsx:23
+#: src/contest/task/TaskView.tsx:22
 msgid "Failed to load task statement. Try reloading the page."
 msgstr "Failed to load task statement. Try reloading the page."
 
@@ -254,7 +254,7 @@ msgstr "How to use Lazarus for programming in Pascal"
 msgid "IP"
 msgstr "IP"
 
-#: src/contest/help/HomeInfo.tsx:26
+#: src/contest/help/HomeInfo.tsx:48
 msgid "If you want to submit more than one source code file, please create a zip file containing them."
 msgstr "If you want to submit more than one source code file, please create a zip file containing them."
 
@@ -286,7 +286,7 @@ msgstr "Last submission:"
 msgid "Last update:"
 msgstr "Last update:"
 
-#: src/admin/AdminLogsView.tsx:130
+#: src/admin/AdminLogsView.tsx:131
 msgid "Level"
 msgstr "Level"
 
@@ -294,9 +294,8 @@ msgstr "Level"
 #~ msgid "Loading submission list failed, reload page."
 #~ msgstr "Loading submission list failed, reload page."
 
-#: src/admin/AdminLogsView.tsx:60
+#: src/admin/AdminLogsView.tsx:61
 #: src/admin/AdminSummaryView.tsx:168
-#: src/contest/task/TaskView.tsx:18
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -305,25 +304,26 @@ msgid "Log in"
 msgstr "Log in"
 
 #: src/admin/AdminLoginView.tsx:36
-#: src/contest/LoginView.tsx:32
+#: src/contest/LoginView.tsx:41
+#: src/contest/SidebarView.tsx:53
 msgid "Login"
 msgstr "Login"
 
 #: src/admin/AdminView.tsx:26
-#: src/contest/ContestView.tsx:47
+#: src/contest/ContestView.tsx:58
 msgid "Logout"
 msgstr "Logout"
 
-#: src/admin/AdminLogsView.tsx:100
-#: src/admin/AdminLogsView.tsx:103
+#: src/admin/AdminLogsView.tsx:101
+#: src/admin/AdminLogsView.tsx:104
 msgid "Logs"
 msgstr "Logs"
 
-#: src/admin/AdminLogsView.tsx:133
+#: src/admin/AdminLogsView.tsx:134
 msgid "Message"
 msgstr "Message"
 
-#: src/admin/AdminLogsView.tsx:117
+#: src/admin/AdminLogsView.tsx:118
 msgid "Message filter"
 msgstr "Message filter"
 
@@ -335,11 +335,11 @@ msgstr "Name"
 msgid "No issue detected"
 msgstr "No issue detected"
 
-#: src/admin/AdminLogsView.tsx:69
+#: src/admin/AdminLogsView.tsx:70
 msgid "No messages yet"
 msgstr "No messages yet"
 
-#: src/contest/help/HomeInfo.tsx:11
+#: src/contest/help/HomeInfo.tsx:33
 msgid "On the left side of this page you can find the tasks, click on any one to open it."
 msgstr "On the left side of this page you can find the tasks, click on any one to open it."
 
@@ -372,7 +372,7 @@ msgstr "Pascal"
 msgid "Pascal Documentation"
 msgstr "Pascal Documentation"
 
-#: src/contest/LoginView.tsx:20
+#: src/contest/LoginView.tsx:29
 msgid "Please login"
 msgstr "Please login"
 
@@ -382,7 +382,7 @@ msgstr "Please select the contest file..."
 
 #: src/contest/submission/submit/OutputSelector.tsx:69
 #: src/contest/submission/submit/SourceSelector.tsx:93
-#: src/contest/submission/submit/Submit.tsx:65
+#: src/contest/submission/submit/Submit.tsx:68
 msgid "Processing..."
 msgstr "Processing..."
 
@@ -397,7 +397,7 @@ msgid "RESET"
 msgstr "RESET"
 
 #: src/admin/AdminSummaryView.tsx:71
-#: src/contest/SidebarView.tsx:26
+#: src/contest/SidebarView.tsx:27
 msgid "Remaining time"
 msgstr "Remaining time"
 
@@ -417,7 +417,7 @@ msgstr "Request new input"
 msgid "Requesting..."
 msgstr "Requesting..."
 
-#: src/contest/SidebarView.tsx:53
+#: src/contest/SidebarView.tsx:59
 msgid "Resources"
 msgstr "Resources"
 
@@ -428,6 +428,10 @@ msgstr "Ruby"
 #: src/contest/submission/submit/submissionLimits.ts:33
 msgid "Rust"
 msgstr "Rust"
+
+#: src/contest/help/HomeInfo.tsx:63
+msgid "Scheduled start at<0/>. This page will reload automatically."
+msgstr "Scheduled start at <0/>. This page will reload automatically."
 
 #: src/contest/submission/FeedbackView.tsx:36
 #: src/contest/submission/SubmissionListView.tsx:95
@@ -483,11 +487,11 @@ msgstr "Submission"
 msgid "Submission for"
 msgstr "Submission for"
 
-#: src/contest/submission/submit/Submit.tsx:48
+#: src/contest/submission/submit/Submit.tsx:51
 msgid "Submission for input"
 msgstr "Submission for input"
 
-#: src/contest/submission/submit/Submit.tsx:74
+#: src/contest/submission/submit/Submit.tsx:77
 msgid "Submit"
 msgstr "Submit"
 
@@ -499,11 +503,11 @@ msgstr "Surname"
 msgid "System status"
 msgstr "System status"
 
-#: src/contest/ContestView.tsx:26
+#: src/contest/ContestView.tsx:37
 msgid "Task not found"
 msgstr "Task not found"
 
-#: src/contest/SidebarView.tsx:38
+#: src/contest/SidebarView.tsx:39
 msgid "Tasks"
 msgstr "Tasks"
 
@@ -515,11 +519,11 @@ msgstr "Text file"
 msgid "The contest has not started yet!"
 msgstr "The contest has not started yet!"
 
-#: src/contest/help/HomeInfo.tsx:34
+#: src/contest/help/HomeInfo.tsx:70
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 
-#: src/contest/SidebarView.tsx:30
+#: src/contest/SidebarView.tsx:31
 msgid "The contest is finished"
 msgstr "The contest is finished"
 
@@ -544,8 +548,8 @@ msgid "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)
 msgstr "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 
 #: src/admin/AdminUsersView.tsx:79
-#: src/contest/LoginView.tsx:28
-#: src/contest/LoginView.tsx:30
+#: src/contest/LoginView.tsx:37
+#: src/contest/LoginView.tsx:39
 msgid "Token"
 msgstr "Token"
 
@@ -561,11 +565,11 @@ msgstr "Upload"
 msgid "Upload solution"
 msgstr "Upload solution"
 
-#: src/contest/help/HomeInfo.tsx:8
+#: src/contest/help/HomeInfo.tsx:30
 msgid "Usage guide"
 msgstr "Usage guide"
 
-#: src/contest/SidebarView.tsx:59
+#: src/contest/SidebarView.tsx:65
 #: src/contest/help/UsefulInfo.tsx:6
 msgid "Useful information"
 msgstr "Useful information"
@@ -589,7 +593,7 @@ msgstr "XML file"
 msgid "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action<0>is logged</0>and must be justified to the committee."
 msgstr "You can set an extra time for all the contestants in case of problems that afflicts everyone. This action <0>is logged</0> and must be justified to the committee."
 
-#: src/contest/help/HomeInfo.tsx:13
+#: src/contest/help/HomeInfo.tsx:35
 msgid "You can submit<0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files<1>remember to submit</1>them by clicking the green button!"
 msgstr "You can submit <0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <1>remember to submit</1> them by clicking the green button!"
 
@@ -605,7 +609,7 @@ msgstr "You selected a file with an unknown extension. This submission may be in
 msgid "You selected an empty file"
 msgstr "You selected an empty file"
 
-#: src/contest/SidebarView.tsx:17
+#: src/contest/SidebarView.tsx:18
 msgid "Your score"
 msgstr "Your score"
 

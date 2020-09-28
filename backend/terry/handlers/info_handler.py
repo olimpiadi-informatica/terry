@@ -23,15 +23,16 @@ class InfoHandler(BaseHandler):
         """
         start_timestamp = Database.get_meta("start_time", type=int)
         start_datetime = (
-            datetime.fromtimestamp(start_timestamp)
+            datetime.utcfromtimestamp(start_timestamp)
             if start_timestamp is not None
             else None
         )
-        now = datetime.now()
+        now = datetime.utcnow()
 
         if not start_timestamp or now < start_datetime:
             return {
                 "has_started": False,
+                "start_time": start_datetime.isoformat() if start_datetime else None,
                 "name": Database.get_meta("contest_name"),
                 "description": Database.get_meta("contest_description"),
             }

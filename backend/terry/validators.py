@@ -9,6 +9,7 @@
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
 
 import time
+from datetime import datetime
 
 import jwt
 from werkzeug.exceptions import Forbidden, BadRequest
@@ -274,13 +275,14 @@ class Validators:
             if user:
                 extra_time = user["extra_time"]
                 start_delay = user["contest_start_delay"]
-        if Database.get_meta("start_time") is None:
+        start_time = Database.get_meta("start_time", type=int)
+        now = time.time()
+        if start_time is None or start_time > now:
             BaseHandler.raise_exc(
                 Forbidden, "FORBIDDEN", "The contest has not started yet"
             )
         contest_end = BaseHandler.get_end_time(extra_time)
         window_end = BaseHandler.get_window_end_time(extra_time, start_delay)
-        now = time.time()
         # check the contest is not finished
         if contest_end < now:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
@@ -290,7 +292,13 @@ class Validators:
 
     @staticmethod
     def _ensure_contest_started():
-        if Database.get_meta("start_time") is None:
+        start_timestamp = Database.get_meta("start_time", type=int)
+        start_datetime = (
+            datetime.utcfromtimestamp(start_timestamp)
+            if start_timestamp is not None
+            else None
+        )
+        if not start_datetime or start_datetime > datetime.utcnow():
             BaseHandler.raise_exc(
                 Forbidden, "FORBIDDEN", "The contest has not started yet"
             )

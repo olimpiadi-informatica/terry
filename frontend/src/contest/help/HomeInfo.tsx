@@ -1,14 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { DateTime } from "luxon";
+import { AbsoluteDateComponent, CountdownComponent } from "src/datetime.views";
+import { useActions, useServerTime } from "src/contest/ContestContext";
+import { Loading } from "src/Loading";
 
 type Props = {
   hasStarted: boolean;
+  startTime: DateTime | null
 };
 
-export function HomeInfo({ hasStarted }: Props) {
-  return hasStarted ? (
+export function HomeInfo({ hasStarted, startTime }: Props) {
+  const serverTime = useServerTime();
+  const { reloadContest } = useActions();
+  useEffect(() => {
+    if (hasStarted || !startTime) return () => {};
+
+    const MAX_DELAY = 1000;
+    // eslint-disable-next-line no-mixed-operators
+    const delay = Math.floor(Math.random() * MAX_DELAY / 2);
+    const delta = startTime.diff(serverTime()).as("milliseconds") + delay;
+
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        if (serverTime().diff(startTime).as("seconds") > MAX_DELAY / 1000 / 2) {
+          clearInterval(interval);
+          reloadContest();
+        }
+      }, MAX_DELAY / 2);
+    }, delta);
+    return () => clearTimeout(timeout);
+  }, [hasStarted, startTime, serverTime, reloadContest]);
+
+  const renderStarted = () => (
     <>
       <h2>
         <Trans>Usage guide</Trans>
@@ -32,18 +58,41 @@ export function HomeInfo({ hasStarted }: Props) {
         <Trans>If you want to submit more than one source code file, please create a zip file containing them.</Trans>
       </p>
     </>
-  ) : (
+  );
+
+  const renderNotStarted = () => (
     <>
       <div className="jumbotron">
         <h1 className="text-center display-1">
           <FontAwesomeIcon icon={faClock} />
         </h1>
-        <p className="text-center">
-          <Trans>
-            The contest has not started yet! Refresh this page when the contest has started to be able to login.
-          </Trans>
-        </p>
+        <div className="text-center">
+          {
+            startTime
+              ? (
+                <>
+                  <h3>
+                    <CountdownComponent clock={() => serverTime()} end={startTime} afterEnd={() => <Loading />} />
+                  </h3>
+                  <p>
+                    <Trans>
+                      Scheduled start at
+                      <AbsoluteDateComponent clock={() => serverTime()} date={startTime} />
+                      . This page will reload automatically.
+                    </Trans>
+                  </p>
+                </>
+              )
+              : (
+                <Trans>
+                  The contest has not started yet! Refresh this page when the contest has started to be able to login.
+                </Trans>
+              )
+          }
+        </div>
       </div>
     </>
   );
+
+  return hasStarted ? renderStarted() : renderNotStarted();
 }

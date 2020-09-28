@@ -84,12 +84,24 @@ class TestValidators(unittest.TestCase):
         with self.assertRaises(Forbidden):
             self.only_during_contest()
 
+    def test_during_contest_not_started_yet(self):
+        # contest starts in the future
+        Utils.start_contest(since=-100, duration=20)
+        with self.assertRaises(Forbidden):
+            self.only_during_contest()
+
     def test_during_contest_ended(self):
         Utils.start_contest(since=100, duration=20)
         with self.assertRaises(Forbidden):
             self.only_during_contest()
 
     def test_started_contest_not_started(self):
+        with self.assertRaises(Forbidden):
+            self.only_contest_started()
+
+    def test_started_contest_not_started_yet(self):
+        # contest starts in the future
+        Utils.start_contest(since=-100, duration=20)
         with self.assertRaises(Forbidden):
             self.only_contest_started()
 

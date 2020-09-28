@@ -40,7 +40,7 @@ class TestInfoHandler(unittest.TestCase):
         res = self.handler.get_contest()
         self.assertTrue(res["has_started"])
         self.assertEqual(
-            datetime.datetime.fromtimestamp(1234).isoformat(), res["start_time"]
+            datetime.datetime.utcfromtimestamp(1234).isoformat(), res["start_time"]
         )
         self.assertEqual(1, len(res["tasks"]))
         self.assertEqual("poldo", res["tasks"][0]["name"])
