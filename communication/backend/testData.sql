@@ -2,8 +2,8 @@ INSERT INTO
     users (token, isAdmin)
 VALUES
     ('admin', 1),
-    ('user', 0),
-    ('user2', 0);
+    ('demo', 0),
+    ('demo2', 0);
 
 INSERT INTO
     announcements (severity, title, content, creator)
@@ -14,9 +14,9 @@ VALUES
 INSERT INTO
     questions (content, creator)
 VALUES
-    ('How about x?', 'user'),
-    ('How about y?', 'user'),
-    ('Is it all right?', 'user2');
+    ('How about x?', 'demo'),
+    ('How about y?', 'demo'),
+    ('Is it all right?', 'demo2');
 
 UPDATE
     questions

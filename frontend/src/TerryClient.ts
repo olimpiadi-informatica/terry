@@ -7,11 +7,15 @@ class Client {
 
   statementsBaseURI = process.env.REACT_APP_STATEMENTS_BASE_URI || "/files/";
 
+  communicationsBaseURI = process.env.REACT_APP_COMMUNICATIONS_BASE_URI || null;
+
   api = axios.create({ baseURL: this.apiBaseURI });
 
   files = axios.create({ baseURL: this.filesBaseURI });
 
   statements = axios.create({ baseURL: this.statementsBaseURI });
+
+  communications = this.communicationsBaseURI ? axios.create({ baseURL: this.communicationsBaseURI }) : null;
 
   adminApi(token: string, path: string, options: { [key: string]: string | undefined } = {}) {
     const data = new FormData();

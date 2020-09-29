@@ -78,21 +78,20 @@ async fn ask(
 
 #[derive(Debug, Deserialize)]
 pub struct AnswerQuestion {
-    id: i64,
     content: String,
 }
 
 #[post("/communications/{token}/{id}")]
 async fn answer(
     db: web::Data<db::Pool>,
-    web::Path((token,)): web::Path<(String,)>,
+    web::Path((token, id)): web::Path<(String, i64)>,
     answer: web::Json<AnswerQuestion>,
 ) -> Result<HttpResponse, ServiceError> {
     let is_admin = db::is_admin(&db, token.clone()).await?;
     if !is_admin {
         return Ok(HttpResponse::Forbidden().json("You are not an admin"));
     }
-    let q = db::answer_question(&db, token, answer.0).await?;
+    let q = db::answer_question(&db, token, id, answer.0.content).await?;
     Ok(HttpResponse::Created().json(q))
 }
 
@@ -143,6 +142,7 @@ async fn main() -> Fallible<()> {
             .service(communications)
             .service(communications_token)
             .service(ask)
+            .service(answer)
             .service(announce)
     })
     .bind(&opt.bind)?

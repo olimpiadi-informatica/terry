@@ -1,6 +1,5 @@
 use std::path::Path;
 use crate::AddAnnouncement;
-use crate::AnswerQuestion;
 use crate::AskQuestion;
 use actix_web::web;
 use failure::Fallible;
@@ -182,7 +181,8 @@ pub async fn is_admin(pool: &Pool, token: String) -> FallibleQuery<bool> {
 pub async fn answer_question(
     pool: &Pool,
     token: String,
-    answer: AnswerQuestion,
+    id: i64,
+    answer: String,
 ) -> FallibleQuery<bool> {
     let conn = pool.get();
     web::block(move || -> Fallible<_> {
@@ -198,7 +198,7 @@ pub async fn answer_question(
             WHERE
                 id = ?3",
         )?;
-        let res = stmt.execute(params![answer.content, token, answer.id])?;
+        let res = stmt.execute(params![answer, token, id])?;
         Ok(res == 1)
     })
     .await

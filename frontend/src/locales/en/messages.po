@@ -32,11 +32,19 @@ msgstr "Admin"
 msgid "Admin token"
 msgstr "Admin token"
 
+#: src/contest/Communication.tsx:75
+msgid "Announcements"
+msgstr "Announcements"
+
 #: src/admin/AdminSummaryView.tsx:39
 #: src/admin/AdminUsersView.tsx:19
 #: src/admin/ContestExtraTimeView.tsx:19
 msgid "Are you sure?"
 msgstr "Are you sure?"
+
+#: src/contest/Communication.tsx:52
+msgid "Ask a question"
+msgstr "Ask a question"
 
 #: src/admin/AdminContestStatus.tsx:49
 msgid "Automatic start disabled"
@@ -100,6 +108,10 @@ msgstr "Close"
 #: src/contest/submission/submit/submissionLimits.ts:42
 msgid "CodeBlocks project"
 msgstr "CodeBlocks project"
+
+#: src/contest/SidebarView.tsx:61
+msgid "Communication"
+msgstr "Communication"
 
 #: src/contest/submission/submit/submissionLimits.ts:46
 msgid "Compiled Java binary"
@@ -180,7 +192,7 @@ msgstr "Details"
 msgid "Detected language:"
 msgstr "Detected language:"
 
-#: src/contest/SidebarView.tsx:68
+#: src/contest/SidebarView.tsx:82
 #: src/contest/help/Documentation.tsx:6
 msgid "Documentation"
 msgstr "Documentation"
@@ -207,7 +219,9 @@ msgstr "Download results"
 #: src/admin/AdminSummaryView.tsx:53
 #: src/admin/AdminUsersView.tsx:43
 #: src/admin/DownloadResultsView.tsx:32
-#: src/contest/ContestView.tsx:26
+#: src/contest/Communication.tsx:79
+#: src/contest/Communication.tsx:92
+#: src/contest/ContestView.tsx:27
 #: src/contest/LoginView.tsx:44
 #: src/contest/submission/SubmissionListView.tsx:115
 #: src/contest/submission/SubmissionReportView.tsx:26
@@ -314,12 +328,12 @@ msgstr "Log in"
 
 #: src/admin/AdminLoginView.tsx:36
 #: src/contest/LoginView.tsx:41
-#: src/contest/SidebarView.tsx:53
+#: src/contest/SidebarView.tsx:54
 msgid "Login"
 msgstr "Login"
 
 #: src/admin/AdminView.tsx:26
-#: src/contest/ContestView.tsx:58
+#: src/contest/ContestView.tsx:59
 msgid "Logout"
 msgstr "Logout"
 
@@ -340,6 +354,14 @@ msgstr "Message filter"
 msgid "Name"
 msgstr "Name"
 
+#: src/contest/hooks/useCommunication.ts:27
+msgid "New announcement: {0}"
+msgstr "New announcement: {0}"
+
+#: src/contest/Communication.tsx:83
+msgid "No announcements yet."
+msgstr "No announcements yet."
+
 #: src/admin/AdminSummaryView.tsx:56
 msgid "No issue detected"
 msgstr "No issue detected"
@@ -347,6 +369,10 @@ msgstr "No issue detected"
 #: src/admin/AdminLogsView.tsx:70
 msgid "No messages yet"
 msgstr "No messages yet"
+
+#: src/contest/Communication.tsx:45
+msgid "Not answered yet."
+msgstr "Not answered yet."
 
 #: src/contest/help/HomeInfo.tsx:33
 msgid "On the left side of this page you can find the tasks, click on any one to open it."
@@ -401,12 +427,24 @@ msgstr "Processing..."
 msgid "Python"
 msgstr "Python"
 
+#: src/contest/hooks/useCommunication.ts:50
+msgid "Question answered!"
+msgstr "Question answered!"
+
+#: src/contest/Communication.tsx:87
+msgid "Questions"
+msgstr "Questions"
+
+#: src/contest/SidebarView.tsx:66
+msgid "Questions and Announcements"
+msgstr "Questions and Announcements"
+
 #: src/admin/AdminSummaryView.tsx:113
 msgid "RESET"
 msgstr "RESET"
 
 #: src/admin/AdminContestStatus.tsx:126
-#: src/contest/SidebarView.tsx:27
+#: src/contest/SidebarView.tsx:28
 msgid "Remaining time"
 msgstr "Remaining time"
 
@@ -426,7 +464,7 @@ msgstr "Request new input"
 msgid "Requesting..."
 msgstr "Requesting..."
 
-#: src/contest/SidebarView.tsx:59
+#: src/contest/SidebarView.tsx:73
 msgid "Resources"
 msgstr "Resources"
 
@@ -458,6 +496,10 @@ msgstr "Select the documentation you want to consult:"
 #: src/contest/help/UsefulInfo.tsx:10
 msgid "Select the tutorial you want to consult:"
 msgstr "Select the tutorial you want to consult:"
+
+#: src/contest/Communication.tsx:57
+msgid "Send"
+msgstr "Send"
 
 #: src/admin/AdminContestStatus.tsx:76
 #: src/admin/AdminUsersView.tsx:34
@@ -521,17 +563,25 @@ msgstr "Surname"
 msgid "System status"
 msgstr "System status"
 
-#: src/contest/ContestView.tsx:37
+#: src/contest/ContestView.tsx:38
 msgid "Task not found"
 msgstr "Task not found"
 
-#: src/contest/SidebarView.tsx:39
+#: src/contest/SidebarView.tsx:40
 msgid "Tasks"
 msgstr "Tasks"
 
 #: src/contest/submission/submit/submissionLimits.ts:43
 msgid "Text file"
 msgstr "Text file"
+
+#: src/contest/hooks/useCommunication.ts:53
+msgid "The answer to one of your questions got updated"
+msgstr "The answer to one of your questions got updated"
+
+#: src/contest/Communication.tsx:19
+msgid "The communication system is not available for this contest."
+msgstr "The communication system is not available for this contest."
 
 #: src/admin/AdminContestStatus.tsx:41
 msgid "The contest has not started yet!"
@@ -541,7 +591,7 @@ msgstr "The contest has not started yet!"
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 
-#: src/contest/SidebarView.tsx:31
+#: src/contest/SidebarView.tsx:32
 msgid "The contest is finished"
 msgstr "The contest is finished"
 
@@ -577,6 +627,10 @@ msgstr "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes
 msgid "The provided date cannot be used as start time for the contest. Please set a date in the future."
 msgstr "The provided date cannot be used as start time for the contest. Please set a date in the future."
 
+#: src/contest/Communication.tsx:61
+msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
+msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
+
 #: src/admin/AdminUsersView.tsx:79
 #: src/contest/LoginView.tsx:37
 #: src/contest/LoginView.tsx:39
@@ -586,6 +640,10 @@ msgstr "Token"
 #: src/contest/submission/submit/submissionLimits.ts:25
 msgid "Typescript"
 msgstr "Typescript"
+
+#: src/contest/hooks/useCommunication.ts:30
+msgid "Updated announcement: {0}"
+msgstr "Updated announcement: {0}"
 
 #: src/admin/UploadPackView.tsx:33
 msgid "Upload"
@@ -599,7 +657,7 @@ msgstr "Upload solution"
 msgid "Usage guide"
 msgstr "Usage guide"
 
-#: src/contest/SidebarView.tsx:65
+#: src/contest/SidebarView.tsx:79
 #: src/contest/help/UsefulInfo.tsx:6
 msgid "Useful information"
 msgstr "Useful information"
@@ -639,7 +697,7 @@ msgstr "You selected a file with an unknown extension. This submission may be in
 msgid "You selected an empty file"
 msgstr "You selected an empty file"
 
-#: src/contest/SidebarView.tsx:18
+#: src/contest/SidebarView.tsx:19
 msgid "Your score"
 msgstr "Your score"
 
