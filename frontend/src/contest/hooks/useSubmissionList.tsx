@@ -71,10 +71,14 @@ export function SubmissionListContextProvider({ children }: { children: ReactNod
 
 export function useSubmissionList(taskName: string) {
   const context = useContext(SubmissionListContext);
-  let list = context.list[taskName];
-  if (!list) {
-    context.reloadTask(taskName);
-    list = Loadable.loading();
-  }
-  return [useMemo(() => list, [list]), () => context.reloadTask(taskName)] as const;
+  const list = context.list[taskName];
+  useEffect(() => {
+    if (!list) {
+      context.reloadTask(taskName);
+    }
+  }, [list, context, taskName]);
+  return [
+    useMemo(() => list || Loadable.loading(), [list]),
+    () => context.reloadTask(taskName),
+  ] as const;
 }
