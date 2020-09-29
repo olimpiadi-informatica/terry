@@ -1,3 +1,4 @@
+use std::path::Path;
 use crate::AddAnnouncement;
 use crate::AnswerQuestion;
 use crate::AskQuestion;
@@ -11,7 +12,7 @@ use serde::Serialize;
 pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
 pub type FallibleQuery<T> = std::result::Result<T, actix_web::Error>;
 
-pub fn connect<S: AsRef<str>>(path: S) -> Fallible<Pool> {
+pub fn connect<P: AsRef<Path>>(path: P) -> Fallible<Pool> {
     let manager = SqliteConnectionManager::file(path.as_ref())
         .with_init(|c| c.execute_batch("PRAGMA foreign_keys=1;"));
     Pool::new(manager).map_err(|e| e.into())

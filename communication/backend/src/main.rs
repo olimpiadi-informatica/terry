@@ -1,8 +1,11 @@
+use actix_web::middleware::Logger;
 use actix_web::ResponseError;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
 use core::fmt::Display;
 use failure::Fallible;
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
+use structopt::StructOpt;
 
 mod db;
 
@@ -49,11 +52,12 @@ async fn communications_token(
     db: web::Data<db::Pool>,
     web::Path((token,)): web::Path<(String,)>,
 ) -> Result<HttpResponse, ServiceError> {
-    let announcements = db::list_announcements(&db).await?;
-    let questions = db::questions(&db, token).await?;
+    let announcements = Box::pin(db::list_announcements(&db));
+    let questions = Box::pin(db::questions(&db, token));
+    let (announcements, questions) = futures::future::join(announcements, questions).await;
     Ok(HttpResponse::Ok().json(CommunicationList {
-        announcements,
-        questions,
+        announcements: announcements?,
+        questions: questions?,
     }))
 }
 
@@ -113,21 +117,35 @@ async fn announce(
     Ok(HttpResponse::Created().json("Announcement added"))
 }
 
+#[derive(Debug, StructOpt)]
+#[structopt(about = "Backend for the communication system of terry.")]
+struct Opt {
+    /// Location of the database file
+    #[structopt(default_value = "db.sqlite3", long, short)]
+    database: PathBuf,
+
+    /// Address to bind for the web server
+    #[structopt(default_value = "127.0.0.1:1236", long, short)]
+    bind: String,
+}
+
 #[actix_web::main]
 async fn main() -> Fallible<()> {
+    let opt = Opt::from_args();
     env_logger::init();
 
-    let pool = db::connect("db.sqlite3")?;
+    let pool = db::connect(&opt.database)?;
 
     HttpServer::new(move || {
         App::new()
             .data(pool.clone())
+            .wrap(Logger::default())
             .service(communications)
             .service(communications_token)
             .service(ask)
             .service(announce)
     })
-    .bind("127.0.0.1:8080")?
+    .bind(&opt.bind)?
     .run()
     .await?;
     Ok(())
