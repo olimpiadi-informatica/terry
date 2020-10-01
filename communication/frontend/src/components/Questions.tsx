@@ -18,7 +18,7 @@ export function Questions() {
       <h2 className="mt-3">Answered</h2>
       { questions.isLoading() && <Loading />}
       { questions.isError() && "Error"}
-      { answered && answered.map((q) => <Question key={q.id} question={q} />)}
+      { answered && answered.slice().reverse().map((q) => <Question key={q.id} question={q} />)}
       { answered && answered.length === 0 && <em>No new questions</em> }
     </>
   );
