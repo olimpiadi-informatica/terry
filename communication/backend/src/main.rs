@@ -9,6 +9,7 @@ use structopt::StructOpt;
 
 mod db;
 
+/// An error occurred with a request.
 #[derive(Debug)]
 struct ServiceError(actix_web::Error);
 
@@ -26,32 +27,44 @@ impl Display for ServiceError {
 
 impl ResponseError for ServiceError {
     fn error_response(&self) -> HttpResponse {
+        // when an error occurs, return it as a 500 ISE, with the json
+        // formatted error.
         HttpResponse::InternalServerError().json(self.0.to_string())
     }
 }
 
+/// Response body to GET /communications
 #[derive(Debug, Serialize)]
 struct AnnouncementList {
+    /// The list of all the posted announcements.
     announcements: Vec<db::Announcement>,
 }
 
+/// Get a list of all the posted announcements, not requiring to be logged in.
 #[get("/communications")]
 async fn communications(db: web::Data<db::Pool>) -> Result<HttpResponse, ServiceError> {
     let announcements = db::list_announcements(&db).await?;
     Ok(HttpResponse::Ok().json(AnnouncementList { announcements }))
 }
 
+// Response body to GET /communications/{token}
 #[derive(Debug, Serialize)]
 struct CommunicationList {
+    /// The list of all the posted announcements.
     announcements: Vec<db::Announcement>,
+    /// The list of all the questions posted by the user, or all the questions
+    /// if the user is an admin.
     questions: Vec<db::Question>,
 }
 
+/// Get a list of all the questions of the user, or all the questions if the
+/// user is an admin; get also the list of all the announcements.
 #[get("/communications/{token}")]
 async fn communications_token(
     db: web::Data<db::Pool>,
     web::Path((token,)): web::Path<(String,)>,
 ) -> Result<HttpResponse, ServiceError> {
+    // execute the two queries in parallel
     let announcements = Box::pin(db::list_announcements(&db));
     let questions = Box::pin(db::questions(&db, token));
     let (announcements, questions) = futures::future::join(announcements, questions).await;
@@ -61,11 +74,14 @@ async fn communications_token(
     }))
 }
 
+/// JSON request body for the POST /communications/{token}
 #[derive(Debug, Deserialize)]
 pub struct AskQuestion {
+    /// Content of the question to post.
     content: String,
 }
 
+/// Post a new question.
 #[post("/communications/{token}")]
 async fn ask(
     db: web::Data<db::Pool>,
@@ -76,11 +92,15 @@ async fn ask(
     Ok(HttpResponse::Created().json(q))
 }
 
+/// JSON request body for the POST /communications/{token}/{id}
 #[derive(Debug, Deserialize)]
 pub struct AnswerQuestion {
+    /// Content of the answer to the question.
     content: String,
 }
 
+/// Answer a question. The token in the URL is the token of the admin that
+/// answers the question. The id is the identifier of the question to answer.
 #[post("/communications/{token}/{id}")]
 async fn answer(
     db: web::Data<db::Pool>,
@@ -95,14 +115,20 @@ async fn answer(
     Ok(HttpResponse::Created().json(q))
 }
 
+/// JSON request body for the POST /communications
 #[derive(Debug, Deserialize)]
 pub struct AddAnnouncement {
+    /// Severity of the announcement (see db.rs)
     severity: String,
+    /// The title of the announcement.
     title: String,
+    /// The content of the announcement, in Markdown.
     content: String,
+    /// The token of the admin that is posting the announcement.
     token: String,
 }
 
+/// Publish a new announcement.
 #[post("/communications")]
 async fn announce(
     db: web::Data<db::Pool>,

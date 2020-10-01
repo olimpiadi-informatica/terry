@@ -1,4 +1,3 @@
-use std::path::Path;
 use crate::AddAnnouncement;
 use crate::AskQuestion;
 use actix_web::web;
@@ -7,25 +6,38 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::Row;
 use rusqlite::{params, NO_PARAMS};
 use serde::Serialize;
+use std::path::Path;
 
 pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
 pub type FallibleQuery<T> = std::result::Result<T, actix_web::Error>;
 
+/// Connect to the sqlite database at the provided path and return a connection
+/// pool to it.
 pub fn connect<P: AsRef<Path>>(path: P) -> Fallible<Pool> {
     let manager = SqliteConnectionManager::file(path.as_ref())
         .with_init(|c| c.execute_batch("PRAGMA foreign_keys=1;"));
     Pool::new(manager).map_err(|e| e.into())
 }
 
+/// Information about an annoucement in the database, containing only the
+/// public information (i.e. not the token of the admin that posted it)
 #[derive(Debug, Serialize)]
 pub struct Announcement {
+    /// Identifier of the announcement.
     pub id: i64,
+    /// Severity of the announcement (i.e. its color using the bootstrap class
+    /// names, e.g. danger, warning, success, info, primary, ...)
     pub severity: String,
+    /// Title of the announcement.
     pub title: String,
+    /// Content of the announcement, in Markdown.
     pub content: String,
+    /// Date of the announcement, in UTC using the "SQL" date format
+    /// (YYYY-MM-DD hh:mm:ss).
     pub date: String,
 }
 
+/// Fetch the list with all the announcements in the database, sorted by date.
 pub async fn list_announcements(pool: &Pool) -> FallibleQuery<Vec<Announcement>> {
     let conn = pool.get();
     web::block(move || -> Fallible<_> {
@@ -52,21 +64,32 @@ pub async fn list_announcements(pool: &Pool) -> FallibleQuery<Vec<Announcement>>
     .map_err(|e| e.into())
 }
 
+/// Information about the answer to a question. Only public information is
+/// listed here (i.e. not the admin token that answered the question).
 #[derive(Debug, Serialize)]
 pub struct Answer {
+    /// Date of the answer, in SQL format in UTC.
     pub date: String,
+    /// Content of the answer, in Markdown.
     pub content: String,
 }
 
+/// Information about a question from a contestant.
 #[derive(Debug, Serialize)]
 pub struct Question {
+    /// The identifier of the question.
     pub id: i64,
+    /// Text written by the contestant, not in Markdown.
     pub content: String,
+    /// Date of the question, in SQL format in UTC.
     pub date: String,
+    /// The answer from an admin, if any.
     pub answer: Option<Answer>,
 }
 
 impl Question {
+    /// Build a question from a properly executed query. The columns should be:
+    /// id, content, date, answer, answerDate
     fn from_row<'s, 't>(row: &'s Row<'t>) -> rusqlite::Result<Question> {
         Ok(Question {
             id: row.get(0)?,
@@ -80,6 +103,8 @@ impl Question {
     }
 }
 
+/// List all the questions from `token`. If `token` is an admin, all the
+/// questions are returned.
 pub async fn questions(pool: &Pool, token: String) -> FallibleQuery<Vec<Question>> {
     let admin = is_admin(pool, token.clone()).await?;
     let conn = pool.get();
@@ -100,6 +125,7 @@ pub async fn questions(pool: &Pool, token: String) -> FallibleQuery<Vec<Question
     .map_err(|e| e.into())
 }
 
+/// Add a new question in the database.
 pub async fn add_question(
     pool: &Pool,
     token: String,
@@ -130,6 +156,8 @@ pub async fn add_question(
     .map_err(|e| e.into())
 }
 
+/// Add a new announcement to the database. It is not checked that the token of
+/// the poster is not an admin.
 pub async fn add_announcement(pool: &Pool, announcement: AddAnnouncement) -> FallibleQuery<()> {
     let conn = pool.get();
     web::block(move || -> Fallible<_> {
@@ -153,6 +181,8 @@ pub async fn add_announcement(pool: &Pool, announcement: AddAnnouncement) -> Fal
     .map_err(|e| e.into())
 }
 
+/// Checks if the `token` is an admin. If the token does not exists `false` is
+/// returned.
 pub async fn is_admin(pool: &Pool, token: String) -> FallibleQuery<bool> {
     let conn = pool.get();
     web::block(move || -> Fallible<_> {
@@ -178,6 +208,7 @@ pub async fn is_admin(pool: &Pool, token: String) -> FallibleQuery<bool> {
     .map_err(|e| e.into())
 }
 
+/// Post the answer of a question, overwriting the previous answer, if any.
 pub async fn answer_question(
     pool: &Pool,
     token: String,
