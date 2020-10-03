@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import { useLogin } from "src/useLogin.hook";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { ContestData } from "./types";
 import { SubmissionListContextProvider } from "./hooks/useSubmissionList";
 

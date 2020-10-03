@@ -1,7 +1,7 @@
 import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
-import { DateComponent } from "src/datetime.views";
+import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
 import { Submission, FeedbackCaseInfo, TaskData } from "src/contest/types";
@@ -46,7 +46,7 @@ export function FeedbackView({ submission, task }: Props) {
           :
         </dt>
         <dd>
-          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+          <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
         </dd>
         <dt style={{ marginTop: "0.75rem" }}>
           <Trans>Score</Trans>

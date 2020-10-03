@@ -2,7 +2,7 @@ import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
-import { CountdownComponent } from "src/datetime.views";
+import { Countdown } from "@terry/shared/_/components/Countdown";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
@@ -36,7 +36,7 @@ export function SidebarView() {
           <Trans>Remaining time</Trans>
         </h5>
         <p className="terry-remaining-time">
-          <CountdownComponent
+          <Countdown
             clock={() => serverTime()}
             end={DateTime.fromISO(startedContest.end_time, { zone: "utc" })}
             afterEnd={() => (

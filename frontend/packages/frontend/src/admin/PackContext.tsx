@@ -3,7 +3,7 @@ import React, {
 } from "react";
 import { client } from "src/TerryClient";
 import { Loadable } from "src/Loadable";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { notifyError } from "src/utils";
 import { Pack } from "./types";
 

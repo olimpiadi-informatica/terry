@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { useToken } from "src/admin/AdminContext";
 import { LogsOptions, LogLevel, LogsData } from "src/admin/types";
 

@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "src/i18n";
+import { i18n } from "@terry/shared/_/i18n";
 import { useActions } from "./AdminContext";
 
 export function UploadPackView() {

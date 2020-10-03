@@ -40,11 +40,11 @@
     "react-tooltip": "^3.5.0",
     "remark-math": "^3.0.1",
     "typescript": "^3.9.7",
-    "universal-cookie": "^2.1.2"
+    "universal-cookie": "^2.1.2",
+    "@terry/shared": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
-    "@lingui/cli": "^2.9.2",
     "@types/http-proxy": "^1.17.4",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",

@@ -1,0 +1,19 @@
+{
+  "localeDir": "src/locales/",
+  "srcPathDirs": [
+    "src/",
+    "src-frontend/"
+  ],
+  "format": "po",
+  "sourceLocale": "en",
+  "extractBabelOptions": {
+    "plugins": [
+      "@babel/plugin-syntax-dynamic-import",
+      "macros"
+    ],
+    "presets": [
+      "@babel/preset-react",
+      "@lingui/babel-preset-react"
+    ]
+  }
+}

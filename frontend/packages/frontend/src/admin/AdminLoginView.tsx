@@ -1,7 +1,7 @@
 import React from "react";
 import { Trans, t } from "@lingui/macro";
 import ReactMarkdown from "react-markdown";
-import { i18n } from "src/i18n";
+import { i18n } from "@terry/shared/_/i18n";
 import { useActions } from "./AdminContext";
 import { usePack } from "./hooks/usePack";
 

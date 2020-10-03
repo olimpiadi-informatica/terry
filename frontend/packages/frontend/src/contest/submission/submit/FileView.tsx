@@ -3,7 +3,7 @@ import filesize from "filesize";
 import { DateTime } from "luxon";
 import "./FileView.css";
 import { Trans } from "@lingui/macro";
-import { DateComponent } from "src/datetime.views";
+import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 
 type Props = {
   file: File;
@@ -25,7 +25,7 @@ export function FileView({ file }: Props) {
               <Trans>Last update:</Trans>
             </th>
             <td>
-              <DateComponent clock={() => DateTime.local()} date={DateTime.fromMillis(file.lastModified)} />
+              <RelativeDate clock={() => DateTime.local()} date={DateTime.fromMillis(file.lastModified)} />
             </td>
           </tr>
         )}

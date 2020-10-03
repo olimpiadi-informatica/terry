@@ -6,7 +6,7 @@ import { Trans, t } from "@lingui/macro";
 import { ModalView } from "src/Modal";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
-import { i18n } from "src/i18n";
+import { i18n } from "@terry/shared/_/i18n";
 import { Loadable } from "src/Loadable";
 import { useToken } from "./AdminContext";
 import { ZipData } from "./types";

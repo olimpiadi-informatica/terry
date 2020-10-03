@@ -8,8 +8,10 @@ import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AbsoluteDateComponent, CountdownComponent, DateComponent } from "src/datetime.views";
-import { i18n } from "src/i18n";
+import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
+import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
+import { Countdown } from "@terry/shared/_/components/Countdown";
+import { i18n } from "@terry/shared/_/i18n";
 import { Loadable } from "src/Loadable";
 import {
   useActions, useServerTime, useStatus,
@@ -60,7 +62,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
             <li>
               <Trans>The contest will start automatically at</Trans>
               {" "}
-              <AbsoluteDateComponent clock={() => serverTime()} date={startTime} />
+              <AbsoluteDate clock={() => serverTime()} date={startTime} />
               {" "}
               <button
                 type="button"
@@ -71,7 +73,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
               </button>
             </li>
             <li>
-              <CountdownComponent clock={() => serverTime()} end={startTime} afterEnd={() => null} />
+              <Countdown clock={() => serverTime()} end={startTime} afterEnd={() => null} />
               {" "}
               <Trans>to the scheduled start</Trans>
               .
@@ -107,7 +109,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
           <p>
             <Trans>The contest would start</Trans>
             {" "}
-            <DateComponent clock={() => serverTime()} date={scheduledStartTime} />
+            <RelativeDate clock={() => serverTime()} date={scheduledStartTime} />
             .
           </p>
         )}
@@ -167,13 +169,13 @@ function ContestStarted({
         <li>
           <Trans>Contest started at</Trans>
           {" "}
-          <AbsoluteDateComponent clock={() => serverTime()} date={startTime} />
+          <AbsoluteDate clock={() => serverTime()} date={startTime} />
         </li>
         {running && (
           <li>
             <Trans>Remaining time</Trans>
             {" "}
-            <CountdownComponent clock={() => serverTime()} end={endTime} afterEnd={() => "00:00:00"} />
+            <Countdown clock={() => serverTime()} end={endTime} afterEnd={() => "00:00:00"} />
             {!!usersWithExtraTime && (
               <>
                 {" "}
@@ -196,7 +198,7 @@ function ContestStarted({
           <li>
             <Trans>Remaining time for some participant</Trans>
             {" "}
-            <CountdownComponent clock={() => serverTime()} end={endTime.plus({ seconds: maxExtraTime })} afterEnd={() => "00:00:00"} />
+            <Countdown clock={() => serverTime()} end={endTime.plus({ seconds: maxExtraTime })} afterEnd={() => "00:00:00"} />
             .
           </li>
         ) }
@@ -215,19 +217,19 @@ function ContestEnded({
         <li>
           <Trans>Contest started at</Trans>
           {" "}
-          <AbsoluteDateComponent clock={() => serverTime()} date={startTime} />
+          <AbsoluteDate clock={() => serverTime()} date={startTime} />
         </li>
         <li>
           <Trans>Contest ended at</Trans>
           {" "}
-          <AbsoluteDateComponent clock={() => serverTime()} date={endTime} />
+          <AbsoluteDate clock={() => serverTime()} date={endTime} />
         </li>
         {
           !!usersWithExtraTime && (
             <li>
               <Trans>Contest ended for everyone at</Trans>
               {" "}
-              <AbsoluteDateComponent clock={() => serverTime()} date={endTime.plus({ seconds: maxExtraTime })} />
+              <AbsoluteDate clock={() => serverTime()} date={endTime.plus({ seconds: maxExtraTime })} />
             </li>
           )
         }

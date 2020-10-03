@@ -6,7 +6,7 @@ import { AxiosResponse, AxiosError } from "axios";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
 import { Loadable } from "src/Loadable";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { useLogin } from "src/useLogin.hook";
 import { PackContext } from "./PackContext";
 import { StatusData } from "./types";

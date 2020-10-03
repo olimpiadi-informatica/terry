@@ -7,8 +7,8 @@ import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
 import { ModalView } from "src/Modal";
 import "./AdminLogsView.css";
-import { AbsoluteDateComponent } from "src/datetime.views";
-import { i18n } from "src/i18n";
+import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
+import { i18n } from "@terry/shared/_/i18n";
 import { useServerTime } from "./AdminContext";
 import { useLogs, defaultLogsOptions } from "./hooks/useLogs";
 import { LogLevel, LogsOptions, LogEntry } from "./types";
@@ -85,7 +85,7 @@ export function AdminLogsView() {
         // eslint-disable-next-line react/no-array-index-key
         <tr key={i} className={`table-${LOG_LEVELS[log.level].color}`}>
           <td>
-            <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date, { zone: "utc" })} />
+            <AbsoluteDate clock={() => serverTime()} date={DateTime.fromISO(log.date, { zone: "utc" })} />
           </td>
           <td>
             <button className="btn btn-link" type="button" onClick={() => setCategory(log.category)}>

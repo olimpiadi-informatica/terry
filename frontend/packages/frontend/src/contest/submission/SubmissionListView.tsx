@@ -5,12 +5,12 @@ import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import ReactTooltip from "react-tooltip";
 import { Trans, t } from "@lingui/macro";
-import { DateComponent } from "src/datetime.views";
+import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 import { client } from "src/TerryClient";
 import { ModalView } from "src/Modal";
 import { colorFromScore } from "src/utils";
 import "./SubmissionListView.css";
-import { i18n } from "src/i18n";
+import { i18n } from "@terry/shared/_/i18n";
 import { Loading } from "src/Loading";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
@@ -33,7 +33,7 @@ export function SubmissionListView({ task }: Props) {
     return (
       <tr key={submission.id}>
         <td>
-          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+          <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
           <br />
           <Link to={`/task/${submission.task}/submission/${submission.id}`}>
             <Trans>view details</Trans>

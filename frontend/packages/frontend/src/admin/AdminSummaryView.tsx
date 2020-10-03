@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Trans, t, Plural } from "@lingui/macro";
-import { DateComponent } from "src/datetime.views";
-import { i18n } from "src/i18n";
+import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
+import { i18n } from "@terry/shared/_/i18n";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./hooks/useLogs";
 import { useUsers } from "./hooks/useUsers";
@@ -73,7 +73,7 @@ export function AdminSummaryView() {
                   <>
                     <Trans>Issue last detected</Trans>
                     {" "}
-                    <DateComponent
+                    <RelativeDate
                       clock={() => serverTime()}
                       date={DateTime.fromISO(logs.value().items[0].date, { zone: "utc" })}
                     />

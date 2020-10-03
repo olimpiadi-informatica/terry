@@ -5,7 +5,7 @@ import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
 import { toast } from "react-toastify";
 import { ModalView } from "src/Modal";
-import { i18n } from "src/i18n";
+import { i18n } from "@terry/shared/_/i18n";
 import { useStatus, useActions } from "./AdminContext";
 
 export function ContestExtraTimeView() {

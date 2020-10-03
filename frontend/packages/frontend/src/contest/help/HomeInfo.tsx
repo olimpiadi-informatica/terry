@@ -3,7 +3,8 @@ import { Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
-import { AbsoluteDateComponent, CountdownComponent } from "src/datetime.views";
+import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
+import { Countdown } from "@terry/shared/_/components/Countdown";
 import { useActions, useServerTime } from "src/contest/ContestContext";
 import { Loading } from "src/Loading";
 
@@ -72,12 +73,12 @@ export function HomeInfo({ hasStarted, startTime }: Props) {
               ? (
                 <>
                   <h3>
-                    <CountdownComponent clock={() => serverTime()} end={startTime} afterEnd={() => <Loading />} />
+                    <Countdown clock={() => serverTime()} end={startTime} afterEnd={() => <Loading />} />
                   </h3>
                   <p>
                     <Trans>
                       Scheduled start at
-                      <AbsoluteDateComponent clock={() => serverTime()} date={startTime} />
+                      <AbsoluteDate clock={() => serverTime()} date={startTime} />
                       . This page will reload automatically.
                     </Trans>
                   </p>
