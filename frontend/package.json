@@ -1,28 +1,28 @@
 {
-    "name": "terry",
-    "private": true,
-    "scripts": {
-        "start": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend'",
-        "start-nobrowser": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-nobrowser'",
-        "start-bare": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-bare'",
-        "start:shared": "cd packages/shared && yarn-or-npm run start",
-        "start:frontend": "cd packages/frontend && yarn-or-npm start",
-        "start:frontend-nobrowser": "cd packages/frontend && yarn-or-npm start-nobrowser",
-        "start:frontend-bare": "cd packages/frontend && yarn-or-npm start-bare",
-        "prestart:shared": "cd packages/shared && tsc",
-        "build": "yarn-or-npm run build:shared && yarn-or-npm run build:frontend",
-        "build:shared": "cd packages/shared && yarn-or-npm run build",
-        "build:frontend": "cd packages/frontend && yarn-or-npm run build",
-        "setup": "lerna bootstrap"
-    },
-    "devDependencies": {
-        "concurrently": "^3.5.1",
-        "lerna": "^3.10.2",
-        "yarn-or-npm": "^3.0.1"
-    },
-    "workspaces": {
-        "packages": [
-            "packages/*"
-        ]
-    }
+  "name": "terry",
+  "private": true,
+  "scripts": {
+    "start": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend'",
+    "start-nobrowser": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-nobrowser'",
+    "start-bare": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-bare'",
+    "start:shared": "cd packages/shared && yarn-or-npm run start",
+    "start:frontend": "cd packages/frontend && yarn-or-npm start",
+    "start:frontend-nobrowser": "cd packages/frontend && yarn-or-npm start-nobrowser",
+    "start:frontend-bare": "cd packages/frontend && yarn-or-npm start-bare",
+    "prestart:shared": "cd packages/shared && tsc",
+    "build": "yarn-or-npm run build:shared && yarn-or-npm run build:frontend",
+    "build:shared": "cd packages/shared && yarn-or-npm run build",
+    "build:frontend": "cd packages/frontend && yarn-or-npm run build",
+    "setup": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "lerna": "^3.10.2",
+    "yarn-or-npm": "^3.0.1"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  }
 }

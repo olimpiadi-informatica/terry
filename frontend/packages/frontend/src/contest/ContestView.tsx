@@ -16,12 +16,16 @@ import { Documentation } from "./help/Documentation";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
 import { useDetectInternet } from "./hooks/useDetectInternet";
+import { Communication } from "./Communication";
+import { useCommunicationPoller } from "./hooks/useCommunication";
 
 function ContestViewInternal() {
   const pack = usePack();
   const contestLoadable = useContest();
   const { logout, isLoggedIn } = useActions();
+
   useDetectInternet();
+  useCommunicationPoller();
 
   if (pack.isLoading()) return <Loading />;
   if (pack.isError()) return <Trans>Error</Trans>;
@@ -76,8 +80,10 @@ function ContestViewInternal() {
         <main>
           {contest && <Route exact path="/" component={ContestHome} />}
           {(!loggedIn || contestLoadable.isError()) && <Route exact path="/" component={LoginView} />}
+
           <Route exact path="/useful-info" component={UsefulInfo} />
           <Route exact path="/documentation" component={Documentation} />
+          <Route exact path="/communication" component={Communication} />
 
           {contest && contest.contest.has_started && (
             <Route path="/task/:taskName" render={({ match }) => renderTask(match.params.taskName)} />

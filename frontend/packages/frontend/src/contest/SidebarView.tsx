@@ -4,6 +4,7 @@ import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
 import { Countdown } from "@terry/shared/_/components/Countdown";
 import { TaskData, StartedContest } from "@terry/shared/_/types/contest";
+import { client } from "@terry/shared/_/TerryClient";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
@@ -75,6 +76,23 @@ export function SidebarView() {
             </NavLink>
           </li>
         )}
+
+        {
+          client.communications && (
+            <>
+              <li className="nav-item title mt-3">
+                <h5 className="text-uppercase">
+                  <Trans>Communication</Trans>
+                </h5>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/communication" className="nav-link tasklist-item" activeClassName="active">
+                  <Trans>Questions and Announcements</Trans>
+                </NavLink>
+              </li>
+            </>
+          )
+        }
 
         <li className="nav-item title mt-3">
           <h5 className="text-uppercase">
