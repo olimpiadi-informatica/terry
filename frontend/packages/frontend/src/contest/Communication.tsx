@@ -8,7 +8,8 @@ import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
 import { Loading } from "@terry/shared/_/components/Loading";
 import { client } from "@terry/shared/_/TerryClient";
 import { useCommunication } from "@terry/shared/_/hooks/useCommunication";
-import { Announcement, Question } from "@terry/shared/_/types/contest";
+import { Announcement } from "@terry/shared/_/types/contest";
+import { Question } from "@terry/shared/_/components/Question";
 import { useActions, useServerTime, useToken } from "./ContestContext";
 
 export function Communication() {
@@ -36,30 +37,6 @@ export function Communication() {
         </h5>
         <hr />
         <ReactMarkdown source={announcement.content} />
-      </div>
-    );
-  };
-
-  const renderQuestion = (question: Question) => {
-    const date = DateTime.fromSQL(question.date, { zone: "utc" });
-    const answerDate = question.answer && DateTime.fromSQL(question.answer.date, { zone: "utc" });
-    const color = question.answer ? "primary" : "dark";
-    return (
-      <div className={`alert alert-${color}`} key={question.id}>
-        <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={date} /></span>
-        {question.content}
-        <hr />
-        {question.answer && answerDate && (
-          <>
-            <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={answerDate} /></span>
-            <ReactMarkdown source={question.answer.content} />
-          </>
-        )}
-        {
-          !question.answer && (
-            <small><em><Trans>Not answered yet.</Trans></em></small>
-          )
-        }
       </div>
     );
   };
@@ -123,7 +100,7 @@ export function Communication() {
             { questions.isLoading() && <Loading /> }
             { questions.isError() && <Trans>Error</Trans> }
             {
-              questions.isReady() && questions.value().slice().reverse().map((question) => renderQuestion(question))
+              questions.isReady() && questions.value().slice().reverse().map((question) => <Question key={question.id} question={question} serverTime={serverTime} />)
             }
           </>
         )
