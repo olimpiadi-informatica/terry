@@ -9,23 +9,26 @@ import { TaskView } from "src/contest/task/TaskView";
 import { PackContextProvider } from "src/admin/PackContext";
 import { usePack } from "src/admin/hooks/usePack";
 import { StartedContest } from "@terry/shared/_/types/contest";
+import { useCommunicationPoller } from "@terry/shared/_/hooks/useCommunication";
 import { SidebarView } from "./SidebarView";
-import { useContest, useActions, ContestContextProvider } from "./ContestContext";
+import {
+  useContest, useActions, ContestContextProvider, useToken,
+} from "./ContestContext";
 import { UsefulInfo } from "./help/UsefulInfo";
 import { Documentation } from "./help/Documentation";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
 import { useDetectInternet } from "./hooks/useDetectInternet";
 import { Communication } from "./Communication";
-import { useCommunicationPoller } from "./hooks/useCommunication";
 
 function ContestViewInternal() {
   const pack = usePack();
   const contestLoadable = useContest();
   const { logout, isLoggedIn } = useActions();
+  const token = useToken();
 
   useDetectInternet();
-  useCommunicationPoller();
+  useCommunicationPoller(token);
 
   if (pack.isLoading()) return <Loading />;
   if (pack.isError()) return <Trans>Error</Trans>;

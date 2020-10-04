@@ -61,6 +61,7 @@
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others 'react-scripts start' 'yarn-or-npm run proxy'",
     "start-bare": "BARE_BACKEND=true yarn-or-npm run start",
+    "start-bare-nobrowser": "BARE_BACKEND=true BROWSER=none yarn-or-npm run start",
     "start-nobrowser": "BROWSER=none yarn-or-npm run start",
     "proxy": "ts-node -O '{\"module\":\"commonjs\"}' proxy.ts",
     "build": "react-scripts build",

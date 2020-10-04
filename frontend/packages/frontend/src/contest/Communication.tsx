@@ -4,15 +4,16 @@ import { Trans } from "@lingui/macro";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { AbsoluteDateComponent } from "src/datetime.views";
-import { Loading } from "src/Loading";
-import { client } from "src/TerryClient";
-import { useCommunication } from "src/contest/hooks/useCommunication";
-import { useActions, useServerTime } from "./ContestContext";
-import { Announcement, Question } from "./types";
+import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
+import { Loading } from "@terry/shared/_/components/Loading";
+import { client } from "@terry/shared/_/TerryClient";
+import { useCommunication } from "@terry/shared/_/hooks/useCommunication";
+import { Announcement, Question } from "@terry/shared/_/types/contest";
+import { useActions, useServerTime, useToken } from "./ContestContext";
 
 export function Communication() {
-  const [announcements, questions, askQuestion] = useCommunication();
+  const token = useToken();
+  const [announcements, questions, askQuestion] = useCommunication(token);
   const serverTime = useServerTime();
   const [textArea, setTextArea] = useState("");
   const { isLoggedIn } = useActions();
@@ -29,7 +30,7 @@ export function Communication() {
     const date = DateTime.fromSQL(announcement.date, { zone: "utc" });
     return (
       <div className={`alert alert-${announcement.severity}`} key={announcement.id}>
-        <span className="float-right"><AbsoluteDateComponent clock={() => serverTime()} date={date} /></span>
+        <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={date} /></span>
         <h5 className="alert-heading">
           {announcement.title}
         </h5>
@@ -45,12 +46,12 @@ export function Communication() {
     const color = question.answer ? "primary" : "dark";
     return (
       <div className={`alert alert-${color}`} key={question.id}>
-        <span className="float-right"><AbsoluteDateComponent clock={() => serverTime()} date={date} /></span>
+        <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={date} /></span>
         {question.content}
         <hr />
         {question.answer && answerDate && (
           <>
-            <span className="float-right"><AbsoluteDateComponent clock={() => serverTime()} date={answerDate} /></span>
+            <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={answerDate} /></span>
             <ReactMarkdown source={question.answer.content} />
           </>
         )}

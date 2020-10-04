@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Loadable } from "src/Loadable";
-import { client } from "src/TerryClient";
-import { useToken } from "src/contest/ContestContext";
-import { CommunicationData, Announcement, Question } from "src/contest/types";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
-import { notifyError } from "src/utils";
-import { i18n } from "src/i18n";
 import { t } from "@lingui/macro";
+import { i18n } from "../i18n";
+import { notifyError } from "../utils";
+import { useTriggerUpdate } from "./useTriggerUpdate";
+import { CommunicationData, Announcement, Question } from "../types/contest";
+import { client } from "../TerryClient";
+import { Loadable } from "../Loadable";
 
 const POLL_INTERVAL = 15 * 1000;
 const FAST_POLL_INTERVAL = 5 * 1000;
@@ -71,9 +70,7 @@ const notifyNewQuestions = (oldList: Question[], newList: Question[]) => {
   });
 };
 
-export function useCommunicationPoller() {
-  const token = useToken();
-
+export function useCommunicationPoller(token: string | null) {
   useEffect(() => {
     if ("Notification" in window) {
       const { permission } = Notification;
@@ -106,7 +103,7 @@ export function useCommunicationPoller() {
   }, [token]);
 }
 
-export function useCommunication() {
+export function useCommunication(token: string | null) {
   const defaultValue = readStorage();
   const [announcements, setAnnouncements] = useState<Loadable<Announcement[]>>(
     defaultValue ? Loadable.of(defaultValue.announcements) : Loadable.loading(),
@@ -115,7 +112,6 @@ export function useCommunication() {
     defaultValue ? Loadable.of(defaultValue.questions || []) : Loadable.loading(),
   );
   const [reloadHandle, reload] = useTriggerUpdate();
-  const token = useToken();
 
   useEffect(() => {
     if (!client.communications) return () => {};

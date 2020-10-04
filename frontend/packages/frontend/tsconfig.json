@@ -22,6 +22,6 @@
   },
   "include": [
     "src",
-    "declarations", "../shared/src/types/contest.ts"
+    "declarations"
   ]
 }
