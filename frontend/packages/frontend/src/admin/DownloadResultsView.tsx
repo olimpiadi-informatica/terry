@@ -8,8 +8,8 @@ import { client } from "@terry/shared/_/TerryClient";
 import { notifyError } from "@terry/shared/_/utils";
 import { i18n } from "@terry/shared/_/i18n";
 import { Loadable } from "@terry/shared/_/Loadable";
+import { ZipData } from "@terry/shared/_/types/admin";
 import { useToken } from "./AdminContext";
-import { ZipData } from "./types";
 
 export function DownloadResultsView() {
   const token = useToken();

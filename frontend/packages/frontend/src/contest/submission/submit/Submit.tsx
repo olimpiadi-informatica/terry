@@ -9,7 +9,7 @@ import "./Submit.css";
 import { Loadable } from "@terry/shared/_/Loadable";
 import { notifyError } from "@terry/shared/_/utils";
 import { useActions } from "src/contest/ContestContext";
-import { UploadedSource, UploadedOutput, TaskData } from "src/contest/types";
+import { UploadedSource, UploadedOutput, TaskData } from "@terry/shared/_/types/contest";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { SourceSelector } from "./SourceSelector";
 import { OutputSelector } from "./OutputSelector";

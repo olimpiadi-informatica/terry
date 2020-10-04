@@ -5,7 +5,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { Modal } from "@terry/shared/_/components/Modal";
 import { Loading } from "@terry/shared/_/components/Loading";
-import { TaskData } from "src/contest/types";
+import { TaskData } from "@terry/shared/_/types/contest";
 import { useSubmission } from "src/contest/hooks/useSubmission";
 import { FeedbackView } from "./FeedbackView";
 

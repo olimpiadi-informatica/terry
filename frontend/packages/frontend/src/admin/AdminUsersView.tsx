@@ -7,9 +7,9 @@ import { Trans, t } from "@lingui/macro";
 import { Modal } from "@terry/shared/_/components/Modal";
 import { i18n } from "@terry/shared/_/i18n";
 import { Loading } from "@terry/shared/_/components/Loading";
+import { UserEntry } from "@terry/shared/_/types/admin";
 import { useActions } from "./AdminContext";
 import { useUsers } from "./hooks/useUsers";
-import { UserEntry } from "./types";
 
 type UserExtraTimeProps = {
   user: UserEntry;

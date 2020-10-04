@@ -9,9 +9,9 @@ import { Modal } from "@terry/shared/_/components/Modal";
 import "./AdminLogsView.css";
 import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
 import { i18n } from "@terry/shared/_/i18n";
+import { LogLevel, LogsOptions, LogEntry } from "@terry/shared/_/types/admin";
 import { useServerTime } from "./AdminContext";
 import { useLogs, defaultLogsOptions } from "./hooks/useLogs";
-import { LogLevel, LogsOptions, LogEntry } from "./types";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {

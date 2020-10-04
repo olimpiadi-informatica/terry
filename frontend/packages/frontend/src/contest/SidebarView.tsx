@@ -3,11 +3,11 @@ import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
 import { Countdown } from "@terry/shared/_/components/Countdown";
+import { TaskData, StartedContest } from "@terry/shared/_/types/contest";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
 import { useContest, useServerTime, useActions } from "./ContestContext";
-import { TaskData, StartedContest } from "./types";
 
 export function SidebarView() {
   const contestL = useContest();

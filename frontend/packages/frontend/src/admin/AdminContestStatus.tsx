@@ -13,10 +13,10 @@ import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 import { Countdown } from "@terry/shared/_/components/Countdown";
 import { i18n } from "@terry/shared/_/i18n";
 import { Loadable } from "@terry/shared/_/Loadable";
+import { UsersData } from "@terry/shared/_/types/admin";
 import {
   useActions, useServerTime, useStatus,
 } from "./AdminContext";
-import { UsersData } from "./types";
 
 type NotStartedProps = {
     startTime: DateTime | null;

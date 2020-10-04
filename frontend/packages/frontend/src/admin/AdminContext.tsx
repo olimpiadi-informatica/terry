@@ -8,8 +8,8 @@ import { notifyError } from "@terry/shared/_/utils";
 import { Loadable } from "@terry/shared/_/Loadable";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { useLogin } from "@terry/shared/_/hooks/useLogin";
+import { StatusData } from "@terry/shared/_/types/admin";
 import { PackContext } from "./PackContext";
-import { StatusData } from "./types";
 
 type ContextData = {
   token: string | null;

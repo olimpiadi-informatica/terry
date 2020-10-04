@@ -7,7 +7,7 @@ import {
   useUpload, UploadType,
 } from "src/contest/hooks/useUpload";
 import { ValidationAlert } from "src/contest/submission/ValidationAlert";
-import { UploadedSource } from "src/contest/types";
+import { UploadedSource } from "@terry/shared/_/types/contest";
 import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
 import { FileView } from "./FileView";
 

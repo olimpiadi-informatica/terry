@@ -4,7 +4,7 @@ import { Trans } from "@lingui/macro";
 import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
-import { Submission, FeedbackCaseInfo, TaskData } from "src/contest/types";
+import { Submission, FeedbackCaseInfo, TaskData } from "@terry/shared/_/types/contest";
 import { ResultView } from "./ResultView";
 import "./GridList.css";
 

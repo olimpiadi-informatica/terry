@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 import { useServerTime } from "src/contest/ContestContext";
-import { Submission, TaskData } from "src/contest/types";
+import { Submission, TaskData } from "@terry/shared/_/types/contest";
 
 type Props = {
   task: TaskData;

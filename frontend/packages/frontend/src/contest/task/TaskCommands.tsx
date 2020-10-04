@@ -9,7 +9,7 @@ import { notifyError } from "@terry/shared/_/utils";
 import { useToken, useActions } from "src/contest/ContestContext";
 import {
   SubmissionList, TaskData, UserTaskData, InputData,
-} from "src/contest/types";
+} from "@terry/shared/_/types/contest";
 
 type Props = {
   task: TaskData;

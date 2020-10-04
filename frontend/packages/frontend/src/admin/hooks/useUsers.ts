@@ -5,7 +5,7 @@ import { client } from "@terry/shared/_/TerryClient";
 import { useToken } from "src/admin/AdminContext";
 import { notifyError } from "@terry/shared/_/utils";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
-import { UsersData } from "src/admin/types";
+import { UsersData } from "@terry/shared/_/types/admin";
 
 export type ReloadUsers = () => void;
 

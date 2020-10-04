@@ -5,7 +5,7 @@ import { client } from "@terry/shared/_/TerryClient";
 import { notifyError } from "@terry/shared/_/utils";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { useToken } from "src/admin/AdminContext";
-import { LogsOptions, LogLevel, LogsData } from "src/admin/types";
+import { LogsOptions, LogLevel, LogsData } from "@terry/shared/_/types/admin";
 
 export const defaultLogsOptions: LogsOptions = {
   start_date: "2000-01-01T00:00:00.000Z",

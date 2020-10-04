@@ -5,7 +5,7 @@ import { client } from "@terry/shared/_/TerryClient";
 import { Loadable } from "@terry/shared/_/Loadable";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { notifyError } from "@terry/shared/_/utils";
-import { Pack } from "./types";
+import { Pack } from "@terry/shared/_/types/admin";
 
 type PackContextType = {
   pack: Loadable<Pack>;

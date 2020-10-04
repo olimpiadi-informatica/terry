@@ -1,6 +1,6 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import { Alert } from "src/contest/types";
+import { Alert } from "@terry/shared/_/types/contest";
 
 type Props<T> = {
   cases: T[];

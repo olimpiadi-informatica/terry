@@ -101,14 +101,6 @@ module.exports = {
 
     // https://eslint.org/docs/rules/semi
     semi: ["error", "always"],
-
-    // https://eslint.org/docs/rules/no-restricted-imports
-    "no-restricted-imports": [
-      "warn",
-      {
-        patterns: ["../*"],
-      },
-    ],
   },
   settings: {
     react: {

@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { colorFromScore, round } from "@terry/shared/_/utils";
+import { StartedContest } from "@terry/shared/_/types/contest";
 import { useContest } from "./ContestContext";
-import { StartedContest } from "./types";
 
 type Props = {
   taskName: string;

@@ -8,7 +8,7 @@ import { useLogin } from "@terry/shared/_/hooks/useLogin";
 import { Loadable } from "@terry/shared/_/Loadable";
 import { client } from "@terry/shared/_/TerryClient";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
-import { ContestData } from "./types";
+import { ContestData } from "@terry/shared/_/types/contest";
 import { SubmissionListContextProvider } from "./hooks/useSubmissionList";
 
 export type ContextData = {

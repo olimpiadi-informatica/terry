@@ -15,7 +15,7 @@ import { Loading } from "@terry/shared/_/components/Loading";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
-import { Submission, SubmissionList, TaskData } from "src/contest/types";
+import { Submission, SubmissionList, TaskData } from "@terry/shared/_/types/contest";
 
 type Props = {
   task: TaskData;
