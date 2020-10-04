@@ -4,6 +4,12 @@ import { I18nProvider } from "@lingui/react";
 import catalogIt from "./locales/it/messages";
 import catalogEn from "./locales/en/messages";
 
+// this import is an hack. Note that:
+// - we are using the package name allowing other packages to refer to this
+// - tsc won't copy the css files in `_`, so it needs to be inside `src/`
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "@terry/shared/src/i18n.css";
+
 require("moment/locale/it");
 
 const catalogs = {

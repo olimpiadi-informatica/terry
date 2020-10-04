@@ -6,11 +6,11 @@ import { DateTime } from "luxon";
 import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
 import { Countdown } from "@terry/shared/_/components/Countdown";
 import { useActions, useServerTime } from "src/contest/ContestContext";
-import { Loading } from "src/Loading";
+import { Loading } from "@terry/shared/_/components/Loading";
 
 type Props = {
   hasStarted: boolean;
-  startTime: DateTime | null
+  startTime: DateTime | null;
 };
 
 export function HomeInfo({ hasStarted, startTime }: Props) {

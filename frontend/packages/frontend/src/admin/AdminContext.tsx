@@ -3,11 +3,11 @@ import React, {
 } from "react";
 import { DateTime, Duration } from "luxon";
 import { AxiosResponse, AxiosError } from "axios";
-import { client } from "src/TerryClient";
-import { notifyError } from "src/utils";
-import { Loadable } from "src/Loadable";
+import { client } from "@terry/shared/_/TerryClient";
+import { notifyError } from "@terry/shared/_/utils";
+import { Loadable } from "@terry/shared/_/Loadable";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
-import { useLogin } from "src/useLogin.hook";
+import { useLogin } from "@terry/shared/_/hooks/useLogin";
 import { PackContext } from "./PackContext";
 import { StatusData } from "./types";
 

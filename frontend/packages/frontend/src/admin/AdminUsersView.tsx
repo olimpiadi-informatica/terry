@@ -4,9 +4,9 @@ import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Trans, t } from "@lingui/macro";
-import { ModalView } from "src/Modal";
+import { Modal } from "@terry/shared/_/components/Modal";
 import { i18n } from "@terry/shared/_/i18n";
-import { Loading } from "src/Loading";
+import { Loading } from "@terry/shared/_/components/Loading";
 import { useActions } from "./AdminContext";
 import { useUsers } from "./hooks/useUsers";
 import { UserEntry } from "./types";
@@ -83,7 +83,7 @@ export function AdminUsersView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Contestants`)} returnUrl="/admin">
+    <Modal contentLabel={i18n._(t`Contestants`)} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">{i18n._(t`Contestants`)}</h5>
         <Link to="/admin" role="button" className="close" aria-label="Close">
@@ -125,6 +125,6 @@ export function AdminUsersView() {
           <Trans>Close</Trans>
         </Link>
       </div>
-    </ModalView>
+    </Modal>
   );
 }

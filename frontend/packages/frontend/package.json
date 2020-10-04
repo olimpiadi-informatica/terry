@@ -17,7 +17,6 @@
     "@types/luxon": "^0.5.1",
     "@types/node": "^9.6.5",
     "@types/react-dom": "^16.0.5",
-    "@types/react-modal": "^3.1.2",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-tooltip": "^3.3.4",
     "axios": "^0.18.0",
@@ -33,14 +32,12 @@
     "react-dom": "^16.3.2",
     "react-katex": "^2.0.2",
     "react-markdown": "^4.3.1",
-    "react-modal": "^3.4.1",
     "react-router-dom": "^5.1.5",
     "react-scripts": "^3.4.3",
     "react-toastify": "^4.0.0-rc.4",
     "react-tooltip": "^3.5.0",
     "remark-math": "^3.0.1",
     "typescript": "^3.9.7",
-    "universal-cookie": "^2.1.2",
     "@terry/shared": "*"
   },
   "devDependencies": {

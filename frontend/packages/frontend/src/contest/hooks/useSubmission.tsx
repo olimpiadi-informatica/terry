@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { client } from "src/TerryClient";
-import { Loadable } from "src/Loadable";
-import { notifyError } from "src/utils";
+import { client } from "@terry/shared/_/TerryClient";
+import { Loadable } from "@terry/shared/_/Loadable";
+import { notifyError } from "@terry/shared/_/utils";
 import { Submission } from "src/contest/types";
 
 export function useSubmission(id: string) {

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "@terry/shared/_/LanguageSwitcher";
-import { Loading } from "src/Loading";
+import { Loading } from "@terry/shared/_/components/Loading";
 import { TaskView } from "src/contest/task/TaskView";
 import { PackContextProvider } from "src/admin/PackContext";
 import { usePack } from "src/admin/hooks/usePack";

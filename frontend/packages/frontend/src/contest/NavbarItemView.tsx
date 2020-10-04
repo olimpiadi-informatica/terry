@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { colorFromScore, round } from "src/utils";
+import { colorFromScore, round } from "@terry/shared/_/utils";
 import { useContest } from "./ContestContext";
 import { StartedContest } from "./types";
 

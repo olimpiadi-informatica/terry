@@ -1,10 +1,10 @@
 import React, {
   useState, useEffect, createContext, ReactNode, useMemo, useContext,
 } from "react";
-import { client } from "src/TerryClient";
+import { client } from "@terry/shared/_/TerryClient";
 import { useToken } from "src/contest/ContestContext";
-import { Loadable } from "src/Loadable";
-import { notifyError } from "src/utils";
+import { Loadable } from "@terry/shared/_/Loadable";
+import { notifyError } from "@terry/shared/_/utils";
 import { SubmissionList } from "src/contest/types";
 
 type TasksSubmissionList = {

@@ -12,7 +12,7 @@ import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
 import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
 import { Countdown } from "@terry/shared/_/components/Countdown";
 import { i18n } from "@terry/shared/_/i18n";
-import { Loadable } from "src/Loadable";
+import { Loadable } from "@terry/shared/_/Loadable";
 import {
   useActions, useServerTime, useStatus,
 } from "./AdminContext";

@@ -1,6 +1,6 @@
 import React from "react";
 import "./ScoreView.css";
-import { round } from "src/utils";
+import { round } from "@terry/shared/_/utils";
 
 type Props = {
   score: number;

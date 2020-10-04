@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
-import { client } from "src/TerryClient";
-import { Loadable } from "src/Loadable";
-import { notifyError } from "src/utils";
+import { client } from "@terry/shared/_/TerryClient";
+import { Loadable } from "@terry/shared/_/Loadable";
+import { notifyError } from "@terry/shared/_/utils";
 import { useToken, useActions } from "src/contest/ContestContext";
 import {
   SubmissionList, TaskData, UserTaskData, InputData,

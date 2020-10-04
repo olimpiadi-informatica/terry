@@ -1,8 +1,8 @@
 import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
-import { Loadable } from "src/Loadable";
-import { client } from "src/TerryClient";
-import { notifyError } from "src/utils";
+import { Loadable } from "@terry/shared/_/Loadable";
+import { client } from "@terry/shared/_/TerryClient";
+import { notifyError } from "@terry/shared/_/utils";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { useToken } from "src/admin/AdminContext";
 import { LogsOptions, LogLevel, LogsData } from "src/admin/types";

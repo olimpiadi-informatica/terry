@@ -2,7 +2,7 @@ import React from "react";
 import RemarkMathPlugin from "remark-math";
 import { BlockMath, InlineMath } from "react-katex";
 import ReactMarkdown from "react-markdown";
-import { client } from "src/TerryClient";
+import { client } from "@terry/shared/_/TerryClient";
 import { TaskData } from "src/contest/types";
 import "./TaskStatementView.css";
 

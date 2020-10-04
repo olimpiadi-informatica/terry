@@ -6,12 +6,12 @@ import { DateTime } from "luxon";
 import ReactTooltip from "react-tooltip";
 import { Trans, t } from "@lingui/macro";
 import { RelativeDate } from "@terry/shared/_/components/RelativeDate";
-import { client } from "src/TerryClient";
-import { ModalView } from "src/Modal";
-import { colorFromScore } from "src/utils";
+import { client } from "@terry/shared/_/TerryClient";
+import { Modal } from "@terry/shared/_/components/Modal";
+import { colorFromScore } from "@terry/shared/_/utils";
 import "./SubmissionListView.css";
 import { i18n } from "@terry/shared/_/i18n";
-import { Loading } from "src/Loading";
+import { Loading } from "@terry/shared/_/components/Loading";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
@@ -141,7 +141,7 @@ export function SubmissionListView({ task }: Props) {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${task.name}`}>
+    <Modal contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${task.name}`}>
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Submission for</Trans>
@@ -162,6 +162,6 @@ export function SubmissionListView({ task }: Props) {
           <Trans>Close</Trans>
         </Link>
       </div>
-    </ModalView>
+    </Modal>
   );
 }

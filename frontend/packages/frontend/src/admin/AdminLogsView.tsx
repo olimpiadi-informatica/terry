@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
-import { ModalView } from "src/Modal";
+import { Modal } from "@terry/shared/_/components/Modal";
 import "./AdminLogsView.css";
 import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
 import { i18n } from "@terry/shared/_/i18n";
@@ -113,7 +113,7 @@ export function AdminLogsView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Logs`)} returnUrl="/admin">
+    <Modal contentLabel={i18n._(t`Logs`)} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Logs</Trans>
@@ -178,6 +178,6 @@ export function AdminLogsView() {
           <Trans>Close</Trans>
         </Link>
       </div>
-    </ModalView>
+    </Modal>
   );
 }

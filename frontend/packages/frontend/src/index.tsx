@@ -1,13 +1,12 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import "./i18n.css";
 
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { TransProvider } from "@terry/shared/_/i18n";
-import { Loading } from "./Loading";
+import { Loading } from "@terry/shared/_/components/Loading";
 
 import { PackView } from "./admin/PackView";
 

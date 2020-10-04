@@ -4,9 +4,9 @@ import React, {
 import { Duration, DateTime } from "luxon";
 import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
-import { useLogin } from "src/useLogin.hook";
-import { Loadable } from "src/Loadable";
-import { client } from "src/TerryClient";
+import { useLogin } from "@terry/shared/_/hooks/useLogin";
+import { Loadable } from "@terry/shared/_/Loadable";
+import { client } from "@terry/shared/_/TerryClient";
 import { useTriggerUpdate } from "@terry/shared/_/hooks/useTriggerUpdate";
 import { ContestData } from "./types";
 import { SubmissionListContextProvider } from "./hooks/useSubmissionList";

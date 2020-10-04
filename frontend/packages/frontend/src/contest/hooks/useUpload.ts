@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { Loadable } from "src/Loadable";
-import { client } from "src/TerryClient";
+import { Loadable } from "@terry/shared/_/Loadable";
+import { client } from "@terry/shared/_/TerryClient";
 
 export enum UploadType {
   Source,

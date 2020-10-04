@@ -1,5 +1,5 @@
 import React from "react";
-import { Loading } from "src/Loading";
+import { Loading } from "@terry/shared/_/components/Loading";
 import { UploadPackView } from "./UploadPackView";
 import { AdminView } from "./AdminView";
 import { AdminContextProvider } from "./AdminContext";
