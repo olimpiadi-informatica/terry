@@ -2,13 +2,17 @@
     "name": "terry",
     "private": true,
     "scripts": {
-        "start": "concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend'",
-        "start-nobrowser": "concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-nobrowser'",
-        "start-bare": "concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-bare'",
-        "start:shared": "lerna run start --scope @terry/shared",
+        "start": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend'",
+        "start-nobrowser": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-nobrowser'",
+        "start-bare": "yarn-or-npm prestart:shared && concurrently --kill-others 'yarn-or-npm start:shared' 'yarn-or-npm start:frontend-bare'",
+        "start:shared": "cd packages/shared && yarn-or-npm run start",
         "start:frontend": "cd packages/frontend && yarn-or-npm start",
         "start:frontend-nobrowser": "cd packages/frontend && yarn-or-npm start-nobrowser",
         "start:frontend-bare": "cd packages/frontend && yarn-or-npm start-bare",
+        "prestart:shared": "cd packages/shared && tsc",
+        "build": "yarn-or-npm run build:shared && yarn-or-npm run build:frontend",
+        "build:shared": "cd packages/shared && yarn-or-npm run build",
+        "build:frontend": "cd packages/frontend && yarn-or-npm run build",
         "setup": "lerna bootstrap"
     },
     "devDependencies": {
