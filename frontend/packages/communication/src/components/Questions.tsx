@@ -1,6 +1,6 @@
 import React from "react";
-import { useQuestions } from "src/hooks/useCommunication";
-import { Loading } from "src/terry-frontend/Loading";
+import { useQuestions } from "@terry/shared/_/hooks/useCommunication";
+import { Loading } from "@terry/shared/_/components/Loading";
 import { Question } from "@terry/shared/_/components/Question";
 import { DateTime } from "luxon";
 
@@ -15,13 +15,14 @@ export function Questions() {
       <h2>Not answered</h2>
       { questions.isLoading() && <Loading />}
       { questions.isError() && "Error"}
-      { notAnswered && notAnswered.map((q) => <Question key={q.id} question={q} serverTime={serverTime} />)}
+      { notAnswered && notAnswered.map((q) => <Question key={q.id} question={q} serverTime={serverTime} canAnswer />)}
       { notAnswered && notAnswered.length === 0 && <em>No new questions</em> }
 
       <h2 className="mt-3">Answered</h2>
       { questions.isLoading() && <Loading />}
       { questions.isError() && "Error"}
-      { answered && answered.slice().reverse().map((q) => <Question key={q.id} question={q} serverTime={serverTime} />)}
+      { answered && answered.slice().reverse().map((q) => (
+        <Question key={q.id} question={q} serverTime={serverTime} canAnswer />))}
       { answered && answered.length === 0 && <em>No new questions</em> }
     </>
   );

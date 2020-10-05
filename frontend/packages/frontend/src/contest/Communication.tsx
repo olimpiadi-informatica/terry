@@ -3,18 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Trans } from "@lingui/macro";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { AbsoluteDate } from "@terry/shared/_/components/AbsoluteDate";
 import { Loading } from "@terry/shared/_/components/Loading";
 import { client } from "@terry/shared/_/TerryClient";
-import { useCommunication } from "@terry/shared/_/hooks/useCommunication";
-import { Announcement } from "@terry/shared/_/types/contest";
 import { Question } from "@terry/shared/_/components/Question";
-import { useActions, useServerTime, useToken } from "./ContestContext";
+import { Announcement } from "@terry/shared/_/components/Announcement";
+import { useAnnouncements, useAskQuestion, useQuestions } from "@terry/shared/_/hooks/useCommunication";
+import { useActions, useServerTime } from "./ContestContext";
 
 export function Communication() {
-  const token = useToken();
-  const [announcements, questions, askQuestion] = useCommunication(token);
+  const announcements = useAnnouncements();
+  const questions = useQuestions();
+  const askQuestion = useAskQuestion();
   const serverTime = useServerTime();
   const [textArea, setTextArea] = useState("");
   const { isLoggedIn } = useActions();
@@ -26,20 +25,6 @@ export function Communication() {
       </p>
     );
   }
-
-  const renderAnnouncement = (announcement: Announcement) => {
-    const date = DateTime.fromSQL(announcement.date, { zone: "utc" });
-    return (
-      <div className={`alert alert-${announcement.severity}`} key={announcement.id}>
-        <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={date} /></span>
-        <h5 className="alert-heading">
-          {announcement.title}
-        </h5>
-        <hr />
-        <ReactMarkdown source={announcement.content} />
-      </div>
-    );
-  };
 
   const doAskQuestion = () => {
     askQuestion(textArea).then(() => setTextArea(""));
@@ -80,7 +65,15 @@ export function Communication() {
       { announcements.isError() && <Trans>Error</Trans> }
       {
         announcements.isReady()
-        && announcements.value().slice().reverse().map((announcement) => renderAnnouncement(announcement))
+        && announcements.value().slice().reverse().map((announcement) => (
+          <Announcement
+            key={announcement.id}
+            title={announcement.title}
+            content={announcement.content}
+            severity={announcement.severity}
+            date={DateTime.fromSQL(announcement.date, { zone: "utc" })}
+          />
+        ))
       }
       {
         announcements.isReady() && announcements.value().length === 0 && (
@@ -100,7 +93,9 @@ export function Communication() {
             { questions.isLoading() && <Loading /> }
             { questions.isError() && <Trans>Error</Trans> }
             {
-              questions.isReady() && questions.value().slice().reverse().map((question) => <Question key={question.id} question={question} serverTime={serverTime} />)
+              questions.isReady() && questions.value().slice().reverse().map((question) => (
+                <Question key={question.id} question={question} serverTime={serverTime} canAnswer={false} />
+              ))
             }
           </>
         )

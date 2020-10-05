@@ -2,11 +2,11 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
-import { useReloadCommunication } from "src/hooks/useCommunication";
+import { useReloadCommunication } from "@terry/shared/_/hooks/useCommunication";
 import { useLogin } from "src/hooks/useLogin";
-import { client } from "src/terry-frontend/TerryClient";
-import { notifyError } from "src/terry-frontend/utils";
-import { Announcement } from "./Announcement";
+import { client } from "@terry/shared/_/TerryClient";
+import { notifyError } from "@terry/shared/_/utils";
+import { Announcement } from "@terry/shared/_/components/Announcement";
 
 export function NewAnnouncement() {
   const [token] = useLogin();

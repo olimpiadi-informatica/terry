@@ -18,6 +18,10 @@
     "react-dom": ">=16.7.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-regular-svg-icons": "^5.14.0",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@lingui/babel-preset-react": "^2.9.2",
     "@lingui/macro": "^2.9.2",
     "@lingui/react": "^2.9.2",

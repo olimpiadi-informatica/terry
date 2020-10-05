@@ -9,10 +9,10 @@ import { TaskView } from "src/contest/task/TaskView";
 import { PackContextProvider } from "src/admin/PackContext";
 import { usePack } from "src/admin/hooks/usePack";
 import { StartedContest } from "@terry/shared/_/types/contest";
-import { useCommunicationPoller } from "@terry/shared/_/hooks/useCommunication";
+import { useCommunicationNotifier } from "@terry/shared/_/hooks/useCommunication";
 import { SidebarView } from "./SidebarView";
 import {
-  useContest, useActions, ContestContextProvider, useToken,
+  useContest, useActions, ContestContextProvider,
 } from "./ContestContext";
 import { UsefulInfo } from "./help/UsefulInfo";
 import { Documentation } from "./help/Documentation";
@@ -25,10 +25,9 @@ function ContestViewInternal() {
   const pack = usePack();
   const contestLoadable = useContest();
   const { logout, isLoggedIn } = useActions();
-  const token = useToken();
 
   useDetectInternet();
-  useCommunicationPoller(token);
+  useCommunicationNotifier();
 
   if (pack.isLoading()) return <Loading />;
   if (pack.isError()) return <Trans>Error</Trans>;

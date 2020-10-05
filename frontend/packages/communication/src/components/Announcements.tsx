@@ -1,8 +1,8 @@
 import { DateTime } from "luxon";
 import React from "react";
-import { useAnnouncements } from "src/hooks/useCommunication";
-import { Loading } from "src/terry-frontend/Loading";
-import { Announcement } from "./Announcement";
+import { useAnnouncements } from "@terry/shared/_/hooks/useCommunication";
+import { Loading } from "@terry/shared/_/components/Loading";
+import { Announcement } from "@terry/shared/_/components/Announcement";
 import { NewAnnouncement } from "./NewAnnouncement";
 
 export function Announcements() {
