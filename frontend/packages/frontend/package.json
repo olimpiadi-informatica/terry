@@ -64,7 +64,7 @@
     "start-bare-nobrowser": "BARE_BACKEND=true BROWSER=none yarn-or-npm run start",
     "start-nobrowser": "BROWSER=none yarn-or-npm run start",
     "proxy": "ts-node -O '{\"module\":\"commonjs\"}' proxy.ts",
-    "build": "react-scripts build",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -7,6 +7,11 @@
       "dom.iterable",
       "esnext"
     ],
+    
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
+
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -16,7 +21,6 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noImplicitAny": true,
-    "declaration": true,
     "target": "es5",
     "module": "esnext",
     "jsx": "react",
