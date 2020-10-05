@@ -6,11 +6,14 @@ import {
   BrowserRouter as Router, Redirect, Route, Switch,
 } from "react-router-dom";
 import { CommunicationContextProvider } from "@terry/shared/_/hooks/useCommunication";
+import { useLogin as useLoginBase } from "@terry/shared/_/hooks/useLogin";
+import { ToastContainer } from "react-toastify";
 import { Announcements } from "./components/Announcements";
 import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { Navbar } from "./components/Navbar";
-import { useLogin } from "./hooks/useLogin";
+
+export const useLogin = () => useLoginBase("communicationToken");
 
 function App() {
   const [token] = useLogin();
@@ -31,6 +34,7 @@ function App() {
 
 ReactDOM.render(
   <>
+    <ToastContainer />
     <Router>
       <Switch>
         <Route path="/login" component={Login} />

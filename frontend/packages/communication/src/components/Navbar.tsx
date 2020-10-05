@@ -1,11 +1,16 @@
 import { faLockOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Link } from "react-router-dom";
-import { useLogin } from "src/hooks/useLogin";
+import { Link, useHistory } from "react-router-dom";
+import { useLogin } from "src/index";
 
 export function Navbar() {
   const [,, logout] = useLogin();
+  const history = useHistory();
+  const doLogout = () => {
+    logout();
+    history.push("/login");
+  };
   return (
     <>
       <nav className="navbar navbar-dark bg-primary mt-2 mb-2">
@@ -20,7 +25,7 @@ export function Navbar() {
         </ul>
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
-            <button type="button" className="btn btn-warning" onClick={() => logout()}>
+            <button type="button" className="btn btn-warning" onClick={() => doLogout()}>
               <FontAwesomeIcon icon={faLockOpen} />
               {" "}
               Logout

@@ -10,7 +10,6 @@ import { Loading } from "@terry/shared/_/components/Loading";
 
 import { PackView } from "./admin/PackView";
 
-import "react-toastify/dist/ReactToastify.min.css";
 import { ContestView } from "./contest/ContestView";
 
 /** ****** DEVELOPMENT SPECIFIC ********* */

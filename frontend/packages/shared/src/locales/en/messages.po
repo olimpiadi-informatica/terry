@@ -32,7 +32,7 @@ msgstr "Admin"
 msgid "Admin token"
 msgstr "Admin token"
 
-#: src-frontend/contest/Communication.tsx:62
+#: src-frontend/contest/Communication.tsx:51
 msgid "Announcements"
 msgstr "Announcements"
 
@@ -42,7 +42,7 @@ msgstr "Announcements"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src-frontend/contest/Communication.tsx:39
+#: src-frontend/contest/Communication.tsx:28
 msgid "Ask a question"
 msgstr "Ask a question"
 
@@ -219,9 +219,9 @@ msgstr "Download results"
 #: src-frontend/admin/AdminSummaryView.tsx:53
 #: src-frontend/admin/AdminUsersView.tsx:43
 #: src-frontend/admin/DownloadResultsView.tsx:32
-#: src-frontend/contest/Communication.tsx:66
-#: src-frontend/contest/Communication.tsx:79
-#: src-frontend/contest/ContestView.tsx:30
+#: src-frontend/contest/Communication.tsx:55
+#: src-frontend/contest/Communication.tsx:68
+#: src-frontend/contest/ContestView.tsx:29
 #: src-frontend/contest/LoginView.tsx:44
 #: src-frontend/contest/submission/SubmissionListView.tsx:115
 #: src-frontend/contest/submission/SubmissionReportView.tsx:26
@@ -333,7 +333,7 @@ msgid "Login"
 msgstr "Login"
 
 #: src-frontend/admin/AdminView.tsx:26
-#: src-frontend/contest/ContestView.tsx:62
+#: src-frontend/contest/ContestView.tsx:61
 msgid "Logout"
 msgstr "Logout"
 
@@ -354,11 +354,11 @@ msgstr "Message filter"
 msgid "Name"
 msgstr "Name"
 
-#: src/hooks/useCommunication.ts:26
+#: src/hooks/useCommunication.tsx:129
 msgid "New announcement: {0}"
 msgstr "New announcement: {0}"
 
-#: src-frontend/contest/Communication.tsx:70
+#: src-frontend/contest/Communication.tsx:59
 msgid "No announcements yet."
 msgstr "No announcements yet."
 
@@ -370,7 +370,7 @@ msgstr "No issue detected"
 msgid "No messages yet"
 msgstr "No messages yet"
 
-#: src/components/Question.tsx:18
+#: src/components/Question.tsx:39
 msgid "Not answered yet."
 msgstr "Not answered yet."
 
@@ -427,11 +427,11 @@ msgstr "Processing..."
 msgid "Python"
 msgstr "Python"
 
-#: src/hooks/useCommunication.ts:50
+#: src/hooks/useCommunication.tsx:153
 msgid "Question answered!"
 msgstr "Question answered!"
 
-#: src-frontend/contest/Communication.tsx:74
+#: src-frontend/contest/Communication.tsx:63
 msgid "Questions"
 msgstr "Questions"
 
@@ -497,7 +497,7 @@ msgstr "Select the documentation you want to consult:"
 msgid "Select the tutorial you want to consult:"
 msgstr "Select the tutorial you want to consult:"
 
-#: src-frontend/contest/Communication.tsx:44
+#: src-frontend/contest/Communication.tsx:33
 msgid "Send"
 msgstr "Send"
 
@@ -563,7 +563,7 @@ msgstr "Surname"
 msgid "System status"
 msgstr "System status"
 
-#: src-frontend/contest/ContestView.tsx:41
+#: src-frontend/contest/ContestView.tsx:40
 msgid "Task not found"
 msgstr "Task not found"
 
@@ -575,7 +575,7 @@ msgstr "Tasks"
 msgid "Text file"
 msgstr "Text file"
 
-#: src/hooks/useCommunication.ts:53
+#: src/hooks/useCommunication.tsx:156
 msgid "The answer to one of your questions got updated"
 msgstr "The answer to one of your questions got updated"
 
@@ -627,7 +627,7 @@ msgstr "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes
 msgid "The provided date cannot be used as start time for the contest. Please set a date in the future."
 msgstr "The provided date cannot be used as start time for the contest. Please set a date in the future."
 
-#: src-frontend/contest/Communication.tsx:48
+#: src-frontend/contest/Communication.tsx:37
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
@@ -641,7 +641,7 @@ msgstr "Token"
 msgid "Typescript"
 msgstr "Typescript"
 
-#: src/hooks/useCommunication.ts:29
+#: src/hooks/useCommunication.tsx:132
 msgid "Updated announcement: {0}"
 msgstr "Updated announcement: {0}"
 

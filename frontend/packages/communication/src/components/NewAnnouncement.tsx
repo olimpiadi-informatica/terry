@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useReloadCommunication } from "@terry/shared/_/hooks/useCommunication";
-import { useLogin } from "src/hooks/useLogin";
+import { useLogin } from "src/index";
 import { client } from "@terry/shared/_/TerryClient";
 import { notifyError } from "@terry/shared/_/utils";
 import { Announcement } from "@terry/shared/_/components/Announcement";
