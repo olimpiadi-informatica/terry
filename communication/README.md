@@ -6,8 +6,8 @@ The backend of this service is written in Rust using actix-web and using sqlite3
 ## How to build the backend
 
 - Install stable Rust, for example using `rustup`
-- Run `cargo build --release` in the `backend/` folder to build the backend
-- You will find the server binary in `backend/target/release/terry-communication-backend`.
+- Run `cargo build --release` to build the backend
+- You will find the server binary in `target/release/terry-communication-backend`.
 
 ## Database
 
