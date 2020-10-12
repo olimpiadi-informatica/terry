@@ -1,25 +1,20 @@
-import { useState, useMemo } from "react";
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
+import { useCallback } from "react";
+import { useCookies } from "react-cookie";
 
 export function useLogin(cookieName: string) {
-  const tokenFromCookie = cookies.get(cookieName);
-  const [token, setToken] = useState<string | null>(tokenFromCookie || null);
-  const login = useMemo(
-    () => (newToken: string) => {
-      cookies.set(cookieName, newToken);
-      setToken(newToken);
+  const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
+  const login = useCallback(
+    (newToken: string) => {
+      setCookie(cookieName, newToken, { path: "/" });
     },
-    [cookieName],
+    [cookieName, setCookie],
   );
-  const logout = useMemo(
-    () => () => {
-      cookies.remove(cookieName);
-      setToken(null);
+  const logout = useCallback(
+    () => {
+      removeCookie(cookieName, { path: "/" });
     },
-    [cookieName],
+    [cookieName, removeCookie],
   );
 
-  return [token, login, logout] as const;
+  return [cookies[cookieName], login, logout] as const;
 }

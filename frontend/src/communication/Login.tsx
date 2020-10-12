@@ -11,7 +11,7 @@ export function Login() {
   if (token) return <Redirect to="/admin/communication" />;
 
   return (
-    <>
+    <div className="container">
       <h1>Login</h1>
       <form onSubmit={(e) => { e.preventDefault(); login(newToken); }}>
         <div className="form-group">
@@ -24,6 +24,6 @@ export function Login() {
           Login
         </button>
       </form>
-    </>
+    </div>
   );
 }
