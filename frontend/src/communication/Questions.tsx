@@ -3,6 +3,7 @@ import { useQuestions } from "src/hooks/useCommunication";
 import { Loading } from "src/components/Loading";
 import { Question } from "src/components/Question";
 import { DateTime } from "luxon";
+import { Trans } from "@lingui/macro";
 
 export function Questions() {
   const questions = useQuestions();
@@ -12,18 +13,19 @@ export function Questions() {
 
   return (
     <>
-      <h2>Not answered</h2>
+      <h1><Trans>Questions</Trans></h1>
+      <h4><Trans>Not answered</Trans></h4>
       { questions.isLoading() && <Loading />}
       { questions.isError() && "Error"}
       { notAnswered && notAnswered.map((q) => <Question key={q.id} question={q} serverTime={serverTime} canAnswer />)}
-      { notAnswered && notAnswered.length === 0 && <em>No new questions</em> }
+      { notAnswered && notAnswered.length === 0 && <em><Trans>No new questions</Trans></em> }
 
-      <h2 className="mt-3">Answered</h2>
+      <h4 className="mt-3"><Trans>Answered</Trans></h4>
       { questions.isLoading() && <Loading />}
       { questions.isError() && "Error"}
       { answered && answered.slice().reverse().map((q) => (
         <Question key={q.id} question={q} serverTime={serverTime} canAnswer />))}
-      { answered && answered.length === 0 && <em>No new questions</em> }
+      { answered && answered.length === 0 && <em><Trans>No new questions</Trans></em> }
     </>
   );
 }

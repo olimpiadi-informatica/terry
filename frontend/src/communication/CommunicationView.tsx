@@ -7,6 +7,8 @@ import {
 import { CommunicationContextProvider } from "src/hooks/useCommunication";
 import { useLogin as useLoginBase } from "src/hooks/useLogin";
 import { ToastContainer } from "react-toastify";
+import { client } from "src/TerryClient";
+import { Trans } from "@lingui/macro";
 import { Announcements } from "./Announcements";
 import { Home } from "./Home";
 import { Login } from "./Login";
@@ -34,6 +36,14 @@ function App() {
 }
 
 export function CommunicationView() {
+  if (!client.communications) {
+    return (
+      <>
+        <p><Trans>The communication system is not available for this contest.</Trans></p>
+      </>
+    );
+  }
+
   return (
     <>
       <ToastContainer />

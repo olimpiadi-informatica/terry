@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DateTime } from "luxon";
@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Question as QuestionT } from "src/types/contest";
 import { useSendAnswer } from "src/hooks/useCommunication";
+import { i18n } from "src/i18n";
 import { AbsoluteDate } from "./AbsoluteDate";
 
 type Props = {
@@ -25,7 +26,12 @@ export function Question({ question, serverTime, canAnswer } : Props) {
     <>
       <form onSubmit={(e) => { e.preventDefault(); sendAnswer(question.id, answer); }}>
         <div className="form-group">
-          <textarea className="form-control" value={answer} onChange={(e) => setAnswer(e.target.value)} />
+          <textarea
+            className="form-control"
+            placeholder={i18n._(t`Answer with Markdown`)}
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+          />
         </div>
         <hr />
         <h3>Preview</h3>

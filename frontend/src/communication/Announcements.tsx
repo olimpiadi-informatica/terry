@@ -3,13 +3,14 @@ import React from "react";
 import { useAnnouncements } from "src/hooks/useCommunication";
 import { Loading } from "src/components/Loading";
 import { Announcement } from "src/components/Announcement";
+import { Trans } from "@lingui/macro";
 import { NewAnnouncement } from "./NewAnnouncement";
 
 export function Announcements() {
   const announcements = useAnnouncements();
   return (
     <>
-      <h1>Announcements</h1>
+      <h1><Trans>Announcements</Trans></h1>
       { announcements.isLoading() && <Loading /> }
       { announcements.isReady() && announcements.value().map((ann) => (
         <Announcement
