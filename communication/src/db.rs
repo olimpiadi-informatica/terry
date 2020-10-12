@@ -66,7 +66,7 @@ pub async fn list_announcements(pool: &Pool) -> FallibleQuery<Vec<Announcement>>
 
 /// Information about the answer to a question. Only public information is
 /// listed here (i.e. not the admin token that answered the question).
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct Answer {
     /// Date of the answer, in SQL format in UTC.
     pub date: String,
@@ -75,7 +75,7 @@ pub struct Answer {
 }
 
 /// Information about a question from a contestant.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct Question {
     /// The identifier of the question.
     pub id: i64,

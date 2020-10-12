@@ -1,13 +1,25 @@
+#[macro_use]
+extern crate log;
+
 use actix_web::middleware::Logger;
 use actix_web::ResponseError;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
+use telegram_bot::{Api, types::ParseMode, types::requests::SendMessage, types::ChannelId};
 use core::fmt::Display;
 use failure::Fallible;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use std::sync::Arc;
 use structopt::StructOpt;
 
 mod db;
+
+/// Information about the telegram bot:
+///
+/// 0. The connected API
+/// 1. The ID of the channel where to post the notifications
+/// 2. The URL of the communication admin page
+type TelegramBotData = Option<(Api, ChannelId, String)>;
 
 /// An error occurred with a request.
 #[derive(Debug)]
@@ -75,20 +87,38 @@ async fn communications_token(
 }
 
 /// JSON request body for the POST /communications/{token}
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct AskQuestion {
     /// Content of the question to post.
     content: String,
+}
+
+async fn send_telegram_notification(api: Arc<TelegramBotData>, question: db::Question) {
+    if let Some((api, channel, url)) = api.as_ref() {
+        let message = format!(
+            "*New question*\n_At {} UTC_\n\n```\n{}\n```\n{}",
+            question.date, question.content, url
+        );
+        let mut message =
+            SendMessage::new(channel, message);
+        message.parse_mode(ParseMode::Markdown);
+        message.disable_preview();
+        if let Err(e) = api.send(message).await {
+            error!("Failed to send telegram message: {:?}", e);
+        }
+    }
 }
 
 /// Post a new question.
 #[post("/communications/{token}")]
 async fn ask(
     db: web::Data<db::Pool>,
+    api: web::Data<TelegramBotData>,
     web::Path((token,)): web::Path<(String,)>,
     question: web::Json<AskQuestion>,
 ) -> Result<HttpResponse, ServiceError> {
-    let q = db::add_question(&db, token, question.0).await?;
+    let q = db::add_question(&db, token, question.0.clone()).await?;
+    actix_web::rt::spawn(send_telegram_notification(api.into_inner(), q.clone()));
     Ok(HttpResponse::Created().json(q))
 }
 
@@ -152,6 +182,22 @@ struct Opt {
     /// Address to bind for the web server
     #[structopt(default_value = "127.0.0.1:1236", long, short)]
     bind: String,
+
+    /// Token of the telegram bot. You have to provide also --admin-url and --channel-id
+    #[structopt(long)]
+    token: Option<String>,
+
+    /// Address with the list of questions.
+    ///
+    /// Example: http://terry.online/admin/communication
+    #[structopt(long)]
+    admin_url: Option<String>,
+
+    /// Channel id of where to send the notifications.
+    ///
+    /// Example: -1001112223334
+    #[structopt(long)]
+    channel_id: Option<i64>,
 }
 
 #[actix_web::main]
@@ -160,10 +206,24 @@ async fn main() -> Fallible<()> {
     env_logger::init();
 
     let pool = db::connect(&opt.database)?;
+    let api: TelegramBotData = match opt.token {
+        Some(token) => {
+            let url = opt.admin_url.expect("Missing --admin-url");
+            let channel = opt.channel_id.expect("Missing --channel-id");
+            let channel = ChannelId::new(channel);
+            eprintln!("Using telegram bot with cannel: {}", channel);
+            Some((Api::new(token), channel, url))
+        }
+        _ => {
+            eprintln!("The telegram bot is disabled");
+            None
+        }
+    };
 
     HttpServer::new(move || {
         App::new()
             .data(pool.clone())
+            .data(api.clone())
             .wrap(Logger::default())
             .service(communications)
             .service(communications_token)
