@@ -1,7 +1,5 @@
 import React from "react";
 import { Link, Route, Redirect } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { Loading } from "src/components/Loading";
@@ -10,6 +8,7 @@ import { PackContextProvider } from "src/admin/PackContext";
 import { usePack } from "src/admin/hooks/usePack";
 import { StartedContest } from "src/types/contest";
 import { useCommunicationNotifier } from "src/hooks/useCommunication";
+import { LogoutButton } from "src/components/LogoutButton";
 import { SidebarView } from "./SidebarView";
 import {
   useContest, useActions, ContestContextProvider,
@@ -60,20 +59,7 @@ function ContestViewInternal() {
             {contest.surname}
           </span>
         )}
-        {contest && (
-          <button
-            className="btn btn-sm btn-light"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              logout();
-            }}
-          >
-            <FontAwesomeIcon icon={faSignOutAlt} />
-            {" "}
-            <Trans>Logout</Trans>
-          </button>
-        )}
+        {contest && <LogoutButton onClick={() => logout()} />}
         <LanguageSwitcher />
       </nav>
 

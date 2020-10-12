@@ -1,8 +1,7 @@
-import { faLockOpen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Trans } from "@lingui/macro";
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { LogoutButton } from "src/components/LogoutButton";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { useLogin } from "./CommunicationView";
 
@@ -31,15 +30,7 @@ export function Navbar() {
             </Link>
           </li>
         </ul>
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <button type="button" className="btn btn-warning" onClick={() => doLogout()}>
-              <FontAwesomeIcon icon={faLockOpen} />
-              {" "}
-              <Trans>Logout</Trans>
-            </button>
-          </li>
-        </ul>
+        <LogoutButton onClick={() => doLogout()} />
         <LanguageSwitcher />
       </nav>
     </>
