@@ -22,7 +22,7 @@ msgstr "(in minutes)"
 msgid "<0>Be careful!</0>Once the contest starts it cannot be stopped!"
 msgstr "<0>Be careful!</0> Once the contest starts it cannot be stopped!"
 
-#: src/admin/AdminView.tsx:18
+#: src/admin/AdminView.tsx:17
 #: src/admin/UploadPackView.tsx:17
 msgid "Admin"
 msgstr "Admin"
@@ -37,8 +37,8 @@ msgid "Admin token"
 msgstr "Admin token"
 
 #: src/communication/Announcements.tsx:11
-#: src/communication/Navbar.tsx:28
-#: src/contest/Communication.tsx:51
+#: src/communication/Navbar.tsx:27
+#: src/contest/Communication.tsx:62
 msgid "Announcements"
 msgstr "Announcements"
 
@@ -57,7 +57,7 @@ msgstr "Answered"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src/contest/Communication.tsx:28
+#: src/contest/Communication.tsx:30
 msgid "Ask a question"
 msgstr "Ask a question"
 
@@ -91,6 +91,10 @@ msgstr "C/C++ Documentation"
 #: src/contest/submission/submit/Submit.tsx:72
 msgid "Cancel"
 msgstr "Cancel"
+
+#: src/contest/Communication.tsx:55
+msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
+msgstr "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 
 #: src/contest/submission/submit/CreateSubmissionView.tsx:7
 msgid "Cannot submit for this input."
@@ -246,9 +250,9 @@ msgstr "Download results"
 #: src/admin/AdminSummaryView.tsx:54
 #: src/admin/AdminUsersView.tsx:43
 #: src/admin/DownloadResultsView.tsx:32
-#: src/contest/Communication.tsx:55
-#: src/contest/Communication.tsx:68
-#: src/contest/ContestView.tsx:29
+#: src/contest/Communication.tsx:66
+#: src/contest/Communication.tsx:79
+#: src/contest/ContestView.tsx:28
 #: src/contest/LoginView.tsx:44
 #: src/contest/submission/SubmissionListView.tsx:115
 #: src/contest/submission/SubmissionReportView.tsx:26
@@ -365,9 +369,7 @@ msgstr "Log in"
 msgid "Login"
 msgstr "Login"
 
-#: src/admin/AdminView.tsx:26
-#: src/communication/Navbar.tsx:37
-#: src/contest/ContestView.tsx:61
+#: src/components/LogoutButton.tsx:12
 msgid "Logout"
 msgstr "Logout"
 
@@ -388,15 +390,19 @@ msgstr "Message filter"
 msgid "Name"
 msgstr "Name"
 
+#: src/contest/Communication.tsx:56
+msgid "Network problem. Reconnecting..."
+msgstr "Network problem. Reconnecting..."
+
 #: src/communication/NewAnnouncement.tsx:35
 msgid "New announcement"
 msgstr "New announcement"
 
-#: src/hooks/useCommunication.tsx:129
+#: src/hooks/useCommunication.tsx:141
 msgid "New announcement: {0}"
 msgstr "New announcement: {0}"
 
-#: src/contest/Communication.tsx:59
+#: src/contest/Communication.tsx:70
 msgid "No announcements yet."
 msgstr "No announcements yet."
 
@@ -486,13 +492,13 @@ msgstr "Publish"
 msgid "Python"
 msgstr "Python"
 
-#: src/hooks/useCommunication.tsx:153
+#: src/hooks/useCommunication.tsx:165
 msgid "Question answered!"
 msgstr "Question answered!"
 
-#: src/communication/Navbar.tsx:23
+#: src/communication/Navbar.tsx:22
 #: src/communication/Questions.tsx:13
-#: src/contest/Communication.tsx:63
+#: src/contest/Communication.tsx:74
 msgid "Questions"
 msgstr "Questions"
 
@@ -562,7 +568,7 @@ msgstr "Select the documentation you want to consult:"
 msgid "Select the tutorial you want to consult:"
 msgstr "Select the tutorial you want to consult:"
 
-#: src/contest/Communication.tsx:33
+#: src/contest/Communication.tsx:35
 msgid "Send"
 msgstr "Send"
 
@@ -636,7 +642,7 @@ msgstr "Surname"
 msgid "System status"
 msgstr "System status"
 
-#: src/contest/ContestView.tsx:40
+#: src/contest/ContestView.tsx:39
 msgid "Task not found"
 msgstr "Task not found"
 
@@ -644,7 +650,7 @@ msgstr "Task not found"
 msgid "Tasks"
 msgstr "Tasks"
 
-#: src/communication/Navbar.tsx:18
+#: src/communication/Navbar.tsx:17
 msgid "Terry Communications"
 msgstr "Terry Communications"
 
@@ -652,7 +658,7 @@ msgstr "Terry Communications"
 msgid "Text file"
 msgstr "Text file"
 
-#: src/hooks/useCommunication.tsx:156
+#: src/hooks/useCommunication.tsx:168
 msgid "The answer to one of your questions got updated"
 msgstr "The answer to one of your questions got updated"
 
@@ -661,7 +667,7 @@ msgid "The communication system is enabled for this contest."
 msgstr "The communication system is enabled for this contest."
 
 #: src/communication/CommunicationView.tsx:33
-#: src/contest/Communication.tsx:21
+#: src/contest/Communication.tsx:23
 msgid "The communication system is not available for this contest."
 msgstr "The communication system is not available for this contest."
 
@@ -709,7 +715,7 @@ msgstr "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes
 msgid "The provided date cannot be used as start time for the contest. Please set a date in the future."
 msgstr "The provided date cannot be used as start time for the contest. Please set a date in the future."
 
-#: src/contest/Communication.tsx:37
+#: src/contest/Communication.tsx:39
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
@@ -723,7 +729,7 @@ msgstr "Token"
 msgid "Typescript"
 msgstr "Typescript"
 
-#: src/hooks/useCommunication.tsx:132
+#: src/hooks/useCommunication.tsx:144
 msgid "Updated announcement: {0}"
 msgstr "Updated announcement: {0}"
 

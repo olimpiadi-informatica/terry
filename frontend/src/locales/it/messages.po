@@ -22,7 +22,7 @@ msgstr "(in minuti)"
 msgid "<0>Be careful!</0>Once the contest starts it cannot be stopped!"
 msgstr "<0>Attenzione!</0> Una volta che la gara inizia non è più possibile fermarla!"
 
-#: src/admin/AdminView.tsx:18
+#: src/admin/AdminView.tsx:17
 #: src/admin/UploadPackView.tsx:17
 msgid "Admin"
 msgstr "Admin"
@@ -37,8 +37,8 @@ msgid "Admin token"
 msgstr "Admin token"
 
 #: src/communication/Announcements.tsx:11
-#: src/communication/Navbar.tsx:28
-#: src/contest/Communication.tsx:51
+#: src/communication/Navbar.tsx:27
+#: src/contest/Communication.tsx:62
 msgid "Announcements"
 msgstr "Annunci"
 
@@ -57,7 +57,7 @@ msgstr "Con risposta"
 msgid "Are you sure?"
 msgstr "Sei sicuro?"
 
-#: src/contest/Communication.tsx:28
+#: src/contest/Communication.tsx:30
 msgid "Ask a question"
 msgstr "Fai una domanda"
 
@@ -91,6 +91,10 @@ msgstr "Documentazione C/C++"
 #: src/contest/submission/submit/Submit.tsx:72
 msgid "Cancel"
 msgstr "Annulla"
+
+#: src/contest/Communication.tsx:55
+msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
+msgstr "Impossibile raggiungere il server delle comunicazioni, il tuo browser riproverà a connettersi automaticamente. Le informazioni visualizzate sono una copia locale che potrebbe non essere aggiornata."
 
 #: src/contest/submission/submit/CreateSubmissionView.tsx:7
 msgid "Cannot submit for this input."
@@ -246,9 +250,9 @@ msgstr "Scarica risultati"
 #: src/admin/AdminSummaryView.tsx:54
 #: src/admin/AdminUsersView.tsx:43
 #: src/admin/DownloadResultsView.tsx:32
-#: src/contest/Communication.tsx:55
-#: src/contest/Communication.tsx:68
-#: src/contest/ContestView.tsx:29
+#: src/contest/Communication.tsx:66
+#: src/contest/Communication.tsx:79
+#: src/contest/ContestView.tsx:28
 #: src/contest/LoginView.tsx:44
 #: src/contest/submission/SubmissionListView.tsx:115
 #: src/contest/submission/SubmissionReportView.tsx:26
@@ -365,9 +369,7 @@ msgstr "Accedi"
 msgid "Login"
 msgstr "Accedi"
 
-#: src/admin/AdminView.tsx:26
-#: src/communication/Navbar.tsx:37
-#: src/contest/ContestView.tsx:61
+#: src/components/LogoutButton.tsx:12
 msgid "Logout"
 msgstr "Logout"
 
@@ -388,15 +390,19 @@ msgstr "Filtra messaggio"
 msgid "Name"
 msgstr "Nome"
 
+#: src/contest/Communication.tsx:56
+msgid "Network problem. Reconnecting..."
+msgstr "Problema di rete. Riconnessione in corso..."
+
 #: src/communication/NewAnnouncement.tsx:35
 msgid "New announcement"
 msgstr "Nuovo annuncio"
 
-#: src/hooks/useCommunication.tsx:129
+#: src/hooks/useCommunication.tsx:141
 msgid "New announcement: {0}"
 msgstr "Nuovo annuncio: {0}"
 
-#: src/contest/Communication.tsx:59
+#: src/contest/Communication.tsx:70
 msgid "No announcements yet."
 msgstr "Ancora nessun annuncio."
 
@@ -486,13 +492,13 @@ msgstr "Pubblica"
 msgid "Python"
 msgstr "Python"
 
-#: src/hooks/useCommunication.tsx:153
+#: src/hooks/useCommunication.tsx:165
 msgid "Question answered!"
 msgstr "Nuova risposta!"
 
-#: src/communication/Navbar.tsx:23
+#: src/communication/Navbar.tsx:22
 #: src/communication/Questions.tsx:13
-#: src/contest/Communication.tsx:63
+#: src/contest/Communication.tsx:74
 msgid "Questions"
 msgstr "Domande"
 
@@ -562,7 +568,7 @@ msgstr "Seleziona la documentazione che vuoi consultare"
 msgid "Select the tutorial you want to consult:"
 msgstr "Seleziona il tutorial che vuoi consultare"
 
-#: src/contest/Communication.tsx:33
+#: src/contest/Communication.tsx:35
 msgid "Send"
 msgstr "Invia"
 
@@ -636,7 +642,7 @@ msgstr "Cognome"
 msgid "System status"
 msgstr "Stato del sistema"
 
-#: src/contest/ContestView.tsx:40
+#: src/contest/ContestView.tsx:39
 msgid "Task not found"
 msgstr "Problema non trovato"
 
@@ -644,7 +650,7 @@ msgstr "Problema non trovato"
 msgid "Tasks"
 msgstr "Problemi"
 
-#: src/communication/Navbar.tsx:18
+#: src/communication/Navbar.tsx:17
 msgid "Terry Communications"
 msgstr "Terry Communications"
 
@@ -652,7 +658,7 @@ msgstr "Terry Communications"
 msgid "Text file"
 msgstr "File di testo"
 
-#: src/hooks/useCommunication.tsx:156
+#: src/hooks/useCommunication.tsx:168
 msgid "The answer to one of your questions got updated"
 msgstr "La risposta ad una tua domanda è stata aggiornata"
 
@@ -661,7 +667,7 @@ msgid "The communication system is enabled for this contest."
 msgstr "Il sistema di comunicazione è attivo per questa gara."
 
 #: src/communication/CommunicationView.tsx:33
-#: src/contest/Communication.tsx:21
+#: src/contest/Communication.tsx:23
 msgid "The communication system is not available for this contest."
 msgstr "Il sistema di comunicazione non è disponibile per questa gara."
 
@@ -709,7 +715,7 @@ msgstr "Il file che hai selezionato è troppo grande ({size} bytes > {MAX_SOURCE
 msgid "The provided date cannot be used as start time for the contest. Please set a date in the future."
 msgstr "La data inserita non può essere usata come data di inizio della gara. Inserisci una data nel futuro."
 
-#: src/contest/Communication.tsx:37
+#: src/contest/Communication.tsx:39
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "La tua domanda verrà inviata allo staff che la analizzerà e cercherà di rispondere più velocemente possibile. Riceverai una notifica (se le hai abilitate) quando la risposta sarà disponibile. Cerca di essere paziente se la risposta ritarda ad arrivare, e cerca di essere rispettoso.<0/>Puoi chiedere chiarimenti sui problemi, ma lo staff si risera l'autorità di decidere a cosa rispondere."
 
@@ -723,7 +729,7 @@ msgstr "Token"
 msgid "Typescript"
 msgstr "Typescript"
 
-#: src/hooks/useCommunication.tsx:132
+#: src/hooks/useCommunication.tsx:144
 msgid "Updated announcement: {0}"
 msgstr "Annuncio aggiornato: {0}"
 

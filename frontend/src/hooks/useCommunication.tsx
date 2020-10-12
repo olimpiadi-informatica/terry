@@ -15,6 +15,7 @@ const sessionName = "communications";
 type CommunicationContextType = {
   announcements: Loadable<Announcement[]>;
   questions: Loadable<Question[]>;
+  errored: boolean;
   reload: () => void;
   askQuestion: (question: string) => Promise<Question>;
   sendAnswer: (id: number, answer: string) => Promise<void>;
@@ -37,6 +38,7 @@ const defaultContext = () => {
     return {
       announcements: Loadable.loading(),
       questions: Loadable.loading(),
+      errored: false,
       reload: () => {},
       askQuestion: () => Promise.reject(),
       sendAnswer: () => Promise.reject(),
@@ -45,6 +47,7 @@ const defaultContext = () => {
   return {
     announcements: Loadable.of(storage.announcements),
     questions: Loadable.of(storage.questions),
+    errored: false,
     reload: () => {},
     askQuestion: () => Promise.reject(),
     sendAnswer: () => Promise.reject(),
@@ -60,6 +63,7 @@ type Props = {
 
 export function CommunicationContextProvider({ children, token }: Props) {
   const fromStorage = defaultContext();
+  const [errored, setErrored] = useState<boolean>(false);
   const [announcements, setAnnouncements] = useState<Loadable<Announcement[]>>(fromStorage.announcements);
   const [questions, setQuestions] = useState<Loadable<Question[]>>(fromStorage.questions);
   const [handle, reload] = useTriggerUpdate();
@@ -74,11 +78,15 @@ export function CommunicationContextProvider({ children, token }: Props) {
           const data = response.data as CommunicationData;
           setAnnouncements(Loadable.of(data.announcements));
           setQuestions(Loadable.of(data.questions || []));
+          setErrored(false);
         })
         .catch((response) => {
           notifyError(response);
+          setErrored(true);
           // eslint-disable-next-line no-console
           console.error("Failed to load communications", response);
+          // the announcements and questions are not reset here, preventing
+          // network failures to hide the locally stored backup
         });
     };
 
@@ -120,6 +128,7 @@ export function CommunicationContextProvider({ children, token }: Props) {
     <CommunicationContext.Provider value={{
       announcements,
       questions,
+      errored,
       reload,
       askQuestion,
       sendAnswer,
@@ -138,6 +147,11 @@ export function useAnnouncements() {
 export function useQuestions() {
   const context = useContext(CommunicationContext);
   return useMemo(() => context.questions, [context.questions]);
+}
+
+export function useCommunicationErrored() {
+  const context = useContext(CommunicationContext);
+  return useMemo(() => context.errored, [context.errored]);
 }
 
 export function useReloadCommunication() {
