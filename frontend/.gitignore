@@ -1,8 +1,8 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules
-.pnp
+/node_modules
+/.pnp
 .pnp.js
 
 # testing
@@ -10,7 +10,6 @@ node_modules
 
 # production
 /build
-_
 
 # misc
 .DS_Store
@@ -18,6 +17,7 @@ _
 .env.development.local
 .env.test.local
 .env.production.local
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -25,5 +25,5 @@ yarn-error.log*
 # DB
 *.sqlite3
 
-# translations
+# lingui
 src/locales/_build

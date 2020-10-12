@@ -1,0 +1,201 @@
+html {
+  min-height: 100%;
+}
+
+html,
+body,
+#root,
+.terry-body {
+  flex: 1 0 100%;
+  display: flex;
+}
+
+html,
+body,
+#root {
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.striped-background {
+  background: repeating-linear-gradient(45deg, #eeeeee, #eeeeee 10px, #fefefe 10px, #fefefe 20px);
+}
+
+.bordered-group > a.btn {
+  border-color: #dee2e6;
+}
+
+.custom-file {
+  width: 3em;
+}
+
+.terry-body {
+  flex-direction: row;
+}
+
+.terry-body > main {
+  flex: 1 1 auto;
+}
+
+.terry-navbar {
+  display: flex;
+  background-color: #0275d8;
+  align-items: center;
+  padding: 8px;
+  color: white;
+}
+
+.terry-navbar a {
+  color: white;
+}
+
+.terry-navbar-admin {
+  background-color: #f0ad4e;
+}
+
+.terry-user-name {
+  margin-right: 1em;
+}
+
+.terry-admin-logout-button,
+.justify-right {
+  margin-left: auto;
+}
+
+.sidebar {
+  order: -1;
+  flex: 0 0 auto;
+  width: 16em;
+}
+
+table.sample-case {
+  white-space: pre;
+}
+
+table.terry-table {
+  margin: 0;
+}
+
+table.terry-table td {
+  vertical-align: middle;
+}
+
+a.tasklist-item {
+  text-transform: uppercase;
+}
+
+h5.modal-subtitle {
+  margin-top: 0.5rem;
+}
+
+/**
+ * Make the tooltip content more similar to the bootstrap one
+ */
+.__react_component_tooltip {
+  font-size: inherit !important;
+  transition: inherit !important;
+  background-color: black !important;
+
+  /* for some reason, !important is required */
+}
+
+/**
+ * Make the tooltip arrows more similar to the bootstrap one
+ */
+.__react_component_tooltip::after {
+  border-top-color: black !important;
+  border-bottom-color: black !important;
+
+  /* for some reason, !important is required */
+}
+
+.sidebar {
+  padding: 16px 0px 0px;
+  order: -1;
+}
+
+.no-padding {
+  padding: 0px;
+}
+
+.nav-link {
+  border-radius: 0px !important;
+}
+
+.divider-vertical {
+  width: calc(100% - 32px);
+  margin: auto;
+  border-top: 1px solid #424242;
+  border-bottom: 1px solid #fff;
+  margin-bottom: 8px;
+  display: none;
+}
+
+li.title {
+  padding-left: 16px;
+}
+
+main {
+  padding: 16px;
+  font-size: large;
+}
+
+.jumbotron {
+  margin: auto;
+  min-width: 50em;
+}
+
+.task-score-badge {
+  float: right;
+  margin-top: 0.2rem;
+}
+
+.task-list-item {
+  overflow-x: hidden;
+}
+
+.submissionView {
+  margin: 16px;
+}
+
+/* Side notes for calling out things
+-------------------------------------------------- */
+
+/* Base styles (regardless of theme) */
+.card-header {
+  background-color: #0275d8;
+  color: #fff;
+}
+
+.card-header h5 {
+  margin-bottom: 0px;
+}
+
+/* Admin
+-------------------------------------------------- */
+.admin-jumbotron {
+  background-color: #f0ad4e;
+}
+
+pre {
+  margin-bottom: 0;
+}
+
+blockquote {
+  margin: 0;
+  font-size: 80%;
+  background-color: cornsilk;
+  padding: 0.5rem;
+}
+blockquote > ul {
+  margin: 0;
+}
+
+body.ReactModal__Body--open {
+  overflow-y: hidden;
+}
+
+.language-selector {
+  max-width: 10em;
+}
