@@ -4,13 +4,13 @@ extern crate log;
 use actix_web::middleware::Logger;
 use actix_web::ResponseError;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
-use telegram_bot::{Api, types::ParseMode, types::requests::SendMessage, types::ChannelId};
 use core::fmt::Display;
 use failure::Fallible;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::Arc;
 use structopt::StructOpt;
+use telegram_bot::{types::requests::SendMessage, types::ChannelId, types::ParseMode, Api};
 
 mod db;
 
@@ -99,8 +99,7 @@ async fn send_telegram_notification(api: Arc<TelegramBotData>, question: db::Que
             "*New question*\n_At {} UTC_\n\n```\n{}\n```\n{}",
             question.date, question.content, url
         );
-        let mut message =
-            SendMessage::new(channel, message);
+        let mut message = SendMessage::new(channel, message);
         message.parse_mode(ParseMode::Markdown);
         message.disable_preview();
         if let Err(e) = api.send(message).await {

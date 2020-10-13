@@ -11,11 +11,14 @@ use std::path::Path;
 pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
 pub type FallibleQuery<T> = std::result::Result<T, actix_web::Error>;
 
+/// The schema of the database, executed at start to setup the tables.
+const SCHEMA: &str = include_str!("../schema.sql");
+
 /// Connect to the sqlite database at the provided path and return a connection
 /// pool to it.
 pub fn connect<P: AsRef<Path>>(path: P) -> Fallible<Pool> {
-    let manager = SqliteConnectionManager::file(path.as_ref())
-        .with_init(|c| c.execute_batch("PRAGMA foreign_keys=1;"));
+    let manager =
+        SqliteConnectionManager::file(path.as_ref()).with_init(|c| c.execute_batch(SCHEMA));
     Pool::new(manager).map_err(|e| e.into())
 }
 

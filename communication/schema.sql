@@ -1,6 +1,6 @@
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     token TEXT PRIMARY KEY,
     isAdmin INTEGER NOT NULL CHECK (
         isAdmin = 0
@@ -8,7 +8,7 @@ CREATE TABLE users (
     )
 );
 
-CREATE TABLE announcements (
+CREATE TABLE IF NOT EXISTS announcements (
     id INTEGER PRIMARY KEY,
     severity TEXT NOT NULL,
     title TEXT NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE announcements (
     creator TEXT NOT NULL REFERENCES users(token)
 );
 
-CREATE TABLE questions (
+CREATE TABLE IF NOT EXISTS questions (
     id INTEGER PRIMARY KEY,
     content TEXT NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
