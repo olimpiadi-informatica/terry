@@ -60,7 +60,8 @@ docker run -d -v $(pwd)/storage:/data -P edomora97/terry:latest
 
 The nginx and terr-server logs are stored inside `/data/logs`.
 
-Note that since the image uses alpine linux, it may be required to have the binaries linked with musl or be statically linked.
+You can use the `build_docker.py` script to ease the building of the docker image.
+Passing `--communication internal` it will setup the container to spawn also the communication server.
 
 ## Build the server VM
 

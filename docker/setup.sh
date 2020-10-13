@@ -1,5 +1,12 @@
 #!/bin/sh -ex
 
+TERRY_BRANCH=${TERRY_BRANCH:-master}
+
+# Diagnostics
+echo "Building terry"
+echo "Branch: $TERRY_BRANCH"
+echo "Communication: $REACT_APP_COMMUNICATIONS_BASE_URI"
+
 # Temporary dependencies
 MAKE_DEPS="curl git libffi-dev"
 
@@ -15,6 +22,10 @@ apt-get install nodejs
 
 # Fetch Terry
 git clone --recursive https://github.com/algorithm-ninja/terry /terry
+
+# Checkout the correct branch
+cd /terry
+git checkout $TERRY_BRANCH
 
 # Build the backend
 cd /terry/backend
