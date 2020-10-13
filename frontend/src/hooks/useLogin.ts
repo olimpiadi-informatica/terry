@@ -16,5 +16,5 @@ export function useLogin(cookieName: string) {
     [cookieName, removeCookie],
   );
 
-  return [cookies[cookieName], login, logout] as const;
+  return [cookies[cookieName] || null, login, logout] as const;
 }
