@@ -14,7 +14,7 @@ export function Navbar() {
   };
   return (
     <>
-      <nav className="terry-navbar navbar-expand-lg mb-3">
+      <nav className="terry-navbar navbar-expand mb-3">
         <Link to="/admin/communication" className="navbar-brand">
           <Trans>Terry Communications</Trans>
         </Link>

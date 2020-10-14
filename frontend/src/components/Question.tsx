@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { Question as QuestionT } from "src/types/contest";
 import { useSendAnswer } from "src/hooks/useCommunication";
 import { i18n } from "src/i18n";
-import { AbsoluteDate } from "./AbsoluteDate";
+import { RelativeDate } from "./RelativeDate";
 
 type Props = {
     question: QuestionT,
@@ -48,12 +48,12 @@ export function Question({ question, serverTime, canAnswer } : Props) {
 
   return (
     <div className={`alert alert-${color}`} key={question.id}>
-      <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={date} /></span>
+      <span className="float-right"><RelativeDate clock={() => serverTime()} date={date} /></span>
       {question.content}
       <hr />
       {question.answer && answerDate && (
         <>
-          <span className="float-right"><AbsoluteDate clock={() => serverTime()} date={answerDate} /></span>
+          <span className="float-right"><RelativeDate clock={() => serverTime()} date={answerDate} /></span>
           <ReactMarkdown source={question.answer.content} />
         </>
       )}
