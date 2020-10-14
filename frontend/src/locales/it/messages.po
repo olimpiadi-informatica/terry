@@ -498,7 +498,7 @@ msgstr "Nuova risposta!"
 
 #: src/communication/Navbar.tsx:22
 #: src/communication/Questions.tsx:13
-#: src/contest/Communication.tsx:74
+#: src/contest/Communication.tsx:73
 msgid "Questions"
 msgstr "Domande"
 
@@ -784,6 +784,10 @@ msgstr "Puoi inviare <0>quante sottoposizioni vuoi</0>, ma riceverai file di inp
 #: src/contest/submission/SubmissionListView.tsx:80
 msgid "You have not submitted yet."
 msgstr "Non hai ancora sottomesso nulla."
+
+#: src/contest/Communication.tsx:83
+msgid "You have to be logged in to ask a question."
+msgstr "Devi effettuare l'accesso per poter fare domande."
 
 #: src/contest/submission/submit/SourceSelector.tsx:68
 msgid "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."

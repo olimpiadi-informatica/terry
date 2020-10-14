@@ -99,13 +99,13 @@ export function Communication() {
           </p>
         )
       }
+      <h1>
+        <Trans>Questions</Trans>
+      </h1>
+      <hr />
       {
-        isLoggedIn() && (
+        isLoggedIn() ? (
           <>
-            <h1>
-              <Trans>Questions</Trans>
-            </h1>
-            <hr />
             {renderAskQuestion()}
             { questions.isLoading() && <Loading /> }
             { questions.isError() && <Trans>Error</Trans> }
@@ -114,6 +114,12 @@ export function Communication() {
                 <Question key={question.id} question={question} serverTime={serverTime} canAnswer={false} />
               ))
             }
+          </>
+        ) : (
+          <>
+            <p>
+              <em><Trans>You have to be logged in to ask a question.</Trans></em>
+            </p>
           </>
         )
       }
