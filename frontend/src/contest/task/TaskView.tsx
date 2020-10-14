@@ -9,7 +9,7 @@ import { SubmissionListView } from "src/contest/submission/SubmissionListView";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { Loading } from "src/components/Loading";
 import { TaskCommands } from "./TaskCommands";
-import { TaskStatementView } from "./TaskStatementView";
+import { TaskStatement } from "./TaskStatement";
 import { LastSubmission } from "./LastSubmission";
 
 type Props = {
@@ -32,7 +32,7 @@ export function TaskView({ task, userTask }: Props) {
         </p>
       );
     }
-    return <TaskStatementView task={task} source={statement.value()} />;
+    return <TaskStatement task={task} source={statement.value()} />;
   };
   return (
     <>

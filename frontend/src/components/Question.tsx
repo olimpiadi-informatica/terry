@@ -3,11 +3,11 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
 import { Question as QuestionT } from "src/types/contest";
 import { useSendAnswer } from "src/hooks/useCommunication";
 import { i18n } from "src/i18n";
 import { RelativeDate } from "./RelativeDate";
+import { Markdown } from "./Markdown";
 
 type Props = {
     question: QuestionT,
@@ -34,8 +34,8 @@ export function Question({ question, serverTime, canAnswer } : Props) {
           />
         </div>
         <hr />
-        <h3>Preview</h3>
-        <ReactMarkdown source={answer} />
+        <h3><Trans>Preview</Trans></h3>
+        <Markdown source={answer} />
         <hr />
         <button type="submit" className="btn btn-primary">
           <FontAwesomeIcon icon={faPaperPlane} />
@@ -54,7 +54,7 @@ export function Question({ question, serverTime, canAnswer } : Props) {
       {question.answer && answerDate && (
         <>
           <span className="float-right"><RelativeDate clock={() => serverTime()} date={answerDate} /></span>
-          <ReactMarkdown source={question.answer.content} />
+          <Markdown source={question.answer.content} />
         </>
       )}
       {

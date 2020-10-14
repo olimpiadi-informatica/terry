@@ -2,21 +2,18 @@ import React from "react";
 import RemarkMathPlugin from "remark-math";
 import { BlockMath, InlineMath } from "react-katex";
 import ReactMarkdown from "react-markdown";
-import { client } from "src/TerryClient";
-import { TaskData } from "src/types/contest";
-import "./TaskStatementView.css";
 
 import "katex/dist/katex.min.css";
 
 type Props = {
-  task: TaskData;
   source: string;
+  baseUri?: string;
 };
 
-export function TaskStatementView({ task, source }: Props) {
+export function Markdown({ baseUri, source }: Props) {
   const transformUri = (url: string) => {
-    const taskBaseUri = task.statement_path.match(/.*\//)?.[0];
-    return client.statementsBaseURI + taskBaseUri + url;
+    if (!baseUri) return url;
+    return baseUri + url;
   };
 
   return (
@@ -32,3 +29,7 @@ export function TaskStatementView({ task, source }: Props) {
     />
   );
 }
+
+Markdown.defaultProps = {
+  baseUri: undefined,
+};

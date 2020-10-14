@@ -2,8 +2,8 @@ import React, { createRef, useState } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "src/i18n";
 import { Loading } from "src/components/Loading";
-import ReactMarkdown from "react-markdown";
 import { usePack } from "src/admin/hooks/usePack";
+import { Markdown } from "src/components/Markdown";
 import { useActions, useContest } from "./ContestContext";
 
 export function LoginView() {
@@ -25,7 +25,7 @@ export function LoginView() {
         pack && pack.uploaded && (
           <div>
             <h1>{pack.name}</h1>
-            <ReactMarkdown source={pack.description} />
+            <Markdown source={pack.description} />
             <hr />
           </div>
         )
