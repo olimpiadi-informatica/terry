@@ -7,6 +7,7 @@
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 
 import base64
+import abc
 
 import nacl
 import nacl.hash
@@ -27,15 +28,166 @@ METADATA_OFFSET = HASH_LEN + VERSION_LEN
 DATA_OFFSET = METADATA_OFFSET + METADATA_LEN
 
 
-def _sha256(data: bytes):
+class PackVersion(abc.ABC):
+    hash_len = 32
+    version_len = 1
+
+    def __init__(self, input_data: bytes):
+        self.input_data = input_data
+
+    @staticmethod
+    def version(input_data: bytes) -> int:
+        """
+        Return the version of the pack. The decoder can be found in the
+        `pack_versions` list.
+        """
+        version = input_data[
+            PackVersion.hash_len : PackVersion.hash_len + PackVersion.version_len
+        ]
+        return int.from_bytes(version, "little")
+
+    def validate(self) -> bool:
+        """
+        Verify if the pack content is valid according to the hash stored
+        inside.
+        """
+        sha = self.input_data[: self.hash_len]
+        return sha == _sha256(self.input_data[self.hash_len :])
+
+    @classmethod
+    @abc.abstractmethod
+    def encode(cls, password: bytes, input_data: bytes, metadata: bytes) -> bytes:
+        """
+        Encode the input_data and the metadata in a new pack encrypted with the
+        provided password.
+        """
+        pass
+
+    @abc.abstractmethod
+    def metadata(self) -> bytes:
+        """
+        Extract the plain text metadata from the pack.
+        """
+        pass
+
+    @abc.abstractmethod
+    def decode(self, password: bytes) -> bytes:
+        """
+        Decode the pack content using the provided password.
+        """
+        pass
+
+
+class Version0(PackVersion):
+    """
+    Pack layout:
+    - [  32 byte] SHA256 of version+metadata+encrypted
+    - [   1 byte] version = 0
+    - [1024 byte] metadata right-padded with zeros
+    - [     rest] encrypted data
+    """
+
+    metadata_len = 1024
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @classmethod
+    def encode(cls, password: bytes, input_data: bytes, metadata: bytes) -> bytes:
+        key = password_to_key(password)
+        box = nacl.secret.SecretBox(key)
+        encrypted = box.encrypt(input_data)
+        if len(metadata) > Version0.metadata_len:
+            raise ValueError("Metadata is too long")
+        metadata += b"\x00" * (Version0.metadata_len - len(metadata))
+        sha = _sha256(b"\x00" + metadata + encrypted)
+        return sha + b"\x00" + metadata + encrypted
+
+    def metadata(self) -> bytes:
+        metadata_start = self.hash_len + self.version_len
+        return self.input_data[metadata_start : metadata_start + self.metadata_len]
+
+    def decode(self, password: bytes) -> bytes:
+        key = password_to_key(password)
+        box = nacl.secret.SecretBox(key)
+        data_offset = self.hash_len + self.version_len + self.metadata_len
+        return box.decrypt(self.input_data[data_offset:])
+
+
+class Version1(PackVersion):
+    """
+    Pack layout:
+    - [ 32 byte] SHA256 of version+metadata_len+metadata+encrypted
+    - [  1 byte] version = 1
+    - [  4 byte] metadata length, in big-endian
+    - [variable] metadata content (of the declared length)
+    - [    rest] encrypted data
+    """
+
+    metadata_len_len = 4
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @classmethod
+    def encode(cls, password: bytes, input_data: bytes, metadata: bytes) -> bytes:
+        key = password_to_key(password)
+        box = nacl.secret.SecretBox(key)
+        encrypted = box.encrypt(input_data)
+        metadata = len(metadata).to_bytes(cls.metadata_len_len, "big") + metadata
+        sha = _sha256(b"\x01" + metadata + encrypted)
+        return sha + b"\x01" + metadata + encrypted
+
+    def metadata_len(self) -> int:
+        metadata_len_start = self.hash_len + self.version_len
+        return int.from_bytes(
+            self.input_data[
+                metadata_len_start : metadata_len_start + self.metadata_len_len
+            ],
+            "big",
+        )
+
+    def metadata(self) -> bytes:
+        metadata_start = self.hash_len + self.version_len + self.metadata_len_len
+        return self.input_data[metadata_start : metadata_start + self.metadata_len()]
+
+    def decode(self, password: bytes) -> bytes:
+        key = password_to_key(password)
+        box = nacl.secret.SecretBox(key)
+        data_offset = (
+            self.hash_len
+            + self.version_len
+            + self.metadata_len_len
+            + self.metadata_len()
+        )
+        return box.decrypt(self.input_data[data_offset:])
+
+
+pack_versions = [Version0, Version1]
+
+
+def parse_pack(input_data: bytes) -> PackVersion:
+    """
+    Return the parser for the pack.
+    """
+    version = PackVersion.version(input_data)
+    if version < 0 or version >= len(pack_versions):
+        raise ValueError("Unsupported pack version: %d" % version)
+    return pack_versions[version](input_data)
+
+
+def _sha256(data: bytes) -> bytes:
     return bytes.fromhex(nacl.hash.sha256(data).decode())
 
 
-def _sha512(data: bytes):
+def _sha512(data: bytes) -> bytes:
     return bytes.fromhex(nacl.hash.sha512(data).decode())
 
 
-def user_to_bytes(user: str):
+def user_to_bytes(user: str) -> bytes:
+    """
+    Convert a username into bytes, checking the format.
+    """
     if not all("A" <= x <= "Z" or "0" <= x <= "9" or x == "_" for x in user):
         raise ValueError("Invalid username")
     return user.encode("ascii")
@@ -99,27 +251,26 @@ def password_to_key(password: bytes):
     )
 
 
-def encode(password: bytes, input_data: bytes, metadata: bytes):
-    key = password_to_key(password)
-    box = nacl.secret.SecretBox(key)
-    encrypted = box.encrypt(input_data)
-    if len(metadata) > METADATA_LEN:
-        raise ValueError("Metadata is too long")
-    metadata += b"\x00" * (METADATA_LEN - len(metadata))
-    sha = _sha256(b"\x00" + metadata + encrypted)
-    return sha + b"\x00" + metadata + encrypted
+def encode(
+    password: bytes, input_data: bytes, metadata: bytes, version: int = -1
+) -> bytes:
+    try:
+        version = pack_versions[version]
+    except IndexError:
+        raise ValueError("Unsupported pack version: %d" % version)
+    return version.encode(password, input_data, metadata)
 
 
-def validate(input_data: bytes):
-    sha = input_data[:VERSION_OFFSET]
-    return sha == _sha256(input_data[VERSION_OFFSET:])
+def validate(input_data: bytes) -> bool:
+    pack = parse_pack(input_data)
+    return pack.validate()
 
 
-def metadata(input_data: bytes):
-    return input_data[METADATA_OFFSET:DATA_OFFSET]
+def metadata(input_data: bytes) -> bytes:
+    pack = parse_pack(input_data)
+    return pack.metadata()
 
 
-def decode(password: bytes, input_data: bytes):
-    key = password_to_key(password)
-    box = nacl.secret.SecretBox(key)
-    return box.decrypt(input_data[DATA_OFFSET:])
+def decode(password: bytes, input_data: bytes) -> bytes:
+    pack = parse_pack(input_data)
+    return pack.decode(password)
