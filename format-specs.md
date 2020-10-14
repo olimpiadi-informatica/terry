@@ -86,10 +86,19 @@ The metadata yaml should follow this format:
 | `name` | yes | `"Contest For Fun"` | Name of the contest, it should be the same as in the contest |
 | `description` | yes | `"A not so nice description"` | A markdown description of the contest, with Mathjax support. See note below. |
 | `deletable` | no | `true` | If `true` is specified the contest can be reset from the admin interface, otherwise the server will lock and use only this pack. |
+| `sections` | no | see below | Extra custom pages to include in the frontend. See below. |
 
 **Note** about `description`: it is not required that the description encrypted inside the pack and the one inside the public metadata are the same.
 The public one will be shown to the user before they log in and may contain useful information on how to log in (e.g. using SSO, or how to the window works).
 After the login only the description inside the pack is shown and can contain information about the tasks.
+
+The `sections` metadata should be an array of objects following this format:
+
+| field | required | example | Info |
+| ----- |:--------:| ------- | ---- |
+| `name` | yes | `"Extra material"` | The title of the page, shown in the navbar |
+| `url` | yes | `extra-material` | The url to use for the new page |
+| `page` | yes | `"## some content"` | The markdown content of the page, with Mathjax support |
 
 **Note** about metadata size: using an old version of terry the yaml-serialized metadata cannot be longer than 1024 bytes. The last version of the pack supports up to 4GB metadata files.
 
