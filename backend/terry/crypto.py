@@ -6,6 +6,7 @@
 # Copyright 2018 - Edoardo Morassutto <edoardo.morassutto@gmail.com>
 # Copyright 2018 - Luca Versari <veluca93@gmail.com>
 
+from typing import BinaryIO
 import base64
 import abc
 
@@ -19,13 +20,6 @@ NACL_SALT = bytes.fromhex(
 )
 SECRET_LEN = 3
 USERNAME_LEN = 6
-
-HASH_LEN = 32
-VERSION_LEN = 1
-METADATA_LEN = 1024
-VERSION_OFFSET = HASH_LEN
-METADATA_OFFSET = HASH_LEN + VERSION_LEN
-DATA_OFFSET = METADATA_OFFSET + METADATA_LEN
 
 
 class PackVersion(abc.ABC):
@@ -60,6 +54,15 @@ class PackVersion(abc.ABC):
         """
         Encode the input_data and the metadata in a new pack encrypted with the
         provided password.
+        """
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def read_metadata(cls, file: BinaryIO) -> bytes:
+        """
+        Read just the metadata part from the pack. The file start from the
+        first byte after the version.
         """
         pass
 
@@ -103,6 +106,10 @@ class Version0(PackVersion):
         sha = _sha256(b"\x00" + metadata + encrypted)
         return sha + b"\x00" + metadata + encrypted
 
+    @classmethod
+    def read_metadata(cls, file: BinaryIO) -> bytes:
+        return file.read(cls.metadata_len)
+
     def metadata(self) -> bytes:
         metadata_start = self.hash_len + self.version_len
         return self.input_data[metadata_start : metadata_start + self.metadata_len]
@@ -137,6 +144,11 @@ class Version1(PackVersion):
         metadata = len(metadata).to_bytes(cls.metadata_len_len, "big") + metadata
         sha = _sha256(b"\x01" + metadata + encrypted)
         return sha + b"\x01" + metadata + encrypted
+
+    @classmethod
+    def read_metadata(cls, file: BinaryIO) -> bytes:
+        metadata_len = int.from_bytes(file.read(cls.metadata_len_len), "big")
+        return file.read(metadata_len)
 
     def metadata_len(self) -> int:
         metadata_len_start = self.hash_len + self.version_len
@@ -269,6 +281,17 @@ def validate(input_data: bytes) -> bool:
 def metadata(input_data: bytes) -> bytes:
     pack = parse_pack(input_data)
     return pack.metadata()
+
+
+def read_metadata(path: str) -> bytes:
+    with open(path, "rb") as f:
+        f.read(PackVersion.hash_len)
+        version = int.from_bytes(f.read(PackVersion.version_len), "big")
+        try:
+            version = pack_versions[version]
+        except IndexError:
+            raise ValueError("Unsupported pack version: %d" % version)
+        return version.read_metadata(f)
 
 
 def decode(password: bytes, input_data: bytes) -> bytes:

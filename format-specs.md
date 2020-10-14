@@ -91,7 +91,7 @@ The metadata yaml should follow this format:
 The public one will be shown to the user before they log in and may contain useful information on how to log in (e.g. using SSO, or how to the window works).
 After the login only the description inside the pack is shown and can contain information about the tasks.
 
-**Note** about metadata size: using an old version of terry the yaml-serialized metadata cannot be longer than 1024 bytes.
+**Note** about metadata size: using an old version of terry the yaml-serialized metadata cannot be longer than 1024 bytes. The last version of the pack supports up to 4GB metadata files.
 
 
 ## Checker result specification

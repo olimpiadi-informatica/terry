@@ -9,6 +9,7 @@ import base64
 import unittest
 
 from terry import crypto
+from .utils import Utils
 
 
 class TestCrypto(unittest.TestCase):
@@ -154,7 +155,7 @@ class TestCrypto(unittest.TestCase):
         secret = b"FFF"
         scrambled_password = b"A" * 65
 
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             crypto.recover_file_password(username, secret, scrambled_password)
 
     def test_recover_file_password_from_token(self):
@@ -189,3 +190,28 @@ class TestCrypto(unittest.TestCase):
                 encrypted = crypto.encode(password, data, b"metadata", version=version)
                 metadata = crypto.metadata(encrypted)
                 self.assertEqual(metadata.strip(b"\x00"), b"metadata")
+
+    def test_read_metadata(self):
+        for version in range(len(crypto.pack_versions)):
+            with self.subTest():
+                password = b"fooobarr"
+                data = b"#bellavita"
+                encrypted = crypto.encode(password, data, b"metadata", version=version)
+                pack_file = Utils.new_tmp_file()
+                with open(pack_file, "wb") as f:
+                    f.write(encrypted)
+                metadata = crypto.read_metadata(pack_file)
+                self.assertEqual(metadata.strip(b"\x00"), b"metadata")
+
+    def test_read_metadata_unsupported_version(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        version = len(crypto.pack_versions).to_bytes(1, "big")
+        pack = crypto.encode(password, data, b"")
+        offset = crypto.PackVersion.hash_len
+        pack = pack[:offset] + version + pack[offset + 1 :]
+        pack_file = Utils.new_tmp_file()
+        with open(pack_file, "wb") as f:
+            f.write(pack)
+        with self.assertRaises(ValueError):
+            crypto.read_metadata(pack_file)

@@ -58,8 +58,7 @@ class AdminHandler(BaseHandler):
         """
         if not os.path.exists(Config.encrypted_file):
             return {"uploaded": False}
-        with open(Config.encrypted_file, "rb") as f:
-            raw_meta = crypto.metadata(f.read(crypto.DATA_OFFSET))
+        raw_meta = crypto.read_metadata(Config.encrypted_file)
         metadata = ruamel.yaml.safe_load(raw_meta.strip(b"\x00"))
         if metadata is None:
             metadata = dict()
