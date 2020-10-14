@@ -1,10 +1,12 @@
+import { AxiosError } from "axios";
+
 export enum LoadableState {
   Loading,
   Ready,
   Error,
 }
 
-export class Loadable<T, E = unknown> {
+export class Loadable<T, E = AxiosError> {
   private state = LoadableState.Loading;
 
   private value_?: T;

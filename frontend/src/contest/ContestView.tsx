@@ -9,6 +9,7 @@ import { usePack } from "src/admin/hooks/usePack";
 import { StartedContest } from "src/types/contest";
 import { useCommunicationNotifier } from "src/hooks/useCommunication";
 import { LogoutButton } from "src/components/LogoutButton";
+import { Error } from "src/components/Error";
 import { SidebarView } from "./SidebarView";
 import {
   useContest, useActions, ContestContextProvider,
@@ -29,7 +30,7 @@ function ContestViewInternal() {
   useCommunicationNotifier();
 
   if (pack.isLoading()) return <Loading />;
-  if (pack.isError()) return <Trans>Error</Trans>;
+  if (pack.isError()) return <Error cause={pack.error()} />;
   if (!pack.value().uploaded) return <Redirect to="/admin" />;
 
   const loggedIn = isLoggedIn();

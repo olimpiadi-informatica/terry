@@ -10,6 +10,7 @@ import "./AdminLogsView.css";
 import { AbsoluteDate } from "src/components/AbsoluteDate";
 import { i18n } from "src/i18n";
 import { LogLevel, LogsOptions, LogEntry } from "src/types/admin";
+import { Error } from "src/components/Error";
 import { useServerTime } from "./AdminContext";
 import { useLogs, defaultLogsOptions } from "./hooks/useLogs";
 
@@ -106,7 +107,7 @@ export function AdminLogsView() {
     return (
       <tr>
         <td colSpan={4}>
-          <Trans>Error</Trans>
+          <Error boxed={false} cause={logs.error()} />
         </td>
       </tr>
     );

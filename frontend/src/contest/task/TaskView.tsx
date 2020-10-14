@@ -1,5 +1,4 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { Route } from "react-router-dom";
 import { TaskData, UserTaskData } from "src/types/contest";
 import { useStatement } from "src/contest/hooks/useStatement";
@@ -8,6 +7,7 @@ import { SubmissionReportView } from "src/contest/submission/SubmissionReportVie
 import { SubmissionListView } from "src/contest/submission/SubmissionListView";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { Loading } from "src/components/Loading";
+import { Error } from "src/components/Error";
 import { TaskCommands } from "./TaskCommands";
 import { TaskStatement } from "./TaskStatement";
 import { LastSubmission } from "./LastSubmission";
@@ -26,11 +26,7 @@ export function TaskView({ task, userTask }: Props) {
       return <Loading />;
     }
     if (statement.isError()) {
-      return (
-        <p>
-          <Trans>Failed to load task statement. Try reloading the page.</Trans>
-        </p>
-      );
+      return <Error cause={statement.error()} />;
     }
     return <TaskStatement task={task} source={statement.value()} />;
   };

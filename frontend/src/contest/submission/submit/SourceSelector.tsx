@@ -8,6 +8,8 @@ import {
 } from "src/contest/hooks/useUpload";
 import { ValidationAlert } from "src/contest/submission/ValidationAlert";
 import { UploadedSource } from "src/types/contest";
+import { Error } from "src/components/Error";
+import { Loading } from "src/components/Loading";
 import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
 import { FileView } from "./FileView";
 
@@ -55,11 +57,7 @@ export function SourceSelector({ inputId, setSource }: Props) {
             <Trans>Source file...</Trans>
           </label>
         </div>
-        {uploadStatus.isError() && (
-          <p>
-            <Trans>Error</Trans>
-          </p>
-        )}
+        {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
       </>
     );
   }
@@ -106,16 +104,8 @@ export function SourceSelector({ inputId, setSource }: Props) {
             {language}
           </div>
         )}
-        {uploadStatus.isLoading() && (
-          <p>
-            <Trans>Processing...</Trans>
-          </p>
-        )}
-        {uploadStatus.isError() && (
-          <p>
-            <Trans>Error</Trans>
-          </p>
-        )}
+        {uploadStatus.isLoading() && <Loading />}
+        {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
         {uploadStatus.isReady()
           && uploadStatus.value().validation.alerts.map((a) => <ValidationAlert alert={a} key={a.message} />)}
       </div>

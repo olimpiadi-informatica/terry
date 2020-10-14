@@ -4,6 +4,7 @@ import { i18n } from "src/i18n";
 import { Loading } from "src/components/Loading";
 import { usePack } from "src/admin/hooks/usePack";
 import { Markdown } from "src/components/Markdown";
+import { Error } from "src/components/Error";
 import { useActions, useContest } from "./ContestContext";
 
 export function LoginView() {
@@ -57,15 +58,7 @@ export function LoginView() {
             />
           </div>
           <input type="submit" className="btn btn-primary" value={i18n._(t`Login`)} />
-          {contest.isError() && (
-            <div className="alert alert-danger mt-2" role="alert">
-              <strong>
-                <Trans>Error</Trans>
-              </strong>
-              {" "}
-              {contest.error().response?.data.message}
-            </div>
-          )}
+          {contest.isError() && <Error className="mt-2" cause={contest.error()} />}
           {isLoading && <Loading />}
         </form>
       </div>

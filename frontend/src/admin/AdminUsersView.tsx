@@ -8,6 +8,7 @@ import { Modal } from "src/components/Modal";
 import { i18n } from "src/i18n";
 import { Loading } from "src/components/Loading";
 import { UserEntry } from "src/types/admin";
+import { Error } from "src/components/Error";
 import { useActions } from "./AdminContext";
 import { useUsers } from "./hooks/useUsers";
 
@@ -57,8 +58,6 @@ function UserExtraTimeView({ user }: UserExtraTimeProps) {
 
 export function AdminUsersView() {
   const [users] = useUsers();
-  if (users.isLoading()) return <Loading />;
-  if (users.isError()) return <Trans>Error</Trans>;
 
   const renderUserRow = (user: UserEntry, i: number) => {
     const ips = user.ip
@@ -90,34 +89,39 @@ export function AdminUsersView() {
           <span aria-hidden="true">&times;</span>
         </Link>
       </div>
-      <div className="modal-body no-padding">
-        <table className="table terry-table">
-          <thead>
-            <tr>
-              <th>
-                <Trans>Name</Trans>
-              </th>
-              <th>
-                <Trans>Surname</Trans>
-              </th>
-              <th>
-                <Trans>Token</Trans>
-              </th>
-              <th>
-                <Trans>IP</Trans>
-              </th>
-              <th>
-                <Trans>Extra time</Trans>
-                {" "}
-                <small>
-                  <Trans>(in minutes)</Trans>
-                </small>
-              </th>
-            </tr>
-          </thead>
-          <tbody>{users.value().items.map((user, i) => renderUserRow(user, i))}</tbody>
-        </table>
-      </div>
+      {users.isLoading() && <Loading />}
+      {users.isError() && <Error cause={users.error()} />}
+      {users.isReady() && (
+        <div className="modal-body no-padding">
+          <table className="table terry-table">
+            <thead>
+              <tr>
+                <th>
+                  <Trans>Name</Trans>
+                </th>
+                <th>
+                  <Trans>Surname</Trans>
+                </th>
+                <th>
+                  <Trans>Token</Trans>
+                </th>
+                <th>
+                  <Trans>IP</Trans>
+                </th>
+                <th>
+                  <Trans>Extra time</Trans>
+                  {" "}
+                  <small>
+                    <Trans>(in minutes)</Trans>
+                  </small>
+                </th>
+              </tr>
+            </thead>
+            <tbody>{users.value().items.map((user, i) => renderUserRow(user, i))}</tbody>
+          </table>
+        </div>
+      )}
+
       <div className="modal-footer">
         <Link to="/admin" role="button" className="btn btn-primary">
           <FontAwesomeIcon icon={faTimes} />

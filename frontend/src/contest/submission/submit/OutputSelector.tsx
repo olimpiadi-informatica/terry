@@ -5,6 +5,8 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useUpload, UploadType } from "src/contest/hooks/useUpload";
 import { ValidationView } from "src/contest/submission/ValidationView";
 import { UploadedOutput } from "src/types/contest";
+import { Error } from "src/components/Error";
+import { Loading } from "src/components/Loading";
 import { FileView } from "./FileView";
 
 type Props = {
@@ -47,11 +49,7 @@ export function OutputSelector({ inputId, setOutput }: Props) {
             <Trans>Output file...</Trans>
           </label>
         </div>
-        {uploadStatus.isError() && (
-          <p>
-            <Trans>Error</Trans>
-          </p>
-        )}
+        {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
       </>
     );
   }
@@ -78,16 +76,8 @@ export function OutputSelector({ inputId, setOutput }: Props) {
       </div>
       <div className="card-body">
         <FileView file={file} />
-        {uploadStatus.isLoading() && (
-          <p>
-            <Trans>Processing...</Trans>
-          </p>
-        )}
-        {uploadStatus.isError() && (
-          <p>
-            <Trans>Error</Trans>
-          </p>
-        )}
+        {uploadStatus.isLoading() && <Loading />}
+        {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
         {uploadStatus.isReady() && <ValidationView output={uploadStatus.value()} />}
       </div>
     </div>
