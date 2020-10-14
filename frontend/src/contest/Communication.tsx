@@ -47,7 +47,7 @@ export function Communication() {
         <em>
           <Trans>
             The question will be sent to the staff, who will analyze it and try to answer as quickly as possible.
-            You will receive a notification (if you enabled them) when the answer will be available.
+            You will receive a notification (if you enabled them) when the answer is available.
             Please be patient if the answer lags to arrive, and try to be respectful.
             <br />
             You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to

@@ -40,7 +40,7 @@ export function Question({ question, serverTime, canAnswer } : Props) {
         <button type="submit" className="btn btn-primary">
           <FontAwesomeIcon icon={faPaperPlane} />
           {" "}
-          Answer
+          <Trans>Answer</Trans>
         </button>
       </form>
     </>

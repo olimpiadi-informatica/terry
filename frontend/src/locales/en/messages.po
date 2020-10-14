@@ -42,6 +42,10 @@ msgstr "Admin token"
 msgid "Announcements"
 msgstr "Announcements"
 
+#: src/components/Question.tsx:28
+msgid "Answer"
+msgstr "Answer"
+
 #: src/components/Question.tsx:19
 msgid "Answer with Markdown"
 msgstr "Answer with Markdown"
@@ -716,8 +720,8 @@ msgid "The provided date cannot be used as start time for the contest. Please se
 msgstr "The provided date cannot be used as start time for the contest. Please set a date in the future."
 
 #: src/contest/Communication.tsx:39
-msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
-msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer will be available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
+msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
+msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
 #: src/admin/AdminUsersView.tsx:79
 #: src/contest/LoginView.tsx:37
