@@ -49,9 +49,11 @@ The solutions in the `solutions/` directory are used only during the development
 ## Task metadata specification
 The `task.yaml` file inside the task root directory should be a YAML file with _at least_ the following fields:
 
-- `name`: the short name of the task (usually all lowercase, without spaces).
-- `description`: a longer name of the task (usually title-case).
-- `max_score`: maximum score obtainable with a 100% correct solution of this task.
+| field | required | example | Info |
+| ----- |:--------:| ------- | ---- |
+| `name` | yes | `"poldo"` | The short name of the task (usually all lowercase, without spaces) |
+| `description` | yes | `"La dieta di Poldo"` | A longer name of the task (usually title-case) |
+| `max_score` | yes | `42` | Maximum score obtainable with a 100% correct solution of this task |
 
 ## Contest metadata specification
 The `contest.yaml` file (actually `__users__/{username}.yaml`, where `{username}` is what's before the first `-` in the admin token) should follow this format:
@@ -97,7 +99,7 @@ The `sections` metadata should be an array of objects following this format:
 | field | required | example | Info |
 | ----- |:--------:| ------- | ---- |
 | `name` | yes | `"Extra material"` | The title of the page, shown in the navbar |
-| `url` | yes | `extra-material` | The url to use for the new page |
+| `url` | yes | `"extra-material"` | The url to use for the new page |
 | `page` | yes | `"## some content"` | The markdown content of the page, with Mathjax support |
 
 **Note** about metadata size: using an old version of terry the yaml-serialized metadata cannot be longer than 1024 bytes. The last version of the pack supports up to 4GB metadata files.
