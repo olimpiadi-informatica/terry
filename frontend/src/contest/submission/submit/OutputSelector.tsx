@@ -23,9 +23,15 @@ export function OutputSelector({ inputId, setOutput }: Props) {
     if (!outputRef.current) return;
     const f = outputRef.current.files?.[0] || null;
     setFile(f);
-    if (uploadStatus.isReady()) setOutput(uploadStatus.value());
-    else setOutput(null);
-  }, [uploadStatus, setOutput, outputRef]);
+  }, [outputRef]);
+
+  useEffect(() => {
+    if (uploadStatus.isReady()) {
+      setOutput(uploadStatus.value());
+    } else {
+      setOutput(null);
+    }
+  }, [uploadStatus, setOutput]);
 
   if (!file) {
     const selectOutputFile = async () => {
