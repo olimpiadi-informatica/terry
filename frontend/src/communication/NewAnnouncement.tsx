@@ -37,10 +37,10 @@ export function NewAnnouncement() {
       <h2><Trans>New announcement</Trans></h2>
       <form onSubmit={(e) => { e.preventDefault(); publish(); }}>
         <div className="form-group">
-          <input className="form-control" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input className="form-control" placeholder={i18n._(t`Title`)} value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div className="form-group">
-          <textarea className="form-control" placeholder="Content" value={content} onChange={(e) => setContent(e.target.value)} />
+          <textarea className="form-control" placeholder={i18n._(t`Content`)} value={content} onChange={(e) => setContent(e.target.value)} />
         </div>
         <div className="form-group">
           <label htmlFor="content"><Trans>Severity</Trans></label>
