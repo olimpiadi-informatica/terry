@@ -53,6 +53,47 @@ The `task.yaml` file inside the task root directory should be a YAML file with _
 - `description`: a longer name of the task (usually title-case).
 - `max_score`: maximum score obtainable with a 100% correct solution of this task.
 
+## Contest metadata specification
+The `contest.yaml` file (actually `__users__/{username}.yaml`, where `{username}` is what's before the first `-` in the admin token) should follow this format:
+
+| field | required | example | Info |
+| ----- |:--------:| ------- | ---- |
+| `duration` | yes | `7200` | Duration of the contest, in seconds |
+| `name` | no | `"Contest For Fun"` | Name of the contest, shown in the navbar and in the homepage |
+| `description` | no | `"A nice description"` | A markdown description of the contest, with Mathjax support |
+| `window_duration` | no | `3600` | If specified the contestants will have this amount of time (in seconds) from the first login |
+| `tasks` | yes | `["task1", "task2"]` | List with the task names, in the correct order |
+| `users` | yes | `[ user1, user2 ]` | List with the users in the contest, see the format below |
+
+Each user in the `users` list should follow this format:
+
+| field | required | example | Info |
+| ----- |:--------:| ------- | ---- |
+| `token` | yes | `"s3cr3t"` | Token that the user use to log in |
+| `name` | yes | `"John"` | First name of the user |
+| `surname` | yes | `"Doe"` | Last name of the user |
+
+### Public metadata
+
+The pack file also contains a yaml section with some public information about the contest.
+Those information are stored unencrypted and are available to the frontend even without being logged in.
+
+They are used to customize the frontend before the contest is extracted and before the user is logged in.
+The metadata yaml should follow this format:
+
+| field | required | example | Info |
+| ----- |:--------:| ------- | ---- |
+| `name` | yes | `"Contest For Fun"` | Name of the contest, it should be the same as in the contest |
+| `description` | yes | `"A not so nice description"` | A markdown description of the contest, with Mathjax support. See note below. |
+| `deletable` | no | `true` | If `true` is specified the contest can be reset from the admin interface, otherwise the server will lock and use only this pack. |
+
+**Note** about `description`: it is not required that the description encrypted inside the pack and the one inside the public metadata are the same.
+The public one will be shown to the user before they log in and may contain useful information on how to log in (e.g. using SSO, or how to the window works).
+After the login only the description inside the pack is shown and can contain information about the tasks.
+
+**Note** about metadata size: using an old version of terry the yaml-serialized metadata cannot be longer than 1024 bytes.
+
+
 ## Checker result specification
 The checker should print to its standard output a JSON value with _at least_ the following fields:
 
