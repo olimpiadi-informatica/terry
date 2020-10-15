@@ -59,7 +59,7 @@ export class Loadable<T, E = AxiosError> {
     return this.error_;
   }
 
-  valueOr(def: T): T {
+  valueOr<T2>(def: T2): T | T2 {
     if (this.value_ === undefined) return def;
     return this.value_;
   }

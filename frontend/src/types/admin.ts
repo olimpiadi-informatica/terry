@@ -53,6 +53,12 @@ export type ZipData = {
   path: string;
 };
 
+export type Section = {
+  name: string;
+  url: string;
+  page: string;
+};
+
 export type Pack =
   | { uploaded: false }
   | {
@@ -60,4 +66,5 @@ export type Pack =
       deletable: boolean;
       name: string;
       description: string;
+      sections?: Section[];
     };

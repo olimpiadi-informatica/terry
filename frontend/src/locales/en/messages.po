@@ -88,10 +88,6 @@ msgstr "C#"
 msgid "C++"
 msgstr "C++"
 
-#: src/contest/help/Documentation.tsx:15
-msgid "C/C++ Documentation"
-msgstr "C/C++ Documentation"
-
 #: src/contest/submission/submit/Submit.tsx:72
 msgid "Cancel"
 msgstr "Cancel"
@@ -112,11 +108,11 @@ msgstr "Category"
 msgid "Category filter"
 msgstr "Category filter"
 
-#: src/contest/submission/submit/OutputSelector.tsx:63
+#: src/contest/submission/submit/OutputSelector.tsx:67
 msgid "Change output"
 msgstr "Change output"
 
-#: src/contest/submission/submit/SourceSelector.tsx:81
+#: src/contest/submission/submit/SourceSelector.tsx:85
 msgid "Change source"
 msgstr "Change source"
 
@@ -132,7 +128,7 @@ msgstr "Close"
 msgid "CodeBlocks project"
 msgstr "CodeBlocks project"
 
-#: src/contest/SidebarView.tsx:61
+#: src/contest/sidebar/SidebarView.tsx:62
 msgid "Communication"
 msgstr "Communication"
 
@@ -227,14 +223,9 @@ msgstr "Date"
 msgid "Details"
 msgstr "Details"
 
-#: src/contest/submission/submit/SourceSelector.tsx:88
+#: src/contest/submission/submit/SourceSelector.tsx:92
 msgid "Detected language:"
 msgstr "Detected language:"
-
-#: src/contest/SidebarView.tsx:82
-#: src/contest/help/Documentation.tsx:6
-msgid "Documentation"
-msgstr "Documentation"
 
 #: src/contest/submission/SubmissionListView.tsx:93
 msgid "Download"
@@ -258,6 +249,10 @@ msgstr "Download results"
 msgid "Error"
 msgstr "Error"
 
+#: src/contest/sidebar/ExtraSections.tsx:18
+msgid "Extra material"
+msgstr "Extra material"
+
 #: src/admin/AdminSummaryView.tsx:84
 #: src/admin/AdminUsersView.tsx:84
 #: src/admin/ContestExtraTimeView.tsx:27
@@ -274,10 +269,6 @@ msgstr "Extra time successfully updated"
 msgid "Extra time successfully updated for the user"
 msgstr "Extra time successfully updated for the user"
 
-#: src/contest/help/UsefulInfo.tsx:25
-msgid "FAQ"
-msgstr "FAQ"
-
 #: src/admin/UploadPackView.tsx:29
 msgid "File"
 msgstr "File"
@@ -289,14 +280,6 @@ msgstr "File:"
 #: src/contest/submission/submit/submissionLimits.ts:21
 msgid "Go"
 msgstr "Go"
-
-#: src/contest/help/UsefulInfo.tsx:15
-msgid "How to use Codeblocks for programming in C/C++"
-msgstr "How to use Codeblocks for programming in C/C++"
-
-#: src/contest/help/UsefulInfo.tsx:20
-msgid "How to use Lazarus for programming in Pascal"
-msgstr "How to use Lazarus for programming in Pascal"
 
 #: src/admin/AdminUsersView.tsx:81
 msgid "IP"
@@ -354,7 +337,7 @@ msgstr "Log in"
 #: src/communication/Login.tsx:13
 #: src/communication/Login.tsx:22
 #: src/contest/LoginView.tsx:41
-#: src/contest/SidebarView.tsx:54
+#: src/contest/sidebar/SidebarView.tsx:55
 msgid "Login"
 msgstr "Login"
 
@@ -424,11 +407,11 @@ msgstr "On the left side of this page you can find the tasks, click on any one t
 msgid "Output file"
 msgstr "Output file"
 
-#: src/contest/submission/submit/OutputSelector.tsx:55
+#: src/contest/submission/submit/OutputSelector.tsx:59
 msgid "Output file info"
 msgstr "Output file info"
 
-#: src/contest/submission/submit/OutputSelector.tsx:46
+#: src/contest/submission/submit/OutputSelector.tsx:50
 msgid "Output file..."
 msgstr "Output file..."
 
@@ -444,10 +427,6 @@ msgstr "PHP"
 #: src/contest/submission/submit/submissionLimits.ts:28
 msgid "Pascal"
 msgstr "Pascal"
-
-#: src/contest/help/Documentation.tsx:20
-msgid "Pascal Documentation"
-msgstr "Pascal Documentation"
 
 #: src/contest/LoginView.tsx:29
 msgid "Please login"
@@ -490,7 +469,7 @@ msgstr "Question answered!"
 msgid "Questions"
 msgstr "Questions"
 
-#: src/contest/SidebarView.tsx:66
+#: src/contest/sidebar/SidebarView.tsx:67
 msgid "Questions and Announcements"
 msgstr "Questions and Announcements"
 
@@ -499,7 +478,7 @@ msgid "RESET"
 msgstr "RESET"
 
 #: src/admin/AdminContestStatus.tsx:128
-#: src/contest/SidebarView.tsx:28
+#: src/contest/sidebar/SidebarView.tsx:29
 msgid "Remaining time"
 msgstr "Remaining time"
 
@@ -518,10 +497,6 @@ msgstr "Request new input"
 #: src/contest/task/TaskCommands.tsx:62
 msgid "Requesting..."
 msgstr "Requesting..."
-
-#: src/contest/SidebarView.tsx:73
-msgid "Resources"
-msgstr "Resources"
 
 #: src/contest/submission/submit/submissionLimits.ts:32
 msgid "Ruby"
@@ -548,14 +523,6 @@ msgstr "Secondary (grey)"
 msgid "Select a file with an extension"
 msgstr "Select a file with an extension"
 
-#: src/contest/help/Documentation.tsx:10
-msgid "Select the documentation you want to consult:"
-msgstr "Select the documentation you want to consult:"
-
-#: src/contest/help/UsefulInfo.tsx:10
-msgid "Select the tutorial you want to consult:"
-msgstr "Select the tutorial you want to consult:"
-
 #: src/contest/Communication.tsx:35
 msgid "Send"
 msgstr "Send"
@@ -581,11 +548,11 @@ msgstr "Size:"
 msgid "Source file"
 msgstr "Source file"
 
-#: src/contest/submission/submit/SourceSelector.tsx:73
+#: src/contest/submission/submit/SourceSelector.tsx:77
 msgid "Source file info"
 msgstr "Source file info"
 
-#: src/contest/submission/submit/SourceSelector.tsx:53
+#: src/contest/submission/submit/SourceSelector.tsx:57
 msgid "Source file..."
 msgstr "Source file..."
 
@@ -630,11 +597,11 @@ msgstr "Surname"
 msgid "System status"
 msgstr "System status"
 
-#: src/contest/ContestView.tsx:40
+#: src/contest/ContestView.tsx:41
 msgid "Task not found"
 msgstr "Task not found"
 
-#: src/contest/SidebarView.tsx:40
+#: src/contest/sidebar/SidebarView.tsx:41
 msgid "Tasks"
 msgstr "Tasks"
 
@@ -667,7 +634,7 @@ msgstr "The contest has not started yet!"
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 
-#: src/contest/SidebarView.tsx:32
+#: src/contest/sidebar/SidebarView.tsx:33
 msgid "The contest is finished"
 msgstr "The contest is finished"
 
@@ -737,11 +704,6 @@ msgstr "Upload solution"
 msgid "Usage guide"
 msgstr "Usage guide"
 
-#: src/contest/SidebarView.tsx:79
-#: src/contest/help/UsefulInfo.tsx:6
-msgid "Useful information"
-msgstr "Useful information"
-
 #: src/admin/AdminSummaryView.tsx:117
 msgid "Visit"
 msgstr "Visit"
@@ -781,7 +743,7 @@ msgstr "You have not submitted yet."
 msgid "You have to be logged in to ask a question."
 msgstr "You have to be logged in to ask a question."
 
-#: src/contest/submission/submit/SourceSelector.tsx:68
+#: src/contest/submission/submit/SourceSelector.tsx:72
 msgid "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 msgstr "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 
@@ -789,7 +751,7 @@ msgstr "You selected a file with an unknown extension. This submission may be in
 msgid "You selected an empty file"
 msgstr "You selected an empty file"
 
-#: src/contest/SidebarView.tsx:19
+#: src/contest/sidebar/SidebarView.tsx:20
 msgid "Your score"
 msgstr "Your score"
 
