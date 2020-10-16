@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
-import { ModalView } from "src/Modal";
+import { Modal } from "src/components/Modal";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
 import { i18n } from "src/i18n";
 import { Loadable } from "src/Loadable";
+import { ZipData } from "src/types/admin";
 import { useToken } from "./AdminContext";
-import { ZipData } from "./types";
 
 export function DownloadResultsView() {
   const token = useToken();
@@ -51,7 +51,7 @@ export function DownloadResultsView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Download results`)} returnUrl="/admin">
+    <Modal contentLabel={i18n._(t`Download results`)} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Download contest results</Trans>
@@ -69,6 +69,6 @@ export function DownloadResultsView() {
         </div>
         {renderDownloadButton()}
       </div>
-    </ModalView>
+    </Modal>
   );
 }

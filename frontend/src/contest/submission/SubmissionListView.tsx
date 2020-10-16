@@ -5,17 +5,17 @@ import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import ReactTooltip from "react-tooltip";
 import { Trans, t } from "@lingui/macro";
-import { DateComponent } from "src/datetime.views";
+import { RelativeDate } from "src/components/RelativeDate";
 import { client } from "src/TerryClient";
-import { ModalView } from "src/Modal";
+import { Modal } from "src/components/Modal";
 import { colorFromScore } from "src/utils";
 import "./SubmissionListView.css";
 import { i18n } from "src/i18n";
-import { Loading } from "src/Loading";
+import { Loading } from "src/components/Loading";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
-import { Submission, SubmissionList, TaskData } from "src/contest/types";
+import { Submission, SubmissionList, TaskData } from "src/types/contest";
 
 type Props = {
   task: TaskData;
@@ -33,7 +33,7 @@ export function SubmissionListView({ task }: Props) {
     return (
       <tr key={submission.id}>
         <td>
-          <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+          <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
           <br />
           <Link to={`/task/${submission.task}/submission/${submission.id}`}>
             <Trans>view details</Trans>
@@ -141,7 +141,7 @@ export function SubmissionListView({ task }: Props) {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${task.name}`}>
+    <Modal contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${task.name}`}>
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Submission for</Trans>
@@ -162,6 +162,6 @@ export function SubmissionListView({ task }: Props) {
           <Trans>Close</Trans>
         </Link>
       </div>
-    </ModalView>
+    </Modal>
   );
 }

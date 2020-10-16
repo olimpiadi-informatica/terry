@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Trans, t, Plural } from "@lingui/macro";
-import { DateComponent } from "src/datetime.views";
+import { RelativeDate } from "src/components/RelativeDate";
 import { i18n } from "src/i18n";
+import { client } from "src/TerryClient";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./hooks/useLogs";
 import { useUsers } from "./hooks/useUsers";
@@ -73,7 +74,7 @@ export function AdminSummaryView() {
                   <>
                     <Trans>Issue last detected</Trans>
                     {" "}
-                    <DateComponent
+                    <RelativeDate
                       clock={() => serverTime()}
                       date={DateTime.fromISO(logs.value().items[0].date, { zone: "utc" })}
                     />
@@ -128,6 +129,21 @@ export function AdminSummaryView() {
           </ul>
         </div>
       </div>
+      {
+        client.communications && (
+          <div className="card mb-3">
+            <div className="card-body">
+              <h3>
+                <Trans>Communication system</Trans>
+              </h3>
+              <p><Trans>The communication system is enabled for this contest.</Trans></p>
+              <Link to="/admin/communication" className="btn btn-primary">
+                <Trans>Visit</Trans>
+              </Link>
+            </div>
+          </div>
+        )
+      }
       <div className="card mb-3 striped-background">
         <div className="card-body">
           <h3>

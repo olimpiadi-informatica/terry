@@ -1,9 +1,8 @@
 import React from "react";
 import { Link, Route } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
+import { LogoutButton } from "src/components/LogoutButton";
 import { AdminLoginView } from "./AdminLoginView";
 import { AdminLogsView } from "./AdminLogsView";
 import { AdminSummaryView } from "./AdminSummaryView";
@@ -20,18 +19,8 @@ export function AdminView() {
       <Link to="/admin" className="navbar-brand">
         <Trans>Admin</Trans>
       </Link>
-      <button
-        className="terry-admin-logout-button btn btn-sm btn-light"
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          logout();
-        }}
-      >
-        <FontAwesomeIcon icon={faSignOutAlt} />
-        {" "}
-        <Trans>Logout</Trans>
-      </button>
+      <div className="justify-right" />
+      <LogoutButton onClick={() => logout()} />
       <LanguageSwitcher />
     </nav>
   );

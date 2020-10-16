@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import { ModalView } from "src/Modal";
-import { Loading } from "src/Loading";
-import { TaskData } from "src/contest/types";
+import { Modal } from "src/components/Modal";
+import { Loading } from "src/components/Loading";
+import { TaskData } from "src/types/contest";
 import { useSubmission } from "src/contest/hooks/useSubmission";
 import { FeedbackView } from "./FeedbackView";
 
@@ -19,7 +19,7 @@ export function SubmissionReportView({ submissionId, task }: Props) {
 
   const returnUrl = `/task/${task.name}`;
   return (
-    <ModalView contentLabel="Submission creation" returnUrl={returnUrl}>
+    <Modal contentLabel="Submission creation" returnUrl={returnUrl}>
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Submission</Trans>
@@ -42,6 +42,6 @@ export function SubmissionReportView({ submissionId, task }: Props) {
           <Trans>Close</Trans>
         </Link>
       </div>
-    </ModalView>
+    </Modal>
   );
 }

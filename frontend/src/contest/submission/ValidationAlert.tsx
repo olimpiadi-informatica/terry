@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "src/contest/types";
+import { Alert } from "src/types/contest";
 
 type Props = {
     alert: Alert

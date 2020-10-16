@@ -6,10 +6,10 @@ import { AxiosResponse, AxiosError } from "axios";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
 import { Loadable } from "src/Loadable";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
-import { useLogin } from "src/useLogin.hook";
+import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
+import { useLogin } from "src/hooks/useLogin";
+import { StatusData } from "src/types/admin";
 import { PackContext } from "./PackContext";
-import { StatusData } from "./types";
 
 type ContextData = {
   token: string | null;

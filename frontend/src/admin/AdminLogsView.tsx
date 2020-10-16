@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
 import { Trans, t } from "@lingui/macro";
-import { ModalView } from "src/Modal";
+import { Modal } from "src/components/Modal";
 import "./AdminLogsView.css";
-import { AbsoluteDateComponent } from "src/datetime.views";
+import { AbsoluteDate } from "src/components/AbsoluteDate";
 import { i18n } from "src/i18n";
+import { LogLevel, LogsOptions, LogEntry } from "src/types/admin";
 import { useServerTime } from "./AdminContext";
 import { useLogs, defaultLogsOptions } from "./hooks/useLogs";
-import { LogLevel, LogsOptions, LogEntry } from "./types";
 
 const LOG_LEVELS: { [level in LogLevel]: { color: string } } = {
   DEBUG: {
@@ -85,7 +85,7 @@ export function AdminLogsView() {
         // eslint-disable-next-line react/no-array-index-key
         <tr key={i} className={`table-${LOG_LEVELS[log.level].color}`}>
           <td>
-            <AbsoluteDateComponent clock={() => serverTime()} date={DateTime.fromISO(log.date, { zone: "utc" })} />
+            <AbsoluteDate clock={() => serverTime()} date={DateTime.fromISO(log.date, { zone: "utc" })} />
           </td>
           <td>
             <button className="btn btn-link" type="button" onClick={() => setCategory(log.category)}>
@@ -113,7 +113,7 @@ export function AdminLogsView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Logs`)} returnUrl="/admin">
+    <Modal contentLabel={i18n._(t`Logs`)} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Logs</Trans>
@@ -178,6 +178,6 @@ export function AdminLogsView() {
           <Trans>Close</Trans>
         </Link>
       </div>
-    </ModalView>
+    </Modal>
   );
 }

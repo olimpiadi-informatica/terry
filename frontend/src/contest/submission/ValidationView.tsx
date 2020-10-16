@@ -1,6 +1,6 @@
 import React from "react";
 import { Select } from "@lingui/macro";
-import { ValidationCaseInfo, UploadedOutput } from "src/contest/types";
+import { ValidationCaseInfo, UploadedOutput } from "src/types/contest";
 import { ResultView } from "./ResultView";
 
 type Props = {

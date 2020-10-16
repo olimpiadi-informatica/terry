@@ -4,11 +4,12 @@ import React, {
 import { Duration, DateTime } from "luxon";
 import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
-import { useLogin } from "src/useLogin.hook";
+import { useLogin } from "src/hooks/useLogin";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
-import { ContestData } from "./types";
+import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
+import { ContestData } from "src/types/contest";
+import { CommunicationContextProvider } from "src/hooks/useCommunication";
 import { SubmissionListContextProvider } from "./hooks/useSubmissionList";
 
 export type ContextData = {
@@ -98,7 +99,11 @@ export function ContestContextProvider({ children }: ContestContextProps) {
         },
       }}
     >
-      <SubmissionListContextProvider>{children}</SubmissionListContextProvider>
+      <CommunicationContextProvider token={token}>
+        <SubmissionListContextProvider>
+          {children}
+        </SubmissionListContextProvider>
+      </CommunicationContextProvider>
     </ContestContext.Provider>
   );
 }

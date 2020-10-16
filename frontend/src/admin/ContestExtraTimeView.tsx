@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
 import { toast } from "react-toastify";
-import { ModalView } from "src/Modal";
+import { Modal } from "src/components/Modal";
 import { i18n } from "src/i18n";
 import { useStatus, useActions } from "./AdminContext";
 
@@ -28,7 +28,7 @@ export function ContestExtraTimeView() {
   };
 
   return (
-    <ModalView contentLabel={i18n._(t`Extra time`)} returnUrl="/admin">
+    <Modal contentLabel={i18n._(t`Extra time`)} returnUrl="/admin">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -85,6 +85,6 @@ export function ContestExtraTimeView() {
           </button>
         </div>
       </form>
-    </ModalView>
+    </Modal>
   );
 }

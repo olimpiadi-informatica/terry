@@ -2,6 +2,8 @@
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 
+import "react-toastify/dist/ReactToastify.min.css";
+
 export function colorFromScore(score: number, maxScore: number) {
   if (score === maxScore) return "success";
   if (score === 0) return "danger";

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useUpload, UploadType } from "src/contest/hooks/useUpload";
 import { ValidationView } from "src/contest/submission/ValidationView";
-import { UploadedOutput } from "src/contest/types";
+import { UploadedOutput } from "src/types/contest";
 import { FileView } from "./FileView";
 
 type Props = {

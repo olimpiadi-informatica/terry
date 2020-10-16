@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { client } from "src/TerryClient";
-import { ModalView } from "src/Modal";
+import { Modal } from "src/components/Modal";
 import "./Submit.css";
 import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
 import { useActions } from "src/contest/ContestContext";
-import { UploadedSource, UploadedOutput, TaskData } from "src/contest/types";
+import { UploadedSource, UploadedOutput, TaskData } from "src/types/contest";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { SourceSelector } from "./SourceSelector";
 import { OutputSelector } from "./OutputSelector";
@@ -54,7 +54,7 @@ export function Submit({ inputId, task }: Props) {
   const canSubmit = () => source != null && output != null;
 
   return (
-    <ModalView contentLabel="Submission creation" returnUrl={`/task/${task.name}`}>
+    <Modal contentLabel="Submission creation" returnUrl={`/task/${task.name}`}>
       <form
         className="submissionForm"
         onSubmit={(e) => {
@@ -94,6 +94,6 @@ export function Submit({ inputId, task }: Props) {
           </button>
         </div>
       </form>
-    </ModalView>
+    </Modal>
   );
 }

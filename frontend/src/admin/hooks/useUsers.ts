@@ -4,8 +4,8 @@ import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 import { useToken } from "src/admin/AdminContext";
 import { notifyError } from "src/utils";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
-import { UsersData } from "src/admin/types";
+import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
+import { UsersData } from "src/types/admin";
 
 export type ReloadUsers = () => void;
 

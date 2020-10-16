@@ -2,12 +2,13 @@ import React from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
-import { CountdownComponent } from "src/datetime.views";
+import { Countdown } from "src/components/Countdown";
+import { TaskData, StartedContest } from "src/types/contest";
+import { client } from "src/TerryClient";
 import { NavbarItemView } from "./NavbarItemView";
 import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
 import { useContest, useServerTime, useActions } from "./ContestContext";
-import { TaskData, StartedContest } from "./types";
 
 export function SidebarView() {
   const contestL = useContest();
@@ -36,7 +37,7 @@ export function SidebarView() {
           <Trans>Remaining time</Trans>
         </h5>
         <p className="terry-remaining-time">
-          <CountdownComponent
+          <Countdown
             clock={() => serverTime()}
             end={DateTime.fromISO(startedContest.end_time, { zone: "utc" })}
             afterEnd={() => (
@@ -75,6 +76,23 @@ export function SidebarView() {
             </NavLink>
           </li>
         )}
+
+        {
+          client.communications && (
+            <>
+              <li className="nav-item title mt-3">
+                <h5 className="text-uppercase">
+                  <Trans>Communication</Trans>
+                </h5>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/communication" className="nav-link tasklist-item" activeClassName="active">
+                  <Trans>Questions and Announcements</Trans>
+                </NavLink>
+              </li>
+            </>
+          )
+        }
 
         <li className="nav-item title mt-3">
           <h5 className="text-uppercase">

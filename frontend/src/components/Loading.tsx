@@ -1,6 +1,7 @@
 import React from "react";
 
-import "./Loading.css";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "src/components/Loading.css";
 
 export function Loading() {
   return (

@@ -1,5 +1,7 @@
 FROM python:3.8-slim
 
+ARG REACT_APP_COMMUNICATIONS_BASE_URI=
+ARG TERRY_BRANCH=master
 EXPOSE 80
 
 # Setup terry

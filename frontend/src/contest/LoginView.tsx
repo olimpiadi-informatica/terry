@@ -1,7 +1,7 @@
 import React, { createRef, useState } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "src/i18n";
-import { Loading } from "src/Loading";
+import { Loading } from "src/components/Loading";
 import ReactMarkdown from "react-markdown";
 import { usePack } from "src/admin/hooks/usePack";
 import { useActions, useContest } from "./ContestContext";

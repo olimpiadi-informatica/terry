@@ -1,27 +1,32 @@
 import React from "react";
 import { Link, Route, Redirect } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
-import { Loading } from "src/Loading";
+import { Loading } from "src/components/Loading";
 import { TaskView } from "src/contest/task/TaskView";
 import { PackContextProvider } from "src/admin/PackContext";
 import { usePack } from "src/admin/hooks/usePack";
+import { StartedContest } from "src/types/contest";
+import { useCommunicationNotifier } from "src/hooks/useCommunication";
+import { LogoutButton } from "src/components/LogoutButton";
 import { SidebarView } from "./SidebarView";
-import { useContest, useActions, ContestContextProvider } from "./ContestContext";
-import { StartedContest } from "./types";
+import {
+  useContest, useActions, ContestContextProvider,
+} from "./ContestContext";
 import { UsefulInfo } from "./help/UsefulInfo";
 import { Documentation } from "./help/Documentation";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
 import { useDetectInternet } from "./hooks/useDetectInternet";
+import { Communication } from "./Communication";
 
 function ContestViewInternal() {
   const pack = usePack();
   const contestLoadable = useContest();
   const { logout, isLoggedIn } = useActions();
+
   useDetectInternet();
+  useCommunicationNotifier();
 
   if (pack.isLoading()) return <Loading />;
   if (pack.isError()) return <Trans>Error</Trans>;
@@ -54,20 +59,7 @@ function ContestViewInternal() {
             {contest.surname}
           </span>
         )}
-        {contest && (
-          <button
-            className="btn btn-sm btn-light"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              logout();
-            }}
-          >
-            <FontAwesomeIcon icon={faSignOutAlt} />
-            {" "}
-            <Trans>Logout</Trans>
-          </button>
-        )}
+        {contest && <LogoutButton onClick={() => logout()} />}
         <LanguageSwitcher />
       </nav>
 
@@ -76,8 +68,10 @@ function ContestViewInternal() {
         <main>
           {contest && <Route exact path="/" component={ContestHome} />}
           {(!loggedIn || contestLoadable.isError()) && <Route exact path="/" component={LoginView} />}
+
           <Route exact path="/useful-info" component={UsefulInfo} />
           <Route exact path="/documentation" component={Documentation} />
+          <Route exact path="/communication" component={Communication} />
 
           {contest && contest.contest.has_started && (
             <Route path="/task/:taskName" render={({ match }) => renderTask(match.params.taskName)} />

@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
 import { useToken } from "src/admin/AdminContext";
-import { LogsOptions, LogLevel, LogsData } from "src/admin/types";
+import { LogsOptions, LogLevel, LogsData } from "src/types/admin";
 
 export const defaultLogsOptions: LogsOptions = {
   start_date: "2000-01-01T00:00:00.000Z",

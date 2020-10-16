@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "terry-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,39 +29,25 @@
     "luxon": "^1.0.0",
     "moment": "^2.22.1",
     "react": "^16.3.2",
+    "react-cookie": "4.0.3",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "^16.3.2",
     "react-katex": "^2.0.2",
     "react-markdown": "^4.3.1",
-    "react-modal": "^3.4.1",
     "react-router-dom": "^5.1.5",
     "react-scripts": "^3.4.3",
-    "react-toastify": "^4.0.0-rc.4",
+    "react-toastify": "^6.0.8",
     "react-tooltip": "^3.5.0",
+    "react-modal": "^3.4.1",
     "remark-math": "^3.0.1",
-    "typescript": "^3.9.7",
-    "universal-cookie": "^2.1.2"
-  },
-  "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others 'react-scripts start' 'yarn-or-npm run proxy'",
-    "start-bare": "BARE_BACKEND=true yarn-or-npm run start",
-    "start-nobrowser": "BROWSER=none yarn-or-npm run start",
-    "proxy": "ts-node -O '{\"module\":\"commonjs\"}' proxy.ts",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "prettier": "prettier --write src",
-    "add-locale": "lingui add-locale",
-    "extract": "lingui extract",
-    "compile": "lingui compile",
-    "eslint": "eslint src/"
+    "typescript": "^3.9.7"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
-    "@lingui/cli": "^2.9.2",
     "@types/http-proxy": "^1.17.4",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
+    "@lingui/cli": "^2.9.2",
     "babel-core": "^7.0.0-bridge.0",
     "concurrently": "^3.5.1",
     "eslint": "^7.9.0",
@@ -75,6 +61,23 @@
     "ts-node": "^9.0.0",
     "yarn-or-npm": "^3.0.1"
   },
+  "scripts": {
+    "start": "SKIP_PREFLIGHT_CHECK=true concurrently --kill-others 'react-scripts start' 'yarn-or-npm run proxy'",
+    "start-bare": "BARE_BACKEND=true yarn-or-npm run start",
+    "start-bare-nobrowser": "BARE_BACKEND=true BROWSER=none yarn-or-npm run start",
+    "start-nobrowser": "BROWSER=none yarn-or-npm run start",
+    "proxy": "ts-node -O '{\"module\":\"commonjs\"}' proxy.ts",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "eslint": "eslint --fix src/",
+    "add-locale": "lingui add-locale",
+    "extract": "lingui extract",
+    "compile": "lingui compile"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -86,8 +89,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "prettier": {
-    "printWidth": 120
   }
 }

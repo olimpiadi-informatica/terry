@@ -1,13 +1,13 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
 import { Route } from "react-router-dom";
-import { TaskData, UserTaskData } from "src/contest/types";
+import { TaskData, UserTaskData } from "src/types/contest";
 import { useStatement } from "src/contest/hooks/useStatement";
 import { CreateSubmissionView } from "src/contest/submission/submit/CreateSubmissionView";
 import { SubmissionReportView } from "src/contest/submission/SubmissionReportView";
 import { SubmissionListView } from "src/contest/submission/SubmissionListView";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
-import { Loading } from "src/Loading";
+import { Loading } from "src/components/Loading";
 import { TaskCommands } from "./TaskCommands";
 import { TaskStatementView } from "./TaskStatementView";
 import { LastSubmission } from "./LastSubmission";

@@ -3,9 +3,9 @@ import React, {
 } from "react";
 import { client } from "src/TerryClient";
 import { Loadable } from "src/Loadable";
-import { useTriggerUpdate } from "src/useTriggerUpdate.hook";
+import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
 import { notifyError } from "src/utils";
-import { Pack } from "./types";
+import { Pack } from "src/types/admin";
 
 type PackContextType = {
   pack: Loadable<Pack>;

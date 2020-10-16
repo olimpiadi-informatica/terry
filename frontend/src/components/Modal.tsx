@@ -1,8 +1,9 @@
 import React from "react";
-import Modal from "react-modal";
+import ReactModal from "react-modal";
 import { useHistory } from "react-router-dom";
 
-import "./Modal.css";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "src/components/Modal.css";
 
 type Props = {
   contentLabel: string;
@@ -10,11 +11,11 @@ type Props = {
   children: React.ReactNode;
 };
 
-export function ModalView({ contentLabel, returnUrl, children }: Props) {
+export function Modal({ contentLabel, returnUrl, children }: Props) {
   const history = useHistory();
 
   return (
-    <Modal
+    <ReactModal
       isOpen
       contentLabel={contentLabel}
       style={{
@@ -47,8 +48,8 @@ export function ModalView({ contentLabel, returnUrl, children }: Props) {
       onRequestClose={() => history.push(returnUrl)}
     >
       {children}
-    </Modal>
+    </ReactModal>
   );
 }
 
-Modal.setAppElement("#root");
+ReactModal.setAppElement("#root");

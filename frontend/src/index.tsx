@@ -1,19 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import "./i18n.css";
 
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { Loading } from "./Loading";
-
-import { TransProvider } from "./i18n";
+import { TransProvider } from "src/i18n";
+import { Loading } from "src/components/Loading";
 
 import { PackView } from "./admin/PackView";
 
-import "react-toastify/dist/ReactToastify.min.css";
 import { ContestView } from "./contest/ContestView";
+import { CommunicationView } from "./communication/CommunicationView";
 
 /** ****** DEVELOPMENT SPECIFIC ********* */
 if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:9000");
@@ -35,6 +33,7 @@ ReactDOM.render(
         <ToastContainer />
         <Router>
           <Switch>
+            <Route path="/admin/communication" component={CommunicationView} />
             <Route path="/admin" component={PackView} />
             <Route component={ContestView} />
           </Switch>

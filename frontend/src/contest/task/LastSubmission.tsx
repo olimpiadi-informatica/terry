@@ -2,9 +2,9 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
-import { DateComponent } from "src/datetime.views";
+import { RelativeDate } from "src/components/RelativeDate";
 import { useServerTime } from "src/contest/ContestContext";
-import { Submission, TaskData } from "src/contest/types";
+import { Submission, TaskData } from "src/types/contest";
 
 type Props = {
   task: TaskData;
@@ -24,7 +24,7 @@ export function LastSubmission({ task, submissions }: Props) {
         <Trans>Last submission:</Trans>
       </strong>
       {" "}
-      <DateComponent clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+      <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
       {" "}
       (
       <Link to={`/task/${task.name}/submissions`}>

@@ -5,7 +5,7 @@ import { client } from "src/TerryClient";
 import { useToken } from "src/contest/ContestContext";
 import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
-import { SubmissionList } from "src/contest/types";
+import { SubmissionList } from "src/types/contest";
 
 type TasksSubmissionList = {
   [taskName: string]: Loadable<SubmissionList>;

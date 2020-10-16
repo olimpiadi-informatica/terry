@@ -119,3 +119,28 @@ export type StartedContest = {
 } & UserData;
 
 export type ContestData = NotStartedContest | StartedContest;
+
+export type Announcement = {
+  id: number;
+  severity: string;
+  title: string;
+  content: string;
+  date: string;
+}
+
+export type Answer = {
+  date: string;
+  content: string;
+}
+
+export type Question = {
+  id: number;
+  content: string;
+  date: string;
+  answer: Answer | null;
+}
+
+export type CommunicationData = {
+  announcements: Announcement[];
+  questions?: Question[];
+}
