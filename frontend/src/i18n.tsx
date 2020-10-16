@@ -18,7 +18,19 @@ export const supportedLanguages = [
   { lang: "it", name: "Italiano" },
 ];
 
-export const defaultLanguage = (navigator.languages ? navigator.languages[0] : navigator.language).substr(0, 2);
+const selectedLanguageKey = "selectedLanguage";
+
+const getDefaultLanguage = () => {
+  const storedLanguage = window.localStorage.getItem(selectedLanguageKey);
+  if (storedLanguage) return storedLanguage;
+  return (navigator.languages ? navigator.languages[0] : navigator.language).substr(0, 2);
+};
+
+const storeDefaultLanguage = (newLang: string) => {
+  window.localStorage.setItem(selectedLanguageKey, newLang);
+};
+
+export const defaultLanguage = getDefaultLanguage();
 
 export const i18n = setupI18n({ catalogs, language: defaultLanguage });
 
@@ -36,6 +48,7 @@ export function TransProvider({ children }: { children: ReactNode }) {
   const [lang, setLanguage] = useState(defaultLanguage);
 
   const changeLanguage = (newLang: string) => {
+    storeDefaultLanguage(newLang);
     setLanguage(newLang);
     i18n.activate(newLang);
     // when the language changes set the attribute so that bootstrap components can be translated via css

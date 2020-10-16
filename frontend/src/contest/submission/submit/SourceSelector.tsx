@@ -1,4 +1,6 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, {
+  createRef, useEffect, useState,
+} from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "@lingui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +10,8 @@ import {
 } from "src/contest/hooks/useUpload";
 import { ValidationAlert } from "src/contest/submission/ValidationAlert";
 import { UploadedSource } from "src/types/contest";
+import { Error } from "src/components/Error";
+import { Loading } from "src/components/Loading";
 import { checkFile, ALLOWED_EXTENSIONS } from "./submissionLimits";
 import { FileView } from "./FileView";
 
@@ -25,9 +29,15 @@ export function SourceSelector({ inputId, setSource }: Props) {
     if (!sourceRef.current) return;
     const f = sourceRef.current.files?.[0] || null;
     setFile(f);
-    if (uploadStatus.isReady()) setSource(uploadStatus.value());
-    else setSource(null);
-  }, [uploadStatus, setSource, sourceRef]);
+  }, [sourceRef]);
+
+  useEffect(() => {
+    if (uploadStatus.isReady()) {
+      setSource(uploadStatus.value());
+    } else {
+      setSource(null);
+    }
+  }, [uploadStatus, setSource]);
 
   if (!file) {
     const selectSourceFile = async () => {
@@ -55,11 +65,7 @@ export function SourceSelector({ inputId, setSource }: Props) {
             <Trans>Source file...</Trans>
           </label>
         </div>
-        {uploadStatus.isError() && (
-          <p>
-            <Trans>Error</Trans>
-          </p>
-        )}
+        {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
       </>
     );
   }
@@ -106,16 +112,8 @@ export function SourceSelector({ inputId, setSource }: Props) {
             {language}
           </div>
         )}
-        {uploadStatus.isLoading() && (
-          <p>
-            <Trans>Processing...</Trans>
-          </p>
-        )}
-        {uploadStatus.isError() && (
-          <p>
-            <Trans>Error</Trans>
-          </p>
-        )}
+        {uploadStatus.isLoading() && <Loading />}
+        {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
         {uploadStatus.isReady()
           && uploadStatus.value().validation.alerts.map((a) => <ValidationAlert alert={a} key={a.message} />)}
       </div>

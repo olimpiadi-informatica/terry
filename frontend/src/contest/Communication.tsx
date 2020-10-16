@@ -96,7 +96,6 @@ export function Communication() {
       </h1>
       <hr />
       { announcements.isLoading() && <Loading /> }
-      { announcements.isError() && <Trans>Error</Trans> }
       {
         announcements.isReady()
         && announcements.value().slice().reverse().map((announcement) => (
@@ -125,7 +124,6 @@ export function Communication() {
           <>
             {renderAskQuestion()}
             { questions.isLoading() && <Loading /> }
-            { questions.isError() && <Trans>Error</Trans> }
             {
               questions.isReady() && questions.value().slice().reverse().map((question) => (
                 <Question key={question.id} question={question} serverTime={serverTime} canAnswer={false} />

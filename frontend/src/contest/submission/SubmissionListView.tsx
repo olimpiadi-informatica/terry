@@ -16,6 +16,7 @@ import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { Submission, SubmissionList, TaskData } from "src/types/contest";
+import { Error } from "src/components/Error";
 
 type Props = {
   task: TaskData;
@@ -153,7 +154,7 @@ export function SubmissionListView({ task }: Props) {
         </Link>
       </div>
       {submissions.isLoading() && <Loading />}
-      {submissions.isError() && <Trans>Error</Trans>}
+      {submissions.isError() && <Error cause={submissions.error()} />}
       {submissions.isReady() && renderBody(submissions.value())}
       <div className="modal-footer">
         <Link to={`/task/${task.name}`} role="button" className="btn btn-primary">

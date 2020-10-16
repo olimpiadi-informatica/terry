@@ -1,7 +1,7 @@
 import React from "react";
 import { Trans, t } from "@lingui/macro";
-import ReactMarkdown from "react-markdown";
 import { i18n } from "src/i18n";
+import { Markdown } from "src/components/Markdown";
 import { useActions } from "./AdminContext";
 import { usePack } from "./hooks/usePack";
 
@@ -23,7 +23,7 @@ export function AdminLoginView() {
   return (
     <div className="jumbotron admin-jumbotron">
       <h1 className="text-center display-3">{pack.name}</h1>
-      <ReactMarkdown source={pack.description} />
+      <Markdown source={pack.description} />
       <hr />
       <h2 className="text-center">
         <Trans>Log in</Trans>

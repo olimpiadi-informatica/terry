@@ -5,10 +5,11 @@ import { NavLink } from "react-router-dom";
 import { Countdown } from "src/components/Countdown";
 import { TaskData, StartedContest } from "src/types/contest";
 import { client } from "src/TerryClient";
+import { useContest, useServerTime, useActions } from "src/contest/ContestContext";
+import { ScoreView } from "src/contest/ScoreView";
 import { NavbarItemView } from "./NavbarItemView";
-import { ScoreView } from "./ScoreView";
 import "./SidebarView.css";
-import { useContest, useServerTime, useActions } from "./ContestContext";
+import { ExtraSections } from "./ExtraSections";
 
 export function SidebarView() {
   const contestL = useContest();
@@ -94,20 +95,7 @@ export function SidebarView() {
           )
         }
 
-        <li className="nav-item title mt-3">
-          <h5 className="text-uppercase">
-            <Trans>Resources</Trans>
-          </h5>
-        </li>
-
-        <li className="nav-item">
-          <NavLink to="/useful-info" className="nav-link tasklist-item" activeClassName="active">
-            <Trans>Useful information</Trans>
-          </NavLink>
-          <NavLink to="/documentation" className="nav-link tasklist-item" activeClassName="active">
-            <Trans>Documentation</Trans>
-          </NavLink>
-        </li>
+        <ExtraSections />
       </ul>
     </nav>
   );

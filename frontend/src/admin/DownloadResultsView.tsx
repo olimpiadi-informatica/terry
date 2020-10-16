@@ -9,13 +9,14 @@ import { notifyError } from "src/utils";
 import { i18n } from "src/i18n";
 import { Loadable } from "src/Loadable";
 import { ZipData } from "src/types/admin";
+import { Error } from "src/components/Error";
 import { useToken } from "./AdminContext";
 
 export function DownloadResultsView() {
   const token = useToken();
   const [zip, setZip] = useState<Loadable<ZipData>>(Loadable.loading());
 
-  if (!token) throw new Error("DownloadResultView needs to be logged in");
+  if (!token) throw new window.Error("DownloadResultView needs to be logged in");
 
   useEffect(() => {
     client.adminApi(token, "/download_results").then(
@@ -37,7 +38,7 @@ export function DownloadResultsView() {
         </h3>
       );
     }
-    if (zip.isError()) return <Trans>Error</Trans>;
+    if (zip.isError()) return <Error cause={zip.error()} />;
 
     return (
       <a role="button" className="btn btn-success btn-lg" href={client.filesBaseURI + zip.value().path} download>

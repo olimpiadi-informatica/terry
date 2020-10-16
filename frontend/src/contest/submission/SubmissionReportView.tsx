@@ -7,6 +7,7 @@ import { Modal } from "src/components/Modal";
 import { Loading } from "src/components/Loading";
 import { TaskData } from "src/types/contest";
 import { useSubmission } from "src/contest/hooks/useSubmission";
+import { Error } from "src/components/Error";
 import { FeedbackView } from "./FeedbackView";
 
 type Props = {
@@ -32,7 +33,7 @@ export function SubmissionReportView({ submissionId, task }: Props) {
       </div>
       <div className="modal-body">
         {submission.isLoading() && <Loading />}
-        {submission.isError() && <Trans>Error</Trans>}
+        {submission.isError() && <Error cause={submission.error()} />}
         {submission.isReady() && <FeedbackView submission={submission.value()} task={task} />}
       </div>
       <div className="modal-footer">

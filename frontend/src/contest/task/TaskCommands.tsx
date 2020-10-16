@@ -10,6 +10,7 @@ import { useToken, useActions } from "src/contest/ContestContext";
 import {
   SubmissionList, TaskData, UserTaskData, InputData,
 } from "src/types/contest";
+import { Error } from "src/components/Error";
 
 type Props = {
   task: TaskData;
@@ -21,7 +22,7 @@ export function TaskCommands({ task, userTask, submissions }: Props) {
   const [input, setInput] = useState<Loadable<InputData> | null>(null);
   const token = useToken();
   const { reloadContest } = useActions();
-  if (!token) throw new Error("You have to be logged in to see the Task Commands");
+  if (!token) throw new window.Error("You have to be logged in to see the Task Commands");
 
   const generateInput = () => {
     const data = new FormData();
@@ -83,9 +84,7 @@ export function TaskCommands({ task, userTask, submissions }: Props) {
         </button>
       );
     }
-    if (input.isError()) {
-      return <Trans>Error</Trans>;
-    }
+    if (input.isError()) return <Error cause={input.error()} />;
   }
   return renderGenerateInputButton();
 }

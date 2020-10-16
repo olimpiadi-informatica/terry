@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import { Markdown } from "src/components/Markdown";
 import { useContest } from "./ContestContext";
 import { HomeInfo } from "./help/HomeInfo";
 
@@ -12,7 +12,7 @@ export function ContestHome() {
   return (
     <>
       <h1>{contest.contest.name}</h1>
-      <ReactMarkdown source={contest.contest.description} />
+      <Markdown source={contest.contest.description} />
       <hr />
       <HomeInfo hasStarted={contest.contest.has_started} startTime={startTime} />
     </>

@@ -2,7 +2,6 @@ import React, {
   ReactNode, useState, createContext, useContext, useMemo, useEffect, useCallback,
 } from "react";
 import { Duration, DateTime } from "luxon";
-import { AxiosError } from "axios";
 import { useHistory } from "react-router-dom";
 import { useLogin } from "src/hooks/useLogin";
 import { Loadable } from "src/Loadable";
@@ -15,7 +14,7 @@ import { SubmissionListContextProvider } from "./hooks/useSubmissionList";
 export type ContextData = {
   token: string | null;
   serverTimeSkew: Loadable<Duration>;
-  contest: Loadable<ContestData, AxiosError>;
+  contest: Loadable<ContestData>;
 };
 
 export type ContextActions = {
@@ -52,7 +51,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
   const cookieName = "userToken";
   const [token, login, doLogout] = useLogin(cookieName);
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
-  const [contest, setContest] = useState<Loadable<ContestData, AxiosError>>(Loadable.loading());
+  const [contest, setContest] = useState<Loadable<ContestData>>(Loadable.loading());
   const [reloadContestHandle, reloadContest] = useTriggerUpdate();
   const history = useHistory();
 

@@ -5,6 +5,8 @@ import { Trans, t, Plural } from "@lingui/macro";
 import { RelativeDate } from "src/components/RelativeDate";
 import { i18n } from "src/i18n";
 import { client } from "src/TerryClient";
+import { Error } from "src/components/Error";
+import { Loading } from "src/components/Loading";
 import { useStatus, useActions, useServerTime } from "./AdminContext";
 import { useLogs } from "./hooks/useLogs";
 import { useUsers } from "./hooks/useUsers";
@@ -20,7 +22,7 @@ export function AdminSummaryView() {
   const { resetContest } = useActions();
 
   if (!pack.uploaded) {
-    throw new Error("AdminSummaryView requires the pack to be uploaded");
+    throw new window.Error("AdminSummaryView requires the pack to be uploaded");
   }
 
   // auto reload the logs
@@ -55,12 +57,13 @@ export function AdminSummaryView() {
           <h3>
             <Trans>System status</Trans>
           </h3>
-          <ul className="mb-0">
-            <li>
-              {logs.isLoading() && i18n._(t`Loading...`)}
-              {logs.isError() && i18n._(t`Error`)}
-              {logs.isReady()
-                && (logs.value().items.length === 0 ? (
+          {logs.isLoading() && <Loading />}
+          {logs.isError() && <Error cause={logs.error()} />}
+          {logs.isReady()
+          && (
+            <ul className="mb-0">
+              <li>
+                {logs.value().items.length === 0 ? (
                   <>
                     <Trans>No issue detected</Trans>
                     {" "}
@@ -85,9 +88,10 @@ export function AdminSummaryView() {
                     </Link>
                     )
                   </>
-                ))}
-            </li>
-          </ul>
+                )}
+              </li>
+            </ul>
+          )}
         </div>
       </div>
       <div className="card mb-3">

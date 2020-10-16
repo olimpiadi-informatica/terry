@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import { Markdown } from "./Markdown";
 import { RelativeDate } from "./RelativeDate";
 
 type Props = {
@@ -20,7 +20,7 @@ export function Announcement({
         {title}
       </h5>
       <hr />
-      <ReactMarkdown source={content} />
+      <Markdown source={content} />
     </div>
   );
 }

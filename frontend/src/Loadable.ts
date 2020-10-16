@@ -1,10 +1,12 @@
+import { AxiosError } from "axios";
+
 export enum LoadableState {
   Loading,
   Ready,
   Error,
 }
 
-export class Loadable<T, E = unknown> {
+export class Loadable<T, E = AxiosError> {
   private state = LoadableState.Loading;
 
   private value_?: T;
@@ -57,7 +59,7 @@ export class Loadable<T, E = unknown> {
     return this.error_;
   }
 
-  valueOr(def: T): T {
+  valueOr<T2>(def: T2): T | T2 {
     if (this.value_ === undefined) return def;
     return this.value_;
   }

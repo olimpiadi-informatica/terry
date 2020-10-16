@@ -77,7 +77,7 @@ A `server.ova` file has been generated, import it in VirtualBox!
 
 You'll need some configuration files in order to make a valid pack using the utilities in this repo:
 
-- A CSV file with the contestant informations: `atleti.csv`
+- A CSV file with the contestant information: `atleti.csv`
 - A CSV with the venues: `sedi.csv`
 - A YAML file with the contest metadata: `metadata.yaml`
 
@@ -99,7 +99,7 @@ This CSV contains all the venues and the number of rooms in each of them. The re
 - `sede` (the venue's code)
 - `aule` (the number of rooms)
 
-The venue's code must be from 3 to 4 charactes long, usually it's in the format `FRI` or `LOM1`, `LOM2`, ...
+The venue's code must be from 3 to 4 characters long, usually it's in the format `FRI` or `LOM1`, `LOM2`, ...
 
 The room identifier will be the venue's code with the 1-based index of the room, padded to be 6 characters long. For example `FRI001`, `FRI002`, `LOM101`, `LOM102`, ...
 
@@ -107,25 +107,17 @@ The room identifier will be the venue's code with the 1-based index of the room,
 
 This files contains the basic information about a contest.
 
-**Note**: there are limitations on the size of that file (1KiB max).
-
 That file is present, unencrypted, in the contest pack.
 It will be shown in the admin page before the contest extraction.
 The content of this file is also used to make the `contest.yaml` files, the name and description of the contest are get from there.
 
-If you want a longer contest description (exceeding the file size limitation) you can have different metadata files, one for the pack header and one for generating the `contest.yaml` file.
-
-The required fields are:
-
-- `deletable` (boolean) whether the contest can be deleted without resetting the server.
-- `name` (string) the name of the contest.
-- `description` (string) the description of the contest, with markdown support and shown in the contestant's homepage.
+You can find the specification of the format of this file [here](https://github.com/algorithm-ninja/terry/blob/master/format-specs.md#public-metadata).
 
 ### Making a pack
 
 Once you have made all the configuration files and prepared all the tasks for the contest you can use the following utilities for preparing the pack and the extra files for the contest.
 
-1. Choose the encription password: an hex string of 14 characters long, for example `aabbccddeeff00`
+1. Choose the encryption password: an hex string of 14 characters long, for example `aabbccddeeff00`
 
 2. Make the credentials for the contestants and admins:
 
@@ -135,7 +127,7 @@ Once you have made all the configuration files and prepared all the tasks for th
    - `task1,task2,task3` are the task names separated with commas.
    - `--num-backup 5` will create 5 extra users for each venue, in case of emergencies.
    - `__users__` is the destination folder, inside of it all the `contest.yaml` files for each room will be created. The folder will be created automatically.
-   - Specifying `--password aabbccddeeff00` the stdout will contain the content of the file `admin.csv` with the columns: `sede` (the venue's code), `full_sede` (the code with the room numebr) and `password` (a valid admin token for that room).
+   - Specifying `--password aabbccddeeff00` the stdout will contain the content of the file `admin.csv` with the columns: `sede` (the venue's code), `full_sede` (the code with the room number) and `password` (a valid admin token for that room).
 
 3. Make the `pack.zip.enc` file:
 

@@ -9,6 +9,7 @@ import base64
 import unittest
 
 from terry import crypto
+from .utils import Utils
 
 
 class TestCrypto(unittest.TestCase):
@@ -53,16 +54,63 @@ class TestCrypto(unittest.TestCase):
         self.assertEqual(password, base64.b32decode("BARRRRRR"))
 
     def test_encode_decode(self):
+        for version in range(len(crypto.pack_versions)):
+            with self.subTest():
+                password = b"fooobarr"
+                data = b"#bellavita"
+                encrypted = crypto.encode(password, data, b"", version=version)
+                self.assertEqual(data, crypto.decode(password, encrypted))
+
+    def test_encode_unsupported_version(self):
         password = b"fooobarr"
         data = b"#bellavita"
-        encrypted = crypto.encode(password, data, b"")
-        self.assertEqual(data, crypto.decode(password, encrypted))
+        version = len(crypto.pack_versions)
+        with self.assertRaises(ValueError):
+            crypto.encode(password, data, b"", version=version)
 
-    def test_encode_metadata_too_long(self):
+    def test_validate_unsupported_version(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        version = len(crypto.pack_versions).to_bytes(1, "big")
+        pack = crypto.encode(password, data, b"")
+        offset = crypto.PackVersion.hash_len
+        pack = pack[:offset] + version + pack[offset + 1 :]
+        with self.assertRaises(ValueError):
+            crypto.validate(pack)
+
+    def test_metadata_unsupported_version(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        version = len(crypto.pack_versions).to_bytes(1, "big")
+        pack = crypto.encode(password, data, b"")
+        offset = crypto.PackVersion.hash_len
+        pack = pack[:offset] + version + pack[offset + 1 :]
+        with self.assertRaises(ValueError):
+            crypto.metadata(pack)
+
+    def test_decode_unsupported_version(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        version = len(crypto.pack_versions).to_bytes(1, "big")
+        pack = crypto.encode(password, data, b"")
+        offset = crypto.PackVersion.hash_len
+        pack = pack[:offset] + version + pack[offset + 1 :]
+        with self.assertRaises(ValueError):
+            crypto.decode(password, pack)
+
+    def test_encode_metadata_too_long_version0(self):
         password = b"fooobarr"
         data = b"#bellavita"
         with self.assertRaises(ValueError):
-            crypto.encode(password, data, b"A" * 1025)
+            crypto.encode(password, data, b"A" * 1025, version=0)
+
+    def test_encode_metadata_too_long_version_bigger_than_0(self):
+        password = b"fooobarr"
+        data = b"#bellavita"
+        original_metadata = b"A" * 123456
+        pack = crypto.encode(password, data, original_metadata)
+        metadata = crypto.metadata(pack)
+        self.assertEqual(metadata, original_metadata)
 
     def test_gen_user_password(self):
         username = "FOOO"
@@ -107,7 +155,7 @@ class TestCrypto(unittest.TestCase):
         secret = b"FFF"
         scrambled_password = b"A" * 65
 
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             crypto.recover_file_password(username, secret, scrambled_password)
 
     def test_recover_file_password_from_token(self):
@@ -118,21 +166,52 @@ class TestCrypto(unittest.TestCase):
         self.assertEqual(crypto.recover_file_password_from_token(token), file_password)
 
     def test_validate(self):
-        password = b"fooobarr"
-        data = b"#bellavita"
-        encrypted = crypto.encode(password, data, b"metadata")
-        self.assertTrue(crypto.validate(encrypted))
+        for version in range(len(crypto.pack_versions)):
+            with self.subTest():
+                password = b"fooobarr"
+                data = b"#bellavita"
+                encrypted = crypto.encode(password, data, b"metadata", version=version)
+                self.assertTrue(crypto.validate(encrypted))
 
     def test_validate_invalid(self):
-        password = b"fooobarr"
-        data = b"#bellavita"
-        encrypted = crypto.encode(password, data, b"metadata")
-        encrypted += b"("
-        self.assertFalse(crypto.validate(encrypted))
+        for version in range(len(crypto.pack_versions)):
+            with self.subTest():
+                password = b"fooobarr"
+                data = b"#bellavita"
+                encrypted = crypto.encode(password, data, b"metadata", version=version)
+                encrypted += b"("
+                self.assertFalse(crypto.validate(encrypted))
 
     def test_metadata(self):
+        for version in range(len(crypto.pack_versions)):
+            with self.subTest():
+                password = b"fooobarr"
+                data = b"#bellavita"
+                encrypted = crypto.encode(password, data, b"metadata", version=version)
+                metadata = crypto.metadata(encrypted)
+                self.assertEqual(metadata.strip(b"\x00"), b"metadata")
+
+    def test_read_metadata(self):
+        for version in range(len(crypto.pack_versions)):
+            with self.subTest():
+                password = b"fooobarr"
+                data = b"#bellavita"
+                encrypted = crypto.encode(password, data, b"metadata", version=version)
+                pack_file = Utils.new_tmp_file()
+                with open(pack_file, "wb") as f:
+                    f.write(encrypted)
+                metadata = crypto.read_metadata(pack_file)
+                self.assertEqual(metadata.strip(b"\x00"), b"metadata")
+
+    def test_read_metadata_unsupported_version(self):
         password = b"fooobarr"
         data = b"#bellavita"
-        encrypted = crypto.encode(password, data, b"metadata")
-        metadata = crypto.metadata(encrypted)
-        self.assertEqual(metadata.strip(b"\x00"), b"metadata")
+        version = len(crypto.pack_versions).to_bytes(1, "big")
+        pack = crypto.encode(password, data, b"")
+        offset = crypto.PackVersion.hash_len
+        pack = pack[:offset] + version + pack[offset + 1 :]
+        pack_file = Utils.new_tmp_file()
+        with open(pack_file, "wb") as f:
+            f.write(pack)
+        with self.assertRaises(ValueError):
+            crypto.read_metadata(pack_file)
