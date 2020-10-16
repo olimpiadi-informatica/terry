@@ -38,7 +38,7 @@ msgstr "Admin token"
 
 #: src/communication/Announcements.tsx:11
 #: src/communication/Navbar.tsx:27
-#: src/contest/Communication.tsx:62
+#: src/contest/Communication.tsx:73
 msgid "Announcements"
 msgstr "Announcements"
 
@@ -61,7 +61,7 @@ msgstr "Answered"
 msgid "Are you sure?"
 msgstr "Are you sure?"
 
-#: src/contest/Communication.tsx:30
+#: src/contest/Communication.tsx:32
 msgid "Ask a question"
 msgstr "Ask a question"
 
@@ -96,7 +96,7 @@ msgstr "C/C++ Documentation"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/contest/Communication.tsx:55
+#: src/contest/Communication.tsx:66
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 
@@ -258,8 +258,8 @@ msgstr "Download results"
 #: src/admin/AdminSummaryView.tsx:54
 #: src/admin/AdminUsersView.tsx:43
 #: src/admin/DownloadResultsView.tsx:32
-#: src/contest/Communication.tsx:66
-#: src/contest/Communication.tsx:79
+#: src/contest/Communication.tsx:77
+#: src/contest/Communication.tsx:90
 #: src/contest/ContestView.tsx:28
 #: src/contest/LoginView.tsx:44
 #: src/contest/submission/SubmissionListView.tsx:115
@@ -398,7 +398,7 @@ msgstr "Message filter"
 msgid "Name"
 msgstr "Name"
 
-#: src/contest/Communication.tsx:56
+#: src/contest/Communication.tsx:67
 msgid "Network problem. Reconnecting..."
 msgstr "Network problem. Reconnecting..."
 
@@ -410,7 +410,7 @@ msgstr "New announcement"
 msgid "New announcement: {0}"
 msgstr "New announcement: {0}"
 
-#: src/contest/Communication.tsx:70
+#: src/contest/Communication.tsx:81
 msgid "No announcements yet."
 msgstr "No announcements yet."
 
@@ -506,7 +506,7 @@ msgstr "Question answered!"
 
 #: src/communication/Navbar.tsx:22
 #: src/communication/Questions.tsx:13
-#: src/contest/Communication.tsx:73
+#: src/contest/Communication.tsx:84
 msgid "Questions"
 msgstr "Questions"
 
@@ -576,7 +576,7 @@ msgstr "Select the documentation you want to consult:"
 msgid "Select the tutorial you want to consult:"
 msgstr "Select the tutorial you want to consult:"
 
-#: src/contest/Communication.tsx:35
+#: src/contest/Communication.tsx:46
 msgid "Send"
 msgstr "Send"
 
@@ -675,7 +675,7 @@ msgid "The communication system is enabled for this contest."
 msgstr "The communication system is enabled for this contest."
 
 #: src/communication/CommunicationView.tsx:33
-#: src/contest/Communication.tsx:23
+#: src/contest/Communication.tsx:24
 msgid "The communication system is not available for this contest."
 msgstr "The communication system is not available for this contest."
 
@@ -723,7 +723,11 @@ msgstr "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes
 msgid "The provided date cannot be used as start time for the contest. Please set a date in the future."
 msgstr "The provided date cannot be used as start time for the contest. Please set a date in the future."
 
-#: src/contest/Communication.tsx:39
+#: src/contest/Communication.tsx:35
+msgid "The question must be at least {MIN_QUESTION_LENGTH} characters long."
+msgstr "The question must be at least {MIN_QUESTION_LENGTH} characters long."
+
+#: src/contest/Communication.tsx:50
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
@@ -797,7 +801,7 @@ msgstr "You can submit <0>as many times as you want</0>, but you will have a dif
 msgid "You have not submitted yet."
 msgstr "You have not submitted yet."
 
-#: src/contest/Communication.tsx:83
+#: src/contest/Communication.tsx:94
 msgid "You have to be logged in to ask a question."
 msgstr "You have to be logged in to ask a question."
 

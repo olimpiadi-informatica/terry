@@ -13,6 +13,8 @@ import {
 import { i18n } from "src/i18n";
 import { useActions, useServerTime } from "./ContestContext";
 
+const MIN_QUESTION_LENGTH = 10;
+
 export function Communication() {
   const announcements = useAnnouncements();
   const questions = useQuestions();
@@ -33,12 +35,27 @@ export function Communication() {
   const doAskQuestion = () => {
     askQuestion(textArea).then(() => setTextArea(""));
   };
+  const questionLongEnough = () => textArea.trim().length >= MIN_QUESTION_LENGTH;
 
   const renderAskQuestion = () => (
     <>
       <h4><Trans>Ask a question</Trans></h4>
       <textarea className="form-control" value={textArea} onChange={(e) => setTextArea(e.target.value)} />
-      <button className="btn btn-primary mt-2" type="button" onClick={() => doAskQuestion()}>
+      <small id="passwordHelpBlock" className="form-text text-muted">
+        <Trans>
+          The question must be at least
+          {" "}
+          {MIN_QUESTION_LENGTH}
+          {" "}
+          characters long.
+        </Trans>
+      </small>
+      <button
+        className="btn btn-primary mt-2"
+        type="button"
+        onClick={() => doAskQuestion()}
+        disabled={!questionLongEnough()}
+      >
         <FontAwesomeIcon icon={faPaperPlane} />
         {" "}
         <Trans>Send</Trans>
