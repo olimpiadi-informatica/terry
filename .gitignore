@@ -13,3 +13,5 @@ util/*.csv
 util/*.zip.enc
 util/output
 util/*.yaml
+
+*.sqlite3*
