@@ -1,3 +1,6 @@
+import "react-app-polyfill/ie11";
+import "react-app-polyfill/stable";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
@@ -8,10 +11,14 @@ import { ToastContainer } from "react-toastify";
 import { TransProvider } from "src/i18n";
 import { Loading } from "src/components/Loading";
 
+import { Blob } from "blob-polyfill";
 import { PackView } from "./admin/PackView";
 
 import { ContestView } from "./contest/ContestView";
 import { CommunicationView } from "./communication/CommunicationView";
+
+// Polyfill for Safari
+window.Blob = Blob;
 
 /** ****** DEVELOPMENT SPECIFIC ********* */
 if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:9000");
