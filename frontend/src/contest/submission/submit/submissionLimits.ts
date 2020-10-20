@@ -55,6 +55,8 @@ export const FORBIDDEN_EXTENSIONS: SourceLanguageType = {
   csproj: t`Visual Studio project`,
   sln: t`Visual Studio project`,
   suo: t`Visual Studio project`,
+  lpi: t`Free Pascal Lazarus project`,
+  lps: t`Free Pascal Lazarus session file`,
 };
 
 const FORBIDDEN_MAGIC_NUMBERS = [

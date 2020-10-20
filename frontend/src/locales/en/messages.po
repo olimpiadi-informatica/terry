@@ -277,6 +277,14 @@ msgstr "File"
 msgid "File:"
 msgstr "File:"
 
+#: src/contest/submission/submit/submissionLimits.ts:61
+msgid "Free Pascal Lazarus project"
+msgstr "Free Pascal Lazarus project"
+
+#: src/contest/submission/submit/submissionLimits.ts:62
+msgid "Free Pascal Lazarus session file"
+msgstr "Free Pascal Lazarus session file"
+
 #: src/contest/submission/submit/submissionLimits.ts:21
 msgid "Go"
 msgstr "Go"
@@ -519,7 +527,7 @@ msgstr "Score"
 msgid "Secondary (grey)"
 msgstr "Secondary (grey)"
 
-#: src/contest/submission/submit/submissionLimits.ts:106
+#: src/contest/submission/submit/submissionLimits.ts:108
 msgid "Select a file with an extension"
 msgstr "Select a file with an extension"
 
@@ -650,19 +658,19 @@ msgstr "The contest will start automatically at"
 msgid "The contest would start"
 msgstr "The contest would start"
 
-#: src/contest/submission/submit/submissionLimits.ts:109
+#: src/contest/submission/submit/submissionLimits.ts:111
 msgid "The extension cannot contain spaces"
 msgstr "The extension cannot contain spaces"
 
-#: src/contest/submission/submit/submissionLimits.ts:115
+#: src/contest/submission/submit/submissionLimits.ts:117
 msgid "The file you selected has been detected as an executable. Please select the corresponding source file instead."
 msgstr "The file you selected has been detected as an executable. Please select the corresponding source file instead."
 
-#: src/contest/submission/submit/submissionLimits.ts:112
+#: src/contest/submission/submit/submissionLimits.ts:114
 msgid "The file you selected is not allowed, please select the actual source file of your program. The detected file type is"
 msgstr "The file you selected is not allowed, please select the actual source file of your program. The detected file type is"
 
-#: src/contest/submission/submit/submissionLimits.ts:103
+#: src/contest/submission/submit/submissionLimits.ts:105
 msgid "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 msgstr "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 
@@ -751,7 +759,7 @@ msgstr "You have to be logged in to ask a question."
 msgid "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 msgstr "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 
-#: src/contest/submission/submit/submissionLimits.ts:100
+#: src/contest/submission/submit/submissionLimits.ts:102
 msgid "You selected an empty file"
 msgstr "You selected an empty file"
 
