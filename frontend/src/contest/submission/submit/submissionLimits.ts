@@ -33,6 +33,7 @@ export const ALLOWED_EXTENSIONS: SourceLanguageType = {
 export const FORBIDDEN_EXTENSIONS: SourceLanguageType = {
   exe: t`Compiled binary`,
   o: t`Compiled binary`,
+  or: t`Compiled binary`,
   so: t`Compiled binary`,
   obj: t`Compiled binary`,
   a: t`Compiled binary`,
@@ -55,8 +56,14 @@ export const FORBIDDEN_EXTENSIONS: SourceLanguageType = {
   csproj: t`Visual Studio project`,
   sln: t`Visual Studio project`,
   suo: t`Visual Studio project`,
+  dev: t`Dev-Cpp project`,
   lpi: t`Free Pascal Lazarus project`,
   lps: t`Free Pascal Lazarus session file`,
+  lrs: t`Free Pascal Lazarus file`,
+  lrt: t`Free Pascal Lazarus file`,
+  lpk: t`Free Pascal Lazarus file`,
+  ppu: t`Free Pascal Lazarus file`,
+  compiled: t`Compiled file`,
 };
 
 const FORBIDDEN_MAGIC_NUMBERS = [
