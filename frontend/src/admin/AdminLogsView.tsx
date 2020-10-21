@@ -99,7 +99,7 @@ export function AdminLogsView() {
             </button>
           </td>
           <td>
-            <pre>{log.message}</pre>
+            <pre className="log-message">{log.message}</pre>
           </td>
         </tr>
       ));
