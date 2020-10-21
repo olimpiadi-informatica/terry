@@ -14,7 +14,7 @@ MAKE_DEPS="curl git libffi-dev"
 apt-get update -y
 apt-get install -y --no-install-recommends \
     $MAKE_DEPS \
-    nginx procps '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
+    nginx procps zip '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
 
 # Add NodeJS and automatically run 'apt-get update'
 curl -sL https://deb.nodesource.com/setup_14.x | bash -
@@ -40,6 +40,9 @@ SKIP_PREFLIGHT_CHECK=true npm run build
 
 # Keep only the built files
 cp -r build /app
+
+# Save the version of terry
+date +%Y%m%d > /version
 
 # Cleanup
 cd /
