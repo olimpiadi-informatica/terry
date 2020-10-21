@@ -1,3 +1,7 @@
+pre {
+  margin-bottom: 0;
+}
+
 .terry-log-table {
   flex: 0 1 auto;
   max-height: 500px;
