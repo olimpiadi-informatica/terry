@@ -42,15 +42,15 @@ msgstr "Admin token"
 msgid "Announcements"
 msgstr "Announcements"
 
-#: src/components/Question.tsx:28
+#: src/components/Question.tsx:29
 msgid "Answer"
 msgstr "Answer"
 
-#: src/components/Question.tsx:19
+#: src/components/Question.tsx:20
 msgid "Answer with Markdown"
 msgstr "Answer with Markdown"
 
-#: src/communication/Questions.tsx:21
+#: src/communication/Questions.tsx:36
 msgid "Answered"
 msgstr "Answered"
 
@@ -115,6 +115,10 @@ msgstr "Change output"
 #: src/contest/submission/submit/SourceSelector.tsx:85
 msgid "Change source"
 msgstr "Change source"
+
+#: src/communication/Questions.tsx:46
+msgid "Clear"
+msgstr "Clear"
 
 #: src/admin/AdminLogsView.tsx:147
 #: src/admin/AdminUsersView.tsx:100
@@ -410,16 +414,19 @@ msgstr "No issue detected"
 msgid "No messages yet"
 msgstr "No messages yet"
 
-#: src/communication/Questions.tsx:19
-#: src/communication/Questions.tsx:25
+#: src/communication/Questions.tsx:34
 msgid "No new questions"
 msgstr "No new questions"
 
-#: src/communication/Questions.tsx:15
+#: src/communication/Questions.tsx:52
+msgid "No questions"
+msgstr "No questions"
+
+#: src/communication/Questions.tsx:32
 msgid "Not answered"
 msgstr "Not answered"
 
-#: src/components/Question.tsx:40
+#: src/components/Question.tsx:54
 msgid "Not answered yet."
 msgstr "Not answered yet."
 
@@ -461,7 +468,7 @@ msgid "Please select the contest file..."
 msgstr "Please select the contest file..."
 
 #: src/communication/NewAnnouncement.tsx:56
-#: src/components/Question.tsx:22
+#: src/components/Question.tsx:23
 msgid "Preview"
 msgstr "Preview"
 
@@ -488,7 +495,7 @@ msgid "Question answered!"
 msgstr "Question answered!"
 
 #: src/communication/Navbar.tsx:22
-#: src/communication/Questions.tsx:14
+#: src/communication/Questions.tsx:31
 #: src/contest/Communication.tsx:83
 msgid "Questions"
 msgstr "Questions"
@@ -563,6 +570,10 @@ msgstr "Set extra time"
 #: src/communication/NewAnnouncement.tsx:44
 msgid "Severity"
 msgstr "Severity"
+
+#: src/communication/Questions.tsx:39
+msgid "Showing only the questions of<0>{filter}</0>"
+msgstr "Showing only the questions of <0>{filter}</0>"
 
 #: src/contest/submission/submit/FileView.tsx:26
 msgid "Size:"

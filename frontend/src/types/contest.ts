@@ -135,6 +135,7 @@ export type Answer = {
 
 export type Question = {
   id: number;
+  creator: string;
   content: string;
   date: string;
   answer: Answer | null;

@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Question as QuestionT } from "src/types/contest";
 import { useSendAnswer } from "src/hooks/useCommunication";
 import { i18n } from "src/i18n";
+import { Link } from "react-router-dom";
 import { RelativeDate } from "./RelativeDate";
 import { Markdown } from "./Markdown";
 
@@ -48,12 +49,27 @@ export function Question({ question, serverTime, canAnswer } : Props) {
 
   return (
     <div className={`alert alert-${color}`} key={question.id}>
-      <span className="float-right"><RelativeDate clock={() => serverTime()} date={date} /></span>
+      <span className="float-right">
+        {canAnswer && (
+          <>
+            <code>
+              id
+              {question.id}
+            </code>
+            {" — "}
+            <Link to={`?token=${question.creator}`}><code>{question.creator}</code></Link>
+            {" — "}
+          </>
+        )}
+        <RelativeDate clock={() => serverTime()} date={date} />
+      </span>
       {question.content}
       <hr />
       {question.answer && answerDate && (
         <>
-          <span className="float-right"><RelativeDate clock={() => serverTime()} date={answerDate} /></span>
+          <span className="float-right">
+            <RelativeDate clock={() => serverTime()} date={answerDate} />
+          </span>
           <Markdown source={question.answer.content} />
         </>
       )}

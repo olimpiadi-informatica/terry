@@ -82,6 +82,8 @@ pub struct Answer {
 pub struct Question {
     /// The identifier of the question.
     pub id: i64,
+    /// The username of the user asking the question.
+    pub creator: String,
     /// Text written by the contestant, not in Markdown.
     pub content: String,
     /// Date of the question, in SQL format in UTC.
@@ -93,14 +95,15 @@ pub struct Question {
 impl Question {
     /// Build a question from a properly executed query. The columns should be:
     /// id, content, date, answer, answerDate
-    fn from_row<'s, 't>(row: &'s Row<'t>) -> rusqlite::Result<Question> {
+    fn from_row(row: &Row) -> rusqlite::Result<Question> {
         Ok(Question {
             id: row.get(0)?,
-            content: row.get(1)?,
-            date: row.get(2)?,
-            answer: row.get::<_, Option<String>>(3)?.map(|_| Answer {
-                content: row.get(3).unwrap(),
-                date: row.get(4).unwrap(),
+            creator: row.get(1)?,
+            content: row.get(2)?,
+            date: row.get(3)?,
+            answer: row.get::<_, Option<String>>(4)?.map(|_| Answer {
+                content: row.get(4).unwrap(),
+                date: row.get(5).unwrap(),
             }),
         })
     }
@@ -115,7 +118,7 @@ pub async fn questions(pool: &Pool, token: String) -> FallibleQuery<Vec<Question
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
-            SELECT id, content, date, answer, answerDate
+            SELECT id, creator, content, date, answer, answerDate
             FROM questions
             WHERE creator = ?1 OR ?2
             ORDER BY date",
@@ -147,7 +150,7 @@ pub async fn add_question(
         let id = stmt.insert(params![question.content, token])?;
         let mut stmt = conn.prepare(
             "
-            SELECT id, content, date, answer, answerDate
+            SELECT id, creator, content, date, answer, answerDate
             FROM questions
             WHERE id = ?1
             ORDER BY date",

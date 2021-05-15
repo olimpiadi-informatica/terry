@@ -210,7 +210,7 @@ async fn main() -> Fallible<()> {
             let url = opt.admin_url.expect("Missing --admin-url");
             let channel = opt.channel_id.expect("Missing --channel-id");
             let channel = ChannelId::new(channel);
-            eprintln!("Using telegram bot with cannel: {}", channel);
+            eprintln!("Using telegram bot with channel: {}", channel);
             Some((Api::new(token), channel, url))
         }
         _ => {
