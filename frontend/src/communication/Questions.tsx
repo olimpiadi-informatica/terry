@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuestions } from "src/hooks/useCommunication";
 import { Loading } from "src/components/Loading";
 import { Question } from "src/components/Question";
@@ -11,10 +11,18 @@ export function Questions() {
   const questions = useQuestions();
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(50);
+  const [currentFilter, setCurrentFilter] = useState<null | string>(null);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const filter = query.get("token");
   const history = useHistory();
+
+  useEffect(() => {
+    if (filter !== currentFilter) {
+      setCurrentFilter(filter);
+      setPage(0);
+    }
+  }, [filter, currentFilter]);
 
   if (questions.isLoading()) {
     return <Loading />;
