@@ -31,7 +31,7 @@ export function Questions() {
     return <Error cause={questions.error()} />;
   }
 
-  const notAnswered = questions.value().filter((q) => !q.answer);
+  const notAnswered = questions.value().filter((q) => !q.answer && (!filter || q.creator === filter));
   const answered = questions.value().filter((q) => q.answer && (!filter || q.creator === filter));
 
   const serverTime = () => DateTime.fromJSDate(new Date());
