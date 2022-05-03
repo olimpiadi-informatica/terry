@@ -50,7 +50,7 @@ msgstr "Rispondi"
 msgid "Answer with Markdown"
 msgstr "Rispondi con Markdown"
 
-#: src/communication/Questions.tsx:36
+#: src/communication/Questions.tsx:43
 msgid "Answered"
 msgstr "Con risposta"
 
@@ -116,7 +116,7 @@ msgstr "Modifica output"
 msgid "Change source"
 msgstr "Modifica sorgente"
 
-#: src/communication/Questions.tsx:46
+#: src/communication/Questions.tsx:53
 msgid "Clear"
 msgstr "Annulla"
 
@@ -313,10 +313,6 @@ msgstr "Go"
 msgid "IP"
 msgstr "IP"
 
-#: src/contest/help/HomeInfo.tsx:49
-msgid "If you want to submit more than one source code file, please create a zip file containing them."
-msgstr "Se vuoi inviare più di un file sorgente sei pregato di creare un archivio compresso (zip)."
-
 #: src/communication/NewAnnouncement.tsx:51
 msgid "Info (teal)"
 msgstr "Info (azzurro)"
@@ -414,15 +410,15 @@ msgstr "Nessun problema rilevato"
 msgid "No messages yet"
 msgstr "Ancora nessun messaggio"
 
-#: src/communication/Questions.tsx:34
+#: src/communication/Questions.tsx:41
 msgid "No new questions"
 msgstr "Nessuna nuova domanda"
 
-#: src/communication/Questions.tsx:52
+#: src/communication/Questions.tsx:59
 msgid "No questions"
 msgstr "Nessuna domanda"
 
-#: src/communication/Questions.tsx:32
+#: src/communication/Questions.tsx:39
 msgid "Not answered"
 msgstr "Senza risposta"
 
@@ -495,7 +491,7 @@ msgid "Question answered!"
 msgstr "Nuova risposta!"
 
 #: src/communication/Navbar.tsx:22
-#: src/communication/Questions.tsx:31
+#: src/communication/Questions.tsx:38
 #: src/contest/Communication.tsx:83
 msgid "Questions"
 msgstr "Domande"
@@ -537,7 +533,7 @@ msgstr "Ruby"
 msgid "Rust"
 msgstr "Rust"
 
-#: src/contest/help/HomeInfo.tsx:64
+#: src/contest/help/HomeInfo.tsx:61
 msgid "Scheduled start at<0/>. This page will reload automatically."
 msgstr "Inizio previsto alle <0/>. Questa pagina si ricaricherà automaticamente."
 
@@ -571,7 +567,7 @@ msgstr "Imposta tempo aggiuntivo"
 msgid "Severity"
 msgstr "Severità"
 
-#: src/communication/Questions.tsx:39
+#: src/communication/Questions.tsx:46
 msgid "Showing only the questions of<0>{filter}</0>"
 msgstr "Visualizzate solo le domande di <0>{filter}</0>"
 
@@ -665,7 +661,7 @@ msgstr "Il sistema di comunicazione non è disponibile per questa gara."
 msgid "The contest has not started yet!"
 msgstr "La gara non è ancora iniziata!"
 
-#: src/contest/help/HomeInfo.tsx:71
+#: src/contest/help/HomeInfo.tsx:68
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "La gara non è ancora iniziata! Per connetterti ricarica questa pagina quando la gara sarà iniziata."
 

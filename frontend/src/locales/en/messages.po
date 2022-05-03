@@ -50,7 +50,7 @@ msgstr "Answer"
 msgid "Answer with Markdown"
 msgstr "Answer with Markdown"
 
-#: src/communication/Questions.tsx:36
+#: src/communication/Questions.tsx:43
 msgid "Answered"
 msgstr "Answered"
 
@@ -116,7 +116,7 @@ msgstr "Change output"
 msgid "Change source"
 msgstr "Change source"
 
-#: src/communication/Questions.tsx:46
+#: src/communication/Questions.tsx:53
 msgid "Clear"
 msgstr "Clear"
 
@@ -313,10 +313,6 @@ msgstr "Go"
 msgid "IP"
 msgstr "IP"
 
-#: src/contest/help/HomeInfo.tsx:49
-msgid "If you want to submit more than one source code file, please create a zip file containing them."
-msgstr "If you want to submit more than one source code file, please create a zip file containing them."
-
 #: src/communication/NewAnnouncement.tsx:51
 msgid "Info (teal)"
 msgstr "Info (teal)"
@@ -414,15 +410,15 @@ msgstr "No issue detected"
 msgid "No messages yet"
 msgstr "No messages yet"
 
-#: src/communication/Questions.tsx:34
+#: src/communication/Questions.tsx:41
 msgid "No new questions"
 msgstr "No new questions"
 
-#: src/communication/Questions.tsx:52
+#: src/communication/Questions.tsx:59
 msgid "No questions"
 msgstr "No questions"
 
-#: src/communication/Questions.tsx:32
+#: src/communication/Questions.tsx:39
 msgid "Not answered"
 msgstr "Not answered"
 
@@ -495,7 +491,7 @@ msgid "Question answered!"
 msgstr "Question answered!"
 
 #: src/communication/Navbar.tsx:22
-#: src/communication/Questions.tsx:31
+#: src/communication/Questions.tsx:38
 #: src/contest/Communication.tsx:83
 msgid "Questions"
 msgstr "Questions"
@@ -537,7 +533,7 @@ msgstr "Ruby"
 msgid "Rust"
 msgstr "Rust"
 
-#: src/contest/help/HomeInfo.tsx:64
+#: src/contest/help/HomeInfo.tsx:61
 msgid "Scheduled start at<0/>. This page will reload automatically."
 msgstr "Scheduled start at <0/>. This page will reload automatically."
 
@@ -571,7 +567,7 @@ msgstr "Set extra time"
 msgid "Severity"
 msgstr "Severity"
 
-#: src/communication/Questions.tsx:39
+#: src/communication/Questions.tsx:46
 msgid "Showing only the questions of<0>{filter}</0>"
 msgstr "Showing only the questions of <0>{filter}</0>"
 
@@ -665,7 +661,7 @@ msgstr "The communication system is not available for this contest."
 msgid "The contest has not started yet!"
 msgstr "The contest has not started yet!"
 
-#: src/contest/help/HomeInfo.tsx:71
+#: src/contest/help/HomeInfo.tsx:68
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 

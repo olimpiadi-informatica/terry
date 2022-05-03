@@ -55,9 +55,6 @@ export function HomeInfo({ hasStarted, startTime }: Props) {
         {" "}
         them by clicking the green button!
       </Trans>
-      <p>
-        <Trans>If you want to submit more than one source code file, please create a zip file containing them.</Trans>
-      </p>
     </>
   );
 
