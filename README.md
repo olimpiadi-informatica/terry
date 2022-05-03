@@ -85,9 +85,9 @@ You'll need some configuration files in order to make a valid pack using the uti
 
 This CSV contains the list and information about all the contestants, there are some required columns:
 
-- `Nome` (the contestant's name)
-- `Cognome` (the contestant's surname)
-- `sede` (the contestant's venue)
+- `name` (the contestant's name)
+- `surname` (the contestant's surname)
+- `venue` (the contestant's venue)
 
 All the other columns will be kept in the `contest.yaml` generated files but won't be stored in the DB.
 The contestant is identified by a randomly generated token, it will be put in the `contest.yaml` file its venue.
@@ -96,8 +96,8 @@ The contestant is identified by a randomly generated token, it will be put in th
 
 This CSV contains all the venues and the number of rooms in each of them. The required columns are:
 
-- `sede` (the venue's code)
-- `aule` (the number of rooms)
+- `venue` (the venue's code)
+- `rooms` (the number of rooms)
 
 The venue's code must be from 3 to 4 characters long, usually it's in the format `FRI` or `LOM1`, `LOM2`, ...
 

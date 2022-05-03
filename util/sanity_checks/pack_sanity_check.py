@@ -3,6 +3,7 @@
 import argparse
 import csv
 import json
+import glob
 import os.path
 import shutil
 import subprocess
@@ -31,21 +32,27 @@ def get_nth_room(sede, aula):
 
 def validate_task(task, fuzz, iterations, solutions):
     print(Fore.BLUE, "Validating task %s..." % task, Fore.RESET)
-    generator = os.path.join(task, "managers", "generator.linux.i686")
-    checker = os.path.join(task, "managers", "checker.linux.i686")
-    validator = os.path.join(task, "managers", "validator.linux.i686")
+    generators = glob.glob(os.path.join(task, "managers", "generator.linux.*"))
+    checkers = glob.glob(os.path.join(task, "managers", "checker.linux.*"))
+    validators = glob.glob(os.path.join(task, "managers", "validator.linux.*"))
     task_yaml = os.path.join(task, "task.yaml")
-    assert os.path.exists(generator)
-    assert os.path.exists(checker)
+
+    assert generators
+    assert checkers
     assert os.path.exists(task_yaml)
+
+    generator = generators[0]
+    checker = checkers[0]
+
     os.chmod(generator, 0o755)
     os.chmod(checker, 0o755)
-    if not os.path.exists(validator):
+    if validators:
+        validator = validators[0]
+        os.chmod(validator, 0o755)
+    else:
         print(Fore.YELLOW, "WARNING: Missing validator for task %s" % task,
               Fore.RESET)
         validator = None
-    else:
-        os.chmod(validator, 0o755)
 
     with open(task_yaml, "r") as f:
         task_info = ruamel.yaml.safe_load(f)

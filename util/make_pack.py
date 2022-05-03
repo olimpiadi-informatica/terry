@@ -46,11 +46,11 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task-maker", help="Builda i task usando task-maker",
+    parser.add_argument("--task-maker", help="Builda i task usando task-maker (deprecated)",
                         action="store_true")
     parser.add_argument("--skip-check", help="Skippa il check del pack",
                         action="store_true")
-    parser.add_argument("--both-arch", help="Compila i manager anche per x86-64",
+    parser.add_argument("--both-arch", help="Compila i manager anche per x86-64 (deprecated)",
                         action="store_true")
     parser.add_argument("--tutorials", help="Cartella da aggiungere al pack con i tutorial",
                         action="store")
