@@ -1,6 +1,6 @@
 colorama==0.4.3
 gevent==20.9.0
-PyJWT==1.5.3
+PyJWT==2.4.0
 PyNaCl==1.4.0
 ruamel.yaml==0.16.12
 Werkzeug==0.15.5
