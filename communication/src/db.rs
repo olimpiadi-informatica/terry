@@ -4,7 +4,7 @@ use actix_web::web;
 use failure::Fallible;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::Row;
-use rusqlite::{params, NO_PARAMS};
+use rusqlite::params;
 use serde::Serialize;
 use std::path::Path;
 
@@ -51,7 +51,7 @@ pub async fn list_announcements(pool: &Pool) -> FallibleQuery<Vec<Announcement>>
             FROM announcements
             ORDER BY date",
         )?;
-        stmt.query_map(NO_PARAMS, |row| {
+        stmt.query_map([], |row| {
             Ok(Announcement {
                 id: row.get(0)?,
                 severity: row.get(1)?,
