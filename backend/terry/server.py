@@ -48,8 +48,7 @@ class Server:
         self.router = Map(
             [
                 Rule("/contest", methods=["GET"], endpoint="info#get_contest"),
-                Rule("/input/<input_id>",
-                     methods=["GET"], endpoint="info#get_input"),
+                Rule("/input/<input_id>", methods=["GET"], endpoint="info#get_input"),
                 Rule(
                     "/output/<output_id>", methods=["GET"], endpoint="info#get_output"
                 ),
@@ -63,8 +62,7 @@ class Server:
                 ),
                 Rule("/scores/<token>",
                      methods=["GET"], endpoint="info#get_user_scores"),
-                Rule("/user/<token>",
-                     methods=["GET"], endpoint="info#get_user"),
+                Rule("/user/<token>", methods=["GET"], endpoint="info#get_user"),
                 Rule(
                     "/user/<token>/submissions/<task>",
                     methods=["GET"],
@@ -106,13 +104,11 @@ class Server:
                     methods=["POST"],
                     endpoint="admin#set_extra_time",
                 ),
-                Rule("/admin/status",
-                     methods=["POST"], endpoint="admin#status"),
+                Rule("/admin/status", methods=["POST"], endpoint="admin#status"),
                 Rule(
                     "/admin/pack_status", methods=["GET"], endpoint="admin#pack_status"
                 ),
-                Rule("/admin/user_list",
-                     methods=["POST"], endpoint="admin#user_list"),
+                Rule("/admin/user_list", methods=["POST"], endpoint="admin#user_list"),
                 Rule(
                     "/admin/drop_contest",
                     methods=["POST"],
@@ -151,8 +147,7 @@ class Server:
         """
         Start a greenlet with the main HTTP server loop
         """
-        server = gevent.pywsgi.WSGIServer(
-            (Config.address, Config.port), self, log=None)
+        server = gevent.pywsgi.WSGIServer((Config.address, Config.port), self, log=None)
         try:
             server.init_socket()
         except OSError:
