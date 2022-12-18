@@ -60,7 +60,7 @@ class Server:
                     methods=["GET"],
                     endpoint="info#get_submission",
                 ),
-                Rule("/scores/<token>",
+                Rule("/user/<token>/scores",
                      methods=["GET"], endpoint="info#get_user_scores"),
                 Rule("/user/<token>", methods=["GET"], endpoint="info#get_user"),
                 Rule(
