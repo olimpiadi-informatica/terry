@@ -132,6 +132,30 @@ class InfoHandler(BaseHandler):
         return BaseHandler.format_dates(user, fields=["end_time"])
 
     @Validators.contest_started
+    def get_user_scores(self, token):
+        """
+        GET /scores/<token>
+        """
+        user = Database.get_user(token)
+        if user is None:
+            return []
+
+        scores = []
+        tasks = Database.get_user_task(token)
+        for task in tasks:
+            task_name = task["task"]
+            task_info = Database.get_task(task_name)
+
+            scores.append({
+                "name": task_name,
+                "score": task["score"],
+                "max_score": task_info["max_score"],
+                "title": task_info["title"]
+            })
+
+        return scores
+
+    @Validators.contest_started
     @Validators.register_user_ip
     @Validators.validate_token
     @Validators.validate_task
