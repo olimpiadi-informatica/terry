@@ -2,7 +2,6 @@ import React, {
   createContext, ReactNode, useContext, useEffect, useMemo, useState,
 } from "react";
 import { t } from "@lingui/macro";
-import { i18n } from "src/i18n";
 import { notifyError } from "src/utils";
 import { CommunicationData, Announcement, Question } from "src/types/contest";
 import { client } from "src/TerryClient";
@@ -174,10 +173,10 @@ const notifyNewAnnouncements = (oldList: Announcement[], newList: Announcement[]
     const oldAnn = oldList.find((old) => old.id === item.id);
     let title = null;
     if (!oldAnn) {
-      title = i18n._(t`New announcement: ${item.title}`);
+      title = t`New announcement: ${item.title}`;
     }
     if (oldAnn && oldAnn.content !== item.content) {
-      title = i18n._(t`Updated announcement: ${item.title}`);
+      title = t`Updated announcement: ${item.title}`;
     }
 
     // old announcement
@@ -199,10 +198,10 @@ const notifyNewQuestions = (oldList: Question[], newList: Question[]) => {
 
     let title = null;
     if (!oldQ.answer && item.answer) {
-      title = i18n._(t`Question answered!`);
+      title = t`Question answered!`;
     }
     if (oldQ.answer && item.answer && oldQ.answer.content !== item.answer.content) {
-      title = i18n._(t`The answer to one of your questions got updated`);
+      title = t`The answer to one of your questions got updated`;
     }
 
     // no changes

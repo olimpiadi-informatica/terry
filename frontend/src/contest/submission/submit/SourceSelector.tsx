@@ -78,9 +78,7 @@ export function SourceSelector({ inputId, setSource }: Props) {
   if (extension in ALLOWED_EXTENSIONS) {
     language = i18n._(ALLOWED_EXTENSIONS[extension]);
   } else {
-    warn = i18n._(
-      t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`,
-    );
+    warn = t`You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting.`;
   }
   return (
     <div key="present" className="card card-outline-primary w-100 mb-3">

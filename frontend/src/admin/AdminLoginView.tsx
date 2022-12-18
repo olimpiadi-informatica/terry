@@ -1,6 +1,5 @@
 import React from "react";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "src/i18n";
 import { Markdown } from "src/components/Markdown";
 import { useActions } from "./AdminContext";
 import { usePack } from "./hooks/usePack";
@@ -45,10 +44,10 @@ export function AdminLoginView() {
             ref={tokenRef}
             className="form-control text-center"
             required
-            placeholder={i18n._(t`Admin token`)}
+            placeholder={t`Admin token`}
           />
         </div>
-        <input type="submit" className="btn btn-danger" value={i18n._(t`Login`)} />
+        <input type="submit" className="btn btn-danger" value={t`Login`} />
       </form>
     </div>
   );

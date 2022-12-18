@@ -1,71 +1,70 @@
-import { t } from "@lingui/macro";
-import { MessageDescriptor } from "@lingui/core";
+import { t, defineMessage } from "@lingui/macro";
+import { MessageDescriptor, i18n } from "@lingui/core";
 import { toast } from "react-toastify";
-import { i18n } from "src/i18n";
 
 export const MAX_SOURCE_SIZE = 30000;
 
 type SourceLanguageType = { [key: string]: MessageDescriptor };
 
 export const ALLOWED_EXTENSIONS: SourceLanguageType = {
-  cpp: t`C++`,
-  cc: t`C++`,
-  cxx: t`C++`,
-  "c++": t`C++`,
-  c: t`C`,
-  cs: t`C#`,
-  dart: t`Dart`,
-  go: t`Go`,
-  html: t`Javascript (HTML)`,
-  java: t`Java`,
-  js: t`Javascript`,
-  kt: t`Kotlin`,
-  ts: t`Typescript`,
-  php: t`PHP`,
-  pas: t`Pascal`,
-  pp: t`Pascal`,
-  py: t`Python`,
-  py2: t`Python`,
-  py3: t`Python`,
-  rb: t`Ruby`,
-  rs: t`Rust`,
-  vb: t`VisualBasic`,
+  cpp: defineMessage({ message: "C++" }),
+  cc: defineMessage({ message: "C++" }),
+  cxx: defineMessage({ message: "C++" }),
+  "c++": defineMessage({ message: "C++" }),
+  c: defineMessage({ message: "C" }),
+  cs: defineMessage({ message: "C#" }),
+  dart: defineMessage({ message: "Dart" }),
+  go: defineMessage({ message: "Go" }),
+  html: defineMessage({ message: "Javascript (HTML)" }),
+  java: defineMessage({ message: "Java" }),
+  js: defineMessage({ message: "Javascript" }),
+  kt: defineMessage({ message: "Kotlin" }),
+  ts: defineMessage({ message: "Typescript" }),
+  php: defineMessage({ message: "PHP" }),
+  pas: defineMessage({ message: "Pascal" }),
+  pp: defineMessage({ message: "Pascal" }),
+  py: defineMessage({ message: "Python" }),
+  py2: defineMessage({ message: "Python" }),
+  py3: defineMessage({ message: "Python" }),
+  rb: defineMessage({ message: "Ruby" }),
+  rs: defineMessage({ message: "Rust" }),
+  vb: defineMessage({ message: "VisualBasic" }),
 };
 
 export const FORBIDDEN_EXTENSIONS: SourceLanguageType = {
-  exe: t`Compiled binary`,
-  o: t`Compiled binary`,
-  or: t`Compiled binary`,
-  so: t`Compiled binary`,
-  obj: t`Compiled binary`,
-  a: t`Compiled binary`,
-  cbp: t`CodeBlocks project`,
-  txt: t`Text file`,
-  xml: t`XML file`,
-  class: t`Compiled Java class`,
-  jar: t`Compiled Java binary`,
-  pyo: t`Compiled Python object`,
-  pyc: t`Compiled Python object`,
-  pyd: t`Compiled Python object`,
-  zip: t`Compressed archive`,
-  tar: t`Compressed archive`,
-  gz: t`Compressed archive`,
-  tgz: t`Compressed archive`,
-  xz: t`Compressed archive`,
-  rar: t`Compressed archive`,
-  pdf: t`PDF file`,
-  vbproj: t`Visual Studio project`,
-  csproj: t`Visual Studio project`,
-  sln: t`Visual Studio project`,
-  suo: t`Visual Studio project`,
-  dev: t`Dev-Cpp project`,
-  lpi: t`Free Pascal Lazarus project`,
-  lps: t`Free Pascal Lazarus session file`,
-  lrs: t`Free Pascal Lazarus file`,
-  lrt: t`Free Pascal Lazarus file`,
-  lpk: t`Free Pascal Lazarus file`,
-  ppu: t`Free Pascal Lazarus file`,
-  compiled: t`Compiled file`,
+  exe: defineMessage({ message: "Compiled binary" }),
+  o: defineMessage({ message: "Compiled binary" }),
+  or: defineMessage({ message: "Compiled binary" }),
+  so: defineMessage({ message: "Compiled binary" }),
+  obj: defineMessage({ message: "Compiled binary" }),
+  a: defineMessage({ message: "Compiled binary" }),
+  cbp: defineMessage({ message: "CodeBlocks project" }),
+  txt: defineMessage({ message: "Text file" }),
+  xml: defineMessage({ message: "XML file" }),
+  class: defineMessage({ message: "Compiled Java class" }),
+  jar: defineMessage({ message: "Compiled Java binary" }),
+  pyo: defineMessage({ message: "Compiled Python object" }),
+  pyc: defineMessage({ message: "Compiled Python object" }),
+  pyd: defineMessage({ message: "Compiled Python object" }),
+  zip: defineMessage({ message: "Compressed archive" }),
+  tar: defineMessage({ message: "Compressed archive" }),
+  gz: defineMessage({ message: "Compressed archive" }),
+  tgz: defineMessage({ message: "Compressed archive" }),
+  xz: defineMessage({ message: "Compressed archive" }),
+  rar: defineMessage({ message: "Compressed archive" }),
+  pdf: defineMessage({ message: "PDF file" }),
+  vbproj: defineMessage({ message: "Visual Studio project" }),
+  csproj: defineMessage({ message: "Visual Studio project" }),
+  sln: defineMessage({ message: "Visual Studio project" }),
+  suo: defineMessage({ message: "Visual Studio project" }),
+  dev: defineMessage({ message: "Dev-Cpp project" }),
+  lpi: defineMessage({ message: "Free Pascal Lazarus project" }),
+  lps: defineMessage({ message: "Free Pascal Lazarus session file" }),
+  lrs: defineMessage({ message: "Free Pascal Lazarus file" }),
+  lrt: defineMessage({ message: "Free Pascal Lazarus file" }),
+  lpk: defineMessage({ message: "Free Pascal Lazarus file" }),
+  ppu: defineMessage({ message: "Free Pascal Lazarus file" }),
+  compiled: defineMessage({ message: "Compiled file" }),
 };
 
 const FORBIDDEN_MAGIC_NUMBERS = [
@@ -92,7 +91,10 @@ async function isExecutable(blob: Blob): Promise<boolean> {
     }
     if (valid) {
       // eslint-disable-next-line no-console
-      console.log("Source file detected to be binary file: it starts with", magic);
+      console.log(
+        "Source file detected to be binary file: it starts with",
+        magic
+      );
       return Promise.resolve(true);
     }
   }
@@ -106,26 +108,24 @@ export async function checkFile(file: File) {
   const size = file.size as number | undefined;
 
   if (size !== undefined && size === 0) {
-    toast.error(i18n._(t`You selected an empty file`));
+    toast.error(t`You selected an empty file`);
   } else if (size !== undefined && size > MAX_SOURCE_SIZE) {
-    toast.error(i18n._(t`The file you selected is too big (${size} bytes > ${MAX_SOURCE_SIZE} bytes)`));
+    toast.error(
+      t`The file you selected is too big (${size} bytes > ${MAX_SOURCE_SIZE} bytes)`
+    );
   } else if (nameParts.length < 2) {
-    toast.error(i18n._(t`Select a file with an extension`));
+    toast.error(t`Select a file with an extension`);
   } else if (extension.includes(" ")) {
-    toast.error(i18n._(t`The extension cannot contain spaces`));
+    toast.error(t`The extension cannot contain spaces`);
   } else if (extension in FORBIDDEN_EXTENSIONS) {
     toast.error(
-      `${i18n._(
-        t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`,
-      )
-      } ${
-        i18n._(FORBIDDEN_EXTENSIONS[extension])}`,
+      `${t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`} ${i18n._(
+        FORBIDDEN_EXTENSIONS[extension]
+      )}`
     );
   } else if (await isExecutable(file)) {
     toast.error(
-      i18n._(
-        t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`,
-      ),
+      t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`
     );
   } else {
     return true;

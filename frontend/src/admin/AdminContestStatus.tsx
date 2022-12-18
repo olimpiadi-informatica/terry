@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { AbsoluteDate } from "src/components/AbsoluteDate";
 import { RelativeDate } from "src/components/RelativeDate";
 import { Countdown } from "src/components/Countdown";
-import { i18n } from "src/i18n";
+import { i18n } from "@lingui/core";
 import { Loadable } from "src/Loadable";
 import { UsersData } from "src/types/admin";
 import {
@@ -66,7 +66,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
               {" "}
               <button
                 type="button"
-                onClick={() => startContest("reset").then(() => toast.success(i18n._(t`Automatic start disabled`)))}
+                onClick={() => startContest("reset").then(() => toast.success(t`Automatic start disabled`))}
                 className="btn btn-danger btn-sm"
               >
                 <FontAwesomeIcon icon={faTrash} />
@@ -86,7 +86,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
         onSubmit={(e) => {
           e.preventDefault();
           if (scheduledStartTime) {
-            startContest(scheduledStartTime).then(() => toast.success(i18n._(t`Automatic start updated`)));
+            startContest(scheduledStartTime).then(() => toast.success(t`Automatic start updated`));
           }
         }}
       >
@@ -95,7 +95,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
         </h4>
         <DateTimePicker
           onChange={(date: Date | null) => setScheduledDate(date ? DateTime.fromJSDate(date) : null)}
-          locale={i18n.language}
+          locale={i18n.locale}
           value={scheduledStartTime?.toJSDate()}
           minDate={new Date()}
         />
@@ -127,7 +127,7 @@ function ContestNotStarted({ startTime }: NotStartedProps) {
         className="mt-3"
         onSubmit={(e) => {
           e.preventDefault();
-          startContest("now").then(() => toast.success(i18n._(t`Contest started successfully`)));
+          startContest("now").then(() => toast.success(t`Contest started successfully`));
         }}
       >
         <h4>

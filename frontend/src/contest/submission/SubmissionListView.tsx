@@ -10,7 +10,6 @@ import { client } from "src/TerryClient";
 import { Modal } from "src/components/Modal";
 import { colorFromScore } from "src/utils";
 import "./SubmissionListView.css";
-import { i18n } from "src/i18n";
 import { Loading } from "src/components/Loading";
 import { ScoreView } from "src/contest/ScoreView";
 import { useServerTime } from "src/contest/ContestContext";
@@ -142,7 +141,7 @@ export function SubmissionListView({ task }: Props) {
   };
 
   return (
-    <Modal contentLabel={i18n._(t`Submission`)} returnUrl={`/task/${task.name}`}>
+    <Modal contentLabel={t`Submission`} returnUrl={`/task/${task.name}`}>
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Submission for</Trans>

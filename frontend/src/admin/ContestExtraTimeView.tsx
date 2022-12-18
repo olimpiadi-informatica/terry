@@ -5,7 +5,6 @@ import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
 import { toast } from "react-toastify";
 import { Modal } from "src/components/Modal";
-import { i18n } from "src/i18n";
 import { useStatus, useActions } from "./AdminContext";
 
 export function ContestExtraTimeView() {
@@ -18,17 +17,17 @@ export function ContestExtraTimeView() {
   const doSetExtraTime = () => {
     if (!minutesRef.current) return;
     // eslint-disable-next-line no-alert
-    if (!window.confirm(i18n._(t`Are you sure?`))) return;
+    if (!window.confirm(t`Are you sure?`)) return;
 
     const minutes = parseInt(minutesRef.current.value, 10);
     setExtraTime(minutes * 60).then(() => {
-      toast.success(i18n._(t`Extra time successfully updated`));
+      toast.success(t`Extra time successfully updated`);
       history.push("/admin");
     });
   };
 
   return (
-    <Modal contentLabel={i18n._(t`Extra time`)} returnUrl="/admin">
+    <Modal contentLabel={t`Extra time`} returnUrl="/admin">
       <form
         onSubmit={(e) => {
           e.preventDefault();

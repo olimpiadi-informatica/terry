@@ -8,7 +8,6 @@ import { Trans, t } from "@lingui/macro";
 import { Modal } from "src/components/Modal";
 import "./AdminLogsView.css";
 import { AbsoluteDate } from "src/components/AbsoluteDate";
-import { i18n } from "src/i18n";
 import { LogLevel, LogsOptions, LogEntry } from "src/types/admin";
 import { Error } from "src/components/Error";
 import { useServerTime } from "./AdminContext";
@@ -114,7 +113,7 @@ export function AdminLogsView() {
   };
 
   return (
-    <Modal contentLabel={i18n._(t`Logs`)} returnUrl="/admin">
+    <Modal contentLabel={t`Logs`} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Logs</Trans>
@@ -138,13 +137,13 @@ export function AdminLogsView() {
             ))}
           </div>
           <input
-            placeholder={i18n._(t`Category filter`)}
+            placeholder={t`Category filter`}
             className="form-control mb-1"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           />
           <input
-            placeholder={i18n._(t`Message filter`)}
+            placeholder={t`Message filter`}
             className="form-control"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}

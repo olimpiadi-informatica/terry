@@ -1,6 +1,16 @@
 {
-  "localeDir": "src/locales/",
-  "srcPathDirs": ["src/"],
-  "format": "po",
-  "sourceLocale": "en"
+  "locales": [
+    "en",
+    "it"
+  ],
+  "sourceLocale": "en",
+  "catalogs": [
+    {
+      "path": "src/locales/{locale}/messages",
+      "include": [
+        "src"
+      ]
+    }
+  ],
+  "format": "po"
 }

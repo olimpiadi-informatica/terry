@@ -3,12 +3,19 @@
 
 import http from "http";
 import httpProxy from "http-proxy";
+import { Socket } from "net";
 
 const bareBackend = process.env.BARE_BACKEND !== undefined;
 const siteEndpoint = "http://127.0.0.1:3000";
-const apiEndpoint = bareBackend ? "http://127.0.0.1:1234" : "http://127.0.0.1:2000/api";
-const filesEndpoint = bareBackend ? "http://127.0.0.1:1235" : "http://127.0.0.1:2000/files";
-const communicationsEndpoint = bareBackend ? "http://127.0.0.1:1236" : "http://127.0.0.1:2000/communications";
+const apiEndpoint = bareBackend
+  ? "http://127.0.0.1:1234"
+  : "http://127.0.0.1:2000/api";
+const filesEndpoint = bareBackend
+  ? "http://127.0.0.1:1235"
+  : "http://127.0.0.1:2000/files";
+const communicationsEndpoint = bareBackend
+  ? "http://127.0.0.1:1236"
+  : "http://127.0.0.1:2000/communications";
 
 if (bareBackend) {
   console.log("\x1b[1mUsing bare backend\x1b[0m");
@@ -56,8 +63,10 @@ const server = http.createServer((req, res) => {
 });
 
 proxy.on("error", (err, req, res) => {
-  res.writeHead(502, { "Content-Type": "text/plain" });
-  res.end("Some of the services are down!");
+  if (!(res instanceof Socket)) {
+    res.writeHead(502, { "Content-Type": "text/plain" });
+    res.end("Some of the services are down!");
+  }
   console.error(err.toString());
 });
 

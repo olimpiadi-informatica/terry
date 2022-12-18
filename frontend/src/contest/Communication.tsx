@@ -10,7 +10,6 @@ import { Announcement } from "src/components/Announcement";
 import {
   useAnnouncements, useAskQuestion, useCommunicationErrored, useQuestions,
 } from "src/hooks/useCommunication";
-import { i18n } from "src/i18n";
 import { useActions, useServerTime } from "./ContestContext";
 
 const MIN_QUESTION_LENGTH = 10;
@@ -83,7 +82,7 @@ export function Communication() {
           <>
             <div className="float-right">
               <small>
-                <abbr title={i18n._(t`Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated.`)}>
+                <abbr title={t`Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated.`}>
                   <em><Trans>Network problem. Reconnecting...</Trans></em>
                 </abbr>
               </small>

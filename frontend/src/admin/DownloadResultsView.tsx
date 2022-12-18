@@ -6,7 +6,6 @@ import { Trans, t } from "@lingui/macro";
 import { Modal } from "src/components/Modal";
 import { client } from "src/TerryClient";
 import { notifyError } from "src/utils";
-import { i18n } from "src/i18n";
 import { Loadable } from "src/Loadable";
 import { ZipData } from "src/types/admin";
 import { Error } from "src/components/Error";
@@ -52,7 +51,7 @@ export function DownloadResultsView() {
   };
 
   return (
-    <Modal contentLabel={i18n._(t`Download results`)} returnUrl="/admin">
+    <Modal contentLabel={t`Download results`} returnUrl="/admin">
       <div className="modal-header">
         <h5 className="modal-title">
           <Trans>Download contest results</Trans>

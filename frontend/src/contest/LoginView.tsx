@@ -1,6 +1,5 @@
 import React, { createRef, useState } from "react";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "src/i18n";
 import { Loading } from "src/components/Loading";
 import { usePack } from "src/admin/hooks/usePack";
 import { Markdown } from "src/components/Markdown";
@@ -53,11 +52,11 @@ export function LoginView() {
               ref={tokenRef}
               className="form-control text-center"
               required
-              placeholder={i18n._(t`Token`)}
+              placeholder={t`Token`}
               type="text"
             />
           </div>
-          <input type="submit" className="btn btn-primary" value={i18n._(t`Login`)} />
+          <input type="submit" className="btn btn-primary" value={t`Login`} />
           {contest.isError() && <Error className="mt-2" cause={contest.error()} />}
           {isLoading && <Loading />}
         </form>

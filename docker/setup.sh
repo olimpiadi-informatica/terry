@@ -16,9 +16,18 @@ apt-get install -y --no-install-recommends \
     $MAKE_DEPS \
     nginx procps zip '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
 
+# Install Python2 deps
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python2
+pip2 install numpy sortedcontainers
+
 # Add NodeJS and automatically run 'apt-get update'
-curl -sL https://deb.nodesource.com/setup_14.x | bash -
+curl -sL https://deb.nodesource.com/setup_18.x | bash -
 apt-get install nodejs
+
+# Install yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
+apt update && apt install --no-install-recommends yarn
 
 # Fetch Terry
 git clone --recursive https://github.com/algorithm-ninja/terry /terry
@@ -35,8 +44,8 @@ pip3 install -I -r requirements.txt
 # Build the frontend
 cd /terry/frontend
 export NODE_ENV=production
-npm install
-SKIP_PREFLIGHT_CHECK=true npm run build
+yarn install --frozen-lockfile
+NODE_OPTIONS=--openssl-legacy-provider SKIP_PREFLIGHT_CHECK=true yarn build
 
 # Keep only the built files
 cp -r build /app

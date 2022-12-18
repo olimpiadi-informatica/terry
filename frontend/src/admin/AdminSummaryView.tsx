@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Trans, t, Plural } from "@lingui/macro";
 import { RelativeDate } from "src/components/RelativeDate";
-import { i18n } from "src/i18n";
 import { client } from "src/TerryClient";
 import { Error } from "src/components/Error";
 import { Loading } from "src/components/Loading";
@@ -44,7 +43,7 @@ export function AdminSummaryView() {
 
   const doResetContest = () => {
     // eslint-disable-next-line no-alert
-    if (!window.confirm(i18n._(t`Are you sure?`))) return;
+    if (!window.confirm(t`Are you sure?`)) return;
 
     resetContest();
   };

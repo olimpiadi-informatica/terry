@@ -5,7 +5,6 @@ import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { Question as QuestionT } from "src/types/contest";
 import { useSendAnswer } from "src/hooks/useCommunication";
-import { i18n } from "src/i18n";
 import { Link } from "react-router-dom";
 import { RelativeDate } from "./RelativeDate";
 import { Markdown } from "./Markdown";
@@ -29,7 +28,7 @@ export function Question({ question, serverTime, canAnswer } : Props) {
         <div className="form-group">
           <textarea
             className="form-control"
-            placeholder={i18n._(t`Answer with Markdown`)}
+            placeholder={t`Answer with Markdown`}
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
           />

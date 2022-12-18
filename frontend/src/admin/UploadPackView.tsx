@@ -1,6 +1,5 @@
 import React, { createRef } from "react";
 import { Trans, t } from "@lingui/macro";
-import { i18n } from "src/i18n";
 import { useActions } from "./AdminContext";
 
 export function UploadPackView() {
@@ -35,7 +34,7 @@ export function UploadPackView() {
           </label>
           <input type="file" accept=".enc" name="file" id="file" ref={inputRef} className="form-control" required />
         </div>
-        <input type="submit" className="btn btn-danger" value={i18n._(t`Upload`)} />
+        <input type="submit" className="btn btn-danger" value={t`Upload`} />
       </form>
     </div>
   );

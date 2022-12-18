@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Trans, t } from "@lingui/macro";
 import { Modal } from "src/components/Modal";
-import { i18n } from "src/i18n";
 import { Loading } from "src/components/Loading";
 import { UserEntry } from "src/types/admin";
 import { Error } from "src/components/Error";
@@ -23,11 +22,11 @@ function UserExtraTimeView({ user }: UserExtraTimeProps) {
   const doSetExtraTime = () => {
     if (!minutesRef.current) return;
     // eslint-disable-next-line no-alert
-    if (!window.confirm(i18n._(t`Are you sure?`))) return;
+    if (!window.confirm(t`Are you sure?`)) return;
 
     const minutes = parseInt(minutesRef.current.value, 10);
     setExtraTime(minutes * 60, user.token);
-    toast.success(i18n._(t`Extra time successfully updated for the user`));
+    toast.success(t`Extra time successfully updated for the user`);
   };
 
   const extraTimeMinutes = () => Math.round(user.extra_time / 60);
@@ -82,9 +81,9 @@ export function AdminUsersView() {
   };
 
   return (
-    <Modal contentLabel={i18n._(t`Contestants`)} returnUrl="/admin">
+    <Modal contentLabel={t`Contestants`} returnUrl="/admin">
       <div className="modal-header">
-        <h5 className="modal-title">{i18n._(t`Contestants`)}</h5>
+        <h5 className="modal-title">{t`Contestants`}</h5>
         <Link to="/admin" role="button" className="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </Link>
