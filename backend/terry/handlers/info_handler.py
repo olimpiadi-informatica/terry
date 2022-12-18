@@ -132,6 +132,7 @@ class InfoHandler(BaseHandler):
         return BaseHandler.format_dates(user, fields=["end_time"])
 
     @Validators.contest_started
+    @Validators.register_user_ip
     def get_user_scores(self, token):
         """
         GET /scores/<token>
