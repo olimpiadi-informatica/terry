@@ -28,6 +28,8 @@ log_level: INFO
 
 # Secret for the JWT token, leave blank to disable SSO authentication
 jwt_secret: ~
+# Name of the JWT cookie
+jwt_cookie_name: token
 # URL to show where to login with SSO
 sso_url: ~
 

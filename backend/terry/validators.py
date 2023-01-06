@@ -184,7 +184,7 @@ class Validators:
         def handle(*args, **kwargs):
             if "_request" in kwargs:
                 request = kwargs["_request"]
-                jwt_token = request.cookies.get("token", None)
+                jwt_token = request.cookies.get(Config.jwt_cookie_name, None)
             else:
                 jwt_token = None
             token = kwargs["token"]

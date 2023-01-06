@@ -28,6 +28,7 @@ class Config:
     decrypted_file = "./zips/pack.zip"
     log_level = "INFO"
     jwt_secret = None
+    jwt_cookie_name = "token"
     sso_url = ""
     append_log_secret = "secret"
 
