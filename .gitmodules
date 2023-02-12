@@ -1,3 +1,7 @@
 [submodule "vm-utils/httptun"]
 	path = vm-utils/httptun
 	url = https://github.com/veluca93/httptun
+[submodule "pseudocode-interpreter"]
+	path = pseudocode-interpreter
+	url = https://github.com/algorithm-ninja/pseudocode-interpreter
+	branch = terry

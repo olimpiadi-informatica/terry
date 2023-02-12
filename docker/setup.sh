@@ -1,6 +1,6 @@
 #!/bin/sh -ex
 
-TERRY_BRANCH=${TERRY_BRANCH:-master}
+TERRY_BRANCH=ide
 
 # Diagnostics
 echo "Building terry"
@@ -13,7 +13,7 @@ MAKE_DEPS="curl git libffi-dev"
 # Install all dependencies
 apt-get update -y
 apt-get install -y --no-install-recommends \
-    $MAKE_DEPS \
+    $MAKE_DEPS build-essential \
     nginx procps zip '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
 
 # Install Python2 deps
@@ -30,11 +30,9 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/
 apt update && apt install --no-install-recommends yarn
 
 # Fetch Terry
-git clone --recursive https://github.com/algorithm-ninja/terry /terry
+git clone --recursive -b $TERRY_BRANCH https://github.com/algorithm-ninja/terry /terry
 
-# Checkout the correct branch
 cd /terry
-git checkout $TERRY_BRANCH
 
 # Build the backend
 cd /terry/backend
@@ -52,6 +50,14 @@ cp -r build /app
 
 # Save the version of terry
 date +%Y%m%d > /version
+
+cd /terry/pseudocode-interpreter/web
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+export PATH="/root/.cargo/bin:${PATH}"
+rustup target add wasm32-unknown-unknown
+cargo install trunk
+trunk build --release
+cp -r dist /ide
 
 # Cleanup
 cd /
