@@ -14,15 +14,12 @@ def main(args):
         shutil.copytree(args.__users__, os.path.join(workdir, "__users__"))
         for task in args.task_dir:
             target_dir = os.path.join(workdir, os.path.basename(task))
-            shutil.copytree(task, target_dir)
+            shutil.copytree(task, target_dir, dirs_exist_ok=True)
             if args.task_maker:
                 print("Building task", task)
-                subprocess.run(["task-maker", "--ui=silent", "--arch=i686",
-                                "--task-dir=" + target_dir, "do_not_evaluate"])
-                if args.both_arch:
-                    subprocess.run(
-                        ["task-maker", "--ui=silent", "--arch=x86_64",
-                         "--task-dir=" + target_dir, "do_not_evaluate"])
+                subprocess.run(
+                    ["task-maker", "--ui=silent",
+                     "--task-dir=" + target_dir, "do_not_evaluate"])
             shutil.rmtree(os.path.join(target_dir, "solutions"), True)
 
         extra_files = []
