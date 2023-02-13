@@ -2,7 +2,7 @@ import { t, defineMessage } from "@lingui/macro";
 import { MessageDescriptor, i18n } from "@lingui/core";
 import { toast } from "react-toastify";
 
-export const MAX_SOURCE_SIZE = 30000;
+export const MAX_SOURCE_SIZE = 100000;
 
 type SourceLanguageType = { [key: string]: MessageDescriptor };
 
@@ -26,6 +26,8 @@ export const ALLOWED_EXTENSIONS: SourceLanguageType = {
   py: defineMessage({ message: "Python" }),
   py2: defineMessage({ message: "Python" }),
   py3: defineMessage({ message: "Python" }),
+  sb3: defineMessage({ message: "Scratch" }),
+  srs: defineMessage({ message: "Pseudocode" }),
   rb: defineMessage({ message: "Ruby" }),
   rs: defineMessage({ message: "Rust" }),
   vb: defineMessage({ message: "VisualBasic" }),
