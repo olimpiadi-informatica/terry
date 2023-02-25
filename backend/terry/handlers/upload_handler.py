@@ -7,7 +7,8 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 
-from werkzeug.exceptions import InternalServerError, BadRequest
+import time
+from werkzeug.exceptions import InternalServerError, BadRequest, Forbidden
 
 from terry.handlers.base_handler import BaseHandler
 from terry.handlers.info_handler import InfoHandler
@@ -37,6 +38,16 @@ class UploadHandler(BaseHandler):
             )
         StorageManager.save_file(path, file["content"])
         file_size = StorageManager.get_file_size(path)
+
+        expiry_date = Database.get_user_task(input["token"], input["task"])["attempt_expiry_date"]
+        if expiry_date is not None:
+            if time.time() > expiry_date:
+                Logger.info(
+                    "UPLOAD", "User %s has uploaded the output %s too late" % (input["token"], output_id)
+                )
+                BaseHandler.raise_exc(
+                    Forbidden, "INPUT_EXPIRED", "The input file has expired"
+                )
 
         try:
             result = ContestManager.evaluate_output(input["task"], input["path"], path)

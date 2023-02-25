@@ -7,6 +7,7 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import json
+import time
 import sqlite3
 
 from werkzeug.exceptions import Forbidden, BadRequest
@@ -42,6 +43,8 @@ class ContestHandler(BaseHandler):
         POST /generate_input
         """
         token = user["token"]
+        Database.cleanup_expired_attempts(token)
+
         if Database.get_user_task(token, task["name"])["current_attempt"]:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
 
@@ -54,7 +57,12 @@ class ContestHandler(BaseHandler):
             Database.add_input(
                 id, token, task["name"], attempt, path, size, autocommit=False
             )
-            Database.set_user_attempt(token, task["name"], attempt, autocommit=False)
+
+            expiry_date = None
+            if task["submission_timeout"] is not None:
+                expiry_date = time.time() + task["submission_timeout"]
+
+            Database.set_user_attempt(token, task["name"], attempt, expiry_date, autocommit=False)
             Database.commit()
         except:
             Database.rollback()

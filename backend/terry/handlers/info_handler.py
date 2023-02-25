@@ -91,6 +91,8 @@ class InfoHandler(BaseHandler):
         """
         token = user["token"]
 
+        Database.cleanup_expired_attempts(token)
+
         user["contest"] = self.get_contest()
 
         if not user["contest"]["has_started"]:

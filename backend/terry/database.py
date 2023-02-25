@@ -9,6 +9,7 @@
 
 import sqlite3
 import uuid
+import time
 
 from gevent.lock import BoundedSemaphore
 
@@ -224,6 +225,27 @@ class Database:
             return Database.dictify(all=True)
 
     @staticmethod
+    def cleanup_expired_attempts(token, autocommit=True):
+        """
+        Invalidates old attempts that timed out
+        """
+        return 1 == Database.do_write(
+            autocommit,
+            """
+            UPDATE user_tasks SET
+                current_attempt = NULL,
+                attempt_expiry_date = NULL
+            WHERE
+                token=:token
+                AND (attempt_expiry_date IS NOT NULL AND attempt_expiry_date<:current_date)
+        """,
+            {
+                "token": token,
+                "current_date": time.time(),
+            },
+        )
+
+    @staticmethod
     def get_next_attempt(token, task):
         Database.c.execute(
             """
@@ -327,12 +349,12 @@ class Database:
         )
 
     @staticmethod
-    def add_task(name, title, statement_path, max_score, num, autocommit=True):
+    def add_task(name, title, statement_path, max_score, num, submission_timeout=None, autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
-            INSERT INTO tasks (name, title, statement_path, max_score, num)
-            VALUES (:name, :title, :statement_path, :max_score, :num)
+            INSERT INTO tasks (name, title, statement_path, max_score, num, submission_timeout)
+            VALUES (:name, :title, :statement_path, :max_score, :num, :submission_timeout)
         """,
             {
                 "name": name,
@@ -340,6 +362,7 @@ class Database:
                 "max_score": max_score,
                 "statement_path": statement_path,
                 "num": num,
+                "submission_timeout": submission_timeout,
             },
         )
 
@@ -445,14 +468,16 @@ class Database:
         )
 
     @staticmethod
-    def set_user_attempt(token, task, attempt, autocommit=True):
+    def set_user_attempt(token, task, attempt, expiry_date=None, autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
-            UPDATE user_tasks SET current_attempt = :attempt
+            UPDATE user_tasks SET
+                current_attempt = :attempt,
+                attempt_expiry_date = :attempt_expiry_date
             WHERE token = :token AND task = :task
         """,
-            {"token": token, "task": task, "attempt": attempt},
+            {"token": token, "task": task, "attempt": attempt, "attempt_expiry_date": expiry_date},
         )
 
     @staticmethod

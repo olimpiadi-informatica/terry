@@ -214,6 +214,8 @@ class ContestManager:
                         task["statement_path"],
                         task["max_score"],
                         count,
+                        # if None, inputs do not expire
+                        task.get("submission_timeout", None),
                         autocommit=False,
                     )
                     count += 1

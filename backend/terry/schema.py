@@ -161,4 +161,8 @@ class Schema:
         """
         ALTER TABLE users ADD COLUMN contest_start_delay INTEGER NULL DEFAULT NULL CHECK (contest_start_delay IS NULL OR contest_start_delay >= 0);
         """,
+        """
+            ALTER TABLE tasks ADD COLUMN submission_timeout INTEGER NULL DEFAULT NULL CHECK (submission_timeout IS NULL OR submission_timeout > 0);
+            ALTER TABLE user_tasks ADD COLUMN attempt_expiry_date INTEGER NULL DEFAULT NULL;
+        """,
     ]
