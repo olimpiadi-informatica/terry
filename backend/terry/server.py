@@ -74,6 +74,7 @@ class Server:
                     endpoint="contest#generate_input",
                 ),
                 Rule("/submit", methods=["POST"], endpoint="contest#submit"),
+                Rule("/abandon_input", methods=["POST"], endpoint="contest#abandon_input"),
                 Rule(
                     "/internet_detected",
                     methods=["POST"],

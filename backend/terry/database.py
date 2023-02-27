@@ -9,7 +9,6 @@
 
 import sqlite3
 import uuid
-import time
 
 from gevent.lock import BoundedSemaphore
 
@@ -143,15 +142,16 @@ class Database:
         return Database.dictify()
 
     @staticmethod
-    def get_submission(id):
+    def get_submission(id, include_abandoned=False):
         Database.c.execute(
-            """
+            f"""
             SELECT
                 submissions.id AS id,
                 submissions.token AS token, 
                 submissions.task AS task,
                 submissions.score AS score,
                 submissions.date AS date,
+                submissions.abandoned AS abandoned,
                 inputs.id AS input_id,
                 inputs.attempt AS input_attempt, 
                 inputs.date AS input_date,
@@ -168,24 +168,26 @@ class Database:
                 sources.size AS source_size
             FROM submissions
             JOIN inputs ON submissions.input = inputs.id
-            JOIN outputs ON submissions.output = outputs.id
-            JOIN sources ON submissions.source = sources.id
+            LEFT JOIN outputs ON submissions.output = outputs.id
+            LEFT JOIN sources ON submissions.source = sources.id
             WHERE submissions.id=:id
+            {'AND submissions.abandoned = FALSE' if not include_abandoned else ''}
         """,
             {"id": id},
         )
         return Database.dictify()
 
     @staticmethod
-    def get_submissions(token, task):
+    def get_submissions(token, task, include_abandoned=False):
         Database.c.execute(
-            """
+            f"""
             SELECT
                 submissions.id AS id,
                 submissions.token AS token, 
                 submissions.task AS task,
                 submissions.score AS score,
                 submissions.date AS date,
+                submissions.abandoned AS abandoned,
                 inputs.id AS input_id,
                 inputs.attempt AS input_attempt, 
                 inputs.date AS input_date,
@@ -202,9 +204,10 @@ class Database:
                 sources.size AS source_size
             FROM submissions
             JOIN inputs ON submissions.input = inputs.id
-            JOIN outputs ON submissions.output = outputs.id
-            JOIN sources ON submissions.source = sources.id
+            LEFT JOIN outputs ON submissions.output = outputs.id
+            LEFT JOIN sources ON submissions.source = sources.id
             WHERE submissions.token=:token AND submissions.task=:task
+            {'AND submissions.abandoned = FALSE' if not include_abandoned else ''}
             ORDER BY inputs.attempt ASC
         """,
             {"token": token, "task": task},
@@ -223,27 +226,6 @@ class Database:
         else:
             c.execute("SELECT * FROM user_tasks WHERE token=:token", {"token": token})
             return Database.dictify(all=True)
-
-    @staticmethod
-    def cleanup_expired_attempts(token, autocommit=True):
-        """
-        Invalidates old attempts that timed out
-        """
-        return 1 == Database.do_write(
-            autocommit,
-            """
-            UPDATE user_tasks SET
-                current_attempt = NULL,
-                attempt_expiry_date = NULL
-            WHERE
-                token=:token
-                AND (attempt_expiry_date IS NOT NULL AND attempt_expiry_date<:current_date)
-        """,
-            {
-                "token": token,
-                "current_date": time.time(),
-            },
-        )
 
     @staticmethod
     def get_next_attempt(token, task):
@@ -437,13 +419,13 @@ class Database:
         )
 
     @staticmethod
-    def add_submission(id, input, output, source, score, autocommit=True):
+    def add_submission(id, input, output, source, score, abandoned=False, autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
             INSERT INTO submissions (id, token, task, input, output, source, 
-            score)
-            SELECT :id, token, task, :input, :output, :source, :score
+            score, abandoned)
+            SELECT :id, token, task, :input, :output, :source, :score, :abandoned
             FROM inputs
             WHERE id = :input
         """,
@@ -453,6 +435,7 @@ class Database:
                 "score": score,
                 "input": input,
                 "source": source,
+                "abandoned": abandoned,
             },
         )
 
@@ -468,16 +451,14 @@ class Database:
         )
 
     @staticmethod
-    def set_user_attempt(token, task, attempt, expiry_date=None, autocommit=True):
+    def set_user_attempt(token, task, attempt, autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
-            UPDATE user_tasks SET
-                current_attempt = :attempt,
-                attempt_expiry_date = :attempt_expiry_date
+            UPDATE user_tasks SET current_attempt = :attempt
             WHERE token = :token AND task = :task
         """,
-            {"token": token, "task": task, "attempt": attempt, "attempt_expiry_date": expiry_date},
+            {"token": token, "task": task, "attempt": attempt},
         )
 
     @staticmethod

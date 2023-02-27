@@ -7,8 +7,8 @@
 # Copyright 2017 - Luca Versari <veluca93@gmail.com>
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import json
-import time
 import sqlite3
+import time
 
 from werkzeug.exceptions import Forbidden, BadRequest
 
@@ -43,8 +43,6 @@ class ContestHandler(BaseHandler):
         POST /generate_input
         """
         token = user["token"]
-        Database.cleanup_expired_attempts(token)
-
         if Database.get_user_task(token, task["name"])["current_attempt"]:
             self.raise_exc(Forbidden, "FORBIDDEN", "You already have a ready input!")
 
@@ -57,12 +55,7 @@ class ContestHandler(BaseHandler):
             Database.add_input(
                 id, token, task["name"], attempt, path, size, autocommit=False
             )
-
-            expiry_date = None
-            if task["submission_timeout"] is not None:
-                expiry_date = time.time() + task["submission_timeout"]
-
-            Database.set_user_attempt(token, task["name"], attempt, expiry_date, autocommit=False)
+            Database.set_user_attempt(token, task["name"], attempt, autocommit=False)
             Database.commit()
         except:
             Database.rollback()
@@ -97,16 +90,54 @@ class ContestHandler(BaseHandler):
                 "The provided pair of source-output is invalid",
             )
 
+        expiry_date = ContestManager.get_input_expiry_date(input)
+        if expiry_date is not None and time.time() > expiry_date:
+            Logger.info(
+                "UPLOAD", "User %s tried to submit for input %s too late" % (input["token"], input["id"])
+            )
+            BaseHandler.raise_exc(
+                Forbidden, "INPUT_EXPIRED", "The input file has expired"
+            )
+
         score = ContestHandler.compute_score(input["task"], output["result"])
+        submission_id = self.add_submission(input, output, source, score)
+
+        Logger.info(
+            "CONTEST",
+            "User %s has submitted %s on %s"
+            % (input["token"], submission_id, input["task"]),
+        )
+        return InfoHandler.patch_submission(Database.get_submission(submission_id))
+
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    def abandon_input(self, input):
+        """
+        POST /abandon_input
+        """
+        submission_id = self.add_submission(input, None, None, 0, abandoned=True)
+
+        Logger.info(
+            "CONTEST",
+            "User %s has abandoned input %s on %s"
+            % (input["token"], input["id"], input["task"]),
+        )
+        return InfoHandler.patch_submission(
+            Database.get_submission(submission_id, include_abandoned=True)
+        )
+
+    def add_submission(self, input, output, source, score, abandoned=False):
         Database.begin()
         try:
             submission_id = Database.gen_id()
             if not Database.add_submission(
                 submission_id,
                 input["id"],
-                output["id"],
-                source["id"],
+                output["id"] if output is not None else None,
+                source["id"] if source is not None else None,
                 score,
+                abandoned,
                 autocommit=False,
             ):
                 self.raise_exc(
@@ -131,12 +162,8 @@ class ContestHandler(BaseHandler):
         except:
             Database.rollback()
             raise
-        Logger.info(
-            "CONTEST",
-            "User %s has submitted %s on %s"
-            % (input["token"], submission_id, input["task"]),
-        )
-        return InfoHandler.patch_submission(Database.get_submission(submission_id))
+
+        return submission_id
 
     @Validators.register_user_ip
     def internet_detected(self, token):

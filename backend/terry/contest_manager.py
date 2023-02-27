@@ -351,6 +351,17 @@ class ContestManager:
         return input["id"], path
 
     @staticmethod
+    def get_input_expiry_date(input):
+        """
+        Returns the expiry timestamp for the given input if any, or None
+        """
+        task = Database.get_task(input["task"])
+        timeout = task["submission_timeout"]
+        if timeout is None:
+            return None
+        return input["date"] + timeout
+
+    @staticmethod
     def evaluate_output(task_name, input_path, output_path):
         """
         Given an input of a task, evaluate the correctness of the output

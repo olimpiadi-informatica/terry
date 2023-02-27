@@ -162,7 +162,31 @@ class Schema:
         ALTER TABLE users ADD COLUMN contest_start_delay INTEGER NULL DEFAULT NULL CHECK (contest_start_delay IS NULL OR contest_start_delay >= 0);
         """,
         """
-            ALTER TABLE tasks ADD COLUMN submission_timeout INTEGER NULL DEFAULT NULL CHECK (submission_timeout IS NULL OR submission_timeout > 0);
-            ALTER TABLE user_tasks ADD COLUMN attempt_expiry_date INTEGER NULL DEFAULT NULL;
+        ALTER TABLE tasks ADD COLUMN submission_timeout INTEGER NULL DEFAULT NULL CHECK (submission_timeout IS NULL OR submission_timeout > 0);
+
+        ALTER TABLE submissions RENAME TO submissions_old;
+        CREATE TABLE submissions (
+            id TEXT PRIMARY KEY,
+            token TEXT NOT NULL,
+            task TEXT NOT NULL,
+            input TEXT UNIQUE NOT NULL,
+            abandoned BOOLEAN NOT NULL,
+            output TEXT NULL,
+            source TEXT NULL,
+            score REAL NOT NULL,
+            date INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+            FOREIGN KEY (input, token, task) REFERENCES inputs(id, token, task),
+            FOREIGN KEY (output, input) REFERENCES outputs(id, input),
+            FOREIGN KEY (source, input) REFERENCES sources(id, input),
+            CHECK (score >= 0),
+            CHECK (
+                CASE abandoned
+                    WHEN TRUE THEN (output IS NULL) AND (source IS NULL) AND (score = 0)
+                    WHEN FALSE THEN (output IS NOT NULL) AND (source IS NOT NULL)
+                END
+            )
+        );
+        INSERT INTO submissions (id, token, task, input, output, source, score, date, abandoned) SELECT *, FALSE FROM submissions_old;
+        DROP TABLE submissions_old;
         """,
     ]
