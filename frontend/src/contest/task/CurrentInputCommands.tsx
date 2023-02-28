@@ -45,67 +45,51 @@ export function CurrentInputCommands({
 
   return (
     <>
-      {expiration?.hasExpired && (
-        <>
-          {" "}
-          <button
-            className="btn btn-secondary"
-            type="button"
-            onClick={() => abandonInput()}
-          >
-            <FontAwesomeIcon icon={faTimes} />
-            {" "}
-            <Trans>Abandon this expired input</Trans>
-          </button>
-          {" "}
-          <a
-            role="button"
-            className="btn btn-outline-primary ml-4"
-            href={client.filesBaseURI + currentInput.path}
-            download
-          >
-            <FontAwesomeIcon icon={faDownload} />
-            {" "}
-            <Trans>Download expired input</Trans>
-          </a>
-        </>
-      )}
-      {isValid && (
-        <>
-          {" "}
-          <a
-            role="button"
-            className="btn btn-primary"
-            href={client.filesBaseURI + currentInput.path}
-            download
-          >
-            <FontAwesomeIcon icon={faDownload} />
-            {" "}
-            <Trans>Download input</Trans>
-          </a>
-          {" "}
-          <Link
-            to={`/task/${task.name}/submit/${currentInput.id}`}
-            role="button"
-            className="btn btn-success"
-          >
-            <FontAwesomeIcon icon={faUpload} />
-            {" "}
-            <Trans>Upload solution</Trans>
-          </Link>
-        </>
-      )}
+      <a
+        role="button"
+        className={isValid ? "btn btn-primary" : "btn btn-light"}
+        href={client.filesBaseURI + currentInput.path}
+        download
+      >
+        <FontAwesomeIcon icon={faDownload} />
+        {" "}
+        <Trans>Download input</Trans>
+      </a>
+      {" "}
+      <Link
+        to={`/task/${task.name}/submit/${currentInput.id}`}
+        role="button"
+        className={isValid ? "btn btn-success" : "btn btn-light disabled"}
+      >
+        <FontAwesomeIcon icon={faUpload} />
+        {" "}
+        <Trans>Upload solution</Trans>
+      </Link>
       {expiration?.willExpireSoon && (
         <>
           {" "}
           <button
-            className="btn btn-outline-secondary ml-4"
+            className="btn btn-outline-secondary ml-3"
             type="button"
             onClick={() => abandonInput()}
           >
             <FontAwesomeIcon icon={faTimes} />
             {" "}
             <Trans>Abandon this input now</Trans>
+          </button>
+        </>
+      )}
+      {expiration?.hasExpired && (
+        <>
+          {" "}
+          <button
+            className="btn btn-primary ml-3"
+            type="button"
+            onClick={() => abandonInput()}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+            {" "}
+            <Trans>Abandon this expired input</Trans>
           </button>
         </>
       )}

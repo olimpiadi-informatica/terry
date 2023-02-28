@@ -22,11 +22,11 @@ msgstr "(in minutes)"
 msgid "<0>Be careful!</0>Once the contest starts it cannot be stopped!"
 msgstr "<0>Be careful!</0> Once the contest starts it cannot be stopped!"
 
-#: src/contest/task/CurrentInputCommands.tsx:62
+#: src/contest/task/CurrentInputCommands.tsx:92
 msgid "Abandon this expired input"
 msgstr "Abandon this expired input"
 
-#: src/contest/task/CurrentInputCommands.tsx:112
+#: src/contest/task/CurrentInputCommands.tsx:78
 msgid "Abandon this input now"
 msgstr "Abandon this input now"
 
@@ -96,7 +96,7 @@ msgstr "C#"
 msgid "C++"
 msgstr "C++"
 
-#: src/contest/submission/submit/Submit.tsx:88
+#: src/contest/submission/submit/Submit.tsx:95
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -104,7 +104,7 @@ msgstr "Cancel"
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 
-#: src/contest/submission/submit/CreateSubmissionView.tsx:16
+#: src/contest/submission/submit/CreateSubmissionView.tsx:17
 msgid "Cannot submit for this input."
 msgstr "Cannot submit for this input."
 
@@ -131,7 +131,7 @@ msgstr "Clear"
 #: src/admin/AdminLogsView.tsx:178
 #: src/admin/AdminUsersView.tsx:128
 #: src/admin/ContestExtraTimeView.tsx:78
-#: src/contest/submission/SubmissionListView.tsx:209
+#: src/contest/submission/SubmissionListView.tsx:162
 #: src/contest/submission/SubmissionReportView.tsx:43
 msgid "Close"
 msgstr "Close"
@@ -236,7 +236,7 @@ msgstr "Dart"
 
 #: src/admin/AdminLogsView.tsx:157
 #: src/contest/submission/FeedbackView.tsx:45
-#: src/contest/submission/SubmissionListView.tsx:165
+#: src/contest/submission/SubmissionListView.tsx:127
 msgid "Date"
 msgstr "Date"
 
@@ -252,7 +252,7 @@ msgstr "Detected language:"
 msgid "Dev-Cpp project"
 msgstr "Dev-Cpp project"
 
-#: src/contest/submission/SubmissionListView.tsx:168
+#: src/contest/submission/SubmissionListView.tsx:130
 msgid "Download"
 msgstr "Download"
 
@@ -262,11 +262,7 @@ msgstr "Download"
 msgid "Download contest results"
 msgstr "Download contest results"
 
-#: src/contest/task/CurrentInputCommands.tsx:73
-msgid "Download expired input"
-msgstr "Download expired input"
-
-#: src/contest/task/CurrentInputCommands.tsx:88
+#: src/contest/task/CurrentInputCommands.tsx:56
 msgid "Download input"
 msgstr "Download input"
 
@@ -333,7 +329,7 @@ msgstr "IP"
 msgid "Info (teal)"
 msgstr "Info (teal)"
 
-#: src/contest/submission/SubmissionListView.tsx:95
+#: src/contest/submission/SubmissionListView.tsx:66
 msgid "Input file"
 msgstr "Input file"
 
@@ -450,7 +446,7 @@ msgstr "Not answered yet."
 msgid "On the left side of this page you can find the tasks, click on any one to open it."
 msgstr "On the left side of this page you can find the tasks, click on any one to open it."
 
-#: src/contest/submission/SubmissionListView.tsx:129
+#: src/contest/submission/SubmissionListView.tsx:98
 msgid "Output file"
 msgstr "Output file"
 
@@ -492,7 +488,7 @@ msgstr "Preview"
 msgid "Primary (blue)"
 msgstr "Primary (blue)"
 
-#: src/contest/submission/submit/Submit.tsx:84
+#: src/contest/submission/submit/Submit.tsx:91
 msgid "Processing..."
 msgstr "Processing..."
 
@@ -533,15 +529,15 @@ msgstr "Remaining time"
 msgid "Remaining time for some participant"
 msgstr "Remaining time for some participant"
 
-#: src/contest/task/TaskCommands.tsx:64
+#: src/contest/task/TaskCommands.tsx:55
 msgid "Request input"
 msgstr "Request input"
 
-#: src/contest/task/TaskCommands.tsx:62
+#: src/contest/task/TaskCommands.tsx:55
 msgid "Request new input"
 msgstr "Request new input"
 
-#: src/contest/task/TaskCommands.tsx:85
+#: src/contest/task/TaskCommands.tsx:75
 msgid "Requesting..."
 msgstr "Requesting..."
 
@@ -558,7 +554,7 @@ msgid "Scheduled start at<0/>. This page will reload automatically."
 msgstr "Scheduled start at <0/>. This page will reload automatically."
 
 #: src/contest/submission/FeedbackView.tsx:52
-#: src/contest/submission/SubmissionListView.tsx:171
+#: src/contest/submission/SubmissionListView.tsx:133
 msgid "Score"
 msgstr "Score"
 
@@ -595,7 +591,7 @@ msgstr "Showing only the questions of <0>{filter}</0>"
 msgid "Size:"
 msgstr "Size:"
 
-#: src/contest/submission/SubmissionListView.tsx:113
+#: src/contest/submission/SubmissionListView.tsx:82
 msgid "Source file"
 msgstr "Source file"
 
@@ -619,20 +615,20 @@ msgstr "Start automatically the contest"
 msgid "Start the contest immediately"
 msgstr "Start the contest immediately"
 
-#: src/contest/submission/SubmissionListView.tsx:182
+#: src/contest/submission/SubmissionListView.tsx:144
 #: src/contest/submission/SubmissionReportView.tsx:26
 msgid "Submission"
 msgstr "Submission"
 
-#: src/contest/submission/SubmissionListView.tsx:185
+#: src/contest/submission/SubmissionListView.tsx:147
 msgid "Submission for"
 msgstr "Submission for"
 
-#: src/contest/submission/submit/Submit.tsx:67
+#: src/contest/submission/submit/Submit.tsx:73
 msgid "Submission for input"
 msgstr "Submission for input"
 
-#: src/contest/submission/submit/Submit.tsx:93
+#: src/contest/submission/submit/Submit.tsx:100
 msgid "Submit"
 msgstr "Submit"
 
@@ -729,11 +725,11 @@ msgstr "The question must be at least {MIN_QUESTION_LENGTH} characters long."
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
-#: src/contest/task/CurrentInputExpiration.tsx:35
+#: src/contest/task/CurrentInputExpiration.tsx:31
 msgid "This input has expired."
 msgstr "This input has expired."
 
-#: src/contest/task/CurrentInputExpiration.tsx:41
+#: src/contest/task/CurrentInputExpiration.tsx:37
 msgid "This input will expire:"
 msgstr "This input will expire:"
 
@@ -759,7 +755,7 @@ msgstr "Updated announcement: {0}"
 msgid "Upload"
 msgstr "Upload"
 
-#: src/contest/task/CurrentInputCommands.tsx:98
+#: src/contest/task/CurrentInputCommands.tsx:66
 msgid "Upload solution"
 msgstr "Upload solution"
 
@@ -798,7 +794,7 @@ msgstr "You can set an extra time for all the contestants in case of problems th
 msgid "You can submit<0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files<1>remember to submit</1>them by clicking the green button!"
 msgstr "You can submit <0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files <1>remember to submit</1> them by clicking the green button!"
 
-#: src/contest/submission/SubmissionListView.tsx:153
+#: src/contest/submission/SubmissionListView.tsx:115
 msgid "You have not submitted yet."
 msgstr "You have not submitted yet."
 
@@ -843,7 +839,7 @@ msgstr "to the scheduled start"
 msgid "view all submissions"
 msgstr "view all submissions"
 
-#: src/contest/submission/SubmissionListView.tsx:44
+#: src/contest/submission/SubmissionListView.tsx:39
 msgid "view details"
 msgstr "view details"
 
