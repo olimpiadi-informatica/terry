@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
-import { Link } from "react-router-dom";
-import { client } from "src/TerryClient";
-import { Loadable } from "src/Loadable";
-import { notifyError } from "src/utils";
-import { useToken, useActions } from "src/contest/ContestContext";
-import {
-  SubmissionList, TaskData, UserTaskData, InputData,
-} from "src/types/contest";
+import React, { useState } from "react";
 import { Error } from "src/components/Error";
+import { useActions, useToken } from "src/contest/ContestContext";
+import { Loadable } from "src/Loadable";
+import { client } from "src/TerryClient";
+import {
+  InputData,
+  SubmissionList,
+  TaskData,
+  UserTaskData,
+} from "src/types/contest";
+import { notifyError } from "src/utils";
+import { CurrentInputCommands } from "./CurrentInputCommands";
 
 type Props = {
   task: TaskData;
@@ -53,27 +56,16 @@ export function TaskCommands({ task, userTask, submissions }: Props) {
       </button>
     );
 
-    return button(submissions.isReady() && submissions.value().items.length > 0);
+    return button(
+      submissions.isReady() && submissions.value().items.length > 0,
+    );
   };
 
   if (userTask.current_input) {
     const currentInput = userTask.current_input;
-    return (
-      <>
-        <a role="button" className="btn btn-primary" href={client.filesBaseURI + currentInput.path} download>
-          <FontAwesomeIcon icon={faDownload} />
-          {" "}
-          <Trans>Download input</Trans>
-        </a>
-        {" "}
-        <Link to={`/task/${task.name}/submit/${currentInput.id}`} role="button" className="btn btn-success">
-          <FontAwesomeIcon icon={faUpload} />
-          {" "}
-          <Trans>Upload solution</Trans>
-        </Link>
-      </>
-    );
+    return <CurrentInputCommands currentInput={currentInput} task={task} />;
   }
+
   if (input) {
     if (input.isLoading()) {
       return (

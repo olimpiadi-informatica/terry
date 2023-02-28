@@ -19,7 +19,7 @@ export function LastSubmission({ task, submissions }: Props) {
   }
   const submission = submissions[submissions.length - 1];
   return (
-    <div className="terry-submission-list-button mt-2">
+    <div>
       <strong>
         <Trans>Last submission:</Trans>
       </strong>

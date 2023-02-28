@@ -1,16 +1,17 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import { TaskData, UserTaskData } from "src/types/contest";
-import { useStatement } from "src/contest/hooks/useStatement";
-import { CreateSubmissionView } from "src/contest/submission/submit/CreateSubmissionView";
-import { SubmissionReportView } from "src/contest/submission/SubmissionReportView";
-import { SubmissionListView } from "src/contest/submission/SubmissionListView";
-import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
-import { Loading } from "src/components/Loading";
 import { Error } from "src/components/Error";
+import { Loading } from "src/components/Loading";
+import { useStatement } from "src/contest/hooks/useStatement";
+import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
+import { SubmissionListView } from "src/contest/submission/SubmissionListView";
+import { SubmissionReportView } from "src/contest/submission/SubmissionReportView";
+import { CreateSubmissionView } from "src/contest/submission/submit/CreateSubmissionView";
+import { CurrentInputExpiration } from "src/contest/task/CurrentInputExpiration";
+import { TaskData, UserTaskData } from "src/types/contest";
+import { LastSubmission } from "./LastSubmission";
 import { TaskCommands } from "./TaskCommands";
 import { TaskStatement } from "./TaskStatement";
-import { LastSubmission } from "./LastSubmission";
 
 type Props = {
   task: TaskData;
@@ -33,8 +34,12 @@ export function TaskView({ task, userTask }: Props) {
   return (
     <>
       <h1>{task.title}</h1>
-      <TaskCommands task={task} userTask={userTask} submissions={submissions} />
-
+      <div className="mb-2">
+        <TaskCommands task={task} userTask={userTask} submissions={submissions} />
+        {userTask.current_input && (
+          <CurrentInputExpiration currentInput={userTask.current_input} />
+        )}
+      </div>
       <Route
         path="/task/:taskName/submit/:inputId"
         render={({ match }) => <CreateSubmissionView inputId={match.params.inputId} task={task} userTask={userTask} />}
@@ -45,9 +50,16 @@ export function TaskView({ task, userTask }: Props) {
         render={({ match }) => <SubmissionReportView submissionId={match.params.submissionId} task={task} />}
       />
 
-      {submissions.isReady() && <LastSubmission task={task} submissions={submissions.value().items} />}
+      {submissions.isReady() && (
+        <LastSubmission
+          task={task}
+          submissions={submissions
+            .value()
+            .items.flatMap((x) => (x.abandoned ? [] : [x]))}
+        />
+      )}
 
-      <hr />
+      <hr className="mt-1" />
 
       {renderTaskStatement()}
     </>
