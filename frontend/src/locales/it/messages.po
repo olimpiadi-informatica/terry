@@ -128,7 +128,7 @@ msgstr "Annulla"
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/contest/submission/submit/submissionLimits.ts:41
+#: src/contest/submission/submit/submissionLimits.ts:43
 msgid "CodeBlocks project"
 msgstr "Progetto CodeBlocks"
 
@@ -140,39 +140,39 @@ msgstr "Comunicazioni"
 msgid "Communication system"
 msgstr "Sistema di comunicazione"
 
-#: src/contest/submission/submit/submissionLimits.ts:45
+#: src/contest/submission/submit/submissionLimits.ts:47
 msgid "Compiled Java binary"
 msgstr "Binario Java compilato"
 
-#: src/contest/submission/submit/submissionLimits.ts:44
+#: src/contest/submission/submit/submissionLimits.ts:46
 msgid "Compiled Java class"
 msgstr "Classe Java compilata"
 
-#: src/contest/submission/submit/submissionLimits.ts:46
-#: src/contest/submission/submit/submissionLimits.ts:47
 #: src/contest/submission/submit/submissionLimits.ts:48
+#: src/contest/submission/submit/submissionLimits.ts:49
+#: src/contest/submission/submit/submissionLimits.ts:50
 msgid "Compiled Python object"
 msgstr "Oggetto Python compilato"
 
-#: src/contest/submission/submit/submissionLimits.ts:35
-#: src/contest/submission/submit/submissionLimits.ts:36
 #: src/contest/submission/submit/submissionLimits.ts:37
 #: src/contest/submission/submit/submissionLimits.ts:38
 #: src/contest/submission/submit/submissionLimits.ts:39
 #: src/contest/submission/submit/submissionLimits.ts:40
+#: src/contest/submission/submit/submissionLimits.ts:41
+#: src/contest/submission/submit/submissionLimits.ts:42
 msgid "Compiled binary"
 msgstr "Binario compilato"
 
-#: src/contest/submission/submit/submissionLimits.ts:67
+#: src/contest/submission/submit/submissionLimits.ts:69
 msgid "Compiled file"
 msgstr "File compilato"
 
-#: src/contest/submission/submit/submissionLimits.ts:49
-#: src/contest/submission/submit/submissionLimits.ts:50
 #: src/contest/submission/submit/submissionLimits.ts:51
 #: src/contest/submission/submit/submissionLimits.ts:52
 #: src/contest/submission/submit/submissionLimits.ts:53
 #: src/contest/submission/submit/submissionLimits.ts:54
+#: src/contest/submission/submit/submissionLimits.ts:55
+#: src/contest/submission/submit/submissionLimits.ts:56
 msgid "Compressed archive"
 msgstr "Archivio compresso"
 
@@ -240,7 +240,7 @@ msgstr "Dettagli"
 msgid "Detected language:"
 msgstr "Linguaggio rilevato:"
 
-#: src/contest/submission/submit/submissionLimits.ts:60
+#: src/contest/submission/submit/submissionLimits.ts:62
 msgid "Dev-Cpp project"
 msgstr "Progetto di Dev-Cpp"
 
@@ -294,18 +294,18 @@ msgstr "File"
 msgid "File:"
 msgstr "File:"
 
-#: src/contest/submission/submit/submissionLimits.ts:63
-#: src/contest/submission/submit/submissionLimits.ts:64
 #: src/contest/submission/submit/submissionLimits.ts:65
 #: src/contest/submission/submit/submissionLimits.ts:66
+#: src/contest/submission/submit/submissionLimits.ts:67
+#: src/contest/submission/submit/submissionLimits.ts:68
 msgid "Free Pascal Lazarus file"
 msgstr "File di Free Pascal Lazarus"
 
-#: src/contest/submission/submit/submissionLimits.ts:61
+#: src/contest/submission/submit/submissionLimits.ts:63
 msgid "Free Pascal Lazarus project"
 msgstr "Progetto di Free Pascal Lazarus"
 
-#: src/contest/submission/submit/submissionLimits.ts:62
+#: src/contest/submission/submit/submissionLimits.ts:64
 msgid "Free Pascal Lazarus session file"
 msgstr "File di sessione di Free Pascal Lazarus"
 
@@ -450,7 +450,7 @@ msgstr "Info sull'output"
 msgid "Output file..."
 msgstr "File di output..."
 
-#: src/contest/submission/submit/submissionLimits.ts:55
+#: src/contest/submission/submit/submissionLimits.ts:57
 msgid "PDF file"
 msgstr "File PDF"
 
@@ -483,6 +483,10 @@ msgstr "Primary (blu)"
 #: src/contest/submission/submit/Submit.tsx:84
 msgid "Processing..."
 msgstr "Caricamento..."
+
+#: src/contest/submission/submit/submissionLimits.ts:30
+msgid "Pseudocode"
+msgstr ""
 
 #: src/communication/NewAnnouncement.tsx:63
 msgid "Publish"
@@ -533,11 +537,11 @@ msgstr "Richiedi nuovo input"
 msgid "Requesting..."
 msgstr "Generazione..."
 
-#: src/contest/submission/submit/submissionLimits.ts:29
+#: src/contest/submission/submit/submissionLimits.ts:31
 msgid "Ruby"
 msgstr "Ruby"
 
-#: src/contest/submission/submit/submissionLimits.ts:30
+#: src/contest/submission/submit/submissionLimits.ts:32
 msgid "Rust"
 msgstr "Rust"
 
@@ -550,11 +554,15 @@ msgstr "Inizio previsto alle <0/>. Questa pagina si ricaricherà automaticamente
 msgid "Score"
 msgstr "Punteggio"
 
+#: src/contest/submission/submit/submissionLimits.ts:29
+msgid "Scratch"
+msgstr ""
+
 #: src/communication/NewAnnouncement.tsx:50
 msgid "Secondary (grey)"
 msgstr "Secondary (grigio)"
 
-#: src/contest/submission/submit/submissionLimits.ts:117
+#: src/contest/submission/submit/submissionLimits.ts:119
 msgid "Select a file with an extension"
 msgstr "Seleziona un file con un'estensione"
 
@@ -648,7 +656,7 @@ msgstr "Problemi"
 msgid "Terry Communications"
 msgstr "Terry Communications"
 
-#: src/contest/submission/submit/submissionLimits.ts:42
+#: src/contest/submission/submit/submissionLimits.ts:44
 msgid "Text file"
 msgstr "File di testo"
 
@@ -689,19 +697,19 @@ msgstr "La gara inizierà automaticamente alle"
 msgid "The contest would start"
 msgstr "La gara inizierebbe"
 
-#: src/contest/submission/submit/submissionLimits.ts:119
+#: src/contest/submission/submit/submissionLimits.ts:121
 msgid "The extension cannot contain spaces"
 msgstr "L'estensione del file non deve contenere spazi"
 
-#: src/contest/submission/submit/submissionLimits.ts:128
+#: src/contest/submission/submit/submissionLimits.ts:130
 msgid "The file you selected has been detected as an executable. Please select the corresponding source file instead."
 msgstr "Il file che hai selezionato sembra essere un eseguibile. Seleziona il corrispondente file sorgente."
 
-#: src/contest/submission/submit/submissionLimits.ts:122
+#: src/contest/submission/submit/submissionLimits.ts:124
 msgid "The file you selected is not allowed, please select the actual source file of your program. The detected file type is"
 msgstr "Il file che hai selezionato non è consentito, seleziona il sorgente del tuo programma. Il tipo di file rilevato è:"
 
-#: src/contest/submission/submit/submissionLimits.ts:114
+#: src/contest/submission/submit/submissionLimits.ts:116
 msgid "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 msgstr "Il file che hai selezionato è troppo grande ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 
@@ -710,7 +718,7 @@ msgid "The provided date cannot be used as start time for the contest. Please se
 msgstr "La data inserita non può essere usata come data di inizio della gara. Inserisci una data nel futuro."
 
 #: src/contest/Communication.tsx:44
-msgid "The question must be at least{MIN_QUESTION_LENGTH}characters long."
+msgid "The question must be at least {MIN_QUESTION_LENGTH} characters long."
 msgstr "La domanda deve essere lunga almeno {MIN_QUESTION_LENGTH} caratteri."
 
 #: src/contest/Communication.tsx:64
@@ -751,14 +759,14 @@ msgstr "Guida"
 msgid "Visit"
 msgstr "Visita"
 
-#: src/contest/submission/submit/submissionLimits.ts:56
-#: src/contest/submission/submit/submissionLimits.ts:57
 #: src/contest/submission/submit/submissionLimits.ts:58
 #: src/contest/submission/submit/submissionLimits.ts:59
+#: src/contest/submission/submit/submissionLimits.ts:60
+#: src/contest/submission/submit/submissionLimits.ts:61
 msgid "Visual Studio project"
 msgstr "Progetto di Visual Studio"
 
-#: src/contest/submission/submit/submissionLimits.ts:31
+#: src/contest/submission/submit/submissionLimits.ts:33
 msgid "VisualBasic"
 msgstr "VisualBasic"
 
@@ -766,7 +774,7 @@ msgstr "VisualBasic"
 msgid "Warning (yellow)"
 msgstr "Warning (giallo)"
 
-#: src/contest/submission/submit/submissionLimits.ts:43
+#: src/contest/submission/submit/submissionLimits.ts:45
 msgid "XML file"
 msgstr "File XML"
 
@@ -790,7 +798,7 @@ msgstr "Devi effettuare l'accesso per poter fare domande."
 msgid "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 msgstr "Hai selezionato un file con un'estensione sconosciuta. Questa sottoposizione potrebbe essere invalidata se non si tratta del vero sorgente del programma che ha generato il file di output. Se pensi di aver selezionato il file sbagliato cambialo prima di inviare la sottoposizione."
 
-#: src/contest/submission/submit/submissionLimits.ts:111
+#: src/contest/submission/submit/submissionLimits.ts:113
 msgid "You selected an empty file"
 msgstr "Hai selezionato un file vuoto"
 
