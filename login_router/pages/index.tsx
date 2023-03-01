@@ -42,7 +42,18 @@ export default function Home() {
         <title>Login</title>
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>Effettua l&apos;accesso</h1>
+        <h1>Giochi di Fibonacci - Seconda Fase</h1>
+        <p>Benvenuto alla Seconda Fase dei Giochi di Fibonacci 2022/23!</p>
+        <p>
+          Accedi con il codice che ti indica il tuo insegnante. Quel codice è
+          tuo ed è segreto, <strong>non condividerlo con nessuno</strong>!
+        </p>
+        <p>
+          Da quando entri nel sito avrai <strong>2 ore</strong> per finire; più
+          15 minuti che il tuo insegnante può decidere di usare come intervallo.
+        </p>
+
+        <h2 className={styles.title}>Effettua l&apos;accesso</h2>
         <form
           className={styles.row}
           onSubmit={(e) => {
