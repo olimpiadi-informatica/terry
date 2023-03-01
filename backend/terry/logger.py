@@ -75,9 +75,8 @@ class Logger:
     @staticmethod
     def set_log_level(lvl):
         """
-        Set the minimum level of the messages to be printed on console. Note
-        that every
-        message is alway stored in the db.
+        Set the minimum level of the messages to be printed on console and
+        stored in the database.
         :param lvl: Minimum level, can be an int or a str with the log level
         name
         """
@@ -101,8 +100,9 @@ class Logger:
         :param message: What really happened, it is converted to string using
         str()
         """
-        if level >= Logger.LOG_LEVEL:
-            Logger.log_console(level, category, message)
+        if level < Logger.LOG_LEVEL:
+            return
+        Logger.log_console(level, category, message)
         c = Logger.c
         c.execute(
             """
