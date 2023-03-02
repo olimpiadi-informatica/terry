@@ -41,7 +41,13 @@ export function Communication() {
       <h4><Trans>Ask a question</Trans></h4>
       <textarea className="form-control" value={textArea} onChange={(e) => setTextArea(e.target.value)} />
       <small id="passwordHelpBlock" className="form-text text-muted">
-        The question must be at least 10 characters long.
+        <Trans>
+          The question must be at least
+          {" "}
+          {MIN_QUESTION_LENGTH}
+          {" "}
+          characters long.
+        </Trans>
       </small>
       <button
         className="btn btn-primary mt-2"
