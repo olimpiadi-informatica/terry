@@ -1,0 +1,18 @@
+.main {
+  max-width: 40rem;
+  margin: 5rem auto;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.row input {
+  flex-grow: 1;
+  height: 2rem;
+}
+
+.row button {
+  padding: 0.5rem;
+}
