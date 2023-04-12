@@ -9,11 +9,16 @@ def main(args):
     with open(args.users) as f:
         reader = csv.DictReader(f)
         tokens = {(r["token"],) for r in reader}
+    print("Loaded %d users" % len(tokens))
+
+    conn = sqlite3.connect(args.db)
+    cur = conn.cursor()
+
+    existing = set(x[0] for x in cur.execute('SELECT token from users').fetchall())
+    tokens = [x for x in tokens if x[0] not in existing]
     print("Inserting %d users" % len(tokens))
 
     query = "INSERT INTO users (token, isAdmin) VALUES (?, 0)"
-    conn = sqlite3.connect(args.db)
-    cur = conn.cursor()
     cur.executemany(query, tokens)
     conn.commit()
 
