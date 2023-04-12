@@ -67,6 +67,17 @@ export const FORBIDDEN_EXTENSIONS: SourceLanguageType = {
   lpk: defineMessage({ message: "Free Pascal Lazarus file" }),
   ppu: defineMessage({ message: "Free Pascal Lazarus file" }),
   compiled: defineMessage({ message: "Compiled file" }),
+  docx: defineMessage({ message: "Word document" }),
+  rtf: defineMessage({ message: "Word document" }),
+  odt: defineMessage({ message: "OpenDocument document" }),
+  xlsx: defineMessage({ message: "Excel document" }),
+  pages: defineMessage({ message: "Pages document" }),
+  jpg: defineMessage({ message: "Image" }),
+  jpeg: defineMessage({ message: "Image" }),
+  svg: defineMessage({ message: "Image" }),
+  png: defineMessage({ message: "Image" }),
+  webp: defineMessage({ message: "Image" }),
+  heic: defineMessage({ message: "Image" }),
 };
 
 const FORBIDDEN_MAGIC_NUMBERS = [
@@ -95,7 +106,7 @@ async function isExecutable(blob: Blob): Promise<boolean> {
       // eslint-disable-next-line no-console
       console.log(
         "Source file detected to be binary file: it starts with",
-        magic
+        magic,
       );
       return Promise.resolve(true);
     }
@@ -113,7 +124,7 @@ export async function checkFile(file: File) {
     toast.error(t`You selected an empty file`);
   } else if (size !== undefined && size > MAX_SOURCE_SIZE) {
     toast.error(
-      t`The file you selected is too big (${size} bytes > ${MAX_SOURCE_SIZE} bytes)`
+      t`The file you selected is too big (${size} bytes > ${MAX_SOURCE_SIZE} bytes)`,
     );
   } else if (nameParts.length < 2) {
     toast.error(t`Select a file with an extension`);
@@ -122,12 +133,12 @@ export async function checkFile(file: File) {
   } else if (extension in FORBIDDEN_EXTENSIONS) {
     toast.error(
       `${t`The file you selected is not allowed, please select the actual source file of your program. The detected file type is`} ${i18n._(
-        FORBIDDEN_EXTENSIONS[extension]
-      )}`
+        FORBIDDEN_EXTENSIONS[extension],
+      )}`,
     );
   } else if (await isExecutable(file)) {
     toast.error(
-      t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`
+      t`The file you selected has been detected as an executable. Please select the corresponding source file instead.`,
     );
   } else {
     return true;
