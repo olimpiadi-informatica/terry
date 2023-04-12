@@ -515,7 +515,7 @@ msgstr "Caricamento..."
 
 #: src/contest/submission/submit/submissionLimits.ts:30
 msgid "Pseudocode"
-msgstr ""
+msgstr "Pseudocodice"
 
 #: src/communication/NewAnnouncement.tsx:63
 msgid "Publish"
@@ -585,7 +585,7 @@ msgstr "Punteggio"
 
 #: src/contest/submission/submit/submissionLimits.ts:29
 msgid "Scratch"
-msgstr ""
+msgstr "Scratch"
 
 #: src/communication/NewAnnouncement.tsx:50
 msgid "Secondary (grey)"
