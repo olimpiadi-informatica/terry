@@ -274,6 +274,10 @@ msgstr "Scarica risultati"
 msgid "Error"
 msgstr "Errore"
 
+#: src/contest/submission/submit/submissionLimits.ts:73
+msgid "Excel document"
+msgstr "Documento Excel"
+
 #: src/contest/sidebar/ExtraSections.tsx:17
 msgid "Extra material"
 msgstr "Materiale extra"
@@ -324,6 +328,15 @@ msgstr "Go"
 #: src/admin/AdminUsersView.tsx:108
 msgid "IP"
 msgstr "IP"
+
+#: src/contest/submission/submit/submissionLimits.ts:75
+#: src/contest/submission/submit/submissionLimits.ts:76
+#: src/contest/submission/submit/submissionLimits.ts:77
+#: src/contest/submission/submit/submissionLimits.ts:78
+#: src/contest/submission/submit/submissionLimits.ts:79
+#: src/contest/submission/submit/submissionLimits.ts:80
+msgid "Image"
+msgstr "Immagine"
 
 #: src/communication/NewAnnouncement.tsx:52
 msgid "Info (teal)"
@@ -446,6 +459,10 @@ msgstr "Ancora senza risposta."
 msgid "On the left side of this page you can find the tasks, click on any one to open it."
 msgstr "Nella parte sinistra di questa pagina trovi la lista dei problemi, premi sul nome di un problema per aprirlo."
 
+#: src/contest/submission/submit/submissionLimits.ts:72
+msgid "OpenDocument document"
+msgstr "Documento OpenDocument"
+
 #: src/contest/submission/SubmissionListView.tsx:98
 msgid "Output file"
 msgstr "File di output"
@@ -465,6 +482,10 @@ msgstr "File PDF"
 #: src/contest/submission/submit/submissionLimits.ts:23
 msgid "PHP"
 msgstr "PHP"
+
+#: src/contest/submission/submit/submissionLimits.ts:74
+msgid "Pages document"
+msgstr "Documento Pages"
 
 #: src/contest/submission/submit/submissionLimits.ts:24
 #: src/contest/submission/submit/submissionLimits.ts:25
@@ -570,7 +591,7 @@ msgstr ""
 msgid "Secondary (grey)"
 msgstr "Secondary (grigio)"
 
-#: src/contest/submission/submit/submissionLimits.ts:119
+#: src/contest/submission/submit/submissionLimits.ts:130
 msgid "Select a file with an extension"
 msgstr "Seleziona un file con un'estensione"
 
@@ -705,19 +726,19 @@ msgstr "La gara inizierà automaticamente alle"
 msgid "The contest would start"
 msgstr "La gara inizierebbe"
 
-#: src/contest/submission/submit/submissionLimits.ts:121
+#: src/contest/submission/submit/submissionLimits.ts:132
 msgid "The extension cannot contain spaces"
 msgstr "L'estensione del file non deve contenere spazi"
 
-#: src/contest/submission/submit/submissionLimits.ts:130
+#: src/contest/submission/submit/submissionLimits.ts:141
 msgid "The file you selected has been detected as an executable. Please select the corresponding source file instead."
 msgstr "Il file che hai selezionato sembra essere un eseguibile. Seleziona il corrispondente file sorgente."
 
-#: src/contest/submission/submit/submissionLimits.ts:124
+#: src/contest/submission/submit/submissionLimits.ts:135
 msgid "The file you selected is not allowed, please select the actual source file of your program. The detected file type is"
 msgstr "Il file che hai selezionato non è consentito, seleziona il sorgente del tuo programma. Il tipo di file rilevato è:"
 
-#: src/contest/submission/submit/submissionLimits.ts:116
+#: src/contest/submission/submit/submissionLimits.ts:127
 msgid "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 msgstr "Il file che hai selezionato è troppo grande ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 
@@ -790,6 +811,11 @@ msgstr "VisualBasic"
 msgid "Warning (yellow)"
 msgstr "Warning (giallo)"
 
+#: src/contest/submission/submit/submissionLimits.ts:70
+#: src/contest/submission/submit/submissionLimits.ts:71
+msgid "Word document"
+msgstr "Documento Word"
+
 #: src/contest/submission/submit/submissionLimits.ts:45
 msgid "XML file"
 msgstr "File XML"
@@ -814,7 +840,7 @@ msgstr "Devi effettuare l'accesso per poter fare domande."
 msgid "You selected a file with an unknown extension. This submission may be invalidated if this file is not the true source of the program that generated the output file. If you think you selected the wrong file, please change it before submitting."
 msgstr "Hai selezionato un file con un'estensione sconosciuta. Questa sottoposizione potrebbe essere invalidata se non si tratta del vero sorgente del programma che ha generato il file di output. Se pensi di aver selezionato il file sbagliato cambialo prima di inviare la sottoposizione."
 
-#: src/contest/submission/submit/submissionLimits.ts:113
+#: src/contest/submission/submit/submissionLimits.ts:124
 msgid "You selected an empty file"
 msgstr "Hai selezionato un file vuoto"
 
