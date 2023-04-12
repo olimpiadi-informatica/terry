@@ -1,6 +1,6 @@
 #!/bin/sh -ex
 
-TERRY_BRANCH=ide
+TERRY_BRANCH=terry2023
 
 # Diagnostics
 echo "Building terry"
