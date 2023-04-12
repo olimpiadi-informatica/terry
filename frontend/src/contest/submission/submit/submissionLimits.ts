@@ -2,7 +2,7 @@ import { t, defineMessage } from "@lingui/macro";
 import { MessageDescriptor, i18n } from "@lingui/core";
 import { toast } from "react-toastify";
 
-export const MAX_SOURCE_SIZE = 100000;
+export const MAX_SOURCE_SIZE = 10000000;
 
 type SourceLanguageType = { [key: string]: MessageDescriptor };
 
