@@ -45,8 +45,8 @@ export default function Home() {
         <h1>Selezioni Territoriali OII 2023</h1>
         <p>Benvenuto alle Selezioni Territoriali delle OII 2023!</p>
         <p>
-          Puoi accedere usando le credenziali che hai ricevuto nell'ultima mail.
-          Ricorda che quel codice d'accesso è tuo e personale, <strong>non condividerlo con nessuno</strong>!
+          Puoi accedere usando le credenziali che hai ricevuto nell&apos;ultima mail.
+          Ricorda che quel codice d&apos;accesso è tuo e personale, <strong>non condividerlo con nessuno</strong>!
         </p>
         <p>
           La mail con le credenziali ha come oggetto <code>Credenziali Selezione Territoriale delle Olimpiadi Italiane di Informatica 2023</code>,
