@@ -7,6 +7,7 @@
 # Copyright 2017-2018 - Luca Versari <veluca93@gmail.com>
 # Copyright 2018 - Massimo Cairo <cairomassimo@gmail.com>
 # Copyright 2018 - William Di Luigi <williamdiluigi@gmail.com>
+import multiprocessing
 import os
 import platform
 import shutil
@@ -38,6 +39,8 @@ from terry.storage_manager import StorageManager
 
 class ContestManager:
     input_queue = dict()
+    in_generation_inputs = dict()
+    task_generation_queue = gevent.queue.PriorityQueue()
     tasks = dict()
     has_contest = False
 
@@ -63,7 +66,8 @@ class ContestManager:
         try:
             username, password = token.split("-", 1)
             secret, scrambled_password = decode_data(password, SECRET_LEN)
-            file_password = recover_file_password(username, secret, scrambled_password)
+            file_password = recover_file_password(
+                username, secret, scrambled_password)
         except ValueError:
             BaseHandler.raise_exc(
                 Forbidden, "WRONG_PASSWORD", "The provided password is malformed"
@@ -241,22 +245,53 @@ class ContestManager:
             pass
 
         # store the task in the ContestManager singleton
-        ContestManager.tasks = dict((task["name"], task) for task in contest["tasks"])
+        ContestManager.tasks = dict((task["name"], task)
+                                    for task in contest["tasks"])
         ContestManager.has_contest = True
 
         # create the queues for the task inputs
         for task in ContestManager.tasks:
-            ContestManager.input_queue[task] = gevent.queue.Queue(Config.queue_size)
-            gevent.spawn(ContestManager.worker, task)
+            ContestManager.input_queue[task] = gevent.queue.Queue(
+                Config.queue_size)
+            ContestManager.in_generation_inputs[task] = 0
+
+        num_workers = Config.num_worker_threads
+        if num_workers == -1:
+            num_workers = multiprocessing.cpu_count()
+
+        assert num_workers > 0, num_workers
+
+        gevent.spawn(ContestManager.watcher)
+        for _ in range(num_workers):
+            gevent.spawn(ContestManager.worker)
 
     @staticmethod
-    def worker(task_name):
+    def watcher():
+        while True:
+            enqueued_one = False
+            for (task, q) in ContestManager.input_queue.items():
+                count = ContestManager.in_generation_inputs[task] + len(q)
+                if count <= Config.queue_size:
+                    ContestManager.in_generation_inputs[task] += 1
+                    ContestManager.task_generation_queue.put((count, task))
+                    enqueued_one = True
+                    Logger.debug(
+                        "TASK",
+                        "Enquequed input generation job for task %s" % (
+                            task),
+                    )
+            if not enqueued_one:
+                gevent.sleep(1)
+
+    @staticmethod
+    def worker():
         """ Method that stays in the background and generates inputs """
-        task = ContestManager.tasks[task_name]
-        queue = ContestManager.input_queue[task_name]
 
         while True:
             try:
+                _, task_name = ContestManager.task_generation_queue.get()
+                task = ContestManager.tasks[task_name]
+                queue = ContestManager.input_queue[task_name]
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
                 seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
@@ -294,7 +329,8 @@ class ContestManager:
                 # if there is a validator in the task use it to check if the
                 # generated input is valid
                 if "validator" in task:
-                    stdin = os.open(StorageManager.get_absolute_path(path), os.O_RDONLY)
+                    stdin = os.open(
+                        StorageManager.get_absolute_path(path), os.O_RDONLY)
                     try:
                         start_time = time.monotonic()
                         # execute the validator piping the input file to stdin
@@ -322,10 +358,11 @@ class ContestManager:
 
                 Logger.debug(
                     "TASK",
-                    "Generated input %s (%d) for task %s" % (id, seed, task_name),
+                    "Generated input %s (%d) for task %s" % (
+                        id, seed, task_name),
                 )
-                # this method is blocking if the queue is full
-                queue.put({"id": id, "path": path})
+                ContestManager.in_generation_inputs[task_name] -= 1
+                queue.put({"id": id, "path": path}, block=False)
             except:
                 Logger.error(
                     "TASK",

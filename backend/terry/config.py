@@ -31,6 +31,7 @@ class Config:
     jwt_cookie_name = "token"
     sso_url = ""
     append_log_secret = "secret"
+    num_worker_threads = -1
 
     @staticmethod
     def set_config_file(config_file):
