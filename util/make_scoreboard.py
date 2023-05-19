@@ -70,7 +70,9 @@ def main(args):
         keys = ["venue", "surname", "name", "token"] + tasks + ["score"]
         writer = csv.DictWriter(f, keys)
         writer.writeheader()
-        writer.writerows(dict((x, d[x]) for x in keys) for d in data.values())
+        data = [dict((x, d[x]) for x in keys) for d in data.values()]
+        data.sort(key=lambda x: -float(x["score"]))
+        writer.writerows(data)
 
 
 if __name__ == '__main__':
