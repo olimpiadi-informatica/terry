@@ -10,6 +10,7 @@
 import multiprocessing
 import os
 import platform
+import random
 import shutil
 import time
 import traceback
@@ -273,7 +274,8 @@ class ContestManager:
                 count = ContestManager.in_generation_inputs[task] + len(q)
                 if count < Config.queue_size:
                     ContestManager.in_generation_inputs[task] += 1
-                    ContestManager.task_generation_queue.put((count, task))
+                    ContestManager.task_generation_queue.put(
+                        (count + random.random(), task))
                     enqueued_one = True
                     Logger.debug(
                         "TASK",
