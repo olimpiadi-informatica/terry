@@ -9,17 +9,21 @@ import "./Submit.css";
 import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
 import { useActions } from "src/contest/ContestContext";
-import { UploadedSource, UploadedOutput, TaskData } from "src/types/contest";
+import {
+  UploadedSource, UploadedOutput, TaskData, InputData,
+} from "src/types/contest";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
+import { useInputExpirationState } from "src/contest/task/useInputExpirationState";
+import { CurrentInputExpiration } from "src/contest/task/CurrentInputExpiration";
 import { SourceSelector } from "./SourceSelector";
 import { OutputSelector } from "./OutputSelector";
 
 type Props = {
-  inputId: string;
   task: TaskData;
+  currentInput: InputData;
 };
 
-export function Submit({ inputId, task }: Props) {
+export function Submit({ task, currentInput }: Props) {
   const [source, setSource] = useState<UploadedSource | null>(null);
   const [output, setOutput] = useState<UploadedOutput | null>(null);
   const [submission, setSubmission] = useState<Loadable<unknown> | null>(null);
@@ -32,7 +36,7 @@ export function Submit({ inputId, task }: Props) {
 
     const data = new FormData();
 
-    data.append("input_id", inputId);
+    data.append("input_id", currentInput?.id);
     data.append("source_id", source.id);
     data.append("output_id", output.id);
 
@@ -51,7 +55,9 @@ export function Submit({ inputId, task }: Props) {
       });
   };
 
-  const canSubmit = () => source != null && output != null;
+  const { isValid } = useInputExpirationState(currentInput);
+
+  const canSubmit = () => isValid && source != null && output != null;
 
   return (
     <Modal contentLabel="Submission creation" returnUrl={`/task/${task.name}`}>
@@ -66,7 +72,7 @@ export function Submit({ inputId, task }: Props) {
           <h5 className="modal-title">
             <Trans>Submission for input</Trans>
             {" "}
-            <strong>{inputId.slice(0, 6)}</strong>
+            <strong>{currentInput.id.slice(0, 6)}</strong>
           </h5>
           <Link to={`/task/${task.name}`} role="button" className="close" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -74,13 +80,14 @@ export function Submit({ inputId, task }: Props) {
         </div>
         <div className="modal-body">
           <div className="input-group">
-            <SourceSelector inputId={inputId} setSource={setSource} />
+            <SourceSelector inputId={currentInput.id} setSource={setSource} />
           </div>
           <div className="input-group">
-            <OutputSelector inputId={inputId} setOutput={setOutput} />
+            <OutputSelector inputId={currentInput.id} setOutput={setOutput} />
           </div>
         </div>
         <div className="modal-footer">
+          <CurrentInputExpiration currentInput={currentInput} />
           {submission && submission.isLoading() && <Trans>Processing...</Trans>}
           <Link to={`/task/${task.name}`} role="button" className="btn btn-danger">
             <FontAwesomeIcon icon={faTimes} />

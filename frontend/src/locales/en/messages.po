@@ -22,6 +22,14 @@ msgstr "(in minutes)"
 msgid "<0>Be careful!</0>Once the contest starts it cannot be stopped!"
 msgstr "<0>Be careful!</0> Once the contest starts it cannot be stopped!"
 
+#: src/contest/task/CurrentInputCommands.tsx:92
+msgid "Abandon this expired input"
+msgstr "Abandon this expired input"
+
+#: src/contest/task/CurrentInputCommands.tsx:78
+msgid "Abandon this input now"
+msgstr "Abandon this input now"
+
 #: src/admin/AdminView.tsx:20
 #: src/admin/UploadPackView.tsx:18
 msgid "Admin"
@@ -88,7 +96,7 @@ msgstr "C#"
 msgid "C++"
 msgstr "C++"
 
-#: src/contest/submission/submit/Submit.tsx:88
+#: src/contest/submission/submit/Submit.tsx:95
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -96,7 +104,7 @@ msgstr "Cancel"
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 
-#: src/contest/submission/submit/CreateSubmissionView.tsx:16
+#: src/contest/submission/submit/CreateSubmissionView.tsx:17
 msgid "Cannot submit for this input."
 msgstr "Cannot submit for this input."
 
@@ -254,7 +262,7 @@ msgstr "Download"
 msgid "Download contest results"
 msgstr "Download contest results"
 
-#: src/contest/task/TaskCommands.tsx:66
+#: src/contest/task/CurrentInputCommands.tsx:56
 msgid "Download input"
 msgstr "Download input"
 
@@ -480,7 +488,7 @@ msgstr "Preview"
 msgid "Primary (blue)"
 msgstr "Primary (blue)"
 
-#: src/contest/submission/submit/Submit.tsx:84
+#: src/contest/submission/submit/Submit.tsx:91
 msgid "Processing..."
 msgstr "Processing..."
 
@@ -521,15 +529,15 @@ msgstr "Remaining time"
 msgid "Remaining time for some participant"
 msgstr "Remaining time for some participant"
 
-#: src/contest/task/TaskCommands.tsx:52
+#: src/contest/task/TaskCommands.tsx:55
 msgid "Request input"
 msgstr "Request input"
 
-#: src/contest/task/TaskCommands.tsx:52
+#: src/contest/task/TaskCommands.tsx:55
 msgid "Request new input"
 msgstr "Request new input"
 
-#: src/contest/task/TaskCommands.tsx:83
+#: src/contest/task/TaskCommands.tsx:75
 msgid "Requesting..."
 msgstr "Requesting..."
 
@@ -616,11 +624,11 @@ msgstr "Submission"
 msgid "Submission for"
 msgstr "Submission for"
 
-#: src/contest/submission/submit/Submit.tsx:67
+#: src/contest/submission/submit/Submit.tsx:73
 msgid "Submission for input"
 msgstr "Submission for input"
 
-#: src/contest/submission/submit/Submit.tsx:93
+#: src/contest/submission/submit/Submit.tsx:100
 msgid "Submit"
 msgstr "Submit"
 
@@ -717,6 +725,14 @@ msgstr "The question must be at least {MIN_QUESTION_LENGTH} characters long."
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
+#: src/contest/task/CurrentInputExpiration.tsx:31
+msgid "This input has expired."
+msgstr "This input has expired."
+
+#: src/contest/task/CurrentInputExpiration.tsx:37
+msgid "This input will expire:"
+msgstr "This input will expire:"
+
 #: src/communication/NewAnnouncement.tsx:39
 msgid "Title"
 msgstr "Title"
@@ -739,7 +755,7 @@ msgstr "Updated announcement: {0}"
 msgid "Upload"
 msgstr "Upload"
 
-#: src/contest/task/TaskCommands.tsx:72
+#: src/contest/task/CurrentInputCommands.tsx:66
 msgid "Upload solution"
 msgstr "Upload solution"
 

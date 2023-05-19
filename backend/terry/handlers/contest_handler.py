@@ -8,6 +8,7 @@
 # Copyright 2017 - Massimo Cairo <cairomassimo@gmail.com>
 import json
 import sqlite3
+import time
 
 from werkzeug.exceptions import Forbidden, BadRequest
 
@@ -89,7 +90,49 @@ class ContestHandler(BaseHandler):
                 "The provided pair of source-output is invalid",
             )
 
+        expiry_date = ContestManager.get_input_expiry_date(input)
+        if expiry_date is not None and time.time() > expiry_date:
+            Logger.info(
+                "UPLOAD", "User %s tried to submit for input %s too late" % (input["token"], input["id"])
+            )
+            BaseHandler.raise_exc(
+                Forbidden, "INPUT_EXPIRED", "The input file has expired"
+            )
+
         score = ContestHandler.compute_score(input["task"], output["result"])
+        submission_id = self.add_submission(input, output, source, score)
+
+        Logger.info(
+            "CONTEST",
+            "User %s has submitted %s on %s"
+            % (input["token"], submission_id, input["task"]),
+        )
+        return InfoHandler.patch_submission(Database.get_submission(submission_id))
+
+    @Validators.during_contest
+    @Validators.register_user_ip
+    @Validators.validate_input_id
+    def abandon_input(self, input):
+        """
+        POST /abandon_input
+        """
+        Database.begin()
+        try:
+            Database.set_user_attempt(
+                input["token"], input["task"], None, autocommit=False
+            )
+            Database.commit()
+        except:
+            Database.rollback()
+            raise
+
+        Logger.info(
+            "CONTEST",
+            "User %s has abandoned input %s on %s"
+            % (input["token"], input["id"], input["task"]),
+        )
+
+    def add_submission(self, input, output, source, score):
         Database.begin()
         try:
             submission_id = Database.gen_id()
@@ -123,12 +166,8 @@ class ContestHandler(BaseHandler):
         except:
             Database.rollback()
             raise
-        Logger.info(
-            "CONTEST",
-            "User %s has submitted %s on %s"
-            % (input["token"], submission_id, input["task"]),
-        )
-        return InfoHandler.patch_submission(Database.get_submission(submission_id))
+
+        return submission_id
 
     @Validators.register_user_ip
     def internet_detected(self, token):

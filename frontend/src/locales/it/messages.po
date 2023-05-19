@@ -22,6 +22,14 @@ msgstr "(in minuti)"
 msgid "<0>Be careful!</0>Once the contest starts it cannot be stopped!"
 msgstr "<0>Attenzione!</0> Una volta che la gara inizia non è più possibile fermarla!"
 
+#: src/contest/task/CurrentInputCommands.tsx:92
+msgid "Abandon this expired input"
+msgstr "Abbandona questo input scaduto"
+
+#: src/contest/task/CurrentInputCommands.tsx:78
+msgid "Abandon this input now"
+msgstr "Abbandona questo input ora"
+
 #: src/admin/AdminView.tsx:20
 #: src/admin/UploadPackView.tsx:18
 msgid "Admin"
@@ -88,7 +96,7 @@ msgstr "C#"
 msgid "C++"
 msgstr "C++"
 
-#: src/contest/submission/submit/Submit.tsx:88
+#: src/contest/submission/submit/Submit.tsx:95
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -96,7 +104,7 @@ msgstr "Annulla"
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Impossibile raggiungere il server delle comunicazioni, il tuo browser riproverà a connettersi automaticamente. Le informazioni visualizzate sono una copia locale che potrebbe non essere aggiornata."
 
-#: src/contest/submission/submit/CreateSubmissionView.tsx:16
+#: src/contest/submission/submit/CreateSubmissionView.tsx:17
 msgid "Cannot submit for this input."
 msgstr "Impossibile sottomettere per questo input."
 
@@ -254,7 +262,7 @@ msgstr "Download"
 msgid "Download contest results"
 msgstr "Scarica i risultati della gara"
 
-#: src/contest/task/TaskCommands.tsx:66
+#: src/contest/task/CurrentInputCommands.tsx:56
 msgid "Download input"
 msgstr "Scarica input"
 
@@ -347,7 +355,7 @@ msgstr "Kotlin"
 
 #: src/contest/task/LastSubmission.tsx:24
 msgid "Last submission:"
-msgstr "Ultima sottoposizione"
+msgstr "Ultima sottoposizione:"
 
 #: src/contest/submission/submit/FileView.tsx:25
 msgid "Last update:"
@@ -480,7 +488,7 @@ msgstr "Anteprima"
 msgid "Primary (blue)"
 msgstr "Primary (blu)"
 
-#: src/contest/submission/submit/Submit.tsx:84
+#: src/contest/submission/submit/Submit.tsx:91
 msgid "Processing..."
 msgstr "Caricamento..."
 
@@ -521,15 +529,15 @@ msgstr "Tempo rimanente"
 msgid "Remaining time for some participant"
 msgstr "Tempo rimanente per alcuni partecipanti"
 
-#: src/contest/task/TaskCommands.tsx:52
+#: src/contest/task/TaskCommands.tsx:55
 msgid "Request input"
 msgstr "Richiedi input"
 
-#: src/contest/task/TaskCommands.tsx:52
+#: src/contest/task/TaskCommands.tsx:55
 msgid "Request new input"
 msgstr "Richiedi nuovo input"
 
-#: src/contest/task/TaskCommands.tsx:83
+#: src/contest/task/TaskCommands.tsx:75
 msgid "Requesting..."
 msgstr "Generazione..."
 
@@ -616,11 +624,11 @@ msgstr "Sottoposizione"
 msgid "Submission for"
 msgstr "Sottoposizione per"
 
-#: src/contest/submission/submit/Submit.tsx:67
+#: src/contest/submission/submit/Submit.tsx:73
 msgid "Submission for input"
 msgstr "Sottoposizione per l'input"
 
-#: src/contest/submission/submit/Submit.tsx:93
+#: src/contest/submission/submit/Submit.tsx:100
 msgid "Submit"
 msgstr "Invia"
 
@@ -717,6 +725,14 @@ msgstr "La domanda deve essere lunga almeno {MIN_QUESTION_LENGTH} caratteri."
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "La tua domanda verrà inviata allo staff che la analizzerà e cercherà di rispondere più velocemente possibile. Riceverai una notifica (se le hai abilitate) quando la risposta sarà disponibile. Cerca di essere paziente se la risposta ritarda ad arrivare, e cerca di mantenere un tono rispettoso.<0/>Puoi chiedere chiarimenti sui problemi, ma lo staff si riserva l'autorità di decidere a cosa rispondere."
 
+#: src/contest/task/CurrentInputExpiration.tsx:31
+msgid "This input has expired."
+msgstr "Questo input è scaduto."
+
+#: src/contest/task/CurrentInputExpiration.tsx:37
+msgid "This input will expire:"
+msgstr "Questo input scadrà:"
+
 #: src/communication/NewAnnouncement.tsx:39
 msgid "Title"
 msgstr "Titolo"
@@ -739,7 +755,7 @@ msgstr "Annuncio aggiornato: {0}"
 msgid "Upload"
 msgstr "Carica"
 
-#: src/contest/task/TaskCommands.tsx:72
+#: src/contest/task/CurrentInputCommands.tsx:66
 msgid "Upload solution"
 msgstr "Carica soluzione"
 

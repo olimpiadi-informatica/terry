@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from terry.handlers.base_handler import BaseHandler
 from terry.database import Database
 from terry.validators import Validators
+from terry.contest_manager import ContestManager
 
 
 class InfoHandler(BaseHandler):
@@ -54,7 +55,10 @@ class InfoHandler(BaseHandler):
         """
         GET /input/<input_id>
         """
-        return BaseHandler.format_dates(input)
+        return BaseHandler.format_dates(
+            InfoHandler.patch_input(input),
+            ["date", "expiry_date"]
+        )
 
     @Validators.contest_started
     @Validators.register_user_ip
@@ -115,9 +119,9 @@ class InfoHandler(BaseHandler):
             task_name = task["task"]
 
             if task["current_attempt"] is not None:
-                current_input = Database.get_input(
+                current_input = InfoHandler.patch_input(Database.get_input(
                     token=token, task=task_name, attempt=task["current_attempt"]
-                )
+                ))
             else:
                 current_input = None
 
@@ -129,7 +133,7 @@ class InfoHandler(BaseHandler):
 
         user["total_score"] = sum(task["score"] for task in tasks)
 
-        return BaseHandler.format_dates(user, fields=["end_time"])
+        return BaseHandler.format_dates(user, fields=["end_time", "date", "expiry_date"])
 
     @Validators.contest_started
     @Validators.register_user_ip
@@ -217,3 +221,17 @@ class InfoHandler(BaseHandler):
             result["input"] = output["input"]
 
         return BaseHandler.format_dates(result)
+
+    @staticmethod
+    def patch_input(input):
+        """
+        Given an input add its expiry date
+        :param input: A dict with the input
+        :return: The input, with an additional expiry_date field
+        """
+        expiry_date = ContestManager.get_input_expiry_date(input)
+
+        return {
+            **input,
+            "expiry_date": expiry_date
+        }

@@ -327,12 +327,12 @@ class Database:
         )
 
     @staticmethod
-    def add_task(name, title, statement_path, max_score, num, autocommit=True):
+    def add_task(name, title, statement_path, max_score, num, submission_timeout=None, autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
-            INSERT INTO tasks (name, title, statement_path, max_score, num)
-            VALUES (:name, :title, :statement_path, :max_score, :num)
+            INSERT INTO tasks (name, title, statement_path, max_score, num, submission_timeout)
+            VALUES (:name, :title, :statement_path, :max_score, :num, :submission_timeout)
         """,
             {
                 "name": name,
@@ -340,6 +340,7 @@ class Database:
                 "max_score": max_score,
                 "statement_path": statement_path,
                 "num": num,
+                "submission_timeout": submission_timeout,
             },
         )
 

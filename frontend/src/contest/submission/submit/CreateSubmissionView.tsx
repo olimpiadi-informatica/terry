@@ -1,6 +1,8 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
+import { t } from "@lingui/macro";
 import { TaskData, UserTaskData } from "src/types/contest";
+import { toast } from "react-toastify";
+import { Redirect } from "react-router-dom";
 import { Submit } from "./Submit";
 
 type Props = {
@@ -10,13 +12,11 @@ type Props = {
 };
 
 export function CreateSubmissionView({ inputId, task, userTask }: Props) {
-  if (userTask.current_input === null || userTask.current_input.id !== inputId) {
-    return (
-      <p>
-        <Trans>Cannot submit for this input.</Trans>
-      </p>
-    );
+  const currentInput = userTask.current_input;
+  if (currentInput === null || currentInput.id !== inputId) {
+    toast.error(t({ message: "Cannot submit for this input." }));
+    return <Redirect to={`/task/${task.name}`} />;
   }
 
-  return <Submit inputId={inputId} task={task} />;
+  return <Submit task={task} currentInput={currentInput} />;
 }
