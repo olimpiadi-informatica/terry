@@ -134,7 +134,7 @@ export function SubmissionListView({ task }: Props) {
               </th>
             </tr>
           </thead>
-          <tbody>{list.items.flatMap((x) => (x.abandoned ? [] : [x])).map(renderSubmission).reverse()}</tbody>
+          <tbody>{list.items.map(renderSubmission).reverse()}</tbody>
         </table>
       </div>
     );

@@ -17,31 +17,20 @@ type FeedbackData = {
   cases: FeedbackCaseInfo[];
 };
 
-type BaseSubmission = {
+export type Submission = {
   id: string;
   date: string;
   score: number;
   task: string;
   token: string;
   input: InputData;
-};
-
-export type AbandonedSubmission = BaseSubmission & {
-  abandoned: true;
-  output: null;
-  source: null;
-  feedback: null;
-};
-
-export type Submission = BaseSubmission & {
-  abandoned: false;
   output: UploadedOutput;
   source: UploadedSource;
   feedback: FeedbackData;
 };
 
 export type SubmissionList = {
-  items: Array<Submission | AbandonedSubmission>;
+  items: Submission[];
 };
 
 export type Alert = {

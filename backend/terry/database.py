@@ -142,16 +142,15 @@ class Database:
         return Database.dictify()
 
     @staticmethod
-    def get_submission(id, include_abandoned=False):
+    def get_submission(id):
         Database.c.execute(
-            f"""
+            """
             SELECT
                 submissions.id AS id,
                 submissions.token AS token, 
                 submissions.task AS task,
                 submissions.score AS score,
                 submissions.date AS date,
-                submissions.abandoned AS abandoned,
                 inputs.id AS input_id,
                 inputs.attempt AS input_attempt, 
                 inputs.date AS input_date,
@@ -168,26 +167,24 @@ class Database:
                 sources.size AS source_size
             FROM submissions
             JOIN inputs ON submissions.input = inputs.id
-            LEFT JOIN outputs ON submissions.output = outputs.id
-            LEFT JOIN sources ON submissions.source = sources.id
+            JOIN outputs ON submissions.output = outputs.id
+            JOIN sources ON submissions.source = sources.id
             WHERE submissions.id=:id
-            {'AND submissions.abandoned = FALSE' if not include_abandoned else ''}
         """,
             {"id": id},
         )
         return Database.dictify()
 
     @staticmethod
-    def get_submissions(token, task, include_abandoned=False):
+    def get_submissions(token, task):
         Database.c.execute(
-            f"""
+            """
             SELECT
                 submissions.id AS id,
                 submissions.token AS token, 
                 submissions.task AS task,
                 submissions.score AS score,
                 submissions.date AS date,
-                submissions.abandoned AS abandoned,
                 inputs.id AS input_id,
                 inputs.attempt AS input_attempt, 
                 inputs.date AS input_date,
@@ -204,10 +201,9 @@ class Database:
                 sources.size AS source_size
             FROM submissions
             JOIN inputs ON submissions.input = inputs.id
-            LEFT JOIN outputs ON submissions.output = outputs.id
-            LEFT JOIN sources ON submissions.source = sources.id
+            JOIN outputs ON submissions.output = outputs.id
+            JOIN sources ON submissions.source = sources.id
             WHERE submissions.token=:token AND submissions.task=:task
-            {'AND submissions.abandoned = FALSE' if not include_abandoned else ''}
             ORDER BY inputs.attempt ASC
         """,
             {"token": token, "task": task},
@@ -419,13 +415,13 @@ class Database:
         )
 
     @staticmethod
-    def add_submission(id, input, output, source, score, abandoned=False, autocommit=True):
+    def add_submission(id, input, output, source, score, autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
             INSERT INTO submissions (id, token, task, input, output, source, 
-            score, abandoned)
-            SELECT :id, token, task, :input, :output, :source, :score, :abandoned
+            score)
+            SELECT :id, token, task, :input, :output, :source, :score
             FROM inputs
             WHERE id = :input
         """,
@@ -435,7 +431,6 @@ class Database:
                 "score": score,
                 "input": input,
                 "source": source,
-                "abandoned": abandoned,
             },
         )
 

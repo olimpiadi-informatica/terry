@@ -116,28 +116,32 @@ class ContestHandler(BaseHandler):
         """
         POST /abandon_input
         """
-        submission_id = self.add_submission(input, None, None, 0, abandoned=True)
+        Database.begin()
+        try:
+            Database.set_user_attempt(
+                input["token"], input["task"], None, autocommit=False
+            )
+            Database.commit()
+        except:
+            Database.rollback()
+            raise
 
         Logger.info(
             "CONTEST",
             "User %s has abandoned input %s on %s"
             % (input["token"], input["id"], input["task"]),
         )
-        return InfoHandler.patch_submission(
-            Database.get_submission(submission_id, include_abandoned=True)
-        )
 
-    def add_submission(self, input, output, source, score, abandoned=False):
+    def add_submission(self, input, output, source, score):
         Database.begin()
         try:
             submission_id = Database.gen_id()
             if not Database.add_submission(
                 submission_id,
                 input["id"],
-                output["id"] if output is not None else None,
-                source["id"] if source is not None else None,
+                output["id"],
+                source["id"],
                 score,
-                abandoned,
                 autocommit=False,
             ):
                 self.raise_exc(

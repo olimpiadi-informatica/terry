@@ -50,14 +50,7 @@ export function TaskView({ task, userTask }: Props) {
         render={({ match }) => <SubmissionReportView submissionId={match.params.submissionId} task={task} />}
       />
 
-      {submissions.isReady() && (
-        <LastSubmission
-          task={task}
-          submissions={submissions
-            .value()
-            .items.flatMap((x) => (x.abandoned ? [] : [x]))}
-        />
-      )}
+      {submissions.isReady() && <LastSubmission task={task} submissions={submissions.value().items} />}
 
       <hr className="mt-1" />
 

@@ -169,7 +169,7 @@ class InfoHandler(BaseHandler):
         GET /user/<token>/submissions/<task>
         """
         submissions = []
-        for sub in Database.get_submissions(user["token"], task["name"], include_abandoned=True):
+        for sub in Database.get_submissions(user["token"], task["name"]):
             submissions.append(InfoHandler.patch_submission(sub))
         return {"items": submissions}
 
@@ -192,16 +192,13 @@ class InfoHandler(BaseHandler):
             else:
                 result[k] = v
 
-        if result["output"]["result"] is None:
-            result = BaseHandler.format_dates(result)
-        else:
-            feedback = json.loads(result["output"]["result"].decode())
-            result["feedback"] = feedback["feedback"]
-            temp = InfoHandler.patch_output(result["output"])
+        feedback = json.loads(result["output"]["result"].decode())
+        result["feedback"] = feedback["feedback"]
+        temp = InfoHandler.patch_output(result["output"])
 
-            del result["output"]
-            result = BaseHandler.format_dates(result)
-            result["output"] = temp
+        del result["output"]
+        result = BaseHandler.format_dates(result)
+        result["output"] = temp
 
         return result
 
