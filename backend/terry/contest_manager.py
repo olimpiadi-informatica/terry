@@ -271,7 +271,7 @@ class ContestManager:
             enqueued_one = False
             for (task, q) in ContestManager.input_queue.items():
                 count = ContestManager.in_generation_inputs[task] + len(q)
-                if count <= Config.queue_size:
+                if count < Config.queue_size:
                     ContestManager.in_generation_inputs[task] += 1
                     ContestManager.task_generation_queue.put((count, task))
                     enqueued_one = True
