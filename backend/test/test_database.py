@@ -78,7 +78,7 @@ class TestDatabase(unittest.TestCase):
         Database.connected = False
         Database.connect_to_database()
 
-        schema_version = int(Database.get_meta("schema_version"))
+        schema_version = Database.get_meta_int("schema_version", None)
         self.assertEqual(len(Schema.UPDATERS) - 1, schema_version)
 
     def test_get_meta_none(self):
@@ -87,9 +87,8 @@ class TestDatabase(unittest.TestCase):
 
         Database.set_meta("test", None)
         Database.set_meta("test2", "None")
-        self.assertEqual(Database.get_meta("test"), None)
-        self.assertEqual(Database.get_meta("test", type=int), None)
-        self.assertEqual(Database.get_meta("test", None, type=int), None)
+        self.assertEqual(Database.get_meta("test", None), None)
+        self.assertEqual(Database.get_meta_int("test", None), None)
         self.assertEqual(Database.get_meta("test2", None), "None")
 
     def test_get_meta_default(self):
@@ -111,89 +110,76 @@ class TestDatabase(unittest.TestCase):
         Database.connected = False
         Database.connect_to_database()
 
-        schema_version = Database.get_meta("schema_version", type=int)
+        schema_version = Database.get_meta_int("schema_version", None)
         self.assertIsInstance(schema_version, int)
 
     def test_get_meta_default_type(self):
         Database.connected = False
         Database.connect_to_database()
 
-        meta = Database.get_meta("not_existing_key", "42", type=int)
+        meta = Database.get_meta_int("not_existing_key", "42")
         self.assertIsInstance(meta, str)
-
-    def test_get_meta_without_default(self):
-        Database.connected = False
-        Database.connect_to_database()
-
-        meta = Database.get_meta("not_existing_key")
-        self.assertIsNone(meta)
-
-    def test_get_meta_type_without_default(self):
-        Database.connected = False
-        Database.connect_to_database()
-
-        self.assertIsNone(Database.get_meta("not_existing_key", type=int))
 
     def test_get_meta_type_bool(self):
         Database.connected = False
         Database.connect_to_database()
 
-        Database.set_meta("boooool", True)
-        self.assertTrue(Database.get_meta("boooool", type=bool))
-        Database.set_meta("boooool2", False)
-        self.assertFalse(Database.get_meta("boooool2", type=bool))
+        Database.set_meta("boooool", str(True))
+        self.assertTrue(Database.get_meta_bool("boooool", None))
+        Database.set_meta("boooool2", str(False))
+        self.assertFalse(Database.get_meta_bool("boooool2", None))
 
     def test_set_meta(self):
         Database.connected = False
         Database.connect_to_database()
 
-        Database.set_meta("random_key", 42)
-        value = Database.get_meta("random_key", type=int)
+        Database.set_meta("random_key", str(42))
+        value = Database.get_meta_int("random_key", None)
         self.assertEqual(42, value)
 
     def test_set_meta_overwrite(self):
         Database.connected = False
         Database.connect_to_database()
 
-        Database.set_meta("random_key", 4242)
-        Database.set_meta("random_key", 42)
-        value = Database.get_meta("random_key", type=int)
+        Database.set_meta("random_key", str(4242))
+        Database.set_meta("random_key", str(42))
+        value = Database.get_meta_int("random_key", None)
         self.assertEqual(42, value)
 
     def test_del_meta(self):
         Database.connected = False
         Database.connect_to_database()
 
-        Database.set_meta("random_key", 4242)
+        Database.set_meta("random_key", "")
         self.assertTrue(Database.del_meta("random_key"))
-        self.assertIsNone(Database.get_meta("random_key"))
+        self.assertIsNone(Database.get_meta("random_key", None))
 
     def test_del_meta_non_exist(self):
         Database.connected = False
         Database.connect_to_database()
 
         self.assertFalse(Database.del_meta("random_key"))
-        self.assertIsNone(Database.get_meta("random_key"))
+        self.assertIsNone(Database.get_meta("random_key", None))
 
     def test_transaction_commit(self):
         Database.connected = False
         Database.connect_to_database()
 
         Database.begin()
-        Database.set_meta("random_foobar", 123, autocommit=False)
+        Database.set_meta("random_foobar", str(123), autocommit=False)
         Database.commit()
 
-        self.assertEqual(123, Database.get_meta("random_foobar", type=int))
+        self.assertEqual(123, Database.get_meta_int("random_foobar", None))
 
     def test_transaction_rollback(self):
         Database.connected = False
         Database.connect_to_database()
 
         Database.begin()
-        Database.set_meta("random_foobar", 123, autocommit=False)
+        Database.set_meta("random_foobar", str(123), autocommit=False)
         Database.rollback()
 
-        self.assertEqual(42, Database.get_meta("random_foobar", default=42, type=int))
+        self.assertEqual(42, Database.get_meta("random_foobar", 42))
 
     def test_dictify(self):
         Database.connected = False
@@ -201,7 +187,7 @@ class TestDatabase(unittest.TestCase):
 
         Database.set_meta("random_key", "random_value")
         Database.c.execute("SELECT * FROM metadata WHERE key = 'random_key'")
-        dct = Database.dictify(all=False)
+        dct = Database.dictify()
 
         self.assertDictEqual({"key": "random_key", "value": "random_value"}, dct)
 
@@ -213,7 +199,7 @@ class TestDatabase(unittest.TestCase):
         Database.c.execute("INSERT INTO metadata (key, value) VALUES ('foo1', 'bar')")
         Database.c.execute("INSERT INTO metadata (key, value) VALUES ('foo2', 'bar')")
         Database.c.execute("SELECT * FROM metadata")
-        lst = Database.dictify(all=True)
+        lst = Database.dictify_all()
 
         self.assertIsInstance(lst, list)
         self.assertEqual(2, len(lst))
@@ -242,4 +228,4 @@ class TestDatabase(unittest.TestCase):
                     {"key": "ciao", "value": "mondo"},
                 )
 
-        self.assertIsNone(Database.get_meta("ciao"))
+        self.assertIsNone(Database.get_meta("ciao", None))

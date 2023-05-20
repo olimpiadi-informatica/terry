@@ -9,6 +9,7 @@
 
 import json
 from datetime import datetime, timezone
+from typing import NoReturn, Optional
 
 from werkzeug.exceptions import HTTPException, BadRequest
 from werkzeug.wrappers import Response
@@ -21,7 +22,7 @@ from ..logger import Logger
 
 class BaseHandler:
     @staticmethod
-    def raise_exc(cls, code, message):
+    def raise_exc(ecls, code, message) -> NoReturn:
         """
         Raise an HTTPException with a code and a message sent in a json like
          {
@@ -35,10 +36,10 @@ class BaseHandler:
         """
         response = Response()
         response.mimetype = "application/json"
-        response.status_code = cls.code
+        response.status_code = ecls.code
         response.data = json.dumps({"code": code, "message": message})
-        Logger.warning(cls.__name__.upper(), code + ": " + message)
-        raise cls(response=response)
+        Logger.warning(ecls.__name__.upper(), code + ": " + message)
+        raise ecls(response=response)
 
     def handle(self, endpoint, route_args, request):
         """
@@ -56,11 +57,11 @@ class BaseHandler:
             )
             response = Response()
             if data is not None:
-                response.code = 200
+                response.status_code = 200
                 response.mimetype = "application/json"
                 response.data = json.dumps(data)
             else:
-                response.code = 204
+                response.status_code = 204
             return response
         except HTTPException as e:
             return e
@@ -74,24 +75,24 @@ class BaseHandler:
         return request.form
 
     @staticmethod
-    def get_end_time(user_extra_time):
+    def get_end_time(user_extra_time: Optional[int]):
         """
         Compute the end time for a user
         :param user_extra_time: Extra time specific for the user in seconds
         :return: The timestamp at which the contest will be finished for this user
         """
-        start = Database.get_meta("start_time", type=int)
+        start = Database.get_meta_float("start_time", None)
         if start is None:
             return None
-        contest_duration = Database.get_meta("contest_duration", type=int, default=0)
-        contest_extra_time = Database.get_meta("extra_time", type=int, default=0)
+        contest_duration = Database.get_meta_int("contest_duration", 0)
+        contest_extra_time = Database.get_meta_int("extra_time", 0)
         if user_extra_time is None:
             user_extra_time = 0
 
         return start + contest_duration + contest_extra_time + user_extra_time
 
     @staticmethod
-    def get_window_end_time(user_extra_time, start_delay):
+    def get_window_end_time(user_extra_time: Optional[int], start_delay: Optional[int]):
         """
         Compute the end time for a window started after `start_delay` and with `extra_time` delay for the user.
         Note that this time may exceed the contest end time, additional checks are required.
@@ -101,10 +102,10 @@ class BaseHandler:
         """
         if start_delay is None:
             return None
-        start = Database.get_meta("start_time", type=int)
+        start = Database.get_meta_float("start_time", None)
         if start is None:
             return None
-        window_duration = Database.get_meta("window_duration", None, type=int)
+        window_duration = Database.get_meta_int("window_duration", None)
         if window_duration is None:
             return None
         if user_extra_time is None:

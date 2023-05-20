@@ -267,10 +267,10 @@ def encode(
     password: bytes, input_data: bytes, metadata: bytes, version: int = -1
 ) -> bytes:
     try:
-        version = pack_versions[version]
+        version_c = pack_versions[version]
     except IndexError:
         raise ValueError("Unsupported pack version: %d" % version)
-    return version.encode(password, input_data, metadata)
+    return version_c.encode(password, input_data, metadata)
 
 
 def validate(input_data: bytes) -> bool:

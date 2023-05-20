@@ -31,7 +31,8 @@ class TestBaseHandler(unittest.TestCase):
         self.handler = BaseHandler()
 
         self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001  # disable the logs
+        Logger.LOG_LEVEL = -9001  # enable the logs
+        Logger.disable_console_logging = True  # .. but not to console
 
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
@@ -71,7 +72,7 @@ class TestBaseHandler(unittest.TestCase):
         endpoint = handler.dummy_endpoint
 
         call_mock.assert_called_once_with(endpoint, 42, 123)
-        self.assertEqual(200, response.code)
+        self.assertEqual(200, response.status_code)
         self.assertEqual("application/json", response.mimetype)
         self.assertDictEqual({"foo": "bar"}, json.loads(response.data.decode()))
 
@@ -79,7 +80,7 @@ class TestBaseHandler(unittest.TestCase):
     def test_handle_no_content(self, call_mock):
         handler = TestBaseHandler.DummyHandler()
         response = handler.handle("dummy_endpoint", 42, 123)
-        self.assertEqual(204, response.code)
+        self.assertEqual(204, response.status_code)
 
     @patch("terry.handlers.base_handler.BaseHandler._call", side_effect=Forbidden())
     def test_handle_exceptions(self, call_mock):

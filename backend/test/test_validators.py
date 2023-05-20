@@ -26,8 +26,8 @@ class TestValidators(unittest.TestCase):
         Utils.prepare_test()
         Database.set_meta("admin_token", "ADMIN-TOKEN")
 
-        self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001  # disable the logs
+        Logger.LOG_LEVEL = -9001  # enable the logs
+        Logger.disable_console_logging = True  # .. but not to console
 
     @Validators.during_contest
     def only_during_contest(self, token=None):

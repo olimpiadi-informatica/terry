@@ -73,10 +73,14 @@ class Utils:
                 pass
 
         sys.stderr = Devnull()
+        # Re-enable logs to console if they were disabled.
+        console_logs = Logger.disable_console_logging
+        Logger.disable_console_logging = False
         try:
             yield sys.stderr
         finally:
             sys.stderr = savestderr
+            Logger.disable_console_logging = console_logs
 
     @staticmethod
     def get_tmp_dir():

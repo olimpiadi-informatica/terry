@@ -55,12 +55,12 @@ class TestLogger(unittest.TestCase):
     def test_log(self):
         Utils.prepare_test(connect_logger=True)
 
-        Logger.log(Logger.DEBUG, "FOO_CAT", "Log message")
+        Logger.log(Logger.WARNING, "FOO_CAT", "Log message")
 
         Logger.c.execute("SELECT * FROM logs WHERE category = 'FOO_CAT'")
         row = Logger.c.fetchone()
         self.assertEqual("FOO_CAT", row[1])
-        self.assertEqual(Logger.DEBUG, int(row[2]))
+        self.assertEqual(Logger.WARNING, int(row[2]))
         self.assertEqual("Log message", row[3])
 
     def test_log_stderr(self):
