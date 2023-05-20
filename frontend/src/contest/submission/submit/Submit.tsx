@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
@@ -29,7 +29,7 @@ export function Submit({ task, currentInput }: Props) {
   const [submission, setSubmission] = useState<Loadable<unknown> | null>(null);
   const reloadSubmissionList = useSubmissionList(task.name)[1];
   const { reloadContest } = useActions();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const submit = () => {
     if (!source || !output) throw new Error("Cannot submit without both source and output");
@@ -45,7 +45,7 @@ export function Submit({ task, currentInput }: Props) {
       .post("/submit", data)
       .then((response) => {
         const { id } = response.data;
-        history.push(`/task/${task.name}/submission/${id}`);
+        navigate(`/task/${task.name}/submission/${id}`);
         reloadContest();
         reloadSubmissionList();
       })

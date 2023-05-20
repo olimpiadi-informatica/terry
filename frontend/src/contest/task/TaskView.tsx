@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode, useCallback } from "react";
 import { Route } from "react-router-dom";
 import { Error } from "src/components/Error";
 import { Loading } from "src/components/Loading";
@@ -9,6 +9,7 @@ import { SubmissionReportView } from "src/contest/submission/SubmissionReportVie
 import { CreateSubmissionView } from "src/contest/submission/submit/CreateSubmissionView";
 import { CurrentInputExpiration } from "src/contest/task/CurrentInputExpiration";
 import { TaskData, UserTaskData } from "src/types/contest";
+import { RouteChildrenProps } from "react-router";
 import { LastSubmission } from "./LastSubmission";
 import { TaskCommands } from "./TaskCommands";
 import { TaskStatement } from "./TaskStatement";
@@ -22,7 +23,7 @@ export function TaskView({ task, userTask }: Props) {
   const statement = useStatement(task.statement_path);
   const [submissions] = useSubmissionList(task.name);
 
-  const renderTaskStatement = () => {
+  const renderTaskStatement = useCallback(() => {
     if (statement.isLoading()) {
       return <Loading />;
     }
@@ -30,7 +31,15 @@ export function TaskView({ task, userTask }: Props) {
       return <Error cause={statement.error()} />;
     }
     return <TaskStatement task={task} source={statement.value()} />;
-  };
+  }, [statement, task]);
+
+  const SubmissionReport = useCallback(({ match }) => (
+    <SubmissionReportView
+      submissionId={match.params.submissionId}
+      task={task}
+    />
+  ), [task]);
+
   return (
     <>
       <h1>{task.title}</h1>
@@ -42,13 +51,14 @@ export function TaskView({ task, userTask }: Props) {
       </div>
       <Route
         path="/task/:taskName/submit/:inputId"
-        render={({ match }) => <CreateSubmissionView inputId={match.params.inputId} task={task} userTask={userTask} />}
+        children={({ match }) => <CreateSubmissionView inputId={match.params.inputId} task={task} userTask={userTask} />}
       />
-      <Route path="/task/:taskName/submissions" render={() => <SubmissionListView task={task} />} />
+      <Route path="/task/:taskName/submissions"><SubmissionListView task={task} /></Route>
       <Route
         path="/task/:taskName/submission/:submissionId"
-        render={({ match }) => <SubmissionReportView submissionId={match.params.submissionId} task={task} />}
-      />
+      >
+        {SubmissionReport}
+      </Route>
 
       {submissions.isReady() && <LastSubmission task={task} submissions={submissions.value().items} />}
 

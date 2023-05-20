@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { colorFromScore, round } from "src/utils";
 import { StartedContest } from "src/types/contest";
 import { useContest } from "src/contest/ContestContext";
+import classNames from "classnames";
 
 type Props = {
   taskName: string;
@@ -18,7 +19,7 @@ export function NavbarItemView({ taskName }: Props) {
 
   return (
     <li className="nav-item">
-      <NavLink to={`/task/${taskName}`} className="nav-link tasklist-item" activeClassName="active">
+      <NavLink to={`/task/${taskName}`} className={({ isActive }) => classNames("nav-link tasklist-item", isActive && "active")}>
         <div className={`task-score-badge badge badge-pill badge-${color}`}>
           {round(score, 2)}
           /

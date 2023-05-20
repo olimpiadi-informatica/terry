@@ -30,17 +30,11 @@ export function AdminView() {
     <>
       {renderNavBar()}
       <main>
-        <>
-          <AdminSummaryView />
-
-          <Route path="/admin/logs" render={() => <AdminLogsView />} />
-
-          <Route path="/admin/extra_time" render={() => <ContestExtraTimeView />} />
-
-          <Route path="/admin/users" render={() => <AdminUsersView />} />
-
-          <Route path="/admin/download_results" render={() => <DownloadResultsView />} />
-        </>
+        <AdminSummaryView />
+        <Route path="/admin/logs"><AdminLogsView /></Route>
+        <Route path="/admin/extra_time"><ContestExtraTimeView /></Route>
+        <Route path="/admin/users"><AdminUsersView /></Route>
+        <Route path="/admin/download_results"><DownloadResultsView /></Route>
       </main>
     </>
   );

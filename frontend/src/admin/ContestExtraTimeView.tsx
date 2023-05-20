@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
 import { Trans, t } from "@lingui/macro";
@@ -10,7 +10,7 @@ import { useStatus, useActions } from "./AdminContext";
 export function ContestExtraTimeView() {
   const minutesRef = React.createRef<HTMLInputElement>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const status = useStatus();
   const { setExtraTime } = useActions();
 
@@ -22,7 +22,7 @@ export function ContestExtraTimeView() {
     const minutes = parseInt(minutesRef.current.value, 10);
     setExtraTime(minutes * 60).then(() => {
       toast.success(t`Extra time successfully updated`);
-      history.push("/admin");
+      navigate("/admin");
     });
   };
 

@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import React from "react";
 import {
-  BrowserRouter as Router, Redirect, Route, Switch,
+  BrowserRouter as Router, Route, Routes, Navigate,
 } from "react-router-dom";
 import { CommunicationContextProvider } from "src/hooks/useCommunication";
 import { useLogin as useLoginBase } from "src/hooks/useLogin";
@@ -18,29 +18,25 @@ export const useLogin = () => useLoginBase("communicationToken");
 
 function App() {
   const [token] = useLogin();
-  if (!token) return <Redirect to="/admin/communication/login" />;
+  if (!token) return <Navigate to="/admin/communication/login" />;
 
   return (
-    <>
-      <CommunicationContextProvider token={token}>
-        <Navbar />
-        <div className="container">
-          <Switch>
-            <Route path="/admin/communication/announcements" component={Announcements} />
-            <Route path="/admin/communication" component={Home} />
-          </Switch>
-        </div>
-      </CommunicationContextProvider>
-    </>
+    <CommunicationContextProvider token={token}>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/admin/communication/announcements"><Announcements /></Route>
+          <Route path="/admin/communication"><Home /></Route>
+        </Routes>
+      </div>
+    </CommunicationContextProvider>
   );
 }
 
 export function CommunicationView() {
   if (!client.communications) {
     return (
-      <>
-        <p><Trans>The communication system is not available for this contest.</Trans></p>
-      </>
+      <p><Trans>The communication system is not available for this contest.</Trans></p>
     );
   }
 
@@ -48,10 +44,10 @@ export function CommunicationView() {
     <>
       <ToastContainer />
       <Router>
-        <Switch>
-          <Route path="/admin/communication/login" component={Login} />
-          <Route path="/admin/communication" component={App} />
-        </Switch>
+        <Routes>
+          <Route path="/admin/communication/login"><Login /></Route>
+          <Route path="/admin/communication"><App /></Route>
+        </Routes>
       </Router>
     </>
   );

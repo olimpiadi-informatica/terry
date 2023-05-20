@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { NavLink } from "react-router-dom";
@@ -7,6 +7,7 @@ import { TaskData, StartedContest } from "src/types/contest";
 import { client } from "src/TerryClient";
 import { useContest, useServerTime, useActions } from "src/contest/ContestContext";
 import { ScoreView } from "src/contest/ScoreView";
+import classNames from "classnames";
 import { NavbarItemView } from "./NavbarItemView";
 import "./SidebarView.css";
 import { ExtraSections } from "./ExtraSections";
@@ -17,7 +18,13 @@ export function SidebarView() {
   const { isLoggedIn } = useActions();
   const contest = contestL.isReady() ? contestL.value() : null;
 
-  const renderStarted = (startedContest: StartedContest) => (
+  const afterEnd = useCallback(() => (
+    <span>
+      <Trans>The contest is finished</Trans>
+    </span>
+  ), []);
+
+  const renderStarted = useCallback((startedContest: StartedContest) => (
     <>
       <li className="nav-item title">
         <h5 className="text-uppercase">
@@ -41,11 +48,7 @@ export function SidebarView() {
           <Countdown
             clock={() => serverTime()}
             end={DateTime.fromISO(startedContest.end_time, { zone: "utc" })}
-            afterEnd={() => (
-              <span>
-                <Trans>The contest is finished</Trans>
-              </span>
-            )}
+            afterEnd={afterEnd}
           />
         </p>
       </li>
@@ -64,7 +67,7 @@ export function SidebarView() {
 
       <li className="divider-vertical" />
     </>
-  );
+  ), [contest, serverTime]);
 
   return (
     <nav className="bg-light sidebar">
@@ -72,7 +75,7 @@ export function SidebarView() {
         {contest && contest.contest.has_started && renderStarted(contest as StartedContest)}
         {!isLoggedIn() && (
           <li className="nav-item">
-            <NavLink exact to="/" className="nav-link tasklist-item" activeClassName="active">
+            <NavLink end to="/" className={({ isActive }) => classNames("nav-link tasklist-item", isActive && "active")}>
               <Trans>Login</Trans>
             </NavLink>
           </li>
@@ -87,7 +90,7 @@ export function SidebarView() {
                 </h5>
               </li>
               <li className="nav-item">
-                <NavLink to="/communication" className="nav-link tasklist-item" activeClassName="active">
+                <NavLink to="/communication" className={({ isActive }) => classNames("nav-link tasklist-item", isActive && "active")}>
                   <Trans>Questions and Announcements</Trans>
                 </NavLink>
               </li>

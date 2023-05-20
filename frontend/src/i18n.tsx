@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useCallback } from "react";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { messages as messagesIt } from "./locales/it/messages";
@@ -46,13 +46,13 @@ export const LanguageContext = React.createContext({
 export function TransProvider({ children }: { children: ReactNode }) {
   const [lang, setLanguage] = useState(defaultLanguage);
 
-  const changeLanguage = (newLang: string) => {
+  const changeLanguage = useCallback((newLang: string) => {
     storeDefaultLanguage(newLang);
     setLanguage(newLang);
     i18n.activate(newLang);
     // when the language changes set the attribute so that bootstrap components can be translated via css
     document.getElementsByTagName("html")[0].setAttribute("lang", newLang);
-  };
+  }, []);
 
   return (
     <I18nProvider i18n={i18n}>

@@ -1,5 +1,5 @@
 import React, {
-  useState, ReactNode, useEffect, useContext, useMemo,
+  useState, ReactNode, useEffect, useContext, useMemo, useCallback,
 } from "react";
 import { DateTime, Duration } from "luxon";
 import { AxiosResponse, AxiosError } from "axios";
@@ -64,7 +64,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const [statusUpdate, triggerStatusUpdate] = useTriggerUpdate();
   const { reloadPack } = useContext(PackContext);
 
-  const startContest = (startTime: StartContestCommand) => {
+  const startContest = useCallback((startTime: StartContestCommand) => {
     if (!token) throw new Error("You are not logged in");
 
     const when = typeof startTime === "string" ? startTime : startTime.toUTC().toISO();
@@ -77,8 +77,8 @@ export function AdminContextProvider({ children }: AdminContextProps) {
         notifyError(response);
         throw response;
       });
-  };
-  const resetContest = () => {
+  }, [token, triggerStatusUpdate]);
+  const resetContest = useCallback(() => {
     if (!token) throw new Error("You are not logged in");
     return client
       .adminApi(token, "/drop_contest")
@@ -89,8 +89,8 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .catch((response) => {
         notifyError(response);
       });
-  };
-  const setExtraTime = (extraTime: number, userToken?: string) => {
+  }, [token, logout, reloadPack]);
+  const setExtraTime = useCallback((extraTime: number, userToken?: string) => {
     if (!token) throw new Error("You are not logged in");
     const options = {
       extra_time: extraTime.toString(),
@@ -105,8 +105,8 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .catch((response) => {
         notifyError(response);
       });
-  };
-  const uploadPack = (file: File) => {
+  }, [token, triggerStatusUpdate]);
+  const uploadPack = useCallback((file: File) => {
     const data = new FormData();
 
     data.append("file", file);
@@ -119,7 +119,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       .catch((response) => {
         notifyError(response);
       });
-  };
+  }, [reloadPack]);
 
   // handle the login
   useEffect(() => {
@@ -144,7 +144,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
       });
   }, [token, statusUpdate, logout]);
 
-  const isLoggedIn = () => !status.isLoading();
+  const isLoggedIn = useCallback(() => !status.isLoading(), [status]);
   return (
     <AdminContext.Provider
       value={{

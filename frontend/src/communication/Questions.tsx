@@ -5,7 +5,7 @@ import { Question } from "src/components/Question";
 import { DateTime } from "luxon";
 import { Trans } from "@lingui/macro";
 import { Error } from "src/components/Error";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function Questions() {
   const questions = useQuestions();
@@ -15,7 +15,7 @@ export function Questions() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const filter = query.get("token");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (filter !== currentFilter) {
@@ -50,23 +50,21 @@ export function Questions() {
 
       <h4 className="mt-3"><Trans>Answered</Trans></h4>
       {filter && (
-        <>
-          <p>
-            <Trans>
-              Showing only the questions of
-              <code>
-                {filter}
-              </code>
-            </Trans>
-            <button
-              type="button"
-              className="ml-2 btn btn-sm btn-outline-primary"
-              onClick={() => history.push("?")}
-            >
-              <Trans>Clear</Trans>
-            </button>
-          </p>
-        </>
+        <p>
+          <Trans>
+            Showing only the questions of
+            <code>
+              {filter}
+            </code>
+          </Trans>
+          <button
+            type="button"
+            className="ml-2 btn btn-sm btn-outline-primary"
+            onClick={() => navigate("?")}
+          >
+            <Trans>Clear</Trans>
+          </button>
+        </p>
       )}
 
       { paged.map((q) => (

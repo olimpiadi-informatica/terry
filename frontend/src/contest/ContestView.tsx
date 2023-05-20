@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, Route, Redirect } from "react-router-dom";
+import React, { useCallback } from "react";
+import { Link, Route, Navigate } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { Loading } from "src/components/Loading";
@@ -32,7 +32,7 @@ function ContestViewInternal() {
   if (loadablePack.isError()) return <Error cause={loadablePack.error()} />;
 
   const pack = loadablePack.value();
-  if (!pack.uploaded) return <Redirect to="/admin" />;
+  if (!pack.uploaded) return <Navigate to="/admin" />;
   const loggedIn = isLoggedIn();
   if (loggedIn && contestLoadable.isLoading()) return <Loading />;
   const contest = contestLoadable.isReady() ? contestLoadable.value() : null;
@@ -67,14 +67,13 @@ function ContestViewInternal() {
       <div className="terry-body">
         <SidebarView />
         <main>
-          {contest && <Route exact path="/" component={ContestHome} />}
-          {(!loggedIn || contestLoadable.isError()) && <Route exact path="/" component={LoginView} />}
+          {contest && <Route path="/"><ContestHome /></Route>}
+          {(!loggedIn || contestLoadable.isError()) && <Route path="/"><LoginView /></Route>}
 
           {
             pack.sections?.map((section) => (
               <Route
                 key={section.url}
-                exact
                 path={`/sections/${section.url}`}
               >
                 <Section section={section} />
@@ -82,10 +81,16 @@ function ContestViewInternal() {
             ))
           }
 
-          <Route exact path="/communication" component={Communication} />
+          <Route path="/communication"><Communication /></Route>
 
           {contest && contest.contest.has_started && (
-            <Route path="/task/:taskName" render={({ match }) => renderTask(match.params.taskName)} />
+            <Route path="/task/:taskName">
+              {/* TODO: fix this!!!!!!! */}
+              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+              {/*
+              // @ts-ignore */}
+              {({ match }) => renderTask(match.params.taskName)}
+            </Route>
           )}
         </main>
       </div>

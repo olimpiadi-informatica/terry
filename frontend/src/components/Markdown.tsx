@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import RemarkMathPlugin from "remark-math";
 import { BlockMath, InlineMath } from "react-katex";
 import ReactMarkdown from "react-markdown";
@@ -16,17 +16,25 @@ export function Markdown({ baseUri, source }: Props) {
     return baseUri + url;
   };
 
+  const math = useCallback((props: { value: string }) => <BlockMath>{props.value}</BlockMath>, []);
+  const inlineMath = useCallback((props: { value: string }) => <InlineMath>{props.value}</InlineMath>, []);
+
   return (
     <ReactMarkdown
-      source={source}
       transformImageUri={transformUri}
       transformLinkUri={transformUri}
-      plugins={[RemarkMathPlugin]}
-      renderers={{
-        math: ({ value }: { value: string }) => <BlockMath>{value}</BlockMath>,
-        inlineMath: ({ value }: { value: string }) => <InlineMath>{value}</InlineMath>,
+      remarkPlugins={[RemarkMathPlugin]}
+      components={{
+        /* TODO: I don't know why this is necessary. */
+        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+        /*
+        // @ts-ignore */
+        math,
+        inlineMath,
       }}
-    />
+    >
+      {source ?? ""}
+    </ReactMarkdown>
   );
 }
 

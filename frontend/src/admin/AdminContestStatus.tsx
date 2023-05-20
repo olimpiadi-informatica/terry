@@ -164,36 +164,35 @@ function ContestStarted({
   const running = serverTime() < endTime;
   const runningForExtras = !running && serverTime() < endTime.plus({ seconds: maxExtraTime });
   return (
-    <>
-      <ul className="mb-0">
+    <ul className="mb-0">
+      <li>
+        <Trans>Contest started at</Trans>
+        {" "}
+        <AbsoluteDate clock={() => serverTime()} date={startTime} />
+      </li>
+      {running && (
         <li>
-          <Trans>Contest started at</Trans>
+          <Trans>Remaining time</Trans>
           {" "}
-          <AbsoluteDate clock={() => serverTime()} date={startTime} />
+          <Countdown clock={() => serverTime()} end={endTime} afterEnd={() => "00:00:00"} />
+          {!!usersWithExtraTime && (
+            <>
+              {" "}
+              (
+              <span>
+                <Plural
+                  value={maxExtraTime / 60}
+                  one="plus # extra minute for some user"
+                  other="plus # extra minutes for some user"
+                />
+              </span>
+              )
+            </>
+          )}
+          .
         </li>
-        {running && (
-          <li>
-            <Trans>Remaining time</Trans>
-            {" "}
-            <Countdown clock={() => serverTime()} end={endTime} afterEnd={() => "00:00:00"} />
-            {!!usersWithExtraTime && (
-              <>
-                {" "}
-                (
-                <span>
-                  <Plural
-                    value={maxExtraTime / 60}
-                    one="plus # extra minute for some user"
-                    other="plus # extra minutes for some user"
-                  />
-                </span>
-                )
-              </>
-            )}
-            .
-          </li>
-        ) }
-        {runningForExtras
+      ) }
+      {runningForExtras
         && (
           <li>
             <Trans>Remaining time for some participant</Trans>
@@ -202,8 +201,7 @@ function ContestStarted({
             .
           </li>
         ) }
-      </ul>
-    </>
+    </ul>
   );
 }
 
