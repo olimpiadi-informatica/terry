@@ -1,5 +1,5 @@
 # terry
-[![Build Status](https://travis-ci.com/algorithm-ninja/terry.svg?branch=master)](https://travis-ci.com/algorithm-ninja/terry)
+[![Tests](https://github.com/algorithm-ninja/terry/actions/workflows/test.yml/badge.svg)](https://github.com/algorithm-ninja/terry/actions/workflows/test.yml)
 [![Code Climate](https://codeclimate.com/github/algorithm-ninja/terry/badges/gpa.svg)](https://codeclimate.com/github/algorithm-ninja/terry)
 [![Coverage Status](https://coveralls.io/repos/github/algorithm-ninja/terry/badge.svg?branch=master)](https://coveralls.io/github/algorithm-ninja/terry?branch=master)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/algorithm-ninja/terry)
