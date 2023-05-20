@@ -26,7 +26,9 @@ jobs:
           ./setup.py install
 
       - name: Test
-        run: coverage run --source=terry --omit=terry/__main__.py,terry/utility.py ./run_tests.py
+        run: |
+          cd backend
+          coverage run --source=terry --omit=terry/__main__.py,terry/utility.py ./run_tests.py
 
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@v2
@@ -36,7 +38,6 @@ jobs:
 
   coverage:
     needs: test
-    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
