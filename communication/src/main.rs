@@ -3,6 +3,7 @@ extern crate log;
 
 use actix_web::middleware::Logger;
 use actix_web::ResponseError;
+use actix_web::web::Data;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
 use core::fmt::Display;
 use failure::Fallible;
@@ -224,8 +225,8 @@ async fn main() -> Fallible<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(pool.clone())
-            .app_data(api.clone())
+            .app_data(Data::new(pool.clone()))
+            .app_data(Data::new(api.clone()))
             .wrap(Logger::default())
             .service(communications)
             .service(communications_token)
