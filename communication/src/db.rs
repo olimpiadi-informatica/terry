@@ -1,5 +1,6 @@
 use crate::AddAnnouncement;
 use crate::AskQuestion;
+use actix_web::error::ErrorInternalServerError;
 use actix_web::web;
 use failure::Fallible;
 use r2d2_sqlite::SqliteConnectionManager;
@@ -63,8 +64,8 @@ pub async fn list_announcements(pool: &Pool) -> FallibleQuery<Vec<Announcement>>
         .and_then(Iterator::collect)
         .map_err(|e| e.into())
     })
-    .await
-    .map_err(|e| e.into())
+    .await?
+    .map_err(ErrorInternalServerError)
 }
 
 /// Information about the answer to a question. Only public information is
@@ -123,12 +124,12 @@ pub async fn questions(pool: &Pool, token: String) -> FallibleQuery<Vec<Question
             WHERE creator = ?1 OR ?2
             ORDER BY date",
         )?;
-        stmt.query_map(params![token, admin], |row| Ok(Question::from_row(row)?))
+        stmt.query_map(params![token, admin], Question::from_row)
             .and_then(Iterator::collect)
             .map_err(|e| e.into())
     })
-    .await
-    .map_err(|e| e.into())
+    .await?
+    .map_err(ErrorInternalServerError)
 }
 
 /// Add a new question in the database.
@@ -155,11 +156,11 @@ pub async fn add_question(
             WHERE id = ?1
             ORDER BY date",
         )?;
-        let mut q = stmt.query_map(params![id], |row| Ok(Question::from_row(row)?))?;
+        let mut q = stmt.query_map(params![id], Question::from_row)?;
         Ok(q.next().unwrap()?)
     })
-    .await
-    .map_err(|e| e.into())
+    .await?
+    .map_err(ErrorInternalServerError)
 }
 
 /// Add a new announcement to the database. It is not checked that the token of
@@ -183,8 +184,8 @@ pub async fn add_announcement(pool: &Pool, announcement: AddAnnouncement) -> Fal
         ])?;
         Ok(())
     })
-    .await
-    .map_err(|e| e.into())
+    .await?
+    .map_err(ErrorInternalServerError)
 }
 
 /// Checks if the `token` is an admin. If the token does not exists `false` is
@@ -210,8 +211,8 @@ pub async fn is_admin(pool: &Pool, token: String) -> FallibleQuery<bool> {
 
         Ok(admin)
     })
-    .await
-    .map_err(|e| e.into())
+    .await?
+    .map_err(ErrorInternalServerError)
 }
 
 /// Post the answer of a question, overwriting the previous answer, if any.
@@ -238,6 +239,6 @@ pub async fn answer_question(
         let res = stmt.execute(params![answer, token, id])?;
         Ok(res == 1)
     })
-    .await
-    .map_err(|e| e.into())
+    .await?
+    .map_err(ErrorInternalServerError)
 }

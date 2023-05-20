@@ -74,8 +74,9 @@ struct CommunicationList {
 #[get("/communications/{token}")]
 async fn communications_token(
     db: web::Data<db::Pool>,
-    web::Path((token,)): web::Path<(String,)>,
+    path: web::Path<(String,)>,
 ) -> Result<HttpResponse, ServiceError> {
+    let (token,) = path.into_inner();
     // execute the two queries in parallel
     let announcements = Box::pin(db::list_announcements(&db));
     let questions = Box::pin(db::questions(&db, token));
@@ -113,9 +114,10 @@ async fn send_telegram_notification(api: Arc<TelegramBotData>, question: db::Que
 async fn ask(
     db: web::Data<db::Pool>,
     api: web::Data<TelegramBotData>,
-    web::Path((token,)): web::Path<(String,)>,
+    path: web::Path<(String,)>,
     question: web::Json<AskQuestion>,
 ) -> Result<HttpResponse, ServiceError> {
+    let (token,) = path.into_inner();
     let q = db::add_question(&db, token, question.0.clone()).await?;
     actix_web::rt::spawn(send_telegram_notification(api.into_inner(), q.clone()));
     Ok(HttpResponse::Created().json(q))
@@ -133,9 +135,10 @@ pub struct AnswerQuestion {
 #[post("/communications/{token}/{id}")]
 async fn answer(
     db: web::Data<db::Pool>,
-    web::Path((token, id)): web::Path<(String, i64)>,
+    path: web::Path<(String, i64)>,
     answer: web::Json<AnswerQuestion>,
 ) -> Result<HttpResponse, ServiceError> {
+    let (token,id) = path.into_inner();
     let is_admin = db::is_admin(&db, token.clone()).await?;
     if !is_admin {
         return Ok(HttpResponse::Forbidden().json("You are not an admin"));
@@ -221,8 +224,8 @@ async fn main() -> Fallible<()> {
 
     HttpServer::new(move || {
         App::new()
-            .data(pool.clone())
-            .data(api.clone())
+            .app_data(pool.clone())
+            .app_data(api.clone())
             .wrap(Logger::default())
             .service(communications)
             .service(communications_token)
