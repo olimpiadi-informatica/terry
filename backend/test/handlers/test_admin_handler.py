@@ -11,7 +11,6 @@ import os.path
 import subprocess
 
 import unittest
-from unittest.mock import patch
 import dateutil.parser
 import ruamel.yaml
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
@@ -33,7 +32,8 @@ class TestAdminHandler(unittest.TestCase):
         Database.set_meta("admin_token", "ADMIN-TOKEN")
 
         self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001  # disable the logs
+        Logger.LOG_LEVEL = -9001  # enable the logs
+        Logger.disable_console_logging = True  # .. but not to console
 
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
@@ -220,7 +220,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
 
         start_time_db = datetime.fromtimestamp(
-            Database.get_meta("start_time", type=int), timezone.utc
+            Database.get_meta_int("start_time", None), timezone.utc
         )
         self.assertEqual(start_time, start_time_db.timestamp())
 
@@ -232,7 +232,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
 
         start_time_db = datetime.fromtimestamp(
-            Database.get_meta("start_time", type=int), timezone.utc
+            Database.get_meta_int("start_time", None), timezone.utc
         )
         self.assertEqual(start_time, start_time_db.timestamp())
 
@@ -243,7 +243,7 @@ class TestAdminHandler(unittest.TestCase):
         )
 
         self.assertIsNone(out["start_time"])
-        self.assertIsNone(Database.get_meta("start_time"))
+        self.assertIsNone(Database.get_meta_int("start_time", None))
 
     def test_start_scheduled(self):
         start_time_str = "2020-01-01T13:13:13.0Z"
@@ -256,7 +256,7 @@ class TestAdminHandler(unittest.TestCase):
         self.assertEqual(start_time, expected_start_time)
 
         start_time_db = datetime.fromtimestamp(
-            Database.get_meta("start_time", type=int), timezone.utc
+            Database.get_meta_float("start_time", None), timezone.utc
         )
         self.assertEqual(start_time, start_time_db)
 
@@ -281,7 +281,7 @@ class TestAdminHandler(unittest.TestCase):
             admin_token="ADMIN-TOKEN", extra_time=42, _ip="1.2.3.4"
         )
 
-        self.assertEqual(42, Database.get_meta("extra_time", type=int))
+        self.assertEqual(42, Database.get_meta_int("extra_time", None))
 
     def test_set_extra_time_user(self):
         Database.c.execute(
@@ -309,7 +309,7 @@ class TestAdminHandler(unittest.TestCase):
         start_time = dateutil.parser.parse(res["start_time"])
 
         start_time_db = datetime.fromtimestamp(
-            Database.get_meta("start_time", type=int), timezone.utc
+            Database.get_meta_float("start_time", None), timezone.utc
         )
         self.assertEqual(start_time, start_time_db)
         self.assertEqual(0, Database.get_meta("extra_time", default=0))
@@ -404,7 +404,8 @@ class TestAdminHandler(unittest.TestCase):
         Utils.setup_encrypted_file()
         Database.del_meta("admin_token")
         with open(Config.encrypted_file, "wb") as f:
-            f.write(Utils.build_pack(ruamel.yaml.dump({"deletable": False})))
+            yaml = ruamel.yaml.YAML(typ=["safe", "string"], pure=True)
+            f.write(Utils.build_pack(yaml.dump_to_string({"deletable": False})))
         with self.assertRaises(Forbidden):
             self.admin_handler.drop_contest(Utils.ZIP_TOKEN)
 
@@ -412,7 +413,8 @@ class TestAdminHandler(unittest.TestCase):
         Utils.setup_encrypted_file()
         Database.del_meta("admin_token")
         with open(Config.encrypted_file, "wb") as f:
-            f.write(Utils.build_pack(ruamel.yaml.dump({"deletable": True})))
+            yaml = ruamel.yaml.YAML(typ=["safe", "string"], pure=True)
+            f.write(Utils.build_pack(yaml.dump_to_string({"deletable": True})))
         self.admin_handler.drop_contest(Utils.ZIP_TOKEN)
         self.assertFalse(os.path.exists(Config.storedir))
         self.assertFalse(os.path.exists(Config.statementdir))

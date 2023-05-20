@@ -29,7 +29,7 @@ monkey.patch_all()
 
 
 class Server:
-    """ Main server """
+    """Main server"""
 
     def __init__(self):
         self.handlers = {
@@ -60,8 +60,11 @@ class Server:
                     methods=["GET"],
                     endpoint="info#get_submission",
                 ),
-                Rule("/user/<token>/scores",
-                     methods=["GET"], endpoint="info#get_user_scores"),
+                Rule(
+                    "/user/<token>/scores",
+                    methods=["GET"],
+                    endpoint="info#get_user_scores",
+                ),
                 Rule("/user/<token>", methods=["GET"], endpoint="info#get_user"),
                 Rule(
                     "/user/<token>/submissions/<task>",
@@ -74,7 +77,9 @@ class Server:
                     endpoint="contest#generate_input",
                 ),
                 Rule("/submit", methods=["POST"], endpoint="contest#submit"),
-                Rule("/abandon_input", methods=["POST"], endpoint="contest#abandon_input"),
+                Rule(
+                    "/abandon_input", methods=["POST"], endpoint="contest#abandon_input"
+                ),
                 Rule(
                     "/internet_detected",
                     methods=["POST"],
@@ -148,7 +153,9 @@ class Server:
         """
         Start a greenlet with the main HTTP server loop
         """
-        server = gevent.pywsgi.WSGIServer((Config.address, Config.port), self, log=None)
+        server = gevent.pywsgi.WSGIServer(
+            (Config.address, Config.port), self, log=None
+        )  # type: ignore
         try:
             server.init_socket()
         except OSError:

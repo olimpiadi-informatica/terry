@@ -93,7 +93,9 @@ class ContestHandler(BaseHandler):
         expiry_date = ContestManager.get_input_expiry_date(input)
         if expiry_date is not None and time.time() > expiry_date:
             Logger.info(
-                "UPLOAD", "User %s tried to submit for input %s too late" % (input["token"], input["id"])
+                "UPLOAD",
+                "User %s tried to submit for input %s too late"
+                % (input["token"], input["id"]),
             )
             BaseHandler.raise_exc(
                 Forbidden, "INPUT_EXPIRED", "The input file has expired"

@@ -22,7 +22,7 @@ class InfoHandler(BaseHandler):
         """
         GET /contest
         """
-        start_timestamp = Database.get_meta("start_time", type=int)
+        start_timestamp = Database.get_meta_float("start_time", None)
         start_datetime = (
             datetime.fromtimestamp(start_timestamp, timezone.utc)
             if start_timestamp is not None
@@ -30,19 +30,19 @@ class InfoHandler(BaseHandler):
         )
         now = datetime.now(timezone.utc)
 
-        if not start_timestamp or now < start_datetime:
+        if not start_datetime or now < start_datetime:
             return {
                 "has_started": False,
                 "start_time": start_datetime.isoformat() if start_datetime else None,
-                "name": Database.get_meta("contest_name"),
-                "description": Database.get_meta("contest_description"),
+                "name": Database.get_meta("contest_name", None),
+                "description": Database.get_meta("contest_description", None),
             }
 
         tasks = Database.get_tasks()
         return {
             "has_started": True,
-            "name": Database.get_meta("contest_name"),
-            "description": Database.get_meta("contest_description"),
+            "name": Database.get_meta("contest_name", None),
+            "description": Database.get_meta("contest_description", None),
             "start_time": start_datetime.isoformat(),
             "tasks": tasks,
             "max_total_score": sum(task["max_score"] for task in tasks),
@@ -56,8 +56,7 @@ class InfoHandler(BaseHandler):
         GET /input/<input_id>
         """
         return BaseHandler.format_dates(
-            InfoHandler.patch_input(input),
-            ["date", "expiry_date"]
+            InfoHandler.patch_input(input), ["date", "expiry_date"]
         )
 
     @Validators.contest_started
@@ -103,25 +102,27 @@ class InfoHandler(BaseHandler):
 
         end_time = InfoHandler.get_end_time(user["extra_time"])
         if user["contest_start_delay"] is not None:
-            end_time = min(
-                end_time,
-                InfoHandler.get_window_end_time(
-                    user["extra_time"], user["contest_start_delay"]
-                ),
+            window_end_time = InfoHandler.get_window_end_time(
+                user["extra_time"], user["contest_start_delay"]
             )
+            if window_end_time is not None:
+                if not end_time or end_time > window_end_time:
+                    end_time = window_end_time
 
         user["end_time"] = end_time
         del user["extra_time"]
         user["tasks"] = {}
 
-        tasks = Database.get_user_task(token)
+        tasks = Database.get_user_tasks(token)
         for task in tasks:
             task_name = task["task"]
 
             if task["current_attempt"] is not None:
-                current_input = InfoHandler.patch_input(Database.get_input(
-                    token=token, task=task_name, attempt=task["current_attempt"]
-                ))
+                current_input = InfoHandler.patch_input(
+                    Database.get_input(
+                        token=token, task=task_name, attempt=task["current_attempt"]
+                    )
+                )
             else:
                 current_input = None
 
@@ -133,7 +134,9 @@ class InfoHandler(BaseHandler):
 
         user["total_score"] = sum(task["score"] for task in tasks)
 
-        return BaseHandler.format_dates(user, fields=["end_time", "date", "expiry_date"])
+        return BaseHandler.format_dates(
+            user, fields=["end_time", "date", "expiry_date"]
+        )
 
     @Validators.contest_started
     @Validators.register_user_ip
@@ -146,17 +149,19 @@ class InfoHandler(BaseHandler):
             return []
 
         scores = []
-        tasks = Database.get_user_task(token)
+        tasks = Database.get_user_tasks(token)
         for task in tasks:
             task_name = task["task"]
             task_info = Database.get_task(task_name)
 
-            scores.append({
-                "name": task_name,
-                "score": task["score"],
-                "max_score": task_info["max_score"],
-                "title": task_info["title"]
-            })
+            scores.append(
+                {
+                    "name": task_name,
+                    "score": task["score"],
+                    "max_score": task_info["max_score"],
+                    "title": task_info["title"],
+                }
+            )
 
         return scores
 
@@ -231,7 +236,4 @@ class InfoHandler(BaseHandler):
         """
         expiry_date = ContestManager.get_input_expiry_date(input)
 
-        return {
-            **input,
-            "expiry_date": expiry_date
-        }
+        return {**input, "expiry_date": expiry_date}

@@ -20,6 +20,7 @@ class TestServer(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
         self.server = Server()
+        Logger.disable_console_logging = False
 
     @patch("terry.server.Server.wsgi_app", side_effect=Exception())
     def test_call_with_error(self, mock):

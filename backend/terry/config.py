@@ -11,7 +11,7 @@ import ruamel.yaml
 
 
 class Config:
-    """ Main config file """
+    """Main config file"""
 
     loaded = False
     logfile = "log.sqlite3"
@@ -45,7 +45,8 @@ class Config:
 
         try:
             with open(config_file, "r") as f:
-                cfg = ruamel.yaml.safe_load(f)
+                yaml = ruamel.yaml.YAML(typ="safe")
+                cfg = yaml.load(f)
         except FileNotFoundError:
             print(
                 "Config file %s not found, you should create it!" % config_file,

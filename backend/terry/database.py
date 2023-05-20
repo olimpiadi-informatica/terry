@@ -10,18 +10,22 @@
 import sqlite3
 import uuid
 
+from typing import Any, List, TypeVar, Dict, Optional, Union
+
 from gevent.lock import BoundedSemaphore
 
 from terry.config import Config
 from terry.logger import Logger
 from terry.schema import Schema
 
+MetaType = TypeVar("MetaType")
+
 
 class Database:
     connected = False
     connection_sem = BoundedSemaphore()
-    c = None
-    conn = None
+    c: sqlite3.Cursor = None  # type: ignore
+    conn: sqlite3.Connection = None  # type: ignore
 
     @staticmethod
     def gen_id():
@@ -40,13 +44,13 @@ class Database:
         )
         Database.c = Database.conn.cursor()
         Database.c.executescript(Schema.INIT)
-        version = Database.get_meta("schema_version", -1, int)
+        version = Database.get_meta_int("schema_version", -1)
         if version == -1:
             Logger.info("DB_OPERATION", "Creating database")
         for upd in range(version + 1, len(Schema.UPDATERS)):
             Logger.info("DB_OPERATION", "Applying updater %d" % upd)
             Database.c.executescript(Schema.UPDATERS[upd])
-            Database.set_meta("schema_version", upd)
+            Database.set_meta("schema_version", str(upd))
             Database.conn.commit()
 
     @staticmethod
@@ -55,21 +59,23 @@ class Database:
         Database.connected = False
 
     @staticmethod
-    def dictify(all=False):
+    def dictify() -> Optional[Dict[str, Any]]:
         c = Database.c
-        if all is False:
-            res = c.fetchone()
-            if res is None:
-                return None
-            return dict(zip(next(zip(*c.description)), res))
-        else:
-            descr = next(zip(*c.description))
-            return [dict(zip(descr, row)) for row in c.fetchall()]
+        res = c.fetchone()
+        if res is None:
+            return None
+        return dict(zip(next(zip(*c.description)), res))
+
+    @staticmethod
+    def dictify_all() -> List[Dict[str, Any]]:
+        c = Database.c
+        descr = next(zip(*c.description))
+        return [dict(zip(descr, row)) for row in c.fetchall()]
 
     @staticmethod
     def get_tasks():
         Database.c.execute("SELECT * FROM tasks ORDER BY num ASC")
-        return Database.dictify(all=True)
+        return Database.dictify_all()
 
     @staticmethod
     def get_task(task):
@@ -96,7 +102,7 @@ class Database:
             LEFT JOIN ips ON users.token = ips.token
         """
         )
-        users = Database.dictify(all=True)
+        users = Database.dictify_all()
 
         users_dict = {}
         for user in users:
@@ -111,7 +117,9 @@ class Database:
                     ip[k[4:]] = v
 
             if ip["ip"] is not None:
-                users_dict[token]["ip"].append(ip)
+                uip = users_dict[token]["ip"]
+                assert isinstance(uip, list)
+                uip.append(ip)
         return list(users_dict.values())
 
     @staticmethod
@@ -208,20 +216,22 @@ class Database:
         """,
             {"token": token, "task": task},
         )
-        return Database.dictify(all=True)
+        return Database.dictify_all()
 
     @staticmethod
-    def get_user_task(token, task=None):
+    def get_user_task(token, task):
         c = Database.c
-        if task is not None:
-            c.execute(
-                "SELECT * FROM user_tasks WHERE token=:token AND task=:task",
-                {"token": token, "task": task},
-            )
-            return Database.dictify()
-        else:
-            c.execute("SELECT * FROM user_tasks WHERE token=:token", {"token": token})
-            return Database.dictify(all=True)
+        c.execute(
+            "SELECT * FROM user_tasks WHERE token=:token AND task=:task",
+            {"token": token, "task": task},
+        )
+        return Database.dictify()
+
+    @staticmethod
+    def get_user_tasks(token):
+        c = Database.c
+        c.execute("SELECT * FROM user_tasks WHERE token=:token", {"token": token})
+        return Database.dictify_all()
 
     @staticmethod
     def get_next_attempt(token, task):
@@ -274,7 +284,7 @@ class Database:
             return Database.c.rowcount
 
     @staticmethod
-    def get_meta(key, default=None, type=None):
+    def get_meta(key, default: MetaType) -> Union[str, MetaType]:
         c = Database.conn.cursor()
         try:
             c.execute("SELECT value FROM metadata WHERE key = :key", {"key": key})
@@ -282,26 +292,41 @@ class Database:
             return default
         row = c.fetchone()
         if row:
-            if row[0] == None:
-                return None
-            elif type is None:
-                return row[0]
-            elif type == bool:
-                return row[0] == "True"
-            else:
-                return type(row[0])
+            return row[0]
         return default
 
     @staticmethod
-    def set_meta(key, value, autocommit=True):
-        if value is not None:
-            value = str(value)
+    def get_meta_float(key, default: MetaType) -> Union[float, MetaType]:
+        smeta = Database.get_meta(key, None)
+        if smeta is None:
+            return default
+        else:
+            return float(smeta)
+
+    @staticmethod
+    def get_meta_int(key, default: MetaType) -> Union[int, MetaType]:
+        smeta = Database.get_meta(key, None)
+        if smeta is None:
+            return default
+        else:
+            return int(smeta)
+
+    @staticmethod
+    def get_meta_bool(key, default: MetaType) -> Union[bool, MetaType]:
+        smeta = Database.get_meta(key, None)
+        if smeta is None:
+            return default
+        else:
+            return smeta == "True"
+
+    @staticmethod
+    def set_meta(key: str, value: Optional[str], autocommit=True):
         return 1 == Database.do_write(
             autocommit,
             """
             INSERT OR REPLACE INTO metadata(key, value) VALUES (:key, :value)
         """,
-            {"key": key, "value": value},
+            {"key": key, "value": None if value is None else str(value)},
         )
 
     @staticmethod
@@ -327,7 +352,15 @@ class Database:
         )
 
     @staticmethod
-    def add_task(name, title, statement_path, max_score, num, submission_timeout=None, autocommit=True):
+    def add_task(
+        name,
+        title,
+        statement_path,
+        max_score,
+        num,
+        submission_timeout=None,
+        autocommit=True,
+    ):
         return 1 == Database.do_write(
             autocommit,
             """

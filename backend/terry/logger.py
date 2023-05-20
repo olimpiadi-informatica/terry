@@ -10,6 +10,8 @@ import datetime
 import sqlite3
 import sys
 
+from typing import Optional
+
 from colorama import Fore, Style
 
 from terry.config import Config
@@ -20,8 +22,9 @@ class Logger:
 
     connected = False
     num_logs = 0
-    c = None
-    conn = None
+    c: sqlite3.Cursor = None  # type: ignore
+    conn: sqlite3.Connection = None  # type: ignore
+    disable_console_logging = False
 
     DEBUG = 0
     INFO = 1
@@ -115,6 +118,8 @@ class Logger:
 
     @staticmethod
     def log_console(level, category, message):
+        if Logger.disable_console_logging:
+            return
         tag = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " "
         tag += Logger.FMT % Logger.HUMAN_MESSAGES[level]
         cat = "[" + Fore.GREEN + ("%s" % category) + Style.RESET_ALL + "]"
@@ -142,7 +147,7 @@ class Logger:
         Logger.log(Logger.ERROR, *args, **kwargs)
 
     @staticmethod
-    def get_logs(level, category, begin, end):
+    def get_logs(level, category: Optional[str], begin: float, end: float):
         """
         Filter the logs with the specified parameters
         :param level: All the events with level greater or equal

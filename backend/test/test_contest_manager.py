@@ -11,7 +11,7 @@ import unittest
 from unittest.mock import patch, call
 
 import gevent
-from gevent import queue
+import gevent.queue
 from werkzeug.exceptions import (
     Forbidden,
     NotFound,
@@ -27,13 +27,19 @@ from terry.logger import Logger
 from test.utils import Utils
 
 
+class FakeQueue:
+    def put(self, *args, **kwargs):
+        raise NotImplementedError("Stop loop")
+
+
 class TestContestManager(unittest.TestCase):
     def setUp(self):
         Utils.prepare_test()
 
-        self.log_backup = Logger.LOG_LEVEL
-        Logger.LOG_LEVEL = 9001  # disable the logs
         self.tempdir = None
+        self.log_backup = Logger.LOG_LEVEL
+        Logger.LOG_LEVEL = -9001  # enable the logs
+        Logger.disable_console_logging = True  # .. but not to console
 
     def tearDown(self):
         Logger.LOG_LEVEL = self.log_backup
@@ -160,10 +166,11 @@ class TestContestManager(unittest.TestCase):
         with patch("gevent.spawn") as mock:
             ContestManager.read_from_disk()
             mock.assert_has_calls(
-                [call(ContestManager.worker, "poldo")], any_order=True
+                [call(ContestManager.worker), call(ContestManager.watcher)],
+                any_order=True,
             )
 
-        self.assertEqual(18000, Database.get_meta("contest_duration", type=int))
+        self.assertEqual(18000, Database.get_meta_int("contest_duration", None))
         tasks = Database.get_tasks()
         self.assertEqual(1, len(tasks))
         self.assertEqual("poldo", tasks[0]["name"])
@@ -184,7 +191,7 @@ class TestContestManager(unittest.TestCase):
         self.assertEqual(0, user_tasks["score"])
         self.assertIsNone(user_tasks["current_attempt"])
 
-        self.assertTrue(Database.get_meta("contest_imported", type=bool))
+        self.assertTrue(Database.get_meta_bool("contest_imported", None))
         self.assertTrue(ContestManager.has_contest)
         self.assertIn("poldo", ContestManager.tasks)
         self.assertIn("poldo", ContestManager.input_queue)
@@ -198,44 +205,36 @@ class TestContestManager(unittest.TestCase):
         with self.assertRaises(Exception) as ex:
             ContestManager.read_from_disk()
         self.assertEqual("ops...", ex.exception.args[0])
-        self.assertIsNone(Database.get_meta("contest_duration"))
+        self.assertIsNone(Database.get_meta("contest_duration", None))
 
     @patch("gevent.subprocess.call")
     @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._valid_subprocess_call
         ContestManager.tasks["poldo"] = {"generator": "/gen", "validator": "/val"}
-
-        class FakeQueue:
-            def put(self, _):
-                raise NotImplementedError("Stop loop")
-
-        ContestManager.input_queue["poldo"] = FakeQueue()
+        ContestManager.input_queue["poldo"] = FakeQueue()  # type: ignore
+        ContestManager.task_generation_queue.put((0, "poldo"))
 
         with patch(
             "terry.logger.Logger.error",
             side_effect=TestContestManager._stop_worker_loop,
         ):
             with self.assertRaises(NotImplementedError) as ex:
-                ContestManager.worker("poldo")
+                ContestManager.worker()
 
     @patch("gevent.subprocess.call", return_value=42)
     @patch("terry.database.Database.gen_id", return_value="inputid")
     def test_worker_generator_fails(self, gen_id_mock, call_mock):
         ContestManager.tasks["poldo"] = {"generator": "/gen", "validator": "/val"}
-
-        class FakeQueue:
-            def put(self, _):
-                raise NotImplementedError("Stop loop")
-
-        ContestManager.input_queue["poldo"] = FakeQueue()
+        ContestManager.input_queue["poldo"] = FakeQueue()  # type: ignore
+        ContestManager.task_generation_queue.put((0, "poldo"))
 
         with patch(
             "terry.logger.Logger.error",
             side_effect=TestContestManager._stop_worker_loop,
         ):
             with self.assertRaises(Exception) as ex:
-                ContestManager.worker("poldo")
+                ContestManager.worker()
             self.assertIn("Error 42 generating input", ex.exception.args[0])
 
     @patch("gevent.subprocess.call")
@@ -243,19 +242,15 @@ class TestContestManager(unittest.TestCase):
     def test_worker_validator_fails(self, gen_id_mock, call_mock):
         call_mock.side_effect = TestContestManager._broken_val_subprocess_call
         ContestManager.tasks["poldo"] = {"generator": "/gen", "validator": "/val"}
-
-        class FakeQueue:
-            def put(self, _):
-                raise NotImplementedError("Stop loop")
-
-        ContestManager.input_queue["poldo"] = FakeQueue()
+        ContestManager.input_queue["poldo"] = FakeQueue()  # type: ignore
+        ContestManager.task_generation_queue.put((0, "poldo"))
 
         with patch(
             "terry.logger.Logger.error",
             side_effect=TestContestManager._stop_worker_loop,
         ):
             with self.assertRaises(Exception) as ex:
-                ContestManager.worker("poldo")
+                ContestManager.worker()
             self.assertIn("Error 42 validating input", ex.exception.args[0])
 
     def test_get_input(self):
@@ -291,7 +286,7 @@ class TestContestManager(unittest.TestCase):
         with self.assertRaises(NotImplementedError) as ex:
             with Utils.nostderr() as stderr:
                 ContestManager.evaluate_output("poldo", "/input", "/output")
-        self.assertIn("Error while evaluating output", stderr.buffer)
+            self.assertIn("Error while evaluating output", stderr.buffer)
         self.assertEqual("ops ;)", ex.exception.args[0])
 
     @staticmethod

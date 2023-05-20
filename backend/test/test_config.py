@@ -22,7 +22,7 @@ class TestConfig(unittest.TestCase):
         self._write_config("test: 42")
 
         Config.set_config_file(self.configFilePath)
-        self.assertEqual(42, Config.test)
+        self.assertEqual(42, Config.test)  # type: ignore
 
     def test_file_not_found(self):
         with self.assertRaises(SystemExit):

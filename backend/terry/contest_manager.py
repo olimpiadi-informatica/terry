@@ -14,6 +14,7 @@ import random
 import shutil
 import time
 import traceback
+from typing import Any, Dict
 import zipfile
 from hashlib import sha256
 
@@ -39,10 +40,10 @@ from terry.storage_manager import StorageManager
 
 
 class ContestManager:
-    input_queue = dict()
-    in_generation_inputs = dict()
+    input_queue: Dict[str, gevent.queue.Queue] = dict()
+    in_generation_inputs: Dict[str, int] = dict()
     task_generation_queue = gevent.queue.PriorityQueue()
-    tasks = dict()
+    tasks: Dict[str, Dict[str, Any]] = dict()
     has_contest = False
 
     @staticmethod
@@ -67,8 +68,7 @@ class ContestManager:
         try:
             username, password = token.split("-", 1)
             secret, scrambled_password = decode_data(password, SECRET_LEN)
-            file_password = recover_file_password(
-                username, secret, scrambled_password)
+            file_password = recover_file_password(username, secret, scrambled_password)
         except ValueError:
             BaseHandler.raise_exc(
                 Forbidden, "WRONG_PASSWORD", "The provided password is malformed"
@@ -119,7 +119,8 @@ class ContestManager:
         :return: Returns the config of the contest
         """
         with open(os.path.join(path, "contest.yaml")) as f:
-            contest_config = ruamel.yaml.safe_load(f)
+            yaml = ruamel.yaml.YAML(typ="safe")
+            contest_config = yaml.load(f)
         tasks = []
         os.makedirs(Config.statementdir, exist_ok=True)
         for task in contest_config["tasks"]:
@@ -135,7 +136,8 @@ class ContestManager:
 
             # load the task config
             with open(os.path.join(path, task, "task.yaml")) as f:
-                task_config = ruamel.yaml.safe_load(f)
+                yaml = ruamel.yaml.YAML(typ="safe")
+                task_config = yaml.load(f)
 
             checker = os.path.join(
                 taskdir, "managers", "checker" + ContestManager.system_extension()
@@ -190,7 +192,7 @@ class ContestManager:
             Database.del_meta("admin_token")
             BaseHandler.raise_exc(UnprocessableEntity, "CONTEST", error)
 
-        if not Database.get_meta("contest_imported", default=False, type=bool):
+        if not Database.get_meta_bool("contest_imported", False):
             Database.begin()
             try:
                 Database.set_meta(
@@ -236,7 +238,7 @@ class ContestManager:
                             user["token"], task["name"], autocommit=False
                         )
 
-                Database.set_meta("contest_imported", True, autocommit=False)
+                Database.set_meta("contest_imported", str(True), autocommit=False)
                 Database.commit()
             except:
                 Database.rollback()
@@ -246,14 +248,12 @@ class ContestManager:
             pass
 
         # store the task in the ContestManager singleton
-        ContestManager.tasks = dict((task["name"], task)
-                                    for task in contest["tasks"])
+        ContestManager.tasks = dict((task["name"], task) for task in contest["tasks"])
         ContestManager.has_contest = True
 
         # create the queues for the task inputs
         for task in ContestManager.tasks:
-            ContestManager.input_queue[task] = gevent.queue.Queue(
-                Config.queue_size)
+            ContestManager.input_queue[task] = gevent.queue.Queue(Config.queue_size)
             ContestManager.in_generation_inputs[task] = 0
 
         num_workers = Config.num_worker_threads
@@ -270,24 +270,24 @@ class ContestManager:
     def watcher():
         while True:
             enqueued_one = False
-            for (task, q) in ContestManager.input_queue.items():
+            for task, q in ContestManager.input_queue.items():
                 count = ContestManager.in_generation_inputs[task] + len(q)
                 if count < Config.queue_size:
                     ContestManager.in_generation_inputs[task] += 1
                     ContestManager.task_generation_queue.put(
-                        (count + random.random(), task))
+                        (count + random.random(), task)
+                    )
                     enqueued_one = True
                     Logger.debug(
                         "TASK",
-                        "Enquequed input generation job for task %s" % (
-                            task),
+                        "Enquequed input generation job for task %s" % (task),
                     )
             if not enqueued_one:
                 gevent.sleep(1)
 
     @staticmethod
     def worker():
-        """ Method that stays in the background and generates inputs """
+        """Method that stays in the background and generates inputs"""
 
         while True:
             try:
@@ -296,7 +296,7 @@ class ContestManager:
                 queue = ContestManager.input_queue[task_name]
                 id = Database.gen_id()
                 path = StorageManager.new_input_file(id, task_name, "invalid")
-                seed = int(sha256(id.encode()).hexdigest(), 16) % (2 ** 31)
+                seed = int(sha256(id.encode()).hexdigest(), 16) % (2**31)
 
                 stdout = os.open(
                     StorageManager.get_absolute_path(path),
@@ -331,8 +331,7 @@ class ContestManager:
                 # if there is a validator in the task use it to check if the
                 # generated input is valid
                 if "validator" in task:
-                    stdin = os.open(
-                        StorageManager.get_absolute_path(path), os.O_RDONLY)
+                    stdin = os.open(StorageManager.get_absolute_path(path), os.O_RDONLY)
                     try:
                         start_time = time.monotonic()
                         # execute the validator piping the input file to stdin
@@ -360,8 +359,7 @@ class ContestManager:
 
                 Logger.debug(
                     "TASK",
-                    "Generated input %s (%d) for task %s" % (
-                        id, seed, task_name),
+                    "Generated input %s (%d) for task %s" % (id, seed, task_name),
                 )
                 ContestManager.in_generation_inputs[task_name] -= 1
                 queue.put({"id": id, "path": path}, block=False)

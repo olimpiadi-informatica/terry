@@ -275,7 +275,7 @@ class Validators:
             if user:
                 extra_time = user["extra_time"]
                 start_delay = user["contest_start_delay"]
-        start_time = Database.get_meta("start_time", type=int)
+        start_time = Database.get_meta_float("start_time", None)
         now = time.time()
         if start_time is None or start_time > now:
             BaseHandler.raise_exc(
@@ -284,6 +284,7 @@ class Validators:
         contest_end = BaseHandler.get_end_time(extra_time)
         window_end = BaseHandler.get_window_end_time(extra_time, start_delay)
         # check the contest is not finished
+        assert contest_end is not None
         if contest_end < now:
             BaseHandler.raise_exc(Forbidden, "FORBIDDEN", "The contest has ended")
         # if a window is present check it's not finished
@@ -292,7 +293,7 @@ class Validators:
 
     @staticmethod
     def _ensure_contest_started():
-        start_timestamp = Database.get_meta("start_time", type=int)
+        start_timestamp = Database.get_meta_float("start_time", None)
         start_datetime = (
             datetime.fromtimestamp(start_timestamp, timezone.utc)
             if start_timestamp is not None
@@ -311,7 +312,7 @@ class Validators:
         :param ip: IP of the client
         """
 
-        correct_token = Database.get_meta("admin_token")
+        correct_token = Database.get_meta("admin_token", None)
 
         if correct_token is None:
             ContestManager.extract_contest(token)
@@ -368,7 +369,7 @@ class Validators:
         start_delay = user["contest_start_delay"]
         if start_delay is not None:
             return False
-        start = Database.get_meta("start_time", type=int)
+        start = Database.get_meta_float("start_time", None)
         if start is None:
             return False
         now = time.time()
