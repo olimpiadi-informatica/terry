@@ -60,8 +60,46 @@ docker run -d -v $(pwd)/storage:/data -P edomora97/terry:latest
 
 The nginx and terr-server logs are stored inside `/data/logs`.
 
-You can use the `build_docker.py` script to ease the building of the docker image.
-Passing `--communication internal` it will setup the container to spawn also the communication server.
+
+#### Building the docker image
+
+With embedded communication backend:
+
+```bash
+docker build \
+   --target with-communication \
+   --build-arg REACT_APP_COMMUNICATIONS_BASE_URI=/api/communications/ \
+   -t terry \
+   .
+```
+
+With external communication backend:
+
+```bash
+docker build \
+   --target without-communication \
+   --build-arg REACT_APP_COMMUNICATIONS_BASE_URI=https://the.server/api/communications/ \
+   -t terry \
+   .
+```
+
+Without communication:
+
+```bash
+docker build \
+   --target without-communication \
+   -t terry \
+   .
+```
+
+Only communication backend:
+
+```bash
+docker build \
+   --target only-communication \
+   -t terry-communication \
+   .
+```
 
 ## Build the server VM
 
