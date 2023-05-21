@@ -59,8 +59,9 @@ class UploadHandler(BaseHandler):
         """
         POST /upload_source
         """
+        content = file["content"]
         alerts = []
-        if get_exeflags(file["content"]):
+        if get_exeflags(content):
             alerts.append(
                 {
                     "severity": "warning",
@@ -69,6 +70,16 @@ class UploadHandler(BaseHandler):
                 }
             )
             Logger.info("UPLOAD", "User %s has uploaded an executable" % input["token"])
+
+        if ContestManager.is_statement_file(content):
+            alerts.append(
+                {
+                    "severity": "warning",
+                    "message": "You have submitted a template file! Please send the source code."
+                }
+            )
+            Logger.info("UPLOAD", "User %s has uploaded a statement file" % input["token"])
+
         if not alerts:
             alerts.append(
                 {"severity": "success", "message": "Source file uploaded correctly."}
@@ -82,7 +93,7 @@ class UploadHandler(BaseHandler):
                 BadRequest, "INVALID_FILENAME", "The provided file has an invalid name"
             )
 
-        StorageManager.save_file(path, file["content"])
+        StorageManager.save_file(path, content)
         file_size = StorageManager.get_file_size(path)
 
         Database.add_source(source_id, input["id"], path, file_size)

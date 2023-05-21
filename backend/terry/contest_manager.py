@@ -14,7 +14,7 @@ import random
 import shutil
 import time
 import traceback
-from typing import Any, Dict
+from typing import Any, Dict, Set
 import zipfile
 from hashlib import sha256
 
@@ -45,6 +45,7 @@ class ContestManager:
     task_generation_queue = gevent.queue.PriorityQueue()
     tasks: Dict[str, Dict[str, Any]] = dict()
     has_contest = False
+    statement_file_hashes: Set[bytes] = set()
 
     @staticmethod
     def system_extension():
@@ -159,6 +160,12 @@ class ContestManager:
             if os.path.exists(validator):
                 task_config["validator"] = validator
                 os.chmod(validator, 0o755)
+
+            # collect hashes of all statement files
+            for dirname, _, files in os.walk(statementdir, followlinks=False):
+                for file in files:
+                    with open(os.path.join(dirname, file), 'rb') as fin:
+                        ContestManager.statement_file_hashes.add(sha256(fin.read()).digest())
 
             task_config["statement_path"] = os.path.join(
                 web_statementdir, "statement.md"
@@ -445,3 +452,8 @@ class ContestManager:
             % (output_path, task_name, input_path),
         )
         return output
+
+    @staticmethod
+    def is_statement_file(content: bytes):
+        h = sha256(content).digest()
+        return h in ContestManager.statement_file_hashes
