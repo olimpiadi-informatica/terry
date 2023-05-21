@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 
+set -ex
+
+mkdir -p /data/logs
 cd /data
-mkdir /data/logs
 
 export RUST_LOG=info
 options=""
@@ -26,4 +28,4 @@ fi
     --database /data/terry-communication-backend.sqlite3 \
     --bind 0.0.0.0:1236 \
     $options 2>&1 \
-| tee -a /data/logs/terry-communication-backend.log &
+| tee -a /data/logs/terry-communication-backend.log
