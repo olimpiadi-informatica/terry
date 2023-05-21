@@ -67,7 +67,7 @@ export function AdminContextProvider({ children }: AdminContextProps) {
   const startContest = useCallback((startTime: StartContestCommand) => {
     if (!token) throw new Error("You are not logged in");
 
-    const when = typeof startTime === "string" ? startTime : startTime.toUTC().toISO();
+    const when = typeof startTime === "string" ? startTime : startTime.toUTC().toISO() ?? undefined;
     return client
       .adminApi(token, "/start", { start_time: when })
       .then(() => {

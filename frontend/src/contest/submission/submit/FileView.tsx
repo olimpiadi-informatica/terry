@@ -1,5 +1,5 @@
 import React from "react";
-import filesize from "filesize";
+import { filesize } from "filesize";
 import { DateTime } from "luxon";
 import "./FileView.css";
 import { Trans } from "@lingui/macro";
@@ -33,7 +33,7 @@ export function FileView({ file }: Props) {
           <th>
             <Trans>Size:</Trans>
           </th>
-          <td>{filesize(file.size, { standard: "iec" })}</td>
+          <td>{filesize(file.size) as string}</td>
         </tr>
       </tbody>
     </table>

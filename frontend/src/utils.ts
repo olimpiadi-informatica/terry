@@ -10,7 +10,7 @@ export function colorFromScore(score: number, maxScore: number) {
   return "warning";
 }
 
-export function errorToString(error: AxiosError) {
+export function errorToString(error: AxiosError): string | null {
   if (error.response) {
     if (error.response.data) {
       if (typeof error.response.data === "string") {
@@ -20,9 +20,9 @@ export function errorToString(error: AxiosError) {
         }
         // application errors (client)
         return error.response.data;
-      } if ("message" in error.response.data) {
+      } if (typeof error.response.data === "object" && "message" in error.response.data) {
         // application errors (server)
-        return error.response.data.message;
+        return error.response.data.message as string;
       }
     }
   } else {
