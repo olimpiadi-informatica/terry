@@ -45,7 +45,7 @@ pip3 install -I -r requirements.txt
 cd /terry/frontend
 export NODE_ENV=production
 yarn install --frozen-lockfile
-NODE_OPTIONS=--openssl-legacy-provider SKIP_PREFLIGHT_CHECK=true yarn build
+NODE_OPTIONS=--openssl-legacy-provider SKIP_PREFLIGHT_CHECK=true DISABLE_ESLINT_PLUGIN=true yarn build
 
 # Keep only the built files
 cp -r build /app
