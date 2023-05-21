@@ -8,12 +8,14 @@
 import os
 import unittest
 from unittest.mock import patch
+from hashlib import sha256
 
 from werkzeug.exceptions import Forbidden, BadRequest, InternalServerError
 
 from terry.config import Config
 from terry.database import Database
 from terry.handlers.upload_handler import UploadHandler
+from terry.contest_manager import ContestManager
 from terry.logger import Logger
 from test.utils import Utils
 
@@ -154,6 +156,26 @@ class TestInfoHandler(unittest.TestCase):
                 _ip="1.1.1.1",
                 file={"content": "foobar".encode(), "name": ".."},
             )
+
+    @patch("terry.database.Database.gen_id", return_value="sourceid")
+    def test_upload_source_template_file(self, gen_mock):
+        Utils.start_contest()
+        self._insert_data()
+
+        old_statement_hashes = ContestManager.statement_file_hashes
+        ContestManager.statement_file_hashes.add(sha256(b"file contents").digest())
+
+        res = self.handler.upload_source(
+            input_id="inputid",
+            _ip="1.1.1.1",
+            file={"content": b"file contents", "name": "source.cpp"},
+        )
+
+        expected = {'severity': 'warning', 'message': 'You have submitted a template file! Please send the source code.'}
+        self.assertTrue(expected in res['validation']['alerts'])
+
+        ContestManager.statement_file_hashes = old_statement_hashes
+
 
     def _insert_data(self):
         Database.add_user("token", "", "")

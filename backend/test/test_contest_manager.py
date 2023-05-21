@@ -289,6 +289,16 @@ class TestContestManager(unittest.TestCase):
             self.assertIn("Error while evaluating output", stderr.buffer)
         self.assertEqual("ops ;)", ex.exception.args[0])
 
+    def test_statement_file_detected(self):
+        path = Utils.new_tmp_dir()
+        self._prepare_contest_dir(path)
+        Config.statementdir = Utils.new_tmp_dir()
+        os.makedirs(os.path.join(Config.statementdir, "poldo"))
+        ContestManager.import_contest(path)
+
+        self.assertTrue(ContestManager.is_statement_file(b"# Poldo"))
+        self.assertFalse(ContestManager.is_statement_file(b"very real solution"))
+
     @staticmethod
     def _stop_worker_loop(cat, text):
         if "Stop loop" not in text:
