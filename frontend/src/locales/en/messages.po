@@ -46,7 +46,7 @@ msgstr "Admin token"
 
 #: src/communication/Announcements.tsx:13
 #: src/communication/Navbar.tsx:29
-#: src/contest/Communication.tsx:94
+#: src/contest/Communication.tsx:90
 msgid "Announcements"
 msgstr "Announcements"
 
@@ -100,7 +100,7 @@ msgstr "C++"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/contest/Communication.tsx:85
+#: src/contest/Communication.tsx:81
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 
@@ -415,7 +415,7 @@ msgstr "Message filter"
 msgid "Name"
 msgstr "Name"
 
-#: src/contest/Communication.tsx:86
+#: src/contest/Communication.tsx:82
 msgid "Network problem. Reconnecting..."
 msgstr "Network problem. Reconnecting..."
 
@@ -427,7 +427,7 @@ msgstr "New announcement"
 msgid "New announcement: {0}"
 msgstr "New announcement: {0}"
 
-#: src/contest/Communication.tsx:113
+#: src/contest/Communication.tsx:109
 msgid "No announcements yet."
 msgstr "No announcements yet."
 
@@ -533,7 +533,7 @@ msgstr "Question answered!"
 
 #: src/communication/Navbar.tsx:24
 #: src/communication/Questions.tsx:46
-#: src/contest/Communication.tsx:118
+#: src/contest/Communication.tsx:114
 msgid "Questions"
 msgstr "Questions"
 
@@ -595,7 +595,7 @@ msgstr "Secondary (grey)"
 msgid "Select a file with an extension"
 msgstr "Select a file with an extension"
 
-#: src/contest/Communication.tsx:60
+#: src/contest/Communication.tsx:56
 msgid "Send"
 msgstr "Send"
 
@@ -750,7 +750,7 @@ msgstr "The provided date cannot be used as start time for the contest. Please s
 msgid "The question must be at least {MIN_QUESTION_LENGTH} characters long."
 msgstr "The question must be at least {MIN_QUESTION_LENGTH} characters long."
 
-#: src/contest/Communication.tsx:64
+#: src/contest/Communication.tsx:60
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 
@@ -832,7 +832,7 @@ msgstr "You can submit <0>as many times as you want</0>, but you will have a dif
 msgid "You have not submitted yet."
 msgstr "You have not submitted yet."
 
-#: src/contest/Communication.tsx:135
+#: src/contest/Communication.tsx:131
 msgid "You have to be logged in to ask a question."
 msgstr "You have to be logged in to ask a question."
 

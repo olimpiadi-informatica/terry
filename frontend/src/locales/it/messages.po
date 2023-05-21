@@ -46,7 +46,7 @@ msgstr "Admin token"
 
 #: src/communication/Announcements.tsx:13
 #: src/communication/Navbar.tsx:29
-#: src/contest/Communication.tsx:94
+#: src/contest/Communication.tsx:90
 msgid "Announcements"
 msgstr "Annunci"
 
@@ -100,7 +100,7 @@ msgstr "C++"
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/contest/Communication.tsx:85
+#: src/contest/Communication.tsx:81
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Impossibile raggiungere il server delle comunicazioni, il tuo browser riproverà a connettersi automaticamente. Le informazioni visualizzate sono una copia locale che potrebbe non essere aggiornata."
 
@@ -415,7 +415,7 @@ msgstr "Filtra messaggio"
 msgid "Name"
 msgstr "Nome"
 
-#: src/contest/Communication.tsx:86
+#: src/contest/Communication.tsx:82
 msgid "Network problem. Reconnecting..."
 msgstr "Problema di rete. Riconnessione in corso..."
 
@@ -427,7 +427,7 @@ msgstr "Nuovo annuncio"
 msgid "New announcement: {0}"
 msgstr "Nuovo annuncio: {0}"
 
-#: src/contest/Communication.tsx:113
+#: src/contest/Communication.tsx:109
 msgid "No announcements yet."
 msgstr "Ancora nessun annuncio."
 
@@ -533,7 +533,7 @@ msgstr "Nuova risposta!"
 
 #: src/communication/Navbar.tsx:24
 #: src/communication/Questions.tsx:46
-#: src/contest/Communication.tsx:118
+#: src/contest/Communication.tsx:114
 msgid "Questions"
 msgstr "Domande"
 
@@ -595,7 +595,7 @@ msgstr "Secondary (grigio)"
 msgid "Select a file with an extension"
 msgstr "Seleziona un file con un'estensione"
 
-#: src/contest/Communication.tsx:60
+#: src/contest/Communication.tsx:56
 msgid "Send"
 msgstr "Invia"
 
@@ -750,7 +750,7 @@ msgstr "La data inserita non può essere usata come data di inizio della gara. I
 msgid "The question must be at least {MIN_QUESTION_LENGTH} characters long."
 msgstr "La domanda deve essere lunga almeno {MIN_QUESTION_LENGTH} caratteri."
 
-#: src/contest/Communication.tsx:64
+#: src/contest/Communication.tsx:60
 msgid "The question will be sent to the staff, who will analyze it and try to answer as quickly as possible. You will receive a notification (if you enabled them) when the answer is available. Please be patient if the answer lags to arrive, and try to be respectful.<0/>You can ask for clarifications about the tasks, but the staff takes the authority to decide whether to answer or not."
 msgstr "La tua domanda verrà inviata allo staff che la analizzerà e cercherà di rispondere più velocemente possibile. Riceverai una notifica (se le hai abilitate) quando la risposta sarà disponibile. Cerca di essere paziente se la risposta ritarda ad arrivare, e cerca di mantenere un tono rispettoso.<0/>Puoi chiedere chiarimenti sui problemi, ma lo staff si riserva l'autorità di decidere a cosa rispondere."
 
@@ -832,7 +832,7 @@ msgstr "Puoi inviare <0>quante sottoposizioni vuoi</0>, ma riceverai file di inp
 msgid "You have not submitted yet."
 msgstr "Non hai ancora sottomesso nulla."
 
-#: src/contest/Communication.tsx:135
+#: src/contest/Communication.tsx:131
 msgid "You have to be logged in to ask a question."
 msgstr "Devi effettuare l'accesso per poter fare domande."
 
