@@ -1,24 +1,38 @@
-import React, { useCallback } from "react";
-import { Link, Route, Navigate } from "react-router-dom";
+import React from "react";
+import {
+  Link, Route, Navigate, useParams, Routes,
+} from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { Loading } from "src/components/Loading";
 import { TaskView } from "src/contest/task/TaskView";
 import { PackContextProvider } from "src/admin/PackContext";
 import { usePack } from "src/admin/hooks/usePack";
-import { StartedContest } from "src/types/contest";
+import { ContestData, StartedContest } from "src/types/contest";
 import { useCommunicationNotifier } from "src/hooks/useCommunication";
 import { LogoutButton } from "src/components/LogoutButton";
 import { Error } from "src/components/Error";
 import { SidebarView } from "./sidebar/SidebarView";
 import {
-  useContest, useActions, ContestContextProvider,
+  useContest,
+  useActions,
+  ContestContextProvider,
 } from "./ContestContext";
 import { ContestHome } from "./ContestHome";
 import { LoginView } from "./LoginView";
 import { useDetectInternet } from "./hooks/useDetectInternet";
 import { Communication } from "./Communication";
 import { Section } from "./help/Section";
+
+function RenderTask({ contest }: {contest: ContestData}) {
+  const { taskName } = useParams() as {taskName: string};
+  const startedContest = contest as StartedContest;
+  const task = startedContest.contest.tasks.find((t) => t.name === taskName);
+  if (!task) {
+    return <Trans>Task not found</Trans>;
+  }
+  return <TaskView task={task} userTask={startedContest.tasks[taskName]} />;
+}
 
 function ContestViewInternal() {
   const loadablePack = usePack();
@@ -36,15 +50,6 @@ function ContestViewInternal() {
   const loggedIn = isLoggedIn();
   if (loggedIn && contestLoadable.isLoading()) return <Loading />;
   const contest = contestLoadable.isReady() ? contestLoadable.value() : null;
-
-  const renderTask = (taskName: string) => {
-    const startedContest = contest as StartedContest;
-    const task = startedContest.contest.tasks.find((t) => t.name === taskName);
-    if (!task) {
-      return <Trans>Task not found</Trans>;
-    }
-    return <TaskView task={task} userTask={startedContest.tasks[taskName]} />;
-  };
 
   return (
     <>
@@ -67,31 +72,24 @@ function ContestViewInternal() {
       <div className="terry-body">
         <SidebarView />
         <main>
-          {contest && <Route path="/"><ContestHome /></Route>}
-          {(!loggedIn || contestLoadable.isError()) && <Route path="/"><LoginView /></Route>}
+          <Routes>
+            {contest && (
+              <Route path="/" element={<ContestHome />} />
+            )}
+            {(!loggedIn || contestLoadable.isError()) && (
+              <Route path="/" element={<LoginView />} />
+            )}
 
-          {
-            pack.sections?.map((section) => (
-              <Route
-                key={section.url}
-                path={`/sections/${section.url}`}
-              >
-                <Section section={section} />
-              </Route>
-            ))
-          }
+            {pack.sections?.map((section) => (
+              <Route key={section.url} path={`/sections/${section.url}`} element={<Section section={section} />} />
+            ))}
 
-          <Route path="/communication"><Communication /></Route>
+            <Route path="/communication" element={<Communication />} />
 
-          {contest && contest.contest.has_started && (
-            <Route path="/task/:taskName">
-              {/* TODO: fix this!!!!!!! */}
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/*
-              // @ts-ignore */}
-              {({ match }) => renderTask(match.params.taskName)}
-            </Route>
-          )}
+            {contest && contest.contest.has_started && (
+              <Route path="/task/:taskName" element={<RenderTask contest={contest} />} />
+            )}
+          </Routes>
         </main>
       </div>
     </>

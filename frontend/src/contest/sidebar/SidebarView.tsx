@@ -67,7 +67,7 @@ export function SidebarView() {
 
       <li className="divider-vertical" />
     </>
-  ), [contest, serverTime]);
+  ), [serverTime, afterEnd]);
 
   return (
     <nav className="bg-light sidebar">

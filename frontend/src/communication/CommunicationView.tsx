@@ -25,8 +25,8 @@ function App() {
       <Navbar />
       <div className="container">
         <Routes>
-          <Route path="/admin/communication/announcements"><Announcements /></Route>
-          <Route path="/admin/communication"><Home /></Route>
+          <Route path="/admin/communication/announcements" element={<Announcements />} />
+          <Route path="/admin/communication" element={<Home />} />
         </Routes>
       </div>
     </CommunicationContextProvider>
@@ -45,8 +45,8 @@ export function CommunicationView() {
       <ToastContainer />
       <Router>
         <Routes>
-          <Route path="/admin/communication/login"><Login /></Route>
-          <Route path="/admin/communication"><App /></Route>
+          <Route path="/admin/communication/login" element={<Login />} />
+          <Route path="/admin/communication" element={<App />} />
         </Routes>
       </Router>
     </>

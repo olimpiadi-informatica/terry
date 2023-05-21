@@ -121,7 +121,7 @@ export function CommunicationContextProvider({ children, token }: Props) {
     }).catch((response) => {
       notifyError(response);
     });
-  }, []);
+  }, [reload, token]);
 
   return (
     <CommunicationContext.Provider value={{

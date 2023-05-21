@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 import { LogoutButton } from "src/components/LogoutButton";
@@ -31,10 +31,12 @@ export function AdminView() {
       {renderNavBar()}
       <main>
         <AdminSummaryView />
-        <Route path="/admin/logs"><AdminLogsView /></Route>
-        <Route path="/admin/extra_time"><ContestExtraTimeView /></Route>
-        <Route path="/admin/users"><AdminUsersView /></Route>
-        <Route path="/admin/download_results"><DownloadResultsView /></Route>
+        <Routes>
+          <Route path="/admin/logs" element={<AdminLogsView />} />
+          <Route path="/admin/extra_time" element={<ContestExtraTimeView />} />
+          <Route path="/admin/users" element={<AdminUsersView />} />
+          <Route path="/admin/download_results" element={<DownloadResultsView />} />
+        </Routes>
       </main>
     </>
   );

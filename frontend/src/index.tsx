@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { TransProvider } from "src/i18n";
@@ -29,18 +29,19 @@ window.addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => 
   }
 });
 
-ReactDOM.render(
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(document.getElementById("root")!);
+root.render(
   <TransProvider>
     <React.Suspense fallback={<Loading />}>
       <ToastContainer />
       <Router>
         <Routes>
-          <Route path="/admin/communication"><CommunicationView /></Route>
-          <Route path="/admin"><PackView /></Route>
-          <Route><ContestView /></Route>
+          <Route path="/admin/communication/*" element={<CommunicationView />} />
+          <Route path="/admin/*" element={<PackView />} />
+          <Route path="*" element={<ContestView />} />
         </Routes>
       </Router>
     </React.Suspense>
   </TransProvider>,
-  document.getElementById("root"),
 );
