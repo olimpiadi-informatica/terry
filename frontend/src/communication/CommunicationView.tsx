@@ -18,15 +18,15 @@ export const useLogin = () => useLoginBase("communicationToken");
 
 function App() {
   const [token] = useLogin();
-  if (!token) return <Navigate to="/admin/communication/login" />;
+  if (!token) return <Navigate to="/admin/communication/login" replace />;
 
   return (
     <CommunicationContextProvider token={token}>
       <Navbar />
       <div className="container">
         <Routes>
-          <Route path="/admin/communication/announcements" element={<Announcements />} />
-          <Route path="/admin/communication" element={<Home />} />
+          <Route path="/announcements" element={<Announcements />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </div>
     </CommunicationContextProvider>
@@ -43,12 +43,10 @@ export function CommunicationView() {
   return (
     <>
       <ToastContainer />
-      <Router>
-        <Routes>
-          <Route path="/admin/communication/login" element={<Login />} />
-          <Route path="/admin/communication" element={<App />} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/*" element={<App />} />
+      </Routes>
     </>
   );
 }

@@ -46,7 +46,7 @@ function ContestViewInternal() {
   if (loadablePack.isError()) return <Error cause={loadablePack.error()} />;
 
   const pack = loadablePack.value();
-  if (!pack.uploaded) return <Navigate to="/admin" />;
+  if (!pack.uploaded) return <Navigate to="/admin" replace />;
   const loggedIn = isLoggedIn();
   if (loggedIn && contestLoadable.isLoading()) return <Loading />;
   const contest = contestLoadable.isReady() ? contestLoadable.value() : null;
@@ -84,10 +84,10 @@ function ContestViewInternal() {
               <Route key={section.url} path={`/sections/${section.url}`} element={<Section section={section} />} />
             ))}
 
-            <Route path="/communication" element={<Communication />} />
+            <Route path="/communication/*" element={<Communication />} />
 
             {contest && contest.contest.has_started && (
-              <Route path="/task/:taskName" element={<RenderTask contest={contest} />} />
+              <Route path="/task/:taskName/*" element={<RenderTask contest={contest} />} />
             )}
           </Routes>
         </main>

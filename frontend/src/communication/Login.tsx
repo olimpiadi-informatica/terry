@@ -9,7 +9,7 @@ export function Login() {
   const [token, login] = useLogin();
   const [newToken, setNewToken] = useState("");
 
-  if (token) return <Navigate to="/admin/communication" />;
+  if (token) return <Navigate to="/admin/communication" replace />;
 
   return (
     <div className="container">

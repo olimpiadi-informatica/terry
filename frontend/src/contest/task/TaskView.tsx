@@ -71,12 +71,12 @@ export function TaskView({ task, userTask }: Props) {
       </div>
       <Routes>
         <Route
-          path="/task/:taskName/submit/:inputId"
+          path="/submit/:inputId"
           element={<CreateSubmission task={task} userTask={userTask} />}
         />
-        <Route path="/task/:taskName/submissions" element={<SubmissionListView task={task} />} />
+        <Route path="/submissions" element={<SubmissionListView task={task} />} />
         <Route
-          path="/task/:taskName/submission/:submissionId"
+          path="/submission/:submissionId"
           element={<SubmissionReport task={task} />}
         />
       </Routes>

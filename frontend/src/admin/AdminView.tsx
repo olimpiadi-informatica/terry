@@ -32,10 +32,10 @@ export function AdminView() {
       <main>
         <AdminSummaryView />
         <Routes>
-          <Route path="/admin/logs" element={<AdminLogsView />} />
-          <Route path="/admin/extra_time" element={<ContestExtraTimeView />} />
-          <Route path="/admin/users" element={<AdminUsersView />} />
-          <Route path="/admin/download_results" element={<DownloadResultsView />} />
+          <Route path="logs" element={<AdminLogsView />} />
+          <Route path="extra_time" element={<ContestExtraTimeView />} />
+          <Route path="users" element={<AdminUsersView />} />
+          <Route path="download_results" element={<DownloadResultsView />} />
         </Routes>
       </main>
     </>

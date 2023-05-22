@@ -15,7 +15,7 @@ export function CreateSubmissionView({ inputId, task, userTask }: Props) {
   const currentInput = userTask.current_input;
   if (currentInput === null || currentInput.id !== inputId) {
     toast.error(t({ message: "Cannot submit for this input." }));
-    return <Navigate to={`/task/${task.name}`} />;
+    return <Navigate to={`/task/${task.name}`} replace />;
   }
 
   return <Submit task={task} currentInput={currentInput} />;
