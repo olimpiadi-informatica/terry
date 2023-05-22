@@ -88,7 +88,7 @@ class Utils:
             Utils.prefix = os.path.join(
                 tempfile.gettempdir(),
                 "terry-backend-tests",
-                datetime.datetime.utcnow().strftime("temp-%Y-%m-%d_%H-%M-%S"),
+                datetime.datetime.now(datetime.timezone.utc).strftime("temp-%Y-%m-%d_%H-%M-%S"),
             )
             os.makedirs(Utils.prefix, exist_ok=True)
         return Utils.prefix

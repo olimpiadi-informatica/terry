@@ -217,7 +217,7 @@ class TestAdminHandler(unittest.TestCase):
         out = self.admin_handler.start("now", admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
 
         start_time = dateutil.parser.parse(out["start_time"]).timestamp()
-        self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
+        self.assertTrue(start_time >= datetime.now(timezone.utc).timestamp() - 10)
 
         start_time_db = datetime.fromtimestamp(
             Database.get_meta_int("start_time", None), timezone.utc
@@ -229,7 +229,7 @@ class TestAdminHandler(unittest.TestCase):
         out = self.admin_handler.start("now", admin_token="ADMIN-TOKEN", _ip="1.2.3.4")
 
         start_time = dateutil.parser.parse(out["start_time"]).timestamp()
-        self.assertTrue(start_time >= datetime.utcnow().timestamp() - 10)
+        self.assertTrue(start_time >= datetime.now(timezone.utc).timestamp() - 10)
 
         start_time_db = datetime.fromtimestamp(
             Database.get_meta_int("start_time", None), timezone.utc

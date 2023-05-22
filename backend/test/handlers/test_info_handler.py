@@ -138,7 +138,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertIn("No such user", response)
 
     def test_get_user(self):
-        now = int(datetime.utcnow().timestamp())
+        now = int(datetime.now(timezone.utc).timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
 
@@ -157,7 +157,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual("inputid", res["tasks"]["poldo"]["current_input"]["id"])
 
     def test_get_user_windowed(self):
-        now = int(datetime.utcnow().timestamp())
+        now = int(datetime.now(timezone.utc).timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -174,7 +174,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_windowed_almost_finished(self):
-        now = int(datetime.utcnow().timestamp())
+        now = int(datetime.now(timezone.utc).timestamp())
         Database.set_meta("start_time", now - 90)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
@@ -191,7 +191,7 @@ class TestInfoHandler(unittest.TestCase):
         self.assertEqual(end_time, res["end_time"])
 
     def test_get_user_windowed_partial_window(self):
-        now = int(datetime.utcnow().timestamp())
+        now = int(datetime.now(timezone.utc).timestamp())
         Database.set_meta("start_time", now)
         Database.set_meta("contest_duration", 1000)
         Database.set_meta("window_duration", 100)
