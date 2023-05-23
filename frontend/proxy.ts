@@ -9,7 +9,7 @@ const bareBackend = process.env.BARE_BACKEND !== undefined;
 const siteEndpoint = "http://127.0.0.1:3000";
 const apiEndpoint = bareBackend
   ? "http://127.0.0.1:1234"
-  : "http://127.0.0.1:2000/api";
+  : "http://127.0.0.0:2000/api";
 const filesEndpoint = bareBackend
   ? "http://127.0.0.1:1235"
   : "http://127.0.0.1:2000/files";

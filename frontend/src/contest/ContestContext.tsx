@@ -2,7 +2,7 @@ import React, {
   ReactNode, useState, createContext, useContext, useMemo, useEffect, useCallback,
 } from "react";
 import { Duration, DateTime } from "luxon";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLogin } from "src/hooks/useLogin";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
@@ -53,12 +53,12 @@ export function ContestContextProvider({ children }: ContestContextProps) {
   const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
   const [contest, setContest] = useState<Loadable<ContestData>>(Loadable.loading());
   const [reloadContestHandle, reloadContest] = useTriggerUpdate();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const logout = useCallback(() => {
     doLogout();
-    history.push("/");
-  }, [doLogout, history]);
+    navigate("/");
+  }, [doLogout, navigate]);
 
   useEffect(() => {
     if (!token) {
@@ -80,7 +80,7 @@ export function ContestContextProvider({ children }: ContestContextProps) {
       });
   }, [token, logout, reloadContestHandle]);
 
-  const isLoggedIn = () => token !== null;
+  const isLoggedIn = useCallback(() => token !== null, [token]);
 
   return (
     <ContestContext.Provider

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "src/components/Modal.css";
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function Modal({ contentLabel, returnUrl, children }: Props) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <ReactModal
@@ -45,7 +45,7 @@ export function Modal({ contentLabel, returnUrl, children }: Props) {
           padding: "0px",
         },
       }}
-      onRequestClose={() => history.push(returnUrl)}
+      onRequestClose={() => navigate(returnUrl)}
     >
       {children}
     </ReactModal>

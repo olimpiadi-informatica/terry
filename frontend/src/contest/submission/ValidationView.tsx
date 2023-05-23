@@ -33,7 +33,7 @@ export function ValidationView({ output }: Props) {
         :
         {" "}
         <b>
-          <Select value={c.status} parsed="parsed" missing="missing" invalid="invalid" other="?" />
+          <Select value={c.status} _parsed_="parsed" _missing_="missing" _invalid_="invalid" other="?" />
         </b>
         <br />
         {"message" in c && <em>{c.message}</em>}

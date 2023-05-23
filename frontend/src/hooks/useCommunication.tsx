@@ -1,5 +1,5 @@
 import React, {
-  createContext, ReactNode, useContext, useEffect, useMemo, useState,
+  createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState,
 } from "react";
 import { t } from "@lingui/macro";
 import { notifyError } from "src/utils";
@@ -94,7 +94,7 @@ export function CommunicationContextProvider({ children, token }: Props) {
     return () => clearInterval(interval);
   }, [token, handle]);
 
-  const askQuestion = (question: string) => {
+  const askQuestion = useCallback((question: string) => {
     if (!token) throw new Error("You have to be logged in to ask a question");
     if (!client.communications) return Promise.reject();
 
@@ -108,9 +108,9 @@ export function CommunicationContextProvider({ children, token }: Props) {
         notifyError(response);
         throw response;
       });
-  };
+  }, [reload, token]);
 
-  const sendAnswer = (id: number, answer: string) => {
+  const sendAnswer = useCallback((id: number, answer: string) => {
     if (!client.communications) return Promise.reject();
     // eslint-disable-next-line no-alert
     if (!window.confirm("Are you sure?")) return Promise.reject();
@@ -121,7 +121,7 @@ export function CommunicationContextProvider({ children, token }: Props) {
     }).catch((response) => {
       notifyError(response);
     });
-  };
+  }, [reload, token]);
 
   return (
     <CommunicationContext.Provider value={{

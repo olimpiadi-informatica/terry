@@ -17,6 +17,7 @@ COPY frontend /frontend
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV SKIP_PREFLIGHT_CHECK=true
+ENV DISABLE_ESLINT_PLUGIN=true
 RUN yarn build
 
 

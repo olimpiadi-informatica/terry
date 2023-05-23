@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { DateTime } from "luxon";
-import ReactTooltip from "react-tooltip";
+import { Tooltip } from "react-tooltip";
 import { Trans, t } from "@lingui/macro";
 import { RelativeDate } from "src/components/RelativeDate";
 import { client } from "src/TerryClient";
@@ -40,15 +40,15 @@ export function SubmissionListView({ task }: Props) {
           </Link>
         </td>
         <td>
-          <ReactTooltip id={`input-${submission.id}`} place="top" type="dark" effect="solid">
+          <Tooltip id={`input-${submission.id}`} place="top" variant="dark">
             {inputBasename}
-          </ReactTooltip>
-          <ReactTooltip id={`source-${submission.id}`} place="top" type="dark" effect="solid">
+          </Tooltip>
+          <Tooltip id={`source-${submission.id}`} place="top" variant="dark">
             {sourceBasename}
-          </ReactTooltip>
-          <ReactTooltip id={`output-${submission.id}`} place="top" type="dark" effect="solid">
+          </Tooltip>
+          <Tooltip id={`output-${submission.id}`} place="top" variant="dark">
             {outputBasename}
-          </ReactTooltip>
+          </Tooltip>
 
           <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
             <a
@@ -57,8 +57,7 @@ export function SubmissionListView({ task }: Props) {
               aria-label={inputBasename}
               href={client.filesBaseURI + submission.input.path}
               download
-              data-tip
-              data-for={`input-${submission.id}`}
+              data-tooltip-id={`input-${submission.id}`}
             >
               <FontAwesomeIcon icon={faDownload} />
               {" "}
@@ -73,8 +72,7 @@ export function SubmissionListView({ task }: Props) {
               aria-label={sourceBasename}
               href={client.filesBaseURI + submission.source.path}
               download
-              data-tip
-              data-for={`source-${submission.id}`}
+              data-tooltip-id={`source-${submission.id}`}
             >
               <FontAwesomeIcon icon={faDownload} />
               {" "}
@@ -89,8 +87,7 @@ export function SubmissionListView({ task }: Props) {
               aria-label={outputBasename}
               href={client.filesBaseURI + submission.output.path}
               download
-              data-tip
-              data-for={`output-${submission.id}`}
+              data-tooltip-id={`output-${submission.id}`}
             >
               <FontAwesomeIcon icon={faDownload} />
               {" "}

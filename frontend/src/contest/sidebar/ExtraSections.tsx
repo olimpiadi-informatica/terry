@@ -2,6 +2,7 @@ import { Trans } from "@lingui/macro";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { usePack } from "src/admin/hooks/usePack";
+import classNames from "classnames";
 
 export function ExtraSections() {
   const pack = usePack().valueOr(null);
@@ -21,7 +22,7 @@ export function ExtraSections() {
       <li className="nav-item">
         {
           pack.sections.map((section) => (
-            <NavLink key={section.url} to={`/sections/${section.url}`} className="nav-link tasklist-item" activeClassName="active">
+            <NavLink key={section.url} to={`/sections/${section.url}`} className={({ isActive }) => classNames("nav-link tasklist-item", isActive && "active")}>
               {section.name}
             </NavLink>
           ))

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Object } from "core-js";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -130,7 +129,7 @@ export function AdminLogsView() {
                 key={lvl}
                 type="button"
                 className={["btn", level === lvl ? "active" : "", `btn-${obj.color}`].join(" ")}
-                onClick={() => setLevel(lvl)}
+                onClick={() => setLevel(lvl as LogLevel)}
               >
                 {lvl}
               </button>

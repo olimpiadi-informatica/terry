@@ -109,6 +109,12 @@ module.exports = {
         patterns: ["../*"],
       },
     ],
+
+    // https://eslint.org/docs/rules/no-unused-vars
+    "no-unused-vars": "off",
+
+    "react/destructuring-assignment": "off",
+    "react/jsx-no-constructed-context-values": "off",
   },
   settings: {
     react: {

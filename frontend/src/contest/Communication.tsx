@@ -75,15 +75,13 @@ export function Communication() {
     <>
       {
         errored && (
-          <>
-            <div className="float-right">
-              <small>
-                <abbr title={t`Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated.`}>
-                  <em><Trans>Network problem. Reconnecting...</Trans></em>
-                </abbr>
-              </small>
-            </div>
-          </>
+          <div className="float-right">
+            <small>
+              <abbr title={t`Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated.`}>
+                <em><Trans>Network problem. Reconnecting...</Trans></em>
+              </abbr>
+            </small>
+          </div>
         )
       }
       <h1>
@@ -126,11 +124,9 @@ export function Communication() {
             }
           </>
         ) : (
-          <>
-            <p>
-              <em><Trans>You have to be logged in to ask a question.</Trans></em>
-            </p>
-          </>
+          <p>
+            <em><Trans>You have to be logged in to ask a question.</Trans></em>
+          </p>
         )
       }
     </>

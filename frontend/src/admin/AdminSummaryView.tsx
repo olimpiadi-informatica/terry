@@ -114,20 +114,18 @@ export function AdminSummaryView() {
               )
             </li>
             <li>
-              <>
-                <Plural
-                  value={countUsersWithExtraTime()}
-                  _0="No user has extra time"
-                  one="# user has extra time"
-                  other="# users have extra time"
-                />
-                {" "}
-                (
-                <Link to="/admin/users">
-                  <Trans>show users</Trans>
-                </Link>
-                )
-              </>
+              <Plural
+                value={countUsersWithExtraTime()}
+                _0="No user has extra time"
+                one="# user has extra time"
+                other="# users have extra time"
+              />
+              {" "}
+              (
+              <Link to="/admin/users">
+                <Trans>show users</Trans>
+              </Link>
+              )
             </li>
           </ul>
         </div>

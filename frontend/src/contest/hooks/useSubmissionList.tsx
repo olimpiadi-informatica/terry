@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, createContext, ReactNode, useMemo, useContext,
+  useState, useEffect, createContext, ReactNode, useMemo, useContext, useCallback,
 } from "react";
 import { client } from "src/TerryClient";
 import { useToken } from "src/contest/ContestContext";
@@ -53,9 +53,9 @@ export function SubmissionListContextProvider({ children }: { children: ReactNod
     }
   }, [toUpdate, list, token]);
 
-  const reloadTask = (taskName: string) => {
+  const reloadTask = useCallback((taskName: string) => {
     setToUpdate([...toUpdate, taskName]);
-  };
+  }, [toUpdate]);
 
   return (
     <SubmissionListContext.Provider

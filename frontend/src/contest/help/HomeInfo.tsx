@@ -59,37 +59,35 @@ export function HomeInfo({ hasStarted, startTime }: Props) {
   );
 
   const renderNotStarted = () => (
-    <>
-      <div className="jumbotron">
-        <h1 className="text-center display-1">
-          <FontAwesomeIcon icon={faClock} />
-        </h1>
-        <div className="text-center">
-          {
-            startTime
-              ? (
-                <>
-                  <h3>
-                    <Countdown clock={() => serverTime()} end={startTime} afterEnd={() => <Loading />} />
-                  </h3>
-                  <p>
-                    <Trans>
-                      Scheduled start at
-                      <AbsoluteDate clock={() => serverTime()} date={startTime} />
-                      . This page will reload automatically.
-                    </Trans>
-                  </p>
-                </>
-              )
-              : (
-                <Trans>
-                  The contest has not started yet! Refresh this page when the contest has started to be able to login.
-                </Trans>
-              )
-          }
-        </div>
+    <div className="jumbotron">
+      <h1 className="text-center display-1">
+        <FontAwesomeIcon icon={faClock} />
+      </h1>
+      <div className="text-center">
+        {
+          startTime
+            ? (
+              <>
+                <h3>
+                  <Countdown clock={() => serverTime()} end={startTime} afterEnd={() => <Loading />} />
+                </h3>
+                <p>
+                  <Trans>
+                    Scheduled start at
+                    <AbsoluteDate clock={() => serverTime()} date={startTime} />
+                    . This page will reload automatically.
+                  </Trans>
+                </p>
+              </>
+            )
+            : (
+              <Trans>
+                The contest has not started yet! Refresh this page when the contest has started to be able to login.
+              </Trans>
+            )
+        }
       </div>
-    </>
+    </div>
   );
 
   return hasStarted ? renderStarted() : renderNotStarted();

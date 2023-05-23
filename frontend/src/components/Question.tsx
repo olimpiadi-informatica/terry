@@ -23,27 +23,25 @@ export function Question({ question, serverTime, canAnswer } : Props) {
   const sendAnswer = useSendAnswer();
 
   const renderAnswerForm = () => (
-    <>
-      <form onSubmit={(e) => { e.preventDefault(); sendAnswer(question.id, answer); }}>
-        <div className="form-group">
-          <textarea
-            className="form-control"
-            placeholder={t`Answer with Markdown`}
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-          />
-        </div>
-        <hr />
-        <h3><Trans>Preview</Trans></h3>
-        <Markdown source={answer} />
-        <hr />
-        <button type="submit" className="btn btn-primary">
-          <FontAwesomeIcon icon={faPaperPlane} />
-          {" "}
-          <Trans>Answer</Trans>
-        </button>
-      </form>
-    </>
+    <form onSubmit={(e) => { e.preventDefault(); sendAnswer(question.id, answer); }}>
+      <div className="form-group">
+        <textarea
+          className="form-control"
+          placeholder={t`Answer with Markdown`}
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+        />
+      </div>
+      <hr />
+      <h3><Trans>Preview</Trans></h3>
+      <Markdown source={answer} />
+      <hr />
+      <button type="submit" className="btn btn-primary">
+        <FontAwesomeIcon icon={faPaperPlane} />
+        {" "}
+        <Trans>Answer</Trans>
+      </button>
+    </form>
   );
 
   return (

@@ -2,14 +2,14 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Trans } from "@lingui/macro";
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useLogin } from "./CommunicationView";
 
 export function Login() {
   const [token, login] = useLogin();
   const [newToken, setNewToken] = useState("");
 
-  if (token) return <Redirect to="/admin/communication" />;
+  if (token) return <Navigate to="/admin/communication" replace />;
 
   return (
     <div className="container">
