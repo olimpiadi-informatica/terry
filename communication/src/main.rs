@@ -11,8 +11,10 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::Arc;
 use structopt::StructOpt;
+use teloxide::payloads::SendMessageSetters;
 use teloxide::requests::Requester;
-use teloxide::types::ChatId;
+use teloxide::types::{ChatId, ParseMode};
+use teloxide::utils::markdown::{bold, code_block, escape, italic};
 use teloxide::Bot;
 
 mod db;
@@ -99,11 +101,20 @@ pub struct AskQuestion {
 
 async fn send_telegram_notification(api: Arc<TelegramBotData>, question: db::Question) {
     if let Some((bot, channel, url)) = api.as_ref() {
-        let message = format!(
-            "*New question*\n_At {} UTC_\n\n```\n{}\n```\n{}",
-            question.date, question.content, url
-        );
-        if let Err(e) = bot.send_message(*channel, message).await {
+        let message = [
+            bold("New question"),
+            italic(&escape(&format!("At {} UTC", question.date))),
+            code_block(&question.content),
+            escape(url),
+        ]
+        .join("\n");
+
+        if let Err(e) = bot
+            .send_message(*channel, message)
+            .parse_mode(ParseMode::MarkdownV2)
+            .disable_web_page_preview(true)
+            .await
+        {
             error!("Failed to send telegram message: {:?}", e);
         }
     }
