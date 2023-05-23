@@ -2,16 +2,18 @@
 extern crate log;
 
 use actix_web::middleware::Logger;
-use actix_web::ResponseError;
 use actix_web::web::Data;
+use actix_web::ResponseError;
 use actix_web::{get, post, web, App, HttpResponse, HttpServer};
+use anyhow::Result;
 use core::fmt::Display;
-use failure::Fallible;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::Arc;
 use structopt::StructOpt;
-use telegram_bot::{types::requests::SendMessage, types::ChannelId, types::ParseMode, Api};
+use teloxide::requests::Requester;
+use teloxide::types::ChatId;
+use teloxide::Bot;
 
 mod db;
 
@@ -20,7 +22,7 @@ mod db;
 /// 0. The connected API
 /// 1. The ID of the channel where to post the notifications
 /// 2. The URL of the communication admin page
-type TelegramBotData = Option<(Api, ChannelId, String)>;
+type TelegramBotData = Option<(Bot, ChatId, String)>;
 
 /// An error occurred with a request.
 #[derive(Debug)]
@@ -96,15 +98,12 @@ pub struct AskQuestion {
 }
 
 async fn send_telegram_notification(api: Arc<TelegramBotData>, question: db::Question) {
-    if let Some((api, channel, url)) = api.as_ref() {
+    if let Some((bot, channel, url)) = api.as_ref() {
         let message = format!(
             "*New question*\n_At {} UTC_\n\n```\n{}\n```\n{}",
             question.date, question.content, url
         );
-        let mut message = SendMessage::new(channel, message);
-        message.parse_mode(ParseMode::Markdown);
-        message.disable_preview();
-        if let Err(e) = api.send(message).await {
+        if let Err(e) = bot.send_message(*channel, message).await {
             error!("Failed to send telegram message: {:?}", e);
         }
     }
@@ -139,7 +138,7 @@ async fn answer(
     path: web::Path<(String, i64)>,
     answer: web::Json<AnswerQuestion>,
 ) -> Result<HttpResponse, ServiceError> {
-    let (token,id) = path.into_inner();
+    let (token, id) = path.into_inner();
     let is_admin = db::is_admin(&db, token.clone()).await?;
     if !is_admin {
         return Ok(HttpResponse::Forbidden().json("You are not an admin"));
@@ -204,7 +203,7 @@ struct Opt {
 }
 
 #[actix_web::main]
-async fn main() -> Fallible<()> {
+async fn main() -> Result<()> {
     let opt = Opt::from_args();
     env_logger::init();
 
@@ -213,9 +212,9 @@ async fn main() -> Fallible<()> {
         Some(token) => {
             let url = opt.admin_url.expect("Missing --admin-url");
             let channel = opt.channel_id.expect("Missing --channel-id");
-            let channel = ChannelId::new(channel);
+            let channel = ChatId(channel);
             eprintln!("Using telegram bot with channel: {}", channel);
-            Some((Api::new(token), channel, url))
+            Some((Bot::new(token), channel, url))
         }
         _ => {
             eprintln!("The telegram bot is disabled");
