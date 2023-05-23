@@ -2,22 +2,22 @@ use crate::AddAnnouncement;
 use crate::AskQuestion;
 use actix_web::error::ErrorInternalServerError;
 use actix_web::web;
-use failure::Fallible;
+use anyhow::Result;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::Row;
 use rusqlite::params;
+use rusqlite::Row;
 use serde::Serialize;
 use std::path::Path;
 
 pub type Pool = r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>;
-pub type FallibleQuery<T> = std::result::Result<T, actix_web::Error>;
+pub type ResultQuery<T> = std::result::Result<T, actix_web::Error>;
 
 /// The schema of the database, executed at start to setup the tables.
 const SCHEMA: &str = include_str!("../schema.sql");
 
 /// Connect to the sqlite database at the provided path and return a connection
 /// pool to it.
-pub fn connect<P: AsRef<Path>>(path: P) -> Fallible<Pool> {
+pub fn connect<P: AsRef<Path>>(path: P) -> Result<Pool> {
     let manager =
         SqliteConnectionManager::file(path.as_ref()).with_init(|c| c.execute_batch(SCHEMA));
     Pool::new(manager).map_err(|e| e.into())
@@ -42,9 +42,9 @@ pub struct Announcement {
 }
 
 /// Fetch the list with all the announcements in the database, sorted by date.
-pub async fn list_announcements(pool: &Pool) -> FallibleQuery<Vec<Announcement>> {
+pub async fn list_announcements(pool: &Pool) -> ResultQuery<Vec<Announcement>> {
     let conn = pool.get();
-    web::block(move || -> Fallible<_> {
+    web::block(move || -> Result<_> {
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
@@ -112,10 +112,10 @@ impl Question {
 
 /// List all the questions from `token`. If `token` is an admin, all the
 /// questions are returned.
-pub async fn questions(pool: &Pool, token: String) -> FallibleQuery<Vec<Question>> {
+pub async fn questions(pool: &Pool, token: String) -> ResultQuery<Vec<Question>> {
     let admin = is_admin(pool, token.clone()).await?;
     let conn = pool.get();
-    web::block(move || -> Fallible<_> {
+    web::block(move || -> Result<_> {
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
@@ -137,9 +137,9 @@ pub async fn add_question(
     pool: &Pool,
     token: String,
     question: AskQuestion,
-) -> FallibleQuery<Question> {
+) -> ResultQuery<Question> {
     let conn = pool.get();
-    web::block(move || -> Fallible<_> {
+    web::block(move || -> Result<_> {
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
@@ -165,9 +165,9 @@ pub async fn add_question(
 
 /// Add a new announcement to the database. It is not checked that the token of
 /// the poster is not an admin.
-pub async fn add_announcement(pool: &Pool, announcement: AddAnnouncement) -> FallibleQuery<()> {
+pub async fn add_announcement(pool: &Pool, announcement: AddAnnouncement) -> ResultQuery<()> {
     let conn = pool.get();
-    web::block(move || -> Fallible<_> {
+    web::block(move || -> Result<_> {
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
@@ -190,9 +190,9 @@ pub async fn add_announcement(pool: &Pool, announcement: AddAnnouncement) -> Fal
 
 /// Checks if the `token` is an admin. If the token does not exists `false` is
 /// returned.
-pub async fn is_admin(pool: &Pool, token: String) -> FallibleQuery<bool> {
+pub async fn is_admin(pool: &Pool, token: String) -> ResultQuery<bool> {
     let conn = pool.get();
-    web::block(move || -> Fallible<_> {
+    web::block(move || -> Result<_> {
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
@@ -221,9 +221,9 @@ pub async fn answer_question(
     token: String,
     id: i64,
     answer: String,
-) -> FallibleQuery<bool> {
+) -> ResultQuery<bool> {
     let conn = pool.get();
-    web::block(move || -> Fallible<_> {
+    web::block(move || -> Result<_> {
         let conn = conn?;
         let mut stmt = conn.prepare(
             "
