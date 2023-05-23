@@ -104,6 +104,7 @@ async fn send_telegram_notification(api: Arc<TelegramBotData>, question: db::Que
         let message = [
             bold("New question"),
             italic(&escape(&format!("At {} UTC", question.date))),
+            "\n".to_owned(),
             code_block(&question.content),
             escape(url),
         ]
