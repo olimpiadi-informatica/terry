@@ -14,6 +14,8 @@ web_statementdir: /statements/secret/
 
 # Queue size for input generation
 queue_size: 64
+# Number of threads to use for input generation. -1 to use all cores
+num_worker_threads: -1
 
 # Number of proxies
 num_proxies: 0
