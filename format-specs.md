@@ -54,6 +54,7 @@ The `task.yaml` file inside the task root directory should be a YAML file with _
 | `name` | yes | `"poldo"` | The short name of the task (usually all lowercase, without spaces) |
 | `description` | yes | `"La dieta di Poldo"` | A longer name of the task (usually title-case) |
 | `max_score` | yes | `42` | Maximum score obtainable with a 100% correct solution of this task |
+| `submission_timeout` | no | `600` | If specified, the maximum time (in seconds) to submit a solution for an input |
 
 ## Contest metadata specification
 The `contest.yaml` file (actually `__users__/{username}.yaml`, where `{username}` is what's before the first `-` in the admin token) should follow this format:
