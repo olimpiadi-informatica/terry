@@ -7,6 +7,7 @@
 
 import unittest
 from unittest.mock import patch
+from datetime import datetime, timezone
 
 from werkzeug.exceptions import Forbidden, BadRequest
 
@@ -347,10 +348,7 @@ class TestContestHandler(unittest.TestCase):
         "terry.contest_manager.ContestManager.get_input",
         return_value=("inputid", "/path"),
     )
-    @patch(
-        "terry.contest_manager.ContestManager.get_input_expiry_date",
-        return_value=42,
-    )
+    @patch("terry.contest_manager.ContestManager.get_input_expiry_date")
     @patch("terry.storage_manager.StorageManager.get_file_size", return_value=42)
     def test_submit_after_timeout(self, g_f_s_mock, g_ied_mock, g_i_mock):
         Utils.start_contest()
@@ -368,6 +366,8 @@ class TestContestHandler(unittest.TestCase):
             "VALUES ('sourceid', 'inputid', '/source', 42)"
         )
 
+        g_ied_mock.return_value = datetime.now(timezone.utc).timestamp() - 1
+
         with self.assertRaises(Forbidden) as ex:
             self.handler.submit(
                 output_id="outputid", source_id="sourceid", _ip="1.1.1.1"
@@ -377,6 +377,60 @@ class TestContestHandler(unittest.TestCase):
             "The input file has expired",
             ex.exception.response.data.decode(),
         )
+
+    @patch(
+        "terry.contest_manager.ContestManager.get_input",
+        return_value=("inputid", "/path"),
+    )
+    @patch("terry.storage_manager.StorageManager.get_file_size", return_value=42)
+    def test_abandon_input(self, g_f_s_mock, g_i_mock):
+        Utils.start_contest()
+        self._insert_data(submission_timeout=20)
+        self.handler.generate_input(token="token", task="poldo", _ip="1.1.1.1")
+
+        Database.c.execute(
+            "INSERT INTO sources (id, input, path, size) "
+            "VALUES ('sourceid', 'inputid', '/source', 42)"
+        )
+
+        self.handler.abandon_input(input_id="inputid", _ip="1.1.1.1")
+
+        res = Database.get_user_task(token="token", task="poldo")
+
+        self.assertTrue("current_attempt" in res)
+        self.assertTrue(res["current_attempt"] is None)
+
+        # We should be able to create a new submission after abandoning the previous one
+        g_i_mock.return_value = ("inputid_2", "/path_2")
+
+        self.handler.generate_input(token="token", task="poldo", _ip="1.1.1.1")
+
+        Database.c.execute(
+            "INSERT INTO outputs (id, input, path, size, result) "
+            "VALUES ('outputid_2', 'inputid_2', '/output_2', 42,"
+            ":result)",
+            {"result": b'{"score":0.5,"feedback":{"a":1},' b'"validation":{"b":2}}'},
+        )
+        Database.c.execute(
+            "INSERT INTO sources (id, input, path, size) "
+            "VALUES ('sourceid_2', 'inputid_2', '/source_2', 42)"
+        )
+
+        response = self.handler.submit(
+            output_id="outputid_2", source_id="sourceid_2", _ip="1.1.1.1"
+        )
+        self.assertEqual("token", response["token"])
+        self.assertEqual("poldo", response["task"])
+        self.assertEqual(21, response["score"])
+        self.assertEqual("inputid_2", response["input"]["id"])
+        self.assertEqual("sourceid_2", response["source"]["id"])
+        self.assertEqual("outputid_2", response["output"]["id"])
+        self.assertEqual(1, response["feedback"]["a"])
+        self.assertEqual(2, response["output"]["validation"]["b"])
+
+        user_task = Database.get_user_task("token", "poldo")
+        self.assertEqual(21, user_task["score"])
+        self.assertEqual(response["id"], Database.get_submission(response["id"])["id"])
 
     def _insert_data(self, token="token", task="poldo", submission_timeout=None):
         try:
