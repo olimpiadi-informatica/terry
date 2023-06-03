@@ -18,7 +18,27 @@ msgstr ""
 msgid "(in minutes)"
 msgstr "(in minuti)"
 
-#: src/admin/AdminContestStatus.tsx:144
+#: src/admin/AdminSummaryView.tsx:103
+msgid "{0, plural, =0 {No extra time set} one {Contest duration was extended by # minute} other {Contest duration was extended by # minutes}}"
+msgstr "{0, plural, =0 {La gara non è stata estesa} one {La gara è stata estesa di # minuto} other {La gara è stata estesa di # minuti}}"
+
+#: src/admin/AdminSummaryView.tsx:117
+msgid "{0, plural, =0 {No user has extra time} one {# user has extra time} other {# users have extra time}}"
+msgstr "{0, plural, =0 {Nessuno studente ha tempo aggiuntivo} one {# studente ha tempo aggiuntivo} other {# studenti hanno tempo aggiuntivo}}"
+
+#: src/admin/AdminContestStatus.tsx:186
+msgid "{0, plural, one {plus # extra minute for some user} other {plus # extra minutes for some user}}"
+msgstr "{0, plural, one {più # minuto aggiuntivi per alcuni studenti} other {più # minuti aggiuntivi per alcuni studenti}}"
+
+#: src/contest/submission/ValidationView.tsx:36
+#~ msgid "{0, select, parsed {parsed} missing {missing} invalid {invalid} other {?}}"
+#~ msgstr "{0, select, parsed {trovato} missing {mancante} invalid {non valido} other {?}}"
+
+#: src/contest/submission/ValidationView.tsx:36
+msgid "{0, select, parsed_ {parsed} missing_ {missing} invalid_ {invalid} other {?}}"
+msgstr ""
+
+#: src/admin/AdminContestStatus.tsx:147
 msgid "<0>Be careful!</0>Once the contest starts it cannot be stopped!"
 msgstr "<0>Attenzione!</0> Una volta che la gara inizia non è più possibile fermarla!"
 
@@ -45,16 +65,16 @@ msgid "Admin token"
 msgstr "Admin token"
 
 #: src/communication/Announcements.tsx:13
-#: src/communication/Navbar.tsx:29
-#: src/contest/Communication.tsx:90
+#: src/communication/Navbar.tsx:28
+#: src/contest/Communication.tsx:88
 msgid "Announcements"
 msgstr "Annunci"
 
-#: src/components/Question.tsx:43
+#: src/components/Question.tsx:42
 msgid "Answer"
 msgstr "Rispondi"
 
-#: src/components/Question.tsx:31
+#: src/components/Question.tsx:30
 msgid "Answer with Markdown"
 msgstr "Rispondi con Markdown"
 
@@ -73,11 +93,11 @@ msgstr "Sei sicuro?"
 msgid "Ask a question"
 msgstr "Fai una domanda"
 
-#: src/admin/AdminContestStatus.tsx:69
+#: src/admin/AdminContestStatus.tsx:72
 msgid "Automatic start disabled"
 msgstr "Avvio automatico disabilitato"
 
-#: src/admin/AdminContestStatus.tsx:89
+#: src/admin/AdminContestStatus.tsx:92
 msgid "Automatic start updated"
 msgstr "Avvio automatico impostato"
 
@@ -100,7 +120,7 @@ msgstr "C++"
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/contest/Communication.tsx:81
+#: src/contest/Communication.tsx:80
 msgid "Cannot reach the communication server, your browser will try again automatically. The info shown are just a local copy that may be outdated."
 msgstr "Impossibile raggiungere il server delle comunicazioni, il tuo browser riproverà a connettersi automaticamente. Le informazioni visualizzate sono una copia locale che potrebbe non essere aggiornata."
 
@@ -108,11 +128,11 @@ msgstr "Impossibile raggiungere il server delle comunicazioni, il tuo browser ri
 msgid "Cannot submit for this input."
 msgstr "Impossibile sottomettere per questo input."
 
-#: src/admin/AdminLogsView.tsx:160
+#: src/admin/AdminLogsView.tsx:159
 msgid "Category"
 msgstr "Categoria"
 
-#: src/admin/AdminLogsView.tsx:140
+#: src/admin/AdminLogsView.tsx:139
 msgid "Category filter"
 msgstr "Filtra categoria"
 
@@ -124,14 +144,14 @@ msgstr "Modifica output"
 msgid "Change source"
 msgstr "Modifica sorgente"
 
-#: src/communication/Questions.tsx:66
+#: src/communication/Questions.tsx:65
 msgid "Clear"
 msgstr "Annulla"
 
-#: src/admin/AdminLogsView.tsx:178
+#: src/admin/AdminLogsView.tsx:177
 #: src/admin/AdminUsersView.tsx:128
 #: src/admin/ContestExtraTimeView.tsx:78
-#: src/contest/submission/SubmissionListView.tsx:162
+#: src/contest/submission/SubmissionListView.tsx:159
 #: src/contest/submission/SubmissionReportView.tsx:43
 msgid "Close"
 msgstr "Chiudi"
@@ -140,13 +160,26 @@ msgstr "Chiudi"
 msgid "CodeBlocks project"
 msgstr "Progetto CodeBlocks"
 
-#: src/contest/sidebar/SidebarView.tsx:86
+#: src/contest/sidebar/SidebarView.tsx:89
 msgid "Communication"
 msgstr "Comunicazioni"
 
-#: src/admin/AdminSummaryView.tsx:140
+#: src/admin/AdminSummaryView.tsx:138
 msgid "Communication system"
 msgstr "Sistema di comunicazione"
+
+#: src/contest/submission/submit/submissionLimits.ts:37
+#: src/contest/submission/submit/submissionLimits.ts:38
+#: src/contest/submission/submit/submissionLimits.ts:39
+#: src/contest/submission/submit/submissionLimits.ts:40
+#: src/contest/submission/submit/submissionLimits.ts:41
+#: src/contest/submission/submit/submissionLimits.ts:42
+msgid "Compiled binary"
+msgstr "Binario compilato"
+
+#: src/contest/submission/submit/submissionLimits.ts:69
+msgid "Compiled file"
+msgstr "File compilato"
 
 #: src/contest/submission/submit/submissionLimits.ts:47
 msgid "Compiled Java binary"
@@ -162,19 +195,6 @@ msgstr "Classe Java compilata"
 msgid "Compiled Python object"
 msgstr "Oggetto Python compilato"
 
-#: src/contest/submission/submit/submissionLimits.ts:37
-#: src/contest/submission/submit/submissionLimits.ts:38
-#: src/contest/submission/submit/submissionLimits.ts:39
-#: src/contest/submission/submit/submissionLimits.ts:40
-#: src/contest/submission/submit/submissionLimits.ts:41
-#: src/contest/submission/submit/submissionLimits.ts:42
-msgid "Compiled binary"
-msgstr "Binario compilato"
-
-#: src/contest/submission/submit/submissionLimits.ts:69
-msgid "Compiled file"
-msgstr "File compilato"
-
 #: src/contest/submission/submit/submissionLimits.ts:51
 #: src/contest/submission/submit/submissionLimits.ts:52
 #: src/contest/submission/submit/submissionLimits.ts:53
@@ -188,24 +208,24 @@ msgstr "Archivio compresso"
 msgid "Content"
 msgstr "Contenuto"
 
-#: src/admin/AdminContestStatus.tsx:223
+#: src/admin/AdminContestStatus.tsx:224
 msgid "Contest ended at"
 msgstr "La gara è finita il"
 
-#: src/admin/AdminContestStatus.tsx:230
+#: src/admin/AdminContestStatus.tsx:231
 msgid "Contest ended for everyone at"
 msgstr "La gara è finita per tutti il"
 
-#: src/admin/AdminContestStatus.tsx:170
-#: src/admin/AdminContestStatus.tsx:218
+#: src/admin/AdminContestStatus.tsx:172
+#: src/admin/AdminContestStatus.tsx:219
 msgid "Contest started at"
 msgstr "La gara è iniziata il"
 
-#: src/admin/AdminContestStatus.tsx:130
+#: src/admin/AdminContestStatus.tsx:133
 msgid "Contest started successfully"
 msgstr "Gara avviata con successo"
 
-#: src/admin/AdminContestStatus.tsx:304
+#: src/admin/AdminContestStatus.tsx:305
 msgid "Contest status"
 msgstr "Stato della gara"
 
@@ -213,6 +233,10 @@ msgstr "Stato della gara"
 #: src/admin/AdminUsersView.tsx:86
 msgid "Contestants"
 msgstr "Partecipanti"
+
+#: src/contest/submission/FeedbackView.tsx:34
+msgid "correct"
+msgstr "corretto"
 
 #: src/admin/DownloadResultsView.tsx:36
 msgid "Creating final zip..."
@@ -222,7 +246,7 @@ msgstr "Creazione zip finale..."
 msgid "Danger (red)"
 msgstr "Danger (rosso)"
 
-#: src/admin/AdminSummaryView.tsx:153
+#: src/admin/AdminSummaryView.tsx:151
 msgid "Danger zone"
 msgstr "Zona pericolosa"
 
@@ -234,9 +258,9 @@ msgstr "Dark (grigio)"
 msgid "Dart"
 msgstr "Dart"
 
-#: src/admin/AdminLogsView.tsx:157
+#: src/admin/AdminLogsView.tsx:156
 #: src/contest/submission/FeedbackView.tsx:45
-#: src/contest/submission/SubmissionListView.tsx:127
+#: src/contest/submission/SubmissionListView.tsx:124
 msgid "Date"
 msgstr "Data"
 
@@ -252,11 +276,11 @@ msgstr "Linguaggio rilevato:"
 msgid "Dev-Cpp project"
 msgstr "Progetto di Dev-Cpp"
 
-#: src/contest/submission/SubmissionListView.tsx:130
+#: src/contest/submission/SubmissionListView.tsx:127
 msgid "Download"
 msgstr "Download"
 
-#: src/admin/AdminContestStatus.tsx:241
+#: src/admin/AdminContestStatus.tsx:242
 #: src/admin/DownloadResultsView.tsx:46
 #: src/admin/DownloadResultsView.tsx:57
 msgid "Download contest results"
@@ -278,7 +302,7 @@ msgstr "Errore"
 msgid "Excel document"
 msgstr "Documento Excel"
 
-#: src/contest/sidebar/ExtraSections.tsx:17
+#: src/contest/sidebar/ExtraSections.tsx:18
 msgid "Extra material"
 msgstr "Materiale extra"
 
@@ -325,10 +349,6 @@ msgstr "File di sessione di Free Pascal Lazarus"
 msgid "Go"
 msgstr "Go"
 
-#: src/admin/AdminUsersView.tsx:108
-msgid "IP"
-msgstr "IP"
-
 #: src/contest/submission/submit/submissionLimits.ts:75
 #: src/contest/submission/submit/submissionLimits.ts:76
 #: src/contest/submission/submit/submissionLimits.ts:77
@@ -342,9 +362,13 @@ msgstr "Immagine"
 msgid "Info (teal)"
 msgstr "Info (azzurro)"
 
-#: src/contest/submission/SubmissionListView.tsx:66
+#: src/contest/submission/SubmissionListView.tsx:65
 msgid "Input file"
 msgstr "File di input"
+
+#: src/admin/AdminUsersView.tsx:108
+msgid "IP"
+msgstr "IP"
 
 #: src/admin/AdminSummaryView.tsx:77
 msgid "Issue last detected"
@@ -374,11 +398,11 @@ msgstr "Ultima sottoposizione:"
 msgid "Last update:"
 msgstr "Ultima modifica:"
 
-#: src/admin/AdminLogsView.tsx:163
+#: src/admin/AdminLogsView.tsx:162
 msgid "Level"
 msgstr "Livello"
 
-#: src/admin/AdminLogsView.tsx:68
+#: src/admin/AdminLogsView.tsx:67
 msgid "Loading..."
 msgstr "Caricamento..."
 
@@ -390,7 +414,7 @@ msgstr "Accedi"
 #: src/communication/Login.tsx:16
 #: src/communication/Login.tsx:25
 #: src/contest/LoginView.tsx:59
-#: src/contest/sidebar/SidebarView.tsx:76
+#: src/contest/sidebar/SidebarView.tsx:79
 msgid "Login"
 msgstr "Accedi"
 
@@ -398,16 +422,16 @@ msgstr "Accedi"
 msgid "Logout"
 msgstr "Logout"
 
-#: src/admin/AdminLogsView.tsx:116
-#: src/admin/AdminLogsView.tsx:119
+#: src/admin/AdminLogsView.tsx:115
+#: src/admin/AdminLogsView.tsx:118
 msgid "Logs"
 msgstr "Logs"
 
-#: src/admin/AdminLogsView.tsx:166
+#: src/admin/AdminLogsView.tsx:165
 msgid "Message"
 msgstr "Messaggio"
 
-#: src/admin/AdminLogsView.tsx:146
+#: src/admin/AdminLogsView.tsx:145
 msgid "Message filter"
 msgstr "Filtra messaggio"
 
@@ -415,7 +439,7 @@ msgstr "Filtra messaggio"
 msgid "Name"
 msgstr "Nome"
 
-#: src/contest/Communication.tsx:82
+#: src/contest/Communication.tsx:81
 msgid "Network problem. Reconnecting..."
 msgstr "Problema di rete. Riconnessione in corso..."
 
@@ -427,7 +451,7 @@ msgstr "Nuovo annuncio"
 msgid "New announcement: {0}"
 msgstr "Nuovo annuncio: {0}"
 
-#: src/contest/Communication.tsx:109
+#: src/contest/Communication.tsx:107
 msgid "No announcements yet."
 msgstr "Ancora nessun annuncio."
 
@@ -435,7 +459,7 @@ msgstr "Ancora nessun annuncio."
 msgid "No issue detected"
 msgstr "Nessun problema rilevato"
 
-#: src/admin/AdminLogsView.tsx:79
+#: src/admin/AdminLogsView.tsx:78
 msgid "No messages yet"
 msgstr "Ancora nessun messaggio"
 
@@ -443,7 +467,7 @@ msgstr "Ancora nessun messaggio"
 msgid "No new questions"
 msgstr "Nessuna nuova domanda"
 
-#: src/communication/Questions.tsx:74
+#: src/communication/Questions.tsx:72
 msgid "No questions"
 msgstr "Nessuna domanda"
 
@@ -451,7 +475,7 @@ msgstr "Nessuna domanda"
 msgid "Not answered"
 msgstr "Senza risposta"
 
-#: src/components/Question.tsx:77
+#: src/components/Question.tsx:75
 msgid "Not answered yet."
 msgstr "Ancora senza risposta."
 
@@ -463,7 +487,7 @@ msgstr "Nella parte sinistra di questa pagina trovi la lista dei problemi, premi
 msgid "OpenDocument document"
 msgstr "Documento OpenDocument"
 
-#: src/contest/submission/SubmissionListView.tsx:98
+#: src/contest/submission/SubmissionListView.tsx:95
 msgid "Output file"
 msgstr "File di output"
 
@@ -475,14 +499,6 @@ msgstr "Info sull'output"
 msgid "Output file..."
 msgstr "File di output..."
 
-#: src/contest/submission/submit/submissionLimits.ts:57
-msgid "PDF file"
-msgstr "File PDF"
-
-#: src/contest/submission/submit/submissionLimits.ts:23
-msgid "PHP"
-msgstr "PHP"
-
 #: src/contest/submission/submit/submissionLimits.ts:74
 msgid "Pages document"
 msgstr "Documento Pages"
@@ -491,6 +507,14 @@ msgstr "Documento Pages"
 #: src/contest/submission/submit/submissionLimits.ts:25
 msgid "Pascal"
 msgstr "Pascal"
+
+#: src/contest/submission/submit/submissionLimits.ts:57
+msgid "PDF file"
+msgstr "File PDF"
+
+#: src/contest/submission/submit/submissionLimits.ts:23
+msgid "PHP"
+msgstr "PHP"
 
 #: src/contest/LoginView.tsx:35
 msgid "Please login"
@@ -501,7 +525,7 @@ msgid "Please select the contest file..."
 msgstr "Seleziona il pacchetto di gara..."
 
 #: src/communication/NewAnnouncement.tsx:57
-#: src/components/Question.tsx:37
+#: src/components/Question.tsx:36
 msgid "Preview"
 msgstr "Anteprima"
 
@@ -531,26 +555,22 @@ msgstr "Python"
 msgid "Question answered!"
 msgstr "Nuova risposta!"
 
-#: src/communication/Navbar.tsx:24
+#: src/communication/Navbar.tsx:23
 #: src/communication/Questions.tsx:46
-#: src/contest/Communication.tsx:114
+#: src/contest/Communication.tsx:112
 msgid "Questions"
 msgstr "Domande"
 
-#: src/contest/sidebar/SidebarView.tsx:91
+#: src/contest/sidebar/SidebarView.tsx:94
 msgid "Questions and Announcements"
 msgstr "Domande e annunci"
 
-#: src/admin/AdminSummaryView.tsx:156
-msgid "RESET"
-msgstr "RESET"
-
-#: src/admin/AdminContestStatus.tsx:176
-#: src/contest/sidebar/SidebarView.tsx:38
+#: src/admin/AdminContestStatus.tsx:178
+#: src/contest/sidebar/SidebarView.tsx:45
 msgid "Remaining time"
 msgstr "Tempo rimanente"
 
-#: src/admin/AdminContestStatus.tsx:199
+#: src/admin/AdminContestStatus.tsx:201
 msgid "Remaining time for some participant"
 msgstr "Tempo rimanente per alcuni partecipanti"
 
@@ -566,6 +586,10 @@ msgstr "Richiedi nuovo input"
 msgid "Requesting..."
 msgstr "Generazione..."
 
+#: src/admin/AdminSummaryView.tsx:154
+msgid "RESET"
+msgstr "RESET"
+
 #: src/contest/submission/submit/submissionLimits.ts:31
 msgid "Ruby"
 msgstr "Ruby"
@@ -574,12 +598,12 @@ msgstr "Ruby"
 msgid "Rust"
 msgstr "Rust"
 
-#: src/contest/help/HomeInfo.tsx:76
+#: src/contest/help/HomeInfo.tsx:75
 msgid "Scheduled start at<0/>. This page will reload automatically."
 msgstr "Inizio previsto alle <0/>. Questa pagina si ricaricherà automaticamente."
 
 #: src/contest/submission/FeedbackView.tsx:52
-#: src/contest/submission/SubmissionListView.tsx:133
+#: src/contest/submission/SubmissionListView.tsx:130
 msgid "Score"
 msgstr "Punteggio"
 
@@ -599,10 +623,14 @@ msgstr "Seleziona un file con un'estensione"
 msgid "Send"
 msgstr "Invia"
 
-#: src/admin/AdminContestStatus.tsx:106
+#: src/admin/AdminContestStatus.tsx:109
 #: src/admin/AdminUsersView.tsx:52
 msgid "Set"
 msgstr "Imposta"
+
+#: src/admin/AdminSummaryView.tsx:112
+msgid "set extra time"
+msgstr "imposta tempo aggiuntivo"
 
 #: src/admin/ContestExtraTimeView.tsx:83
 msgid "Set extra time"
@@ -612,7 +640,16 @@ msgstr "Imposta tempo aggiuntivo"
 msgid "Severity"
 msgstr "Severità"
 
-#: src/communication/Questions.tsx:55
+#: src/admin/AdminSummaryView.tsx:71
+#: src/admin/AdminSummaryView.tsx:86
+msgid "show log"
+msgstr "mostra log"
+
+#: src/admin/AdminSummaryView.tsx:126
+msgid "show users"
+msgstr "mostra utenti"
+
+#: src/communication/Questions.tsx:54
 msgid "Showing only the questions of<0>{filter}</0>"
 msgstr "Visualizzate solo le domande di <0>{filter}</0>"
 
@@ -620,7 +657,7 @@ msgstr "Visualizzate solo le domande di <0>{filter}</0>"
 msgid "Size:"
 msgstr "Dimensione"
 
-#: src/contest/submission/SubmissionListView.tsx:82
+#: src/contest/submission/SubmissionListView.tsx:80
 msgid "Source file"
 msgstr "Sorgente"
 
@@ -632,24 +669,24 @@ msgstr "Informazioni sorgente"
 msgid "Source file..."
 msgstr "Sorgente..."
 
-#: src/admin/AdminContestStatus.tsx:139
+#: src/admin/AdminContestStatus.tsx:142
 msgid "Start"
 msgstr "Avvia"
 
-#: src/admin/AdminContestStatus.tsx:94
+#: src/admin/AdminContestStatus.tsx:97
 msgid "Start automatically the contest"
 msgstr "Avvia automaticamente la gara"
 
-#: src/admin/AdminContestStatus.tsx:134
+#: src/admin/AdminContestStatus.tsx:137
 msgid "Start the contest immediately"
 msgstr "Avvia la gara adesso"
 
-#: src/contest/submission/SubmissionListView.tsx:144
+#: src/contest/submission/SubmissionListView.tsx:141
 #: src/contest/submission/SubmissionReportView.tsx:26
 msgid "Submission"
 msgstr "Sottoposizione"
 
-#: src/contest/submission/SubmissionListView.tsx:147
+#: src/contest/submission/SubmissionListView.tsx:144
 msgid "Submission for"
 msgstr "Sottoposizione per"
 
@@ -673,15 +710,15 @@ msgstr "Cognome"
 msgid "System status"
 msgstr "Stato del sistema"
 
-#: src/contest/ContestView.tsx:44
+#: src/contest/ContestView.tsx:32
 msgid "Task not found"
 msgstr "Problema non trovato"
 
-#: src/contest/sidebar/SidebarView.tsx:56
+#: src/contest/sidebar/SidebarView.tsx:59
 msgid "Tasks"
 msgstr "Problemi"
 
-#: src/communication/Navbar.tsx:19
+#: src/communication/Navbar.tsx:18
 msgid "Terry Communications"
 msgstr "Terry Communications"
 
@@ -693,24 +730,24 @@ msgstr "File di testo"
 msgid "The answer to one of your questions got updated"
 msgstr "La risposta ad una tua domanda è stata aggiornata"
 
-#: src/admin/AdminSummaryView.tsx:142
+#: src/admin/AdminSummaryView.tsx:140
 msgid "The communication system is enabled for this contest."
 msgstr "Il sistema di comunicazione è attivo per questa gara."
 
-#: src/communication/CommunicationView.tsx:42
+#: src/communication/CommunicationView.tsx:39
 #: src/contest/Communication.tsx:29
 msgid "The communication system is not available for this contest."
 msgstr "Il sistema di comunicazione non è disponibile per questa gara."
 
-#: src/admin/AdminContestStatus.tsx:58
+#: src/admin/AdminContestStatus.tsx:61
 msgid "The contest has not started yet!"
 msgstr "La gara non è ancora iniziata!"
 
-#: src/contest/help/HomeInfo.tsx:85
+#: src/contest/help/HomeInfo.tsx:84
 msgid "The contest has not started yet! Refresh this page when the contest has started to be able to login."
 msgstr "La gara non è ancora iniziata! Per connetterti ricarica questa pagina quando la gara sarà iniziata."
 
-#: src/contest/sidebar/SidebarView.tsx:46
+#: src/contest/sidebar/SidebarView.tsx:23
 msgid "The contest is finished"
 msgstr "La gara è terminata"
 
@@ -718,11 +755,11 @@ msgstr "La gara è terminata"
 msgid "The contest is finished, you must now download the zip containing all the contest data. This zip must then be sent to the committee."
 msgstr "La gara è terminata, devi adesso scaricare l'archivio zip contenente tutti i dati della gara. Questo zip dovrà essere poi spedito al comitato."
 
-#: src/admin/AdminContestStatus.tsx:63
+#: src/admin/AdminContestStatus.tsx:66
 msgid "The contest will start automatically at"
 msgstr "La gara inizierà automaticamente alle"
 
-#: src/admin/AdminContestStatus.tsx:110
+#: src/admin/AdminContestStatus.tsx:113
 msgid "The contest would start"
 msgstr "La gara inizierebbe"
 
@@ -742,7 +779,7 @@ msgstr "Il file che hai selezionato non è consentito, seleziona il sorgente del
 msgid "The file you selected is too big ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 msgstr "Il file che hai selezionato è troppo grande ({size} bytes > {MAX_SOURCE_SIZE} bytes)"
 
-#: src/admin/AdminContestStatus.tsx:118
+#: src/admin/AdminContestStatus.tsx:121
 msgid "The provided date cannot be used as start time for the contest. Please set a date in the future."
 msgstr "La data inserita non può essere usata come data di inizio della gara. Inserisci una data nel futuro."
 
@@ -765,6 +802,10 @@ msgstr "Questo input scadrà:"
 #: src/communication/NewAnnouncement.tsx:39
 msgid "Title"
 msgstr "Titolo"
+
+#: src/admin/AdminContestStatus.tsx:81
+msgid "to the scheduled start"
+msgstr "all'inizio della gara"
 
 #: src/admin/AdminUsersView.tsx:105
 #: src/contest/LoginView.tsx:46
@@ -792,7 +833,15 @@ msgstr "Carica soluzione"
 msgid "Usage guide"
 msgstr "Guida"
 
-#: src/admin/AdminSummaryView.tsx:144
+#: src/contest/task/LastSubmission.tsx:31
+msgid "view all submissions"
+msgstr "tutte le sottoposizioni"
+
+#: src/contest/submission/SubmissionListView.tsx:39
+msgid "view details"
+msgstr "dettagli"
+
+#: src/admin/AdminSummaryView.tsx:142
 msgid "Visit"
 msgstr "Visita"
 
@@ -816,6 +865,10 @@ msgstr "Warning (giallo)"
 msgid "Word document"
 msgstr "Documento Word"
 
+#: src/contest/submission/FeedbackView.tsx:34
+msgid "wrong"
+msgstr "errato"
+
 #: src/contest/submission/submit/submissionLimits.ts:45
 msgid "XML file"
 msgstr "File XML"
@@ -828,11 +881,11 @@ msgstr "Puoi impostare del tempo aggiuntivo per tutti i partecipanti in caso di 
 msgid "You can submit<0>as many times as you want</0>, but you will have a different input every time. When you make a submission remember to send the correct source file and the output corresponding to the last generated input. When you have uploaded your files<1>remember to submit</1>them by clicking the green button!"
 msgstr "Puoi inviare <0>quante sottoposizioni vuoi</0>, ma riceverai file di input ogni volta diversi. Quando fai una sottoposizione ricorda di inviare il file sorgente corretto e il file di output relativo all'ultimo input generato. Quando carichi i due file <1>ricorda di inviarli</1> premendo il pulsante verde!"
 
-#: src/contest/submission/SubmissionListView.tsx:115
+#: src/contest/submission/SubmissionListView.tsx:112
 msgid "You have not submitted yet."
 msgstr "Non hai ancora sottomesso nulla."
 
-#: src/contest/Communication.tsx:131
+#: src/contest/Communication.tsx:128
 msgid "You have to be logged in to ask a question."
 msgstr "Devi effettuare l'accesso per poter fare domande."
 
@@ -844,55 +897,6 @@ msgstr "Hai selezionato un file con un'estensione sconosciuta. Questa sottoposiz
 msgid "You selected an empty file"
 msgstr "Hai selezionato un file vuoto"
 
-#: src/contest/sidebar/SidebarView.tsx:24
+#: src/contest/sidebar/SidebarView.tsx:31
 msgid "Your score"
 msgstr "Punteggio"
-
-#: src/contest/submission/FeedbackView.tsx:34
-msgid "correct"
-msgstr "corretto"
-
-#: src/admin/AdminSummaryView.tsx:112
-msgid "set extra time"
-msgstr "imposta tempo aggiuntivo"
-
-#: src/admin/AdminSummaryView.tsx:71
-#: src/admin/AdminSummaryView.tsx:86
-msgid "show log"
-msgstr "mostra log"
-
-#: src/admin/AdminSummaryView.tsx:127
-msgid "show users"
-msgstr "mostra utenti"
-
-#: src/admin/AdminContestStatus.tsx:78
-msgid "to the scheduled start"
-msgstr "all'inizio della gara"
-
-#: src/contest/task/LastSubmission.tsx:31
-msgid "view all submissions"
-msgstr "tutte le sottoposizioni"
-
-#: src/contest/submission/SubmissionListView.tsx:39
-msgid "view details"
-msgstr "dettagli"
-
-#: src/contest/submission/FeedbackView.tsx:34
-msgid "wrong"
-msgstr "errato"
-
-#: src/admin/AdminSummaryView.tsx:103
-msgid "{0, plural, =0 {No extra time set} one {Contest duration was extended by # minute} other {Contest duration was extended by # minutes}}"
-msgstr "{0, plural, =0 {La gara non è stata estesa} one {La gara è stata estesa di # minuto} other {La gara è stata estesa di # minuti}}"
-
-#: src/admin/AdminSummaryView.tsx:118
-msgid "{0, plural, =0 {No user has extra time} one {# user has extra time} other {# users have extra time}}"
-msgstr "{0, plural, =0 {Nessuno studente ha tempo aggiuntivo} one {# studente ha tempo aggiuntivo} other {# studenti hanno tempo aggiuntivo}}"
-
-#: src/admin/AdminContestStatus.tsx:184
-msgid "{0, plural, one {plus # extra minute for some user} other {plus # extra minutes for some user}}"
-msgstr "{0, plural, one {più # minuto aggiuntivi per alcuni studenti} other {più # minuti aggiuntivi per alcuni studenti}}"
-
-#: src/contest/submission/ValidationView.tsx:36
-msgid "{0, select, parsed {parsed} missing {missing} invalid {invalid} other {?}}"
-msgstr "{0, select, parsed {trovato} missing {mancante} invalid {non valido} other {?}}"
