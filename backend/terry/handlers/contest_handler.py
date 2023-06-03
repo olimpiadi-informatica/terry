@@ -9,6 +9,7 @@
 import json
 import sqlite3
 import time
+from datetime import datetime, timezone
 
 from werkzeug.exceptions import Forbidden, BadRequest
 
@@ -91,7 +92,7 @@ class ContestHandler(BaseHandler):
             )
 
         expiry_date = ContestManager.get_input_expiry_date(input)
-        if expiry_date is not None and time.time() > expiry_date:
+        if expiry_date is not None and datetime.now(timezone.utc).timestamp() > expiry_date:
             Logger.info(
                 "UPLOAD",
                 "User %s tried to submit for input %s too late"

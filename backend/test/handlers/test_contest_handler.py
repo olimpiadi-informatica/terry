@@ -306,14 +306,86 @@ class TestContestHandler(unittest.TestCase):
         self.assertEqual(21, user_task["score"])
         self.assertEqual(response["id"], Database.get_submission(response["id"])["id"])
 
-    def _insert_data(self, token="token", task="poldo"):
+    @patch(
+        "terry.contest_manager.ContestManager.get_input",
+        return_value=("inputid", "/path"),
+    )
+    @patch("terry.storage_manager.StorageManager.get_file_size", return_value=42)
+    def test_submit_before_timeout(self, g_f_s_mock, g_i_mock):
+        Utils.start_contest()
+        self._insert_data(submission_timeout=10)
+        self.handler.generate_input(token="token", task="poldo", _ip="1.1.1.1")
+
+        Database.c.execute(
+            "INSERT INTO outputs (id, input, path, size, result) "
+            "VALUES ('outputid', 'inputid', '/output', 42,"
+            ":result)",
+            {"result": b'{"score":0.5,"feedback":{"a":1},' b'"validation":{"b":2}}'},
+        )
+        Database.c.execute(
+            "INSERT INTO sources (id, input, path, size) "
+            "VALUES ('sourceid', 'inputid', '/source', 42)"
+        )
+
+        response = self.handler.submit(
+            output_id="outputid", source_id="sourceid", _ip="1.1.1.1"
+        )
+        self.assertEqual("token", response["token"])
+        self.assertEqual("poldo", response["task"])
+        self.assertEqual(21, response["score"])
+        self.assertEqual("inputid", response["input"]["id"])
+        self.assertEqual("sourceid", response["source"]["id"])
+        self.assertEqual("outputid", response["output"]["id"])
+        self.assertEqual(1, response["feedback"]["a"])
+        self.assertEqual(2, response["output"]["validation"]["b"])
+
+        user_task = Database.get_user_task("token", "poldo")
+        self.assertEqual(21, user_task["score"])
+        self.assertEqual(response["id"], Database.get_submission(response["id"])["id"])
+
+    @patch(
+        "terry.contest_manager.ContestManager.get_input",
+        return_value=("inputid", "/path"),
+    )
+    @patch(
+        "terry.contest_manager.ContestManager.get_input_expiry_date",
+        return_value=42,
+    )
+    @patch("terry.storage_manager.StorageManager.get_file_size", return_value=42)
+    def test_submit_after_timeout(self, g_f_s_mock, g_ied_mock, g_i_mock):
+        Utils.start_contest()
+        self._insert_data(submission_timeout=10)
+        self.handler.generate_input(token="token", task="poldo", _ip="1.1.1.1")
+
+        Database.c.execute(
+            "INSERT INTO outputs (id, input, path, size, result) "
+            "VALUES ('outputid', 'inputid', '/output', 42,"
+            ":result)",
+            {"result": b'{"score":0.5,"feedback":{"a":1},' b'"validation":{"b":2}}'},
+        )
+        Database.c.execute(
+            "INSERT INTO sources (id, input, path, size) "
+            "VALUES ('sourceid', 'inputid', '/source', 42)"
+        )
+
+        with self.assertRaises(Forbidden) as ex:
+            self.handler.submit(
+                output_id="outputid", source_id="sourceid", _ip="1.1.1.1"
+            )
+
+        self.assertIn(
+            "The input file has expired",
+            ex.exception.response.data.decode(),
+        )
+
+    def _insert_data(self, token="token", task="poldo", submission_timeout=None):
         try:
             Database.c.execute(
                 """
-                INSERT INTO tasks (name, title, statement_path, max_score, num)
-                VALUES ('%s', '', '', 42, 0)
+                INSERT INTO tasks (name, title, statement_path, max_score, num, submission_timeout)
+                VALUES ('%s', '', '', 42, 0, %s)
             """
-                % task
+                % (task, submission_timeout if submission_timeout is not None else 'NULL')
             )
         except:
             pass
