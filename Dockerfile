@@ -25,7 +25,7 @@ RUN yarn build
 # BACKEND
 # ------------------------------------------------------
 
-FROM python:3.11-slim AS backend-builder
+FROM python:3.11-slim-bullseye AS backend-builder
 
 WORKDIR /terry
 
@@ -56,7 +56,7 @@ RUN cargo build --release
 # FINAL IMAGE
 # ------------------------------------------------------
 
-FROM python:3.11-slim AS without-communication
+FROM python:3.11-slim-bullseye AS without-communication
 
 # Install system dependencies and task dependencies
 RUN apt-get update && \
