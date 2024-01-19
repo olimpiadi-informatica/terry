@@ -46,3 +46,12 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           parallel-finished: true
+
+  # very limited testing at the moment: we only check that it compiles
+  test-communication:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build
