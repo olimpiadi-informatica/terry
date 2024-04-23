@@ -15,7 +15,16 @@ data = dict()
 def process_pack(pack, workdir):
     global data
 
-    with common.extract_and_connect(pack, workdir):
+    if pack == 'all':
+        packname = pack
+        cm = common.connect_to_dir(workdir)
+    else:
+        cm = common.extract_and_connect(pack, workdir)
+        packname = os.path.basename(pack)[:4]
+        if packname[3] in "0.":
+            packname = packname[:3]
+
+    with cm:
         venue = "-".join(os.path.basename(pack).split("-")[0:2])
         tasks = common.get_tasks()
         users = Database.get_users()
@@ -50,10 +59,13 @@ def main(args):
                          for d in csv.DictReader(f, delimiter=";"))
 
     tasks = []
-    for pack in sorted(glob.glob(os.path.join(args.zip_dir, "*.zip"))):
-        print("Processing %s" % os.path.basename(pack))
-        with tempfile.TemporaryDirectory() as workdir:
-            tasks = process_pack(pack, workdir)
+    if args.unpacked:
+        tasks = process_pack("all", args.zip_dir)
+    else:
+        for pack in sorted(glob.glob(os.path.join(args.zip_dir, "*.zip"))):
+            print("Processing %s" % os.path.basename(pack))
+            with tempfile.TemporaryDirectory(dir=os.getcwd()) as workdir:
+                tasks = process_pack(pack, workdir)
 
     for token, user in data.items():
         venue = user["venue"][:4]
@@ -78,5 +90,7 @@ if __name__ == '__main__':
     parser.add_argument("zip_dir", help="Directory with all the zips")
     parser.add_argument("out_csv", help="Output CSV")
     parser.add_argument("--patch", help="CSV with old;new;token")
+    parser.add_argument(
+        "--unpacked", help="zip_dir is unpacked", action="store_true")
     args = parser.parse_args()
     main(args)

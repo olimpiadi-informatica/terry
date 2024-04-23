@@ -15,7 +15,7 @@ from terry.database import Database
 def to_local_tz(date):
     now_timestamp = time.time()
     offset = datetime.datetime.fromtimestamp(now_timestamp) - \
-             datetime.datetime.utcfromtimestamp(now_timestamp)
+        datetime.datetime.utcfromtimestamp(now_timestamp)
     return date + offset
 
 
@@ -26,14 +26,15 @@ def store_submission(submission, taskdir, workdir, source_only, ignore0):
 
     if source_only:
         ext = os.path.splitext(submission["source_path"])[1]
-        from_path = os.path.join(workdir, "files", submission["source_path"]).encode().decode("cp437")
+        from_path = os.path.join(
+            workdir, "files", submission["source_path"]).encode().decode("cp437")
         source_path = os.path.join(taskdir, id + ext)
         shutil.copy(from_path, source_path)
     else:
         submission_dir = os.path.join(taskdir, id)
         os.makedirs(submission_dir, exist_ok=True)
         source_path = os.path.join(submission_dir,
-                             os.path.basename(submission["source_path"]))
+                                   os.path.basename(submission["source_path"]))
         shutil.copy(os.path.join(workdir, "files", submission["source_path"]),
                     source_path)
         shutil.copy(os.path.join(workdir, "files", submission["input_path"]),
@@ -48,10 +49,15 @@ def store_submission(submission, taskdir, workdir, source_only, ignore0):
 
 
 def analyze_pack(pack, workdir, token, all, ignore0, source_only, no_group_venue, outdir):
-    packname = os.path.basename(pack)[:4]
-    if packname[3] in "0.":
-        packname = packname[:3]
-    with common.extract_and_connect(pack, workdir):
+    if pack == 'all':
+        packname = pack
+        cm = common.connect_to_dir(workdir)
+    else:
+        cm = common.extract_and_connect(pack, workdir)
+        packname = os.path.basename(pack)[:4]
+        if packname[3] in "0.":
+            packname = packname[:3]
+    with cm:
         users = Database.get_users()
         if token:
             users = list(filter(lambda u: u["token"] in token, users))
@@ -71,20 +77,26 @@ def analyze_pack(pack, workdir, token, all, ignore0, source_only, no_group_venue
                     taskdir = os.path.join(outdir, packname, task, token)
                 os.makedirs(taskdir, exist_ok=True)
                 if not all:
-                    best = max(submissions, key=lambda x: x["score"], default=None)
+                    best = max(
+                        submissions, key=lambda x: x["score"], default=None)
                     if best:
                         submissions = [best]
                 for submission in submissions:
-                    store_submission(submission, taskdir, workdir, source_only, ignore0)
+                    store_submission(submission, taskdir,
+                                     workdir, source_only, ignore0)
             print("    > %d submissions" % num_submissions, file=sys.stderr)
         return len(token) == 1 and num_submissions > 0
 
 
 def main(args):
+    if args.unpacked:
+        return analyze_pack("all", args.zip_dir, set(args.token), args.all, args.ignore0,
+                            args.source_only, args.no_group_venue, args.out_dir)
+
     for pack in sorted(
             glob.glob(os.path.join(args.zip_dir, args.venue + "**"))):
         print("Analyzing pack", os.path.basename(pack), file=sys.stderr)
-        with tempfile.TemporaryDirectory() as workdir:
+        with tempfile.TemporaryDirectory(dir=os.getcwd()) as workdir:
             if analyze_pack(pack, workdir, set(args.token), args.all, args.ignore0,
                             args.source_only, args.no_group_venue, args.out_dir):
                 return
@@ -97,6 +109,8 @@ if __name__ == '__main__':
     parser.add_argument("token", help="Token of the student", nargs="*")
     parser.add_argument("--all", help="Extract all the submissions, not only "
                                       "the best", action="store_true")
+    parser.add_argument(
+        "--unpacked", help="zip_dir is unpacked", action="store_true")
     parser.add_argument("--ignore0", help="Ignore the submissions that scored 0",
                         action="store_true")
     parser.add_argument("--source-only", help="Extract only the source",

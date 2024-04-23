@@ -77,7 +77,7 @@ def main(args):
 
     for pack in sorted(glob.glob(os.path.join(args.zip_dir, "*.zip"))):
         print("Processing %s" % os.path.basename(pack), file=sys.stderr)
-        with tempfile.TemporaryDirectory() as workdir:
+        with tempfile.TemporaryDirectory(dir=os.getcwd()) as workdir:
             process_pack(pack, workdir)
 
     max_t = max(max(data["submissions"].keys()), max(data["inputs"].keys()))

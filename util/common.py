@@ -16,6 +16,25 @@ def remember_cwd(newdir):
 
 
 @contextlib.contextmanager
+def connect_to_dir(dbdir):
+    from terry.config import Config
+    from terry.database import Database
+    from terry.logger import Logger
+
+    db_path = os.path.join(dbdir, "db.sqlite3")
+    log_path = os.path.join(dbdir, "log.sqlite3")
+    Config.db = db_path
+    Config.logfile = log_path
+    Database.connect_to_database()
+    Logger.connect_to_database()
+    try:
+        yield
+    finally:
+        Database.disconnect_database()
+        Logger.disconnect_database()
+
+
+@contextlib.contextmanager
 def extract_and_connect(path, workdir):
     from terry.config import Config
     from terry.database import Database
