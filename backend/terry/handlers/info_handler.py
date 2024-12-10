@@ -199,12 +199,13 @@ class InfoHandler(BaseHandler):
 
         feedback = json.loads(result["output"]["result"].decode())
         result["feedback"] = feedback["feedback"]
-        result["subtasks"] = feedback["subtasks"]
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]
         result = BaseHandler.format_dates(result)
+
         result["output"] = temp
+        result["subtasks"] = feedback["subtasks"]
 
         return result
 
