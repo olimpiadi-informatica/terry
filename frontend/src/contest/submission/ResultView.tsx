@@ -1,11 +1,11 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import { Alert } from "src/types/contest";
+import { Alert, Subtask } from "src/types/contest";
 
 type Props<T> = {
   cases: T[];
   alerts: Alert[];
-  subtasks?: string;
+  subtasks?: Subtask[];
   renderCase: (c: T, i: number) => React.ReactNode;
   renderCaseSummary: (c: T, i: number) => React.ReactNode;
 };
@@ -15,7 +15,16 @@ export function ResultView<T>({
 }: Props<T>) {
   let summary = subtasks ? (
     <>
-      <p>This problem has subtasks!!!</p>
+      {subtasks.map((s: Subtask, i: number) => (
+        <ul className="list-inline mb-0">
+          {s.testcases.map((i: number, _: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <li className="list-inline-item" key={i}>
+              {renderCaseSummary(cases[i], i + 1)}
+            </li>
+          ))}
+        </ul>
+      ))}
     </>
   ) : (
     <>
