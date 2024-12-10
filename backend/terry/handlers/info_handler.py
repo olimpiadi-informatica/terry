@@ -199,6 +199,7 @@ class InfoHandler(BaseHandler):
 
         feedback = json.loads(result["output"]["result"].decode())
         result["feedback"] = feedback["feedback"]
+        result["subtasks"] = feedback["subtasks"]
         temp = InfoHandler.patch_output(result["output"])
 
         del result["output"]
