@@ -26,6 +26,7 @@ export type Submission = {
   input: InputData;
   output: UploadedOutput;
   source: UploadedSource;
+  subtasks: string;
   feedback: FeedbackData;
 };
 

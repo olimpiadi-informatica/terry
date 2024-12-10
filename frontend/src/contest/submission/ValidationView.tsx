@@ -45,6 +45,7 @@ export function ValidationView({ output }: Props) {
     <ResultView
       alerts={output.validation.alerts}
       cases={output.validation.cases}
+      subtasks={undefined}
       renderCase={renderCase}
       renderCaseSummary={renderCaseSummary}
     />

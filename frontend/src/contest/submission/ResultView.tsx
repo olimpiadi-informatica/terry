@@ -5,13 +5,31 @@ import { Alert } from "src/types/contest";
 type Props<T> = {
   cases: T[];
   alerts: Alert[];
+  subtasks?: string;
   renderCase: (c: T, i: number) => React.ReactNode;
   renderCaseSummary: (c: T, i: number) => React.ReactNode;
 };
 
 export function ResultView<T>({
-  cases, alerts, renderCase, renderCaseSummary,
+  cases, alerts, subtasks, renderCase, renderCaseSummary,
 }: Props<T>) {
+  let summary = subtasks ? (
+    <>
+      <p>This problem has subtasks!!!</p>
+    </>
+  ) : (
+    <>
+      <ul className="list-inline mb-0">
+        {cases.map((c: T, i: number) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <li className="list-inline-item" key={i}>
+            {renderCaseSummary(c, i + 1)}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+
   return (
     <>
       <ul className="list-unstyled">
@@ -34,14 +52,7 @@ export function ResultView<T>({
           :
         </dt>
         <dd>
-          <ul className="list-inline mb-0">
-            {cases.map((c: T, i: number) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <li className="list-inline-item" key={i}>
-                {renderCaseSummary(c, i + 1)}
-              </li>
-            ))}
-          </ul>
+          {summary}
         </dd>
       </dl>
       <div className="result-detail">

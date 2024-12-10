@@ -59,6 +59,7 @@ export function FeedbackView({ submission, task }: Props) {
       <ResultView
         cases={submission.feedback.cases}
         alerts={submission.feedback.alerts}
+        subtasks={submission.subtasks}
         renderCase={renderCase}
         renderCaseSummary={renderCaseSummary}
       />
