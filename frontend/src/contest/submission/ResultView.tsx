@@ -15,16 +15,27 @@ export function ResultView<T>({
 }: Props<T>) {
   let summary = subtasks ? (
     <>
-      {subtasks.map((s: Subtask, i: number) => (
-        <ul className="list-inline mb-0">
-          {s.testcases.map((i: number, _: number) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <li className="list-inline-item" key={i}>
-              {renderCaseSummary(cases[i], i + 1)}
-            </li>
+      <table>
+        <tbody>
+          {subtasks.map((s: Subtask, i: number) => (
+            <tr>
+              <td>
+                Subtask {i + 1} ({s.score}/{s.max_score})
+              </td>
+              <td>
+                <ul className="list-inline mb-0">
+                  {s.testcases.map((i: number, _: number) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <li className="list-inline-item" key={i}>
+                      {renderCaseSummary(cases[i], i + 1)}
+                    </li>
+                  ))}
+                </ul>
+              </td>
+            </tr>
           ))}
-        </ul>
-      ))}
+        </tbody>
+      </table>
     </>
   ) : (
     <>
