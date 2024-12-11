@@ -25,7 +25,7 @@ RUN yarn build
 # BACKEND
 # ------------------------------------------------------
 
-FROM python:3.11-slim-bullseye AS backend-builder
+FROM python:3.11-slim-bookworm AS backend-builder
 
 WORKDIR /terry
 
@@ -40,7 +40,7 @@ RUN ./setup.py install
 # COMMUNICATION
 # ------------------------------------------------------
 
-FROM rust:1.69 as communication-builder
+FROM rust:1.83 as communication-builder
 
 COPY communication/src /build/src
 COPY communication/Cargo.toml /build
@@ -56,13 +56,12 @@ RUN cargo build --release
 # FINAL IMAGE
 # ------------------------------------------------------
 
-FROM python:3.11-slim-bullseye AS without-communication
+FROM python:3.11-slim-bookworm AS without-communication
 
 # Install system dependencies and task dependencies
 RUN apt-get update && \
-    apt-get install -y curl nginx procps zip '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$' && \
-    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python2 && \
-    pip2 install numpy sortedcontainers
+    apt-get install -y \
+    curl nginx procps zip '^python3?$' '^python3?-(wheel|pip|numpy|sortedcontainers)$'
 
 # Frontend
 COPY --from=frontend-builder /frontend/build /app
