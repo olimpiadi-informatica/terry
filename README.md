@@ -1,19 +1,19 @@
 # terry
-[![Tests](https://github.com/algorithm-ninja/terry/actions/workflows/test.yml/badge.svg)](https://github.com/algorithm-ninja/terry/actions/workflows/test.yml)
-[![Code Climate](https://codeclimate.com/github/algorithm-ninja/terry/badges/gpa.svg)](https://codeclimate.com/github/algorithm-ninja/terry)
-[![Coverage Status](https://coveralls.io/repos/github/algorithm-ninja/terry/badge.svg?branch=master)](https://coveralls.io/github/algorithm-ninja/terry?branch=master)
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/algorithm-ninja/terry)
-[![license](https://img.shields.io/github/license/algorithm-ninja/terry.svg)](https://github.com/algorithm-ninja/terry/blob/master/LICENSE)
+[![Tests](https://github.com/olimpiadi-informatica/terry/actions/workflows/test.yml/badge.svg)](https://github.com/olimpiadi-informatica/terry/actions/workflows/test.yml)
+[![Code Climate](https://codeclimate.com/github/olimpiadi-informatica/terry/badges/gpa.svg)](https://codeclimate.com/github/olimpiadi-informatica/terry)
+[![Coverage Status](https://coveralls.io/repos/github/olimpiadi-informatica/terry/badge.svg?branch=master)](https://coveralls.io/github/olimpiadi-informatica/terry?branch=master)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/olimpiadi-informatica/terry)
+[![license](https://img.shields.io/github/license/olimpiadi-informatica/terry.svg)](https://github.com/olimpiadi-informatica/terry/blob/master/LICENSE)
 
 **terry** is a Google-Code-Jam-like programming contest environment designed for the territorial phase of the Italian Olympiad in Informatics (OII, _Olimpiadi Italiane di Informatica_).
 
 ## Specification of the terry format
 
-You can find the specification of the format accepted by `terry` [here](https://github.com/algorithm-ninja/terry/blob/master/format-specs.md).
+You can find the specification of the format accepted by `terry` [here](https://github.com/olimpiadi-informatica/terry/blob/master/format-specs.md).
 
 ## Setup a production-like environment
 
-1. Clone recursively this repo `git clone --recurse-submodules https://github.com/algorithm-ninja/terry`
+1. Clone recursively this repo `git clone --recurse-submodules https://github.com/olimpiadi-informatica/terry`
 2. Follow the instructions in `backend/`
 3. Place the zip of the contest in the folder set in the backend config file
 4. Setup the frontend
@@ -149,7 +149,7 @@ That file is present, unencrypted, in the contest pack.
 It will be shown in the admin page before the contest extraction.
 The content of this file is also used to make the `contest.yaml` files, the name and description of the contest are get from there.
 
-You can find the specification of the format of this file [here](https://github.com/algorithm-ninja/terry/blob/master/format-specs.md#public-metadata).
+You can find the specification of the format of this file [here](https://github.com/olimpiadi-informatica/terry/blob/master/format-specs.md#public-metadata).
 
 ### Making a pack
 
