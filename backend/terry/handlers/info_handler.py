@@ -205,7 +205,8 @@ class InfoHandler(BaseHandler):
         result = BaseHandler.format_dates(result)
 
         result["output"] = temp
-        result["subtasks"] = feedback["subtasks"]
+        if "subtasks" in feedback:
+            result["subtasks"] = feedback["subtasks"]
 
         return result
 
