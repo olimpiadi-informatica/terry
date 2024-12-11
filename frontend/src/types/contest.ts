@@ -17,6 +17,12 @@ type FeedbackData = {
   cases: FeedbackCaseInfo[];
 };
 
+export type Subtask = {
+  max_score: number;
+  score: number;
+  testcases: number[];
+};
+
 export type Submission = {
   id: string;
   date: string;
@@ -26,6 +32,7 @@ export type Submission = {
   input: InputData;
   output: UploadedOutput;
   source: UploadedSource;
+  subtasks: Subtask[];
   feedback: FeedbackData;
 };
 

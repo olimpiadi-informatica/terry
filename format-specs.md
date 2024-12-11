@@ -125,4 +125,12 @@ The checker should print to its standard output a JSON value with _at least_ the
 		- `severity`: a string with one of the following values: `"warning"`
 		- `message`: the message to show to the contestant.
 
+The following field must be present if and only if the problem is scored with subtasks:
+- `subtasks`: the subtasks of the task. It is an array with an entry for each subtask. Each entry is an object with _at least_ the following fields:
+	- `score`: a number indicating the score of the contestant on the subtask.
+	- `max_score`: a number indicating the maximum score on the subtask.
+	- `testcases`: an array of numbers, containing the testcases belonging to the subtask.
+
+Note that is the checker's responsibility to make sure that the information contained in `subtasks` is accurate.
+
 The checker should be very resilient to invalid output files submitted by the contestant. To avoid writing every time the parsing code a Python library is available [here](https://github.com/algorithm-ninja/territoriali-cli/blob/master/terry_cli/parser.py). Note that it's useful only for the `Case #1: ...` output format.

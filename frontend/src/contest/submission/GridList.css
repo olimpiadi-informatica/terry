@@ -17,3 +17,9 @@ dl.terry-grid-list > dd {
   -ms-flex: 1 1 100%;
   flex: 1 1 100%;
 }
+
+dl.terry-grid-list > dd > table {
+  border-spacing: 10px 0;
+  border-collapse: separate;
+  margin-left: -10px;
+}
