@@ -13,42 +13,50 @@ type Props<T> = {
 export function ResultView<T>({
   cases, alerts, subtasks, renderCase, renderCaseSummary,
 }: Props<T>) {
-  let summary = subtasks ? (
-    <>
-      <table>
-        <tbody>
-          {subtasks.map((s: Subtask, i: number) => (
-            <tr>
-              <td>
-                Subtask {i + 1} ({s.score}/{s.max_score})
-              </td>
-              <td>
-                <ul className="list-inline mb-0">
-                  {s.testcases.map((i: number, _: number) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <li className="list-inline-item" key={i}>
-                      {renderCaseSummary(cases[i], i + 1)}
-                    </li>
-                  ))}
-                </ul>
-              </td>
-            </tr>
+  const renderGridWithSubtasks = (subtasks: Subtask[], cases: T[]) => {
+    return (
+      <>
+        <table>
+          <tbody>
+            {subtasks.map((s: Subtask, i: number) => (
+              <tr>
+                <td>
+                  Subtask {i + 1} ({s.score}/{s.max_score})
+                </td>
+                <td>
+                  <ul className="list-inline mb-0">
+                    {s.testcases.map((i: number, _: number) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <li className="list-inline-item" key={i}>
+                        {renderCaseSummary(cases[i], i + 1)}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  };
+
+  const renderGridWithoutSubtasks = (cases: T[]) => {
+    return (
+      <>
+        <ul className="list-inline mb-0">
+          {cases.map((c: T, i: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <li className="list-inline-item" key={i}>
+              {renderCaseSummary(c, i + 1)}
+            </li>
           ))}
-        </tbody>
-      </table>
-    </>
-  ) : (
-    <>
-      <ul className="list-inline mb-0">
-        {cases.map((c: T, i: number) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <li className="list-inline-item" key={i}>
-            {renderCaseSummary(c, i + 1)}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+        </ul>
+      </>
+    );
+  }
+
+  const summary = subtasks ? renderGridWithSubtasks(subtasks, cases) : renderGridWithoutSubtasks(cases);
 
   return (
     <>
