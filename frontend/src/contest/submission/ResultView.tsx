@@ -21,7 +21,7 @@ export function ResultView<T>({
             {subtasks.map((s: Subtask, i: number) => (
               <tr>
                 <td>
-                  Subtask {i + 1} ({s.score}/{s.max_score})
+                  Group {i + 1} ({s.score}/{s.max_score})
                 </td>
                 <td>
                   <ul className="list-inline mb-0">
@@ -29,6 +29,11 @@ export function ResultView<T>({
                       // eslint-disable-next-line react/no-array-index-key
                       <li className="list-inline-item" key={i}>
                         {renderCaseSummary(cases[i], i + 1)}
+                      </li>
+                    ))}
+                    {s.labels && s.labels.map((label: String, i: number) => (
+                      <li className="list-inline-item" key={i}>
+                        <div className="badge badge-warning">{label}</div>
                       </li>
                     ))}
                   </ul>
