@@ -21,6 +21,7 @@ export type Subtask = {
   max_score: number;
   score: number;
   testcases: number[];
+  labels?: String[];
 };
 
 export type Submission = {
