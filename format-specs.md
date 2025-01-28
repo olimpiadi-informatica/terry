@@ -130,6 +130,7 @@ The following field must be present if and only if the problem is scored with su
 	- `score`: a number indicating the score of the contestant on the subtask.
 	- `max_score`: a number indicating the maximum score on the subtask.
 	- `testcases`: an array of numbers, containing the testcases belonging to the subtask.
+	- `labels`: an optional array of string used to label the subtask.
 
 Note that is the checker's responsibility to make sure that the information contained in `subtasks` is accurate.
 
