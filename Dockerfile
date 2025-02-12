@@ -95,7 +95,7 @@ VOLUME [ "/data" ]
 # FINAL IMAGE ONLY COMMUNICATION
 # ------------------------------------------------------
 
-FROM debian:stable-slim AS only-communication
+FROM debian:bookworm-slim AS only-communication
 
 ADD communication/docker/start.sh /
 COPY --from=communication-builder /build/target/release/terry-communication-backend /terry-communication-backend
