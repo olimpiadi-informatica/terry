@@ -2,7 +2,7 @@
 # FRONTEND
 # ------------------------------------------------------
 
-FROM node:lts-buster-slim AS frontend-builder
+FROM node:lts-bookworm-slim AS frontend-builder
 
 WORKDIR /frontend
 
@@ -40,7 +40,7 @@ RUN ./setup.py install
 # COMMUNICATION
 # ------------------------------------------------------
 
-FROM rust:1.83 as communication-builder
+FROM rust:1.84-bookworm AS communication-builder
 
 COPY communication/src /build/src
 COPY communication/Cargo.toml /build
@@ -95,7 +95,7 @@ VOLUME [ "/data" ]
 # FINAL IMAGE ONLY COMMUNICATION
 # ------------------------------------------------------
 
-FROM debian:stable-slim AS only-communication
+FROM debian:bookworm-slim AS only-communication
 
 ADD communication/docker/start.sh /
 COPY --from=communication-builder /build/target/release/terry-communication-backend /terry-communication-backend
