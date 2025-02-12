@@ -2,7 +2,7 @@
 # FRONTEND
 # ------------------------------------------------------
 
-FROM node:lts-buster-slim AS frontend-builder
+FROM node:lts-bookworm-slim AS frontend-builder
 
 WORKDIR /frontend
 
@@ -40,7 +40,7 @@ RUN ./setup.py install
 # COMMUNICATION
 # ------------------------------------------------------
 
-FROM rust:1.83 as communication-builder
+FROM rust:1.84-bookworm as communication-builder
 
 COPY communication/src /build/src
 COPY communication/Cargo.toml /build
