@@ -40,7 +40,7 @@ RUN ./setup.py install
 # COMMUNICATION
 # ------------------------------------------------------
 
-FROM rust:1.84-bookworm as communication-builder
+FROM rust:1.84-bookworm AS communication-builder
 
 COPY communication/src /build/src
 COPY communication/Cargo.toml /build
