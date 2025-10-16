@@ -1,26 +1,32 @@
 import React, {
-  ReactNode, useState, createContext, useContext, useMemo, useEffect, useCallback,
+  ReactNode,
+  useState,
+  createContext,
+  useContext,
+  useMemo,
+  useEffect,
+  useCallback,
 } from "react";
 import { Duration, DateTime } from "luxon";
+import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "src/hooks/useLogin";
 import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
-import { ContestData } from "src/types/contest";
+import { Status } from "src/types/contest";
 import { CommunicationContextProvider } from "src/hooks/useCommunication";
+import { Loading } from "src/components/Loading";
+import { notifyError } from "src/utils";
 import { SubmissionListContextProvider } from "./hooks/useSubmissionList";
 
 export type ContextData = {
-  token: string | null;
   serverTimeSkew: Loadable<Duration>;
-  contest: Loadable<ContestData>;
+  status: Loadable<Status>;
 };
 
 export type ContextActions = {
-  isLoggedIn: () => boolean;
-  login: (token: string) => void;
-  logout: () => void;
+  login: (token: string) => Promise<void>;
+  logout: () => Promise<void>;
   reloadContest: () => void;
 };
 
@@ -31,14 +37,12 @@ type ContestContextType = {
 
 export const ContestContext = createContext<ContestContextType>({
   data: {
-    token: null,
     serverTimeSkew: Loadable.loading(),
-    contest: Loadable.loading(),
+    status: Loadable.loading(),
   },
   actions: {
-    isLoggedIn: () => false,
-    login: () => {},
-    logout: () => {},
+    login: () => Promise.reject(),
+    logout: () => Promise.reject(),
     reloadContest: () => {},
   },
 });
@@ -48,57 +52,63 @@ type ContestContextProps = {
 };
 
 export function ContestContextProvider({ children }: ContestContextProps) {
-  const cookieName = "userToken";
-  const [token, login, doLogout] = useLogin(cookieName);
-  const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(Loadable.loading());
-  const [contest, setContest] = useState<Loadable<ContestData>>(Loadable.loading());
+  const [serverTimeSkew, setServerTimeSkew] = useState<Loadable<Duration>>(
+    Loadable.loading(),
+  );
+  const [status, setStatus] = useState<Loadable<Status>>(Loadable.loading());
   const [reloadContestHandle, reloadContest] = useTriggerUpdate();
   const navigate = useNavigate();
 
-  const logout = useCallback(() => {
-    doLogout();
+  const logout = useCallback(async () => {
+    await client.api.post("/logout");
+    reloadContest();
     navigate("/");
-  }, [doLogout, navigate]);
+  }, [navigate, reloadContest]);
+
+  const login = useCallback(
+    async (token: string) => {
+      await client.api
+        .post("/login", token)
+        .catch((e: AxiosError) => notifyError(e));
+      reloadContest();
+    },
+    [reloadContest],
+  );
 
   useEffect(() => {
-    if (!token) {
-      setServerTimeSkew(Loadable.loading());
-      setContest(Loadable.loading());
-      return;
-    }
+    setStatus(Loadable.loading());
     client.api
-      .get(`/user/${token}`)
-      .then((response) => {
-        const serverDate = DateTime.fromHTTP(response.headers.date);
+      .get("/status")
+      .then((resp) => {
+        const serverDate = DateTime.fromHTTP(resp.headers.date);
         setServerTimeSkew(Loadable.of(DateTime.local().diff(serverDate)));
-        setContest(Loadable.of(response.data));
+        setStatus(Loadable.of(resp.data));
       })
-      .catch((response) => {
-        logout();
+      .catch((error) => {
         setServerTimeSkew(Loadable.loading());
-        setContest(Loadable.error(response));
+        setStatus(Loadable.error(error));
       });
-  }, [token, logout, reloadContestHandle]);
+  }, [reloadContestHandle]);
 
-  const isLoggedIn = useCallback(() => token !== null, [token]);
+  if (status.isLoading()) {
+    return <Loading />;
+  }
 
   return (
     <ContestContext.Provider
       value={{
         data: {
-          token,
           serverTimeSkew,
-          contest,
+          status,
         },
         actions: {
-          isLoggedIn,
           login,
           logout,
           reloadContest,
         },
       }}
     >
-      <CommunicationContextProvider token={token}>
+      <CommunicationContextProvider>
         <SubmissionListContextProvider>
           {children}
         </SubmissionListContextProvider>
@@ -112,20 +122,37 @@ export function useActions() {
   return useMemo(() => context.actions, [context.actions]);
 }
 
-export function useToken() {
+export function useStatus() {
   const context = useContext(ContestContext);
-  return useMemo(() => context.data.token, [context.data.token]);
+  return useMemo(() => context.data.status, [context.data.status]);
 }
 
-export function useContest() {
+export function useIsAdmin() {
   const context = useContext(ContestContext);
-  return useMemo(() => context.data.contest, [context.data.contest]);
+  return useMemo(
+    () => context.data.status.isReady()
+      && context.data.status.value().user?.role === "Admin",
+    [context.data.status],
+  );
+}
+
+export function useToken() {
+  const context = useContext(ContestContext);
+  return useMemo(
+    () => (context.data.status.isReady()
+      ? context.data.status.value().user?.token
+      : null),
+    [context.data.status],
+  );
 }
 
 export function useServerTime() {
   const context = useContext(ContestContext);
 
-  return useMemo(() => () => DateTime.local().minus(context.data.serverTimeSkew.valueOr(Duration.fromMillis(0))), [
-    context.data.serverTimeSkew,
-  ]);
+  return useMemo(
+    () => () => DateTime.local().minus(
+      context.data.serverTimeSkew.valueOr(Duration.fromMillis(0)),
+    ),
+    [context.data.serverTimeSkew],
+  );
 }

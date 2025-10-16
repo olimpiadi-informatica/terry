@@ -1,0 +1,128 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        SELECT\n            s.id as \"id\",\n            s.token as \"token\",\n            s.task as \"task\",\n            s.score as \"score\",\n            s.date as \"submission_date\",\n            i.id AS \"input_id\",\n            i.attempt AS \"input_attempt\",\n            i.date AS \"input_date\",\n            i.path AS \"input_path\",\n            i.size AS \"input_size\",\n            o.id AS \"output_id\",\n            o.date AS \"output_date\",\n            o.path AS \"output_path\",\n            o.size AS \"output_size\",\n            o.result AS \"output_result\",\n            src.id AS \"source_id\",\n            src.date AS \"source_date\",\n            src.path AS \"source_path\",\n            src.size AS \"source_size\"\n        FROM submissions s\n        JOIN inputs i ON s.input = i.id\n        JOIN outputs o ON s.output = o.id\n        JOIN sources src ON s.source = src.id\n        WHERE s.token = ? AND s.task = ?\n        ORDER BY i.attempt ASC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "token",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "task",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "score",
+        "ordinal": 3,
+        "type_info": "Float"
+      },
+      {
+        "name": "submission_date",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "input_id",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "input_attempt",
+        "ordinal": 6,
+        "type_info": "Integer"
+      },
+      {
+        "name": "input_date",
+        "ordinal": 7,
+        "type_info": "Integer"
+      },
+      {
+        "name": "input_path",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "input_size",
+        "ordinal": 9,
+        "type_info": "Integer"
+      },
+      {
+        "name": "output_id",
+        "ordinal": 10,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_date",
+        "ordinal": 11,
+        "type_info": "Integer"
+      },
+      {
+        "name": "output_path",
+        "ordinal": 12,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_size",
+        "ordinal": 13,
+        "type_info": "Integer"
+      },
+      {
+        "name": "output_result",
+        "ordinal": 14,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_id",
+        "ordinal": 15,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_date",
+        "ordinal": 16,
+        "type_info": "Integer"
+      },
+      {
+        "name": "source_path",
+        "ordinal": 17,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_size",
+        "ordinal": 18,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "057d87efd1e792476c436a4a4a094cc303507af009eaa5edb462fa5391f9df6c"
+}

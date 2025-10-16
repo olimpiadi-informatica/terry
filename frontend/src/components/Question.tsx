@@ -4,26 +4,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { Question as QuestionT } from "src/types/contest";
-import { useSendAnswer } from "src/hooks/useCommunication";
 import { Link } from "react-router-dom";
 import { RelativeDate } from "./RelativeDate";
 import { Markdown } from "./Markdown";
 
 type Props = {
-    question: QuestionT,
-    serverTime: () => DateTime,
-    canAnswer: boolean
+  question: QuestionT;
+  serverTime: () => DateTime;
+  sendAnswer?: (id: number, answer: string) => Promise<void>;
 };
 
-export function Question({ question, serverTime, canAnswer } : Props) {
+export function Question({ question, serverTime, sendAnswer }: Props) {
   const [answer, setAnswer] = useState("");
-  const date = DateTime.fromSQL(question.date, { zone: "utc" });
-  const answerDate = question.answer && DateTime.fromSQL(question.answer.date, { zone: "utc" });
+  const date = DateTime.fromISO(question.date, { zone: "utc" });
+  const answerDate = question.answer_date
+    && DateTime.fromISO(question.answer_date, { zone: "utc" });
   const color = question.answer ? "primary" : "dark";
-  const sendAnswer = useSendAnswer();
 
   const renderAnswerForm = () => (
-    <form onSubmit={(e) => { e.preventDefault(); sendAnswer(question.id, answer); }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        sendAnswer?.(question.id, answer);
+      }}
+    >
       <div className="form-group">
         <textarea
           className="form-control"
@@ -33,7 +37,9 @@ export function Question({ question, serverTime, canAnswer } : Props) {
         />
       </div>
       <hr />
-      <h3><Trans>Preview</Trans></h3>
+      <h3>
+        <Trans>Preview</Trans>
+      </h3>
       <Markdown source={answer} />
       <hr />
       <button type="submit" className="btn btn-primary">
@@ -47,14 +53,16 @@ export function Question({ question, serverTime, canAnswer } : Props) {
   return (
     <div className={`alert alert-${color}`} key={question.id}>
       <span className="float-right">
-        {canAnswer && (
+        {sendAnswer && (
           <>
             <code>
               id
               {question.id}
             </code>
             {" — "}
-            <Link to={`?token=${question.creator}`}><code>{question.creator}</code></Link>
+            <Link to={`?token=${question.creator}`}>
+              <code>{question.creator}</code>
+            </Link>
             {" — "}
           </>
         )}
@@ -67,15 +75,21 @@ export function Question({ question, serverTime, canAnswer } : Props) {
           <span className="float-right">
             <RelativeDate clock={() => serverTime()} date={answerDate} />
           </span>
-          <Markdown source={question.answer.content} />
+          <Markdown source={question.answer} />
         </>
       )}
-      {
-        !question.answer && !canAnswer && (
-          <small><em><Trans>Not answered yet.</Trans></em></small>
-        )
-      }
-      { !question.answer && canAnswer && renderAnswerForm() }
+      {!question.answer && !sendAnswer && (
+        <small>
+          <em>
+            <Trans>Not answered yet.</Trans>
+          </em>
+        </small>
+      )}
+      {!question.answer && sendAnswer && renderAnswerForm()}
     </div>
   );
 }
+
+Question.defaultProps = {
+  sendAnswer: null,
+};

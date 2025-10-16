@@ -1,8 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { colorFromScore, round } from "src/utils";
-import { StartedContest } from "src/types/contest";
-import { useContest } from "src/contest/ContestContext";
+import { useStatus } from "src/contest/ContestContext";
 import classNames from "classnames";
 
 type Props = {
@@ -10,16 +9,20 @@ type Props = {
 };
 
 export function NavbarItemView({ taskName }: Props) {
-  const contest = useContest().value() as StartedContest;
-  const task = contest.contest.tasks.find((t) => t.name === taskName);
+  const status = useStatus().value();
+  const task = status.contest.tasks?.find((t) => t.name === taskName);
   if (!task) throw new Error(`Task not found: ${taskName}`);
 
-  const { score } = contest.tasks[taskName];
+  const userTask = status.user?.tasks[taskName];
+  const score = userTask ? userTask.score : 0;
   const color = colorFromScore(score, task.max_score);
 
   return (
     <li className="nav-item">
-      <NavLink to={`/task/${taskName}`} className={({ isActive }) => classNames("nav-link tasklist-item", isActive && "active")}>
+      <NavLink
+        to={`/task/${taskName}`}
+        className={({ isActive }) => classNames("nav-link tasklist-item", isActive && "active")}
+      >
         <div className={`task-score-badge badge badge-pill badge-${color}`}>
           {round(score, 2)}
           /

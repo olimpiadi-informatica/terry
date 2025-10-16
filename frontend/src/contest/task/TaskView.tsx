@@ -43,7 +43,8 @@ function SubmissionReport({ task }: { task: TaskData }) {
 }
 
 export function TaskView({ task, userTask }: Props) {
-  const statement = useStatement(task.statement_path);
+  const statementPath = `${task.name}/${task.statement_path}`;
+  const statement = useStatement(statementPath);
   const [submissions] = useSubmissionList(task.name);
 
   const renderTaskStatement = useCallback(() => {
@@ -74,7 +75,10 @@ export function TaskView({ task, userTask }: Props) {
           path="/submit/:inputId"
           element={<CreateSubmission task={task} userTask={userTask} />}
         />
-        <Route path="/submissions" element={<SubmissionListView task={task} />} />
+        <Route
+          path="/submissions"
+          element={<SubmissionListView task={task} />}
+        />
         <Route
           path="/submission/:submissionId"
           element={<SubmissionReport task={task} />}
@@ -82,7 +86,7 @@ export function TaskView({ task, userTask }: Props) {
       </Routes>
 
       {submissions.isReady() && (
-        <LastSubmission task={task} submissions={submissions.value().items} />
+        <LastSubmission task={task} submissions={submissions.value()} />
       )}
 
       <hr className="mt-1" />

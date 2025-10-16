@@ -19,7 +19,13 @@ body,
 }
 
 .striped-background {
-  background: repeating-linear-gradient(45deg, #eeeeee, #eeeeee 10px, #fefefe 10px, #fefefe 20px);
+  background: repeating-linear-gradient(
+    45deg,
+    #eeeeee,
+    #eeeeee 10px,
+    #fefefe 10px,
+    #fefefe 20px
+  );
 }
 
 .bordered-group > a.btn {
@@ -52,6 +58,10 @@ body,
 
 .terry-navbar-admin {
   background-color: #f0ad4e;
+}
+
+.admin-nav {
+  flex-direction: row;
 }
 
 .terry-user-name {

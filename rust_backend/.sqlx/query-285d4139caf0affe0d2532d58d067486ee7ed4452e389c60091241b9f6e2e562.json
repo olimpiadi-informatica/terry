@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE user_tasks SET current_attempt = ? WHERE token = ? AND task = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "285d4139caf0affe0d2532d58d067486ee7ed4452e389c60091241b9f6e2e562"
+}

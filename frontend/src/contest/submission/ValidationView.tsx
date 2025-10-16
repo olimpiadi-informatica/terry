@@ -26,14 +26,24 @@ export function ValidationView({ output }: Props) {
   );
 
   const renderCase = (c: ValidationCaseInfo, id: number) => (
-    <li id={`case-${id}`} key={id} className={`list-group-item list-group-item-${getColor(c)}`}>
+    <li
+      id={`case-${id}`}
+      key={id}
+      className={`list-group-item list-group-item-${getColor(c)}`}
+    >
       <span>
         Case #
         <samp>{id}</samp>
         :
         {" "}
         <b>
-          <Select value={c.status} _parsed_="parsed" _missing_="missing" _invalid_="invalid" other="?" />
+          <Select
+            value={c.status}
+            _parsed_="parsed"
+            _missing_="missing"
+            _invalid_="invalid"
+            other="?"
+          />
         </b>
         <br />
         {"message" in c && <em>{c.message}</em>}

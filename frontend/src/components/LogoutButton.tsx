@@ -4,7 +4,7 @@ import { Trans } from "@lingui/macro";
 import React from "react";
 
 type Props = {
-    onClick: () => void;
+  onClick: () => void;
 };
 
 export function LogoutButton({ onClick }: Props) {

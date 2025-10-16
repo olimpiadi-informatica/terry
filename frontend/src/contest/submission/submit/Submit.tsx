@@ -10,7 +10,10 @@ import { Loadable } from "src/Loadable";
 import { notifyError } from "src/utils";
 import { useActions } from "src/contest/ContestContext";
 import {
-  UploadedSource, UploadedOutput, TaskData, InputData,
+  UploadedSource,
+  UploadedOutput,
+  TaskData,
+  InputData,
 } from "src/types/contest";
 import { useSubmissionList } from "src/contest/hooks/useSubmissionList";
 import { useInputExpirationState } from "src/contest/task/useInputExpirationState";
@@ -34,15 +37,12 @@ export function Submit({ task, currentInput }: Props) {
   const submit = () => {
     if (!source || !output) throw new Error("Cannot submit without both source and output");
 
-    const data = new FormData();
-
-    data.append("input_id", currentInput?.id);
-    data.append("source_id", source.id);
-    data.append("output_id", output.id);
-
     setSubmission(Loadable.loading());
     client.api
-      .post("/submit", data)
+      .post(`/submit/${currentInput.id}`, {
+        source_id: source.id,
+        output_id: output.id,
+      })
       .then((response) => {
         const { id } = response.data;
         navigate(`/task/${task.name}/submission/${id}`);
@@ -74,7 +74,12 @@ export function Submit({ task, currentInput }: Props) {
             {" "}
             <strong>{currentInput.id.slice(0, 6)}</strong>
           </h5>
-          <Link to={`/task/${task.name}`} role="button" className="close" aria-label="Close">
+          <Link
+            to={`/task/${task.name}`}
+            role="button"
+            className="close"
+            aria-label="Close"
+          >
             <span aria-hidden="true">&times;</span>
           </Link>
         </div>
@@ -89,12 +94,20 @@ export function Submit({ task, currentInput }: Props) {
         <div className="modal-footer">
           <CurrentInputExpiration currentInput={currentInput} />
           {submission && submission.isLoading() && <Trans>Processing...</Trans>}
-          <Link to={`/task/${task.name}`} role="button" className="btn btn-danger">
+          <Link
+            to={`/task/${task.name}`}
+            role="button"
+            className="btn btn-danger"
+          >
             <FontAwesomeIcon icon={faTimes} />
             {" "}
             <Trans>Cancel</Trans>
           </Link>
-          <button type="submit" className="btn btn-success" disabled={!canSubmit()}>
+          <button
+            type="submit"
+            className="btn btn-success"
+            disabled={!canSubmit()}
+          >
             <FontAwesomeIcon icon={faPaperPlane} />
             {" "}
             <Trans>Submit</Trans>

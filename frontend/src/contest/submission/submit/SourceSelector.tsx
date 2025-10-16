@@ -1,13 +1,9 @@
-import React, {
-  createRef, useEffect, useState,
-} from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { Trans, t } from "@lingui/macro";
 import { i18n } from "@lingui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import {
-  useUpload, UploadType,
-} from "src/contest/hooks/useUpload";
+import { useUpload, UploadType } from "src/contest/hooks/useUpload";
 import { ValidationAlert } from "src/contest/submission/ValidationAlert";
 import { UploadedSource } from "src/types/contest";
 import { Error } from "src/components/Error";
@@ -23,7 +19,10 @@ type Props = {
 export function SourceSelector({ inputId, setSource }: Props) {
   const sourceRef = createRef<HTMLInputElement>();
   const [file, setFile] = useState<File | null>(null);
-  const [uploadStatus, upload] = useUpload<UploadedSource>(inputId, UploadType.Source);
+  const [uploadStatus, upload] = useUpload<UploadedSource>(
+    inputId,
+    UploadType.Source,
+  );
 
   useEffect(() => {
     if (!sourceRef.current) return;
@@ -113,7 +112,11 @@ export function SourceSelector({ inputId, setSource }: Props) {
         {uploadStatus.isLoading() && <Loading />}
         {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
         {uploadStatus.isReady()
-          && uploadStatus.value().validation.alerts.map((a) => <ValidationAlert alert={a} key={a.message} />)}
+          && uploadStatus
+            .value()
+            .validation.alerts.map((a) => (
+              <ValidationAlert alert={a} key={a.message} />
+            ))}
       </div>
     </div>
   );

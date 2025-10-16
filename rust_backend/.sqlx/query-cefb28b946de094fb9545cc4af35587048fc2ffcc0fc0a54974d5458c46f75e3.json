@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE users SET extra_time = ? WHERE token = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "cefb28b946de094fb9545cc4af35587048fc2ffcc0fc0a54974d5458c46f75e3"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO sources (id, input, path, size) VALUES (?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "a78e8e90a4a9c8c4219ee8b603ef17b62330b5dd679df75f8b3682c550211680"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO announcements (severity, title, content, creator) VALUES (?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "ced8bb10a74d376597bcd6af89112003c8af9192c3603f12e622630596e5440d"
+}

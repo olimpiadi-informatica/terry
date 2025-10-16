@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id, content, creator, date as \"date: _\", answer, answerer, answer_date as \"answer_date: _\" FROM questions WHERE creator = ? ORDER BY date",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "content",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "creator",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "date: _",
+        "ordinal": 3,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "answer",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "answerer",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "answer_date: _",
+        "ordinal": 6,
+        "type_info": "Datetime"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "83cb58a23b746f96af171c17eb6e5f75dc24f5817976a8c402f88e9108325d1d"
+}

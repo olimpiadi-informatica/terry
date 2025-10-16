@@ -33,7 +33,10 @@ export function SubmissionListView({ task }: Props) {
     return (
       <tr key={submission.id}>
         <td>
-          <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+          <RelativeDate
+            clock={() => serverTime()}
+            date={DateTime.fromISO(submission.date, { zone: "utc" })}
+          />
           <br />
           <Link to={`/task/${submission.task}/submission/${submission.id}`}>
             <Trans>view details</Trans>
@@ -50,7 +53,11 @@ export function SubmissionListView({ task }: Props) {
             {outputBasename}
           </Tooltip>
 
-          <div className="btn-group bordered-group" role="group" aria-label="Download submission data">
+          <div
+            className="btn-group bordered-group"
+            role="group"
+            aria-label="Download submission data"
+          >
             <a
               role="button"
               className="btn btn-light"
@@ -97,7 +104,9 @@ export function SubmissionListView({ task }: Props) {
             </a>
           </div>
         </td>
-        <td className={`alert-${colorFromScore(submission.score, task.max_score)}`}>
+        <td
+          className={`alert-${colorFromScore(submission.score, task.max_score)}`}
+        >
           <ScoreView score={submission.score} max={task.max_score} size={1} />
         </td>
       </tr>
@@ -105,7 +114,7 @@ export function SubmissionListView({ task }: Props) {
   };
 
   const renderBody = (list: SubmissionList) => {
-    if (list.items.length === 0) {
+    if (list.length === 0) {
       return (
         <div className="modal-body">
           <em>
@@ -131,7 +140,7 @@ export function SubmissionListView({ task }: Props) {
               </th>
             </tr>
           </thead>
-          <tbody>{list.items.map(renderSubmission).reverse()}</tbody>
+          <tbody>{list.map(renderSubmission).reverse()}</tbody>
         </table>
       </div>
     );
@@ -145,7 +154,12 @@ export function SubmissionListView({ task }: Props) {
           {" "}
           <strong className="text-uppercase">{task.name}</strong>
         </h5>
-        <Link to={`/task/${task.name}`} role="button" className="close" aria-label="Close">
+        <Link
+          to={`/task/${task.name}`}
+          role="button"
+          className="close"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </Link>
       </div>
@@ -153,7 +167,11 @@ export function SubmissionListView({ task }: Props) {
       {submissions.isError() && <Error cause={submissions.error()} />}
       {submissions.isReady() && renderBody(submissions.value())}
       <div className="modal-footer">
-        <Link to={`/task/${task.name}`} role="button" className="btn btn-primary">
+        <Link
+          to={`/task/${task.name}`}
+          role="button"
+          className="btn btn-primary"
+        >
           <FontAwesomeIcon icon={faTimes} />
           {" "}
           <Trans>Close</Trans>

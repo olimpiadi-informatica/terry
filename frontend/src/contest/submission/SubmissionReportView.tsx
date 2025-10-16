@@ -34,7 +34,9 @@ export function SubmissionReportView({ submissionId, task }: Props) {
       <div className="modal-body">
         {submission.isLoading() && <Loading />}
         {submission.isError() && <Error cause={submission.error()} />}
-        {submission.isReady() && <FeedbackView submission={submission.value()} task={task} />}
+        {submission.isReady() && (
+          <FeedbackView submission={submission.value()} task={task} />
+        )}
       </div>
       <div className="modal-footer">
         <Link to={returnUrl} role="button" className="btn btn-primary">

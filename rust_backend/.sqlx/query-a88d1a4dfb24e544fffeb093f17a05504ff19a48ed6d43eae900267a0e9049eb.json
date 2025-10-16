@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT name, title, statement_path, max_score, num, submission_timeout FROM tasks WHERE name = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "name",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "title",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "statement_path",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "max_score",
+        "ordinal": 3,
+        "type_info": "Float"
+      },
+      {
+        "name": "num",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "submission_timeout",
+        "ordinal": 5,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "a88d1a4dfb24e544fffeb093f17a05504ff19a48ed6d43eae900267a0e9049eb"
+}

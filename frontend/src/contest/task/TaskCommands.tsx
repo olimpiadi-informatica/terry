@@ -23,20 +23,14 @@ type Props = {
 
 export function TaskCommands({ task, userTask, submissions }: Props) {
   const [input, setInput] = useState<Loadable<InputData> | null>(null);
-  const token = useToken();
   const { reloadContest } = useActions();
+  const token = useToken();
+
   if (!token) throw new window.Error("You have to be logged in to see the Task Commands");
 
   const generateInput = () => {
-    const data = new FormData();
-
-    data.append("token", token);
-    data.append("task", task.name);
-
-    setInput(Loadable.loading());
-
     client.api
-      .post("/generate_input", data)
+      .post(`/generate_input/${task.name}`)
       .then((response) => {
         setInput(Loadable.of(response.data));
         reloadContest();
@@ -49,16 +43,22 @@ export function TaskCommands({ task, userTask, submissions }: Props) {
 
   const renderGenerateInputButton = () => {
     const button = (already: boolean) => (
-      <button className="btn btn-success" type="button" onClick={() => generateInput()}>
+      <button
+        className="btn btn-success"
+        type="button"
+        onClick={() => generateInput()}
+      >
         <FontAwesomeIcon icon={faPlus} />
         {" "}
-        {already ? <Trans>Request new input</Trans> : <Trans>Request input</Trans>}
+        {already ? (
+          <Trans>Request new input</Trans>
+        ) : (
+          <Trans>Request input</Trans>
+        )}
       </button>
     );
 
-    return button(
-      submissions.isReady() && submissions.value().items.length > 0,
-    );
+    return button(submissions.isReady() && submissions.value().length > 0);
   };
 
   if (userTask.current_input) {

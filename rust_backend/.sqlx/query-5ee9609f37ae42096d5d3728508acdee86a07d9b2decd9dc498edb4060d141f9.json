@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE questions SET answer = ?, answerer = ?, answer_date = CURRENT_TIMESTAMP WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "5ee9609f37ae42096d5d3728508acdee86a07d9b2decd9dc498edb4060d141f9"
+}

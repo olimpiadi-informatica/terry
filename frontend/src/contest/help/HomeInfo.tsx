@@ -21,7 +21,7 @@ export function HomeInfo({ hasStarted, startTime }: Props) {
 
     const MAX_DELAY = 1000;
     // eslint-disable-next-line no-mixed-operators
-    const delay = Math.floor(Math.random() * MAX_DELAY / 2);
+    const delay = Math.floor((Math.random() * MAX_DELAY) / 2);
     const delta = startTime.diff(serverTime()).as("milliseconds") + delay;
 
     const timeout = setTimeout(() => {
@@ -41,15 +41,19 @@ export function HomeInfo({ hasStarted, startTime }: Props) {
         <Trans>Usage guide</Trans>
       </h2>
       <p>
-        <Trans>On the left side of this page you can find the tasks, click on any one to open it.</Trans>
+        <Trans>
+          On the left side of this page you can find the tasks, click on any one
+          to open it.
+        </Trans>
       </p>
       <Trans>
         You can submit
         {" "}
         <em>as many times as you want</em>
-        , but you will have a different input every time. When you make
-        a submission remember to send the correct source file and the output corresponding to the last generated input.
-        When you have uploaded your files
+        , but you will have a
+        different input every time. When you make a submission remember to send
+        the correct source file and the output corresponding to the last
+        generated input. When you have uploaded your files
         {" "}
         <em>remember to submit</em>
         {" "}
@@ -64,28 +68,30 @@ export function HomeInfo({ hasStarted, startTime }: Props) {
         <FontAwesomeIcon icon={faClock} />
       </h1>
       <div className="text-center">
-        {
-          startTime
-            ? (
-              <>
-                <h3>
-                  <Countdown clock={() => serverTime()} end={startTime} afterEnd={() => <Loading />} />
-                </h3>
-                <p>
-                  <Trans>
-                    Scheduled start at
-                    <AbsoluteDate clock={() => serverTime()} date={startTime} />
-                    . This page will reload automatically.
-                  </Trans>
-                </p>
-              </>
-            )
-            : (
+        {startTime ? (
+          <>
+            <h3>
+              <Countdown
+                clock={() => serverTime()}
+                end={startTime}
+                afterEnd={() => <Loading />}
+              />
+            </h3>
+            <p>
               <Trans>
-                The contest has not started yet! Refresh this page when the contest has started to be able to login.
+                Scheduled start at
+                <AbsoluteDate clock={() => serverTime()} date={startTime} />
+                .
+                This page will reload automatically.
               </Trans>
-            )
-        }
+            </p>
+          </>
+        ) : (
+          <Trans>
+            The contest has not started yet! Refresh this page when the contest
+            has started to be able to login.
+          </Trans>
+        )}
       </div>
     </div>
   );

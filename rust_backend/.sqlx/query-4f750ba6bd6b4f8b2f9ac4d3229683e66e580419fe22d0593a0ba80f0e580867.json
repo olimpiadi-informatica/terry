@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id, input, date as \"date: _\", path, size, result FROM outputs WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "input",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "date: _",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "path",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "size",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "result",
+        "ordinal": 5,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "4f750ba6bd6b4f8b2f9ac4d3229683e66e580419fe22d0593a0ba80f0e580867"
+}

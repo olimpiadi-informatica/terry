@@ -25,7 +25,10 @@ export function FileView({ file }: Props) {
               <Trans>Last update:</Trans>
             </th>
             <td>
-              <RelativeDate clock={() => DateTime.local()} date={DateTime.fromMillis(file.lastModified)} />
+              <RelativeDate
+                clock={() => DateTime.local()}
+                date={DateTime.fromMillis(file.lastModified)}
+              />
             </td>
           </tr>
         )}

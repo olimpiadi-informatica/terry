@@ -20,19 +20,18 @@ export function CurrentInputCommands({
   currentInput: InputData;
   task: TaskData;
 }) {
-  const token = useToken();
   const { reloadContest } = useActions();
+  const token = useToken();
 
-  if (!token) { throw new window.Error("You have to be logged in to see CurrentInputCommands"); }
+  if (!token) {
+    throw new window.Error(
+      "You have to be logged in to see CurrentInputCommands",
+    );
+  }
 
   const abandonInput = () => {
-    const data = new FormData();
-
-    data.append("token", token);
-    data.append("input_id", currentInput.id);
-
     client.api
-      .post("/abandon_input", data)
+      .post(`/abandon_input/${currentInput.id}`)
       .then(() => {
         reloadContest();
       })

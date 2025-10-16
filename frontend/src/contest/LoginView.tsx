@@ -1,35 +1,39 @@
 import React, { createRef, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { Loading } from "src/components/Loading";
-import { usePack } from "src/admin/hooks/usePack";
-import { Markdown } from "src/components/Markdown";
 import { Error } from "src/components/Error";
-import { useActions, useContest } from "./ContestContext";
+import { Markdown } from "src/components/Markdown";
+import { useActions, useStatus, useToken } from "./ContestContext";
 
 export function LoginView() {
   const tokenRef = createRef<HTMLInputElement>();
   const { login } = useActions();
-  const contest = useContest();
-  const pack = usePack().value();
+  const status = useStatus();
+  const token = useToken();
   const [isLoading, setIsLoading] = useState(false);
+
+  if (token) {
+    return <Navigate to="/" replace />;
+  }
 
   const doLogin = () => {
     if (!tokenRef.current) return;
     setIsLoading(true);
-    login(tokenRef.current.value);
+    login(tokenRef.current.value).finally(() => {
+      setIsLoading(false);
+    });
   };
 
   return (
     <>
-      {
-        pack && pack.uploaded && (
-          <div>
-            <h1>{pack.name}</h1>
-            <Markdown source={pack.description} />
-            <hr />
-          </div>
-        )
-      }
+      {status.isReady() && (
+        <div>
+          <h1>{status.value().contest.name}</h1>
+          <Markdown source={status.value().contest.description} />
+          <hr />
+        </div>
+      )}
       <div className="jumbotron">
         <h1 className="text-center">
           <Trans>Please login</Trans>
@@ -57,7 +61,9 @@ export function LoginView() {
             />
           </div>
           <input type="submit" className="btn btn-primary" value={t`Login`} />
-          {contest.isError() && <Error className="mt-2" cause={contest.error()} />}
+          {status.isError() && (
+            <Error className="mt-2" cause={status.error()} />
+          )}
           {isLoading && <Loading />}
         </form>
       </div>

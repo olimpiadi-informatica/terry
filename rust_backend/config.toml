@@ -1,0 +1,46 @@
+# rust_backend/config.toml
+
+# The name of the contest (Required)
+contest_name = "My Awesome Contest"
+
+# A description of the contest (Optional, path to a markdown file)
+contest_description = "./config/contest_description.md"
+
+# The total duration of the contest in seconds (Required)
+contest_duration = "4w 1h 30m"
+
+# The start time of the contest (RFC3339 format). If not set, the contest must be started manually.
+start_time = "2025-10-26T01:58:00+02:00"
+
+# Secret for signing JWT tokens.
+jwt_secret = "a-very-secure-secret-that-you-should-change"
+
+# The name of the cookie used for JWT tokens.
+jwt_cookie_name = "terry"
+
+# Path to a markdown file for public description, available before login.
+public_description = "./config/public_description.md"
+
+# A list of extra material sections.
+[[extra_material]]
+name = "Extra Material 1"
+url = "extra-material-1"
+page = "config/extra_material.md"
+
+[[extra_material]]
+name = "Extra Material 2"
+url = "extra-material-2"
+page = "config/extra_material.md"
+
+# --- Optional Fields ---
+
+# The URL of the SSO provider.
+# sso_url = "https://my.sso.provider/auth"
+
+# If present, enables USACO-style contest mode
+# window_duration = "3h"
+
+# --- Telegram settings ---
+# telegram_bot_token = ""
+# telegram_channel_id = 0
+# telegram_admin_url = ""

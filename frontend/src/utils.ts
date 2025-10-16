@@ -20,7 +20,11 @@ export function errorToString(error: AxiosError): string | null {
         }
         // application errors (client)
         return error.response.data;
-      } if (typeof error.response.data === "object" && "message" in error.response.data) {
+      }
+      if (
+        typeof error.response.data === "object"
+        && "message" in error.response.data
+      ) {
         // application errors (server)
         return error.response.data.message as string;
       }

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE users SET contest_start_delay = ? WHERE token = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "d75d11f7815d8ea56a74d1602fbbb45bdd6e84251cc5598d805336125c2d9631"
+}

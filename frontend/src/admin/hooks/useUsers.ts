@@ -1,35 +1,32 @@
-import { AxiosResponse } from "axios";
 import { useState, useEffect } from "react";
-import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
-import { useToken } from "src/admin/AdminContext";
 import { notifyError } from "src/utils";
-import { useTriggerUpdate } from "src/hooks/useTriggerUpdate";
-import { UsersData } from "src/types/admin";
+import { AxiosError } from "axios";
 
-export type ReloadUsers = () => void;
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+  total_score: number;
+  scores: Record<string, number>;
+}
 
-export function useUsers(): [Loadable<UsersData>, ReloadUsers] {
-  const token = useToken();
-  const [users, setUsers] = useState<Loadable<UsersData>>(Loadable.loading());
-  const [usersUpdate, triggerUsersUpdate] = useTriggerUpdate();
+export function useUsers() {
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    if (!token) return;
     client
-      .adminApi(token, "/user_list")
-      .then((response: AxiosResponse) => {
-        setUsers(Loadable.of(response.data as UsersData));
+      .adminApi("user_list")
+      .then((response) => {
+        setUsers(response.data.items);
       })
-      .catch((response) => {
-        notifyError(response);
-        setUsers(Loadable.error(response));
+      .catch((error: AxiosError) => {
+        notifyError(error);
       });
-  }, [token, usersUpdate]);
+  }, []);
 
-  const reloadUsers = () => {
-    triggerUsersUpdate();
-  };
-
-  return [users, reloadUsers];
+  return users;
 }

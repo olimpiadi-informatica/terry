@@ -17,7 +17,10 @@ type Props = {
 export function OutputSelector({ inputId, setOutput }: Props) {
   const outputRef = createRef<HTMLInputElement>();
   const [file, setFile] = useState<File | null>(null);
-  const [uploadStatus, upload] = useUpload<UploadedOutput>(inputId, UploadType.Output);
+  const [uploadStatus, upload] = useUpload<UploadedOutput>(
+    inputId,
+    UploadType.Output,
+  );
 
   useEffect(() => {
     if (!outputRef.current) return;
@@ -84,7 +87,9 @@ export function OutputSelector({ inputId, setOutput }: Props) {
         <FileView file={file} />
         {uploadStatus.isLoading() && <Loading />}
         {uploadStatus.isError() && <Error cause={uploadStatus.error()} />}
-        {uploadStatus.isReady() && <ValidationView output={uploadStatus.value()} />}
+        {uploadStatus.isReady() && (
+          <ValidationView output={uploadStatus.value()} />
+        )}
       </div>
     </div>
   );

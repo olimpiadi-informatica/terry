@@ -1,9 +1,9 @@
 import React from "react";
 import { Markdown } from "src/components/Markdown";
-import { Section as SectionT } from "src/types/admin";
+import { ExtraMaterialSection } from "src/types/contest";
 
 type Props = {
-    section: SectionT;
+  section: ExtraMaterialSection;
 };
 
 export function Section({ section }: Props) {

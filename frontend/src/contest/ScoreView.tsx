@@ -14,7 +14,10 @@ export function ScoreView({
 }: Props) {
   return (
     <div className="terry-score" style={{ fontSize: `${size}rem`, ...style }}>
-      <span className="terry-score-value" style={{ fontSize: `${2 * size}rem` }}>
+      <span
+        className="terry-score-value"
+        style={{ fontSize: `${2 * size}rem` }}
+      >
         {round(score, 2)}
       </span>
       {" "}

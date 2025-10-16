@@ -5,7 +5,9 @@ import { notifyError } from "src/utils";
 import { Submission } from "src/types/contest";
 
 export function useSubmission(id: string) {
-  const [submission, setSubmission] = useState<Loadable<Submission>>(Loadable.loading());
+  const [submission, setSubmission] = useState<Loadable<Submission>>(
+    Loadable.loading(),
+  );
 
   useEffect(() => {
     client.api
