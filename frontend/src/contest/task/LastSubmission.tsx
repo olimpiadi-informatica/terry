@@ -24,7 +24,10 @@ export function LastSubmission({ task, submissions }: Props) {
         <Trans>Last submission:</Trans>
       </strong>
       {" "}
-      <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+      <RelativeDate
+        clock={() => serverTime()}
+        date={DateTime.fromISO(submission.date, { zone: "utc" })}
+      />
       {" "}
       (
       <Link to={`/task/${task.name}/submissions`}>

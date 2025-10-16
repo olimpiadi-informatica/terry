@@ -10,24 +10,29 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { TransProvider } from "src/i18n";
 import { Loading } from "src/components/Loading";
-
-import { PackView } from "./admin/PackView";
-
+import { AdminView } from "./admin/AdminView";
 import { ContestView } from "./contest/ContestView";
-import { CommunicationView } from "./communication/CommunicationView";
-
-/** ****** DEVELOPMENT SPECIFIC ********* */
-if (window.location.origin.endsWith(":3000")) window.location.replace("http://localhost:9000");
-/** ****** DEVELOPMENT SPECIFIC ********* */
+import { ExtraMaterialView } from "./contest/ExtraMaterialView";
+import { ContestHome } from "./contest/ContestHome";
+import { LoginView } from "./contest/LoginView";
+import { RenderTask } from "./contest/RenderTask";
+import { Communication } from "./contest/Communication";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ContestContextProvider } from "./contest/ContestContext";
 
 // handle errors in promises
-window.addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => {
-  // FIXME: dirty trick to avoid alerts in development
-  if (!window.location.origin.endsWith(":9000")) {
-    // eslint-disable-next-line no-alert
-    window.alert(`An error occurred. Please reload the page. (${event.reason || "<no reason>"})`);
-  }
-});
+window.addEventListener(
+  "unhandledrejection",
+  (event: PromiseRejectionEvent) => {
+    // FIXME: dirty trick to avoid alerts in development
+    if (!window.location.origin.endsWith(":9000")) {
+      // eslint-disable-next-line no-alert
+      window.alert(
+        `An error occurred. Please reload the page. (${event.reason || "<no reason>"})`,
+      );
+    }
+  },
+);
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = createRoot(document.getElementById("root")!);
@@ -36,11 +41,23 @@ root.render(
     <React.Suspense fallback={<Loading />}>
       <ToastContainer />
       <Router>
-        <Routes>
-          <Route path="/admin/communication/*" element={<CommunicationView />} />
-          <Route path="/admin/*" element={<PackView />} />
-          <Route path="*" element={<ContestView />} />
-        </Routes>
+        <ContestContextProvider>
+          <Routes>
+            <Route path="/" element={<ContestView />}>
+              <Route path="admin/*" element={<AdminView />} />
+              <Route path="communication/*" element={<Communication />} />
+              <Route element={<ProtectedRoute />}>
+                <Route index element={<ContestHome />} />
+                <Route path="task/:taskName/*" element={<RenderTask />} />
+              </Route>
+              <Route
+                path="extra-material/:sectionUrl"
+                element={<ExtraMaterialView />}
+              />
+              <Route path="login" element={<LoginView />} />
+            </Route>
+          </Routes>
+        </ContestContextProvider>
       </Router>
     </React.Suspense>
   </TransProvider>,

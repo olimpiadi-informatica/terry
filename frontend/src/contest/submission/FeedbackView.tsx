@@ -25,7 +25,11 @@ export function FeedbackView({ submission, task }: Props) {
   );
 
   const renderCase = (c: FeedbackCaseInfo, id: number) => (
-    <li id={`case-${id}`} key={id} className={`list-group-item list-group-item-${getColor(c)}`}>
+    <li
+      id={`case-${id}`}
+      key={id}
+      className={`list-group-item list-group-item-${getColor(c)}`}
+    >
       <span>
         Case #
         <samp>{id}</samp>
@@ -46,7 +50,10 @@ export function FeedbackView({ submission, task }: Props) {
           :
         </dt>
         <dd>
-          <RelativeDate clock={() => serverTime()} date={DateTime.fromISO(submission.date, { zone: "utc" })} />
+          <RelativeDate
+            clock={() => serverTime()}
+            date={DateTime.fromISO(submission.date, { zone: "utc" })}
+          />
         </dd>
         <dt style={{ marginTop: "0.75rem" }}>
           <Trans>Score</Trans>

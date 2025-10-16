@@ -5,54 +5,14 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "pypy3.8"]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-
-      - name: Install
-        run: |
-          cd backend
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r test-requirements.txt
-          ./setup.py install
-
-      - name: Test
-        run: |
-          cd backend
-          coverage run --source=terry --omit=terry/__main__.py,terry/utility.py ./run_tests.py
-          coverage xml
-
-      - name: Coveralls Parallel
-        uses: coverallsapp/github-action@v2
-        with:
-          flag-name: run-${{ join(matrix.*, '-') }}
-          parallel: true
-
-  coverage:
-    needs: test
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2
-        with:
-          parallel-finished: true
-
-  # very limited testing at the moment: we only check that it compiles
-  test-communication:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - run: cargo build
-        working-directory: ./communication
+      - run: cargo install sqlx-cli 
+      - run: sqlx database create
+        working-directory: ./rust_backend
+      - run: sqlx migrate run
+        working-directory: ./rust_backend
+      - run: cargo test
+        working-directory: ./rust_backend

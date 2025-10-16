@@ -15,7 +15,11 @@ export function CurrentInputExpiration({
   const token = useToken();
   const serverTime = useServerTime();
 
-  if (!token) { throw new window.Error("You have to be logged in to see CurrentInputExpiration"); }
+  if (!token) {
+    throw new window.Error(
+      "You have to be logged in to see CurrentInputExpiration",
+    );
+  }
 
   const { expiration } = useInputExpirationState(currentInput);
 

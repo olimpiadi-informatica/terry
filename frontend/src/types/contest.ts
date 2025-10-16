@@ -21,7 +21,7 @@ export type Subtask = {
   max_score: number;
   score: number;
   testcases: number[];
-  labels?: String[];
+  labels?: string[];
 };
 
 export type Submission = {
@@ -37,13 +37,11 @@ export type Submission = {
   feedback: FeedbackData;
 };
 
-export type SubmissionList = {
-  items: Submission[];
-};
+export type SubmissionList = Submission[];
 
 export type Alert = {
   message: string;
-  severity: "warning" | "danger" | "success";
+  severity: "warning";
   code?: string;
 };
 
@@ -68,35 +66,12 @@ export type UploadedSource = UploadedFile & {
   };
 };
 
-export type NotStartedContestData = {
-  name: string;
-  description: string;
-  has_started: false;
-  start_time: string | null;
-};
-
 export type TaskData = {
   name: string;
   title: string;
   max_score: number;
   statement_path: string;
-};
-
-export type StartedContestData = {
-  name: string;
-  description: string;
-  has_started: true;
-  start_time: string;
-  max_total_score: number;
-  tasks: TaskData[];
-};
-
-export type UserData = {
-  name: string;
-  surname: string;
-  token: string;
-  sso_user: number;
-  contest_start_delay: number | null;
+  submission_timeout?: number;
 };
 
 export type InputData = {
@@ -116,18 +91,38 @@ export type UserTaskData = {
   current_input: InputData | null;
 };
 
-export type NotStartedContest = {
-  contest: NotStartedContestData;
-} & UserData;
+export type ExtraMaterialSection = {
+  name: string;
+  url: string;
+  page: string;
+};
 
-export type StartedContest = {
-  contest: StartedContestData;
-  end_time: string;
-  total_score: number;
+export type UserStatus = {
+  token: string;
+  name: string;
+  surname: string;
+  sso_user: number;
+  contest_start_delay: number | null;
   tasks: { [name: string]: UserTaskData };
-} & UserData;
+  role: string;
+  total_score: number;
+  extra_time: number;
+};
 
-export type ContestData = NotStartedContest | StartedContest;
+export type ContestStatus = {
+  has_started: boolean;
+  time: { start: string; end: string };
+  name: string;
+  description: string;
+  extra_material: ExtraMaterialSection[];
+  tasks?: TaskData[];
+  max_total_score?: number;
+};
+
+export type Status = {
+  user?: UserStatus;
+  contest: ContestStatus;
+};
 
 export type Announcement = {
   id: number;
@@ -135,22 +130,25 @@ export type Announcement = {
   title: string;
   content: string;
   date: string;
-}
+};
 
 export type Answer = {
   date: string;
   content: string;
-}
+  answerer: string;
+};
 
 export type Question = {
   id: number;
   creator: string;
   content: string;
   date: string;
-  answer: Answer | null;
-}
+  answer: string | null;
+  answerer: string | null;
+  answer_date: string | null;
+};
 
 export type CommunicationData = {
   announcements: Announcement[];
   questions?: Question[];
-}
+};

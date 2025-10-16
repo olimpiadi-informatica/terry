@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE user_tasks SET score = ? WHERE token = ? AND task = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "350e8c47c919277ddff7fdd4ca24599f24625b8643076a39836c3fd66783735b"
+}

@@ -4,9 +4,9 @@ import React from "react";
 import { errorToString } from "src/utils";
 
 type Props = {
-    boxed?: boolean;
-    cause?: string | AxiosError;
-    className?: string;
+  boxed?: boolean;
+  cause?: string | AxiosError;
+  className?: string;
 };
 
 export function Error({ cause: message, boxed, className }: Props) {
@@ -27,7 +27,6 @@ export function Error({ cause: message, boxed, className }: Props) {
       {messageStr && (
         <>
           :
-          {" "}
           {messageStr}
         </>
       )}
@@ -35,11 +34,7 @@ export function Error({ cause: message, boxed, className }: Props) {
   );
 
   if (boxed) {
-    return (
-      <div className={`alert alert-danger ${className}`}>
-        {error}
-      </div>
-    );
+    return <div className={`alert alert-danger ${className}`}>{error}</div>;
   }
   return <span className={className}>{error}</span>;
 }

@@ -1,11 +1,19 @@
 import React, {
-  createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState,
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
 import { t } from "@lingui/macro";
+import { AxiosError } from "axios";
 import { notifyError } from "src/utils";
 import { CommunicationData, Announcement, Question } from "src/types/contest";
 import { client } from "src/TerryClient";
 import { Loadable } from "src/Loadable";
+import { useToken } from "src/contest/ContestContext";
 import { useTriggerUpdate } from "./useTriggerUpdate";
 
 const POLL_INTERVAL = 15 * 1000;
@@ -17,8 +25,7 @@ type CommunicationContextType = {
   errored: boolean;
   reload: () => void;
   askQuestion: (question: string) => Promise<Question>;
-  sendAnswer: (id: number, answer: string) => Promise<void>;
-}
+};
 
 const readStorage = () => {
   const item = window.sessionStorage.getItem(sessionName);
@@ -40,7 +47,6 @@ const defaultContext = () => {
       errored: false,
       reload: () => {},
       askQuestion: () => Promise.reject(),
-      sendAnswer: () => Promise.reject(),
     } as CommunicationContextType;
   }
   return {
@@ -49,7 +55,6 @@ const defaultContext = () => {
     errored: false,
     reload: () => {},
     askQuestion: () => Promise.reject(),
-    sendAnswer: () => Promise.reject(),
   } as CommunicationContextType;
 };
 
@@ -57,29 +62,31 @@ export const CommunicationContext = createContext<CommunicationContextType>(defa
 
 type Props = {
   children: ReactNode;
-  token: string | null;
-}
+};
 
-export function CommunicationContextProvider({ children, token }: Props) {
+export function CommunicationContextProvider({ children }: Props) {
   const fromStorage = defaultContext();
   const [errored, setErrored] = useState<boolean>(false);
-  const [announcements, setAnnouncements] = useState<Loadable<Announcement[]>>(fromStorage.announcements);
-  const [questions, setQuestions] = useState<Loadable<Question[]>>(fromStorage.questions);
+  const [announcements, setAnnouncements] = useState<Loadable<Announcement[]>>(
+    fromStorage.announcements,
+  );
+  const [questions, setQuestions] = useState<Loadable<Question[]>>(
+    fromStorage.questions,
+  );
   const [handle, reload] = useTriggerUpdate();
+  const token = useToken();
 
   useEffect(() => {
-    if (!client.communications) return () => {};
-
     const fetchData = () => {
       client.communications
-        ?.get(token ? `/communications/${token}` : "/communications")
+        ?.get("/communications")
         .then((response) => {
           const data = response.data as CommunicationData;
           setAnnouncements(Loadable.of(data.announcements));
           setQuestions(Loadable.of(data.questions || []));
           setErrored(false);
         })
-        .catch((response) => {
+        .catch((response: AxiosError) => {
           notifyError(response);
           setErrored(true);
           // eslint-disable-next-line no-console
@@ -94,44 +101,34 @@ export function CommunicationContextProvider({ children, token }: Props) {
     return () => clearInterval(interval);
   }, [token, handle]);
 
-  const askQuestion = useCallback((question: string) => {
-    if (!token) throw new Error("You have to be logged in to ask a question");
-    if (!client.communications) return Promise.reject();
+  const askQuestion = useCallback(
+    (question: string) => {
+      if (!token) throw new Error("You have to be logged in to ask a question");
+      if (!client.communications) return Promise.reject();
 
-    return client.communications
-      .post(`/communications/${token}`, { content: question })
-      .then((response) => {
-        reload();
-        return response.data;
-      })
-      .catch((response) => {
-        notifyError(response);
-        throw response;
-      });
-  }, [reload, token]);
-
-  const sendAnswer = useCallback((id: number, answer: string) => {
-    if (!client.communications) return Promise.reject();
-    // eslint-disable-next-line no-alert
-    if (!window.confirm("Are you sure?")) return Promise.reject();
-    return client.communications.post(`/communications/${token}/${id}`, {
-      content: answer,
-    }).then(() => {
-      reload();
-    }).catch((response) => {
-      notifyError(response);
-    });
-  }, [reload, token]);
+      return client.communications
+        .post(`/communications`, question)
+        .then((response) => {
+          reload();
+          return response.data;
+        })
+        .catch((response: AxiosError) => {
+          notifyError(response);
+          throw response;
+        });
+    },
+    [reload, token],
+  );
 
   return (
-    <CommunicationContext.Provider value={{
-      announcements,
-      questions,
-      errored,
-      reload,
-      askQuestion,
-      sendAnswer,
-    }}
+    <CommunicationContext.Provider
+      value={{
+        announcements,
+        questions,
+        errored,
+        reload,
+        askQuestion,
+      }}
     >
       {children}
     </CommunicationContext.Provider>
@@ -163,12 +160,10 @@ export function useAskQuestion() {
   return useMemo(() => context.askQuestion, [context.askQuestion]);
 }
 
-export function useSendAnswer() {
-  const context = useContext(CommunicationContext);
-  return useMemo(() => context.sendAnswer, [context.sendAnswer]);
-}
-
-const notifyNewAnnouncements = (oldList: Announcement[], newList: Announcement[]) => {
+const notifyNewAnnouncements = (
+  oldList: Announcement[],
+  newList: Announcement[],
+) => {
   newList.forEach((item) => {
     const oldAnn = oldList.find((old) => old.id === item.id);
     let title = null;
@@ -200,7 +195,7 @@ const notifyNewQuestions = (oldList: Question[], newList: Question[]) => {
     if (!oldQ.answer && item.answer) {
       title = t`Question answered!`;
     }
-    if (oldQ.answer && item.answer && oldQ.answer.content !== item.answer.content) {
+    if (oldQ.answer && item.answer && oldQ.answer !== item.answer) {
       title = t`The answer to one of your questions got updated`;
     }
 
@@ -209,7 +204,7 @@ const notifyNewQuestions = (oldList: Question[], newList: Question[]) => {
 
     // eslint-disable-next-line no-new
     new Notification(title, {
-      body: item.answer?.content,
+      body: item.answer || undefined,
       requireInteraction: true,
     });
   });
@@ -235,7 +230,10 @@ export function useCommunicationNotifier() {
         notifyNewAnnouncements(oldDada.announcements, announcements.value());
         notifyNewQuestions(oldDada.questions || [], questions.value() || []);
       }
-      saveStorage({ announcements: announcements.value(), questions: questions.value() });
+      saveStorage({
+        announcements: announcements.value(),
+        questions: questions.value(),
+      });
     }
   }, [questions, announcements]);
 }

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO inputs (id, token, task, attempt, path, size) VALUES (?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "2498e85204457984451505b8b1827282df9fd3efdf33b4de1090c3aae569b7e9"
+}

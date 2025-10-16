@@ -3,7 +3,9 @@ import { Loadable } from "src/Loadable";
 import { client } from "src/TerryClient";
 
 export function useStatement(path: string) {
-  const [statement, setStatement] = useState<Loadable<string>>(Loadable.loading());
+  const [statement, setStatement] = useState<Loadable<string>>(
+    Loadable.loading(),
+  );
 
   // This is a hack that forces the statement to be immediately discarded if the path changes: without this the old
   // statement is returned, used and drawn under the context of the other task. This cause the old images to be loaded

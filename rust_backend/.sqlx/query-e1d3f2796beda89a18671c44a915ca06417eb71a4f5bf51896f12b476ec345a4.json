@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT token, name, surname, extra_time, sso_user, contest_start_delay, role as 'role: _' FROM users",
+  "describe": {
+    "columns": [
+      {
+        "name": "token",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "surname",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "extra_time",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "sso_user",
+        "ordinal": 4,
+        "type_info": "Bool"
+      },
+      {
+        "name": "contest_start_delay",
+        "ordinal": 5,
+        "type_info": "Integer"
+      },
+      {
+        "name": "role: _",
+        "ordinal": 6,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "e1d3f2796beda89a18671c44a915ca06417eb71a4f5bf51896f12b476ec345a4"
+}

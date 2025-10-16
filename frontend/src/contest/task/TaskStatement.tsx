@@ -12,7 +12,6 @@ type Props = {
 };
 
 export function TaskStatement({ task, source }: Props) {
-  const taskBaseUri = task.statement_path.match(/.*\//)?.[0];
-  const baseUri = client.statementsBaseURI + taskBaseUri;
+  const baseUri = `${client.statementsBaseURI}${task.name}/`;
   return <Markdown source={source} baseUri={baseUri} />;
 }

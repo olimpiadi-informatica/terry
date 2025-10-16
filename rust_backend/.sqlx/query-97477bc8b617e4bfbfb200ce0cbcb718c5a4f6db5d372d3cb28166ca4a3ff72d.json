@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id, token, task, attempt, date as \"date: _\", path, size FROM inputs WHERE token = ? AND task = ? AND attempt = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "token",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "task",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "attempt",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "date: _",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "path",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "size",
+        "ordinal": 6,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "97477bc8b617e4bfbfb200ce0cbcb718c5a4f6db5d372d3cb28166ca4a3ff72d"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        INSERT INTO submissions (id, token, task, input, output, source, score)\n        SELECT ?, i.token, i.task, ?, ?, ?, ?\n        FROM inputs i\n        WHERE i.id = ?\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "1102162b4ce4d3eb27536f53f061e034f07bb873f9871f43032896753641852a"
+}

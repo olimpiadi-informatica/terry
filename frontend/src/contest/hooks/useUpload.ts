@@ -15,11 +15,14 @@ export function useUpload<T>(inputId: string, type: UploadType) {
       if (!file) return;
       const data = new FormData();
 
-      data.append("input_id", inputId);
       data.append("file", file);
 
       client.api
-        .post(type === UploadType.Source ? "/upload_source" : "/upload_output", data)
+        .post(
+          (type === UploadType.Source ? "/upload_source/" : "/upload_output/")
+            + inputId,
+          data,
+        )
         .then((response) => {
           setUpload(Loadable.of(response.data));
         })

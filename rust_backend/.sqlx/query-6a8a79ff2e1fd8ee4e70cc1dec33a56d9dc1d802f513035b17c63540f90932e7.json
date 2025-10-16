@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO outputs (id, input, path, size, result) VALUES (?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "6a8a79ff2e1fd8ee4e70cc1dec33a56d9dc1d802f513035b17c63540f90932e7"
+}

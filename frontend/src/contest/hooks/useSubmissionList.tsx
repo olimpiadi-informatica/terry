@@ -1,5 +1,11 @@
 import React, {
-  useState, useEffect, createContext, ReactNode, useMemo, useContext, useCallback,
+  useState,
+  useEffect,
+  createContext,
+  ReactNode,
+  useMemo,
+  useContext,
+  useCallback,
 } from "react";
 import { client } from "src/TerryClient";
 import { useToken } from "src/contest/ContestContext";
@@ -21,7 +27,11 @@ export const SubmissionListContext = createContext<SubmissionListContextType>({
   reloadTask: () => {},
 });
 
-export function SubmissionListContextProvider({ children }: { children: ReactNode }) {
+export function SubmissionListContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [list, setList] = useState<TasksSubmissionList>({});
   const [toUpdate, setToUpdate] = useState<string[]>([]);
   const token = useToken();
@@ -32,13 +42,14 @@ export function SubmissionListContextProvider({ children }: { children: ReactNod
       if (Object.keys(list).length > 0) {
         setList({});
       }
+      return;
     }
 
     const newList = { ...list };
     toUpdate.forEach((taskName) => {
       newList[taskName] = Loadable.loading();
       client.api
-        .get(`/user/${token}/submissions/${taskName}`)
+        .get(`/submissions/${taskName}`)
         .then((response) => {
           setList({ ...list, [taskName]: Loadable.of(response.data) });
         })
@@ -53,9 +64,12 @@ export function SubmissionListContextProvider({ children }: { children: ReactNod
     }
   }, [toUpdate, list, token]);
 
-  const reloadTask = useCallback((taskName: string) => {
-    setToUpdate([...toUpdate, taskName]);
-  }, [toUpdate]);
+  const reloadTask = useCallback(
+    (taskName: string) => {
+      setToUpdate([...toUpdate, taskName]);
+    },
+    [toUpdate],
+  );
 
   return (
     <SubmissionListContext.Provider

@@ -6,7 +6,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
 type Props = {
-  source: string;
+  source: string | null | undefined;
   baseUri?: string;
 };
 

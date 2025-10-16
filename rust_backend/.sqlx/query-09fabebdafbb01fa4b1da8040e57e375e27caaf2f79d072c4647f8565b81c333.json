@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT token, task, score, current_attempt FROM user_tasks WHERE token = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "token",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "task",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "score",
+        "ordinal": 2,
+        "type_info": "Float"
+      },
+      {
+        "name": "current_attempt",
+        "ordinal": 3,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "09fabebdafbb01fa4b1da8040e57e375e27caaf2f79d072c4647f8565b81c333"
+}
