@@ -1,45 +1,46 @@
 # terry frontend
 
-## How to run the frontend
+This is the React-based frontend for the `terry` contest environment.
 
-1. First of all you need to install all the dependencies of this project: `npx yarn install`
+For full setup and production build instructions, please refer to the [root README.md](../README.md).
 
-2. Build the docker image for the backend: `docker build -t terry ./docker/`
+## Development Setup
 
-3. Start the backend: `docker run -p 2000:80 terry`
+1. Install dependencies:
+   ```bash
+   yarn install
+   ```
 
-4. Start the frontend: `npx yarn start`
+2. Start the development server:
+   ```bash
+   yarn start
+   ```
+   This will start the frontend on `http://localhost:3000` and proxy API requests to the backend (configured in `proxy.ts`).
 
-5. Point your browser to http://localhost:9000/admin
-
-6. Upload a contest pack. You can find a sample in https://github.com/algorithm-ninja/terry-sample-contest
-
-7. Start the contest by clicking on the button.
-
-If for some weird reason you need to start the contest _without using a browser_ you can issue:
-```
-curl -X POST -F admin_token=secret  http://localhost:1234/admin/start
-```
-where `secret` is the admin token you have chosen.
-
+3. Point your browser to `http://localhost:3000/`.
 
 ## Internet connectivity detection and reporting
 
-Build/start the front-end with the following environment variable:
+The frontend can detect and report internet connectivity issues. You can configure the test endpoint using the following environment variable:
 
 ```
-REACT_APP_DETECT_INTERNET_TEST_ENDPOINT="http://gstatic.com/generate_204"
+REACT_APP_DETECT_INTERNET_TEST_ENDPOINT="https://gstatic.com/generate_204"
 ```
 
 ## Translation workflow
 
-1. Write your text in English wrapping it in the `<Trans>` component
-2. Run `yarn extract` for updating the `.po` files inside `src/locales`. It will show you how many translations are still missing
-3. Make your translations in the `.po` files
-4. Compile the new translations with `yarn compile`
+`terry` uses [LinguiJS](https://lingui.js.org/) for internationalization.
+
+1. Write your text in English wrapping it in the `<Trans>` component or using the `t` macro.
+2. Run `yarn extract` to update the `.po` files inside `src/locales`.
+3. Make your translations in the `.po` files.
+4. Compile the new translations:
+   ```bash
+   yarn compile
+   ```
 
 If you want to support a new language:
 1. Run `yarn add-locale <locale>`
-2. Write your translations in the `.po` file
-3. Compile the translation with `yarn compile`
-4. Add your language to the catalog and to the language list in `src/i18n.tsx`
+2. Write your translations in the `.po` file.
+3. Compile the translation with `yarn compile`.
+4. Add your language to the catalog and to the language list in `src/i18n.tsx`.
