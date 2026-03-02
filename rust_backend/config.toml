@@ -21,17 +21,6 @@ jwt_cookie_name = "terry"
 # Path to a markdown file for public description, available before login.
 public_description = "./config/public_description.md"
 
-# A list of extra material sections.
-[[extra_material]]
-name = "Extra Material 1"
-url = "extra-material-1"
-page = "config/extra_material.md"
-
-[[extra_material]]
-name = "Extra Material 2"
-url = "extra-material-2"
-page = "config/extra_material.md"
-
 # --- Optional Fields ---
 
 # The URL of the SSO provider.
@@ -44,3 +33,15 @@ page = "config/extra_material.md"
 # telegram_bot_token = ""
 # telegram_channel_id = 0
 # telegram_admin_url = ""
+
+# A list of extra material sections.
+[[extra_material]]
+name = "Extra Material 1"
+url = "extra-material-1"
+page = "config/extra_material.md"
+
+[[extra_material]]
+name = "Extra Material 2"
+url = "extra-material-2"
+page = "config/extra_material.md"
+
