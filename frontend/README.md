@@ -4,29 +4,6 @@ This is the React-based frontend for the `terry` contest environment.
 
 For full setup and production build instructions, please refer to the [root README.md](../README.md).
 
-## Development Setup
-
-1. Install dependencies:
-   ```bash
-   yarn install
-   ```
-
-2. Start the development server:
-   ```bash
-   yarn start
-   ```
-   This will start the frontend on `http://localhost:3000` and proxy API requests to the backend (configured in `proxy.ts`).
-
-3. Point your browser to `http://localhost:3000/`.
-
-## Internet connectivity detection and reporting
-
-The frontend can detect and report internet connectivity issues. You can configure the test endpoint using the following environment variable:
-
-```
-REACT_APP_DETECT_INTERNET_TEST_ENDPOINT="https://gstatic.com/generate_204"
-```
-
 ## Translation workflow
 
 `terry` uses [LinguiJS](https://lingui.js.org/) for internationalization.
