@@ -119,13 +119,13 @@ export function ContestStatusView() {
   );
 
   const requestSort = (key: SortKey, taskName?: string) => {
-    let direction: "ascending" | "descending" = "ascending";
+    let direction: "ascending" | "descending" = "descending";
     if (
       sortConfig
       && sortConfig.key === key
-      && sortConfig.direction === "ascending"
+      && sortConfig.direction === "descending"
     ) {
-      direction = "descending";
+      direction = "ascending";
     }
     setSortConfig({ key, direction, taskName });
   };
