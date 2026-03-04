@@ -12,6 +12,7 @@ use super::api::{ContestStatus, StatusResponse, Submission};
 use crate::config::Config;
 use crate::database;
 use crate::extractors::{AuthUser, EnsureUserContestStarted};
+use crate::models::Role;
 use crate::serve::{AppState, ExtraMaterialSection};
 
 const CACHE_DURATION: Duration = Duration::from_secs(5);
@@ -119,6 +120,7 @@ pub async fn get_status(
 
     let contest_started_for_user = match (user, state.config.window_duration) {
         (None, _) => false,
+        (Some(u), _) if u.role == Role::Admin => true,
         (Some(u), Some(_)) => u.contest_start_delay.is_some(),
         (Some(_), None) => chrono::Utc::now() >= state.config.start_time,
     };

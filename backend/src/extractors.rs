@@ -209,6 +209,11 @@ impl FromRequestParts<AppState> for EnsureUserContestStarted {
     ) -> Result<Self, Self::Rejection> {
         let AuthUser(user) =
             <AuthUser as FromRequestParts<_>>::from_request_parts(parts, state).await?;
+
+        if user.role == Role::Admin {
+            return Ok(EnsureUserContestStarted);
+        }
+
         if state.config.window_duration.is_some() {
             if user.contest_start_delay.is_none() {
                 return Err(ApiError::Forbidden(
@@ -235,6 +240,10 @@ impl FromRequestParts<AppState> for EnsureContestRunning {
     ) -> Result<Self, Self::Rejection> {
         let AuthUser(user) =
             <AuthUser as FromRequestParts<_>>::from_request_parts(parts, state).await?;
+        if user.role == Role::Admin {
+            return Ok(EnsureContestRunning);
+        }
+
         if state.config.window_duration.is_some() {
             if user.contest_start_delay.is_none() {
                 return Err(ApiError::Forbidden(
