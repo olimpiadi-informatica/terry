@@ -1,5 +1,10 @@
 /* eslint-disable camelcase */
 
+export type AlertSeverity =
+  | "warning"
+  | "danger"
+  | "success";
+
 export type ValidationCaseInfo =
   | {
       status: "missing";
@@ -41,8 +46,9 @@ export type SubmissionList = Submission[];
 
 export type Alert = {
   message: string;
-  severity: "warning";
+  severity: AlertSeverity;
   code?: string;
+  blocking?: boolean;
 };
 
 export type UploadedFile = {

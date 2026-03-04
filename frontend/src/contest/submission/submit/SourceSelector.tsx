@@ -31,7 +31,7 @@ export function SourceSelector({ inputId, setSource }: Props) {
   }, [sourceRef]);
 
   useEffect(() => {
-    if (uploadStatus.isReady()) {
+    if (uploadStatus.isReady() && !uploadStatus.value().validation.alerts.find((x) => x.blocking)) {
       setSource(uploadStatus.value());
     } else {
       setSource(null);

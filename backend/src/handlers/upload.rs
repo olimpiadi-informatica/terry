@@ -112,8 +112,9 @@ pub async fn upload_source(
     let mut alerts = Vec::new();
     if !get_exeflags(&content).is_empty() {
         alerts.push(Alert {
-            severity: AlertSeverity::Warning,
+            severity: AlertSeverity::Danger,
             message: "You have submitted an executable! Please send the source code.".to_string(),
+            blocking: true,
         });
     }
 
@@ -123,15 +124,17 @@ pub async fn upload_source(
         .await?
     {
         alerts.push(Alert {
-            severity: AlertSeverity::Warning,
+            severity: AlertSeverity::Danger,
             message: "You have submitted a template file! Please send the source code.".to_string(),
+            blocking: true,
         });
     }
 
     if alerts.is_empty() {
         alerts.push(Alert {
-            severity: AlertSeverity::Warning,
+            severity: AlertSeverity::Success,
             message: "Source file uploaded correctly.".to_string(),
+            blocking: false,
         });
     }
 
