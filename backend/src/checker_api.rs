@@ -27,12 +27,16 @@ pub struct Validation {
 #[serde(rename_all = "lowercase")]
 pub enum AlertSeverity {
     Warning,
+    Danger,
+    Success,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Alert {
     pub severity: AlertSeverity,
     pub message: String,
+    #[serde(default)]
+    pub blocking: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
