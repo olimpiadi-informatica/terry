@@ -31,53 +31,70 @@ export function SidebarView() {
     [],
   );
 
-  const renderStarted = useCallback(
+  const afterStart = useCallback(
     (statusInfo: Status) => (
-      <>
-        <li className="nav-item title">
-          <h5 className="text-uppercase">
-            <Trans>Your score</Trans>
-          </h5>
-          <ScoreView
-            style={{ textAlign: "right", marginRight: "1rem" }}
-            score={statusInfo.user?.total_score || 0}
-            max={statusInfo.contest.max_total_score || 0}
-            size={2}
-          />
-        </li>
-
-        <li className="divider-vertical" />
-
-        <li className="nav-item title">
-          <h5 className="text-uppercase">
-            <Trans>Remaining time</Trans>
-          </h5>
-          <p className="terry-remaining-time">
-            <Countdown
-              clock={() => serverTime()}
-              end={DateTime.fromISO(statusInfo.contest.time.end, {
-                zone: "utc",
-              })}
-              afterEnd={afterEnd}
-            />
-          </p>
-        </li>
-        <li className="divider-vertical" />
-
-        <li className="nav-item title">
-          <h5 className="text-uppercase">
-            <Trans>Tasks</Trans>
-          </h5>
-        </li>
-        <li className="divider-vertical" />
-
-        {statusInfo.contest.tasks?.map((task: TaskData) => (
-          <NavbarItemView key={task.name} taskName={task.name} />
-        ))}
-
-        <li className="divider-vertical" />
-      </>
+      <Countdown
+        clock={() => serverTime()}
+        end={DateTime.fromISO(statusInfo.contest.time.end, {
+          zone: "utc",
+        })}
+        afterEnd={afterEnd}
+      />
     ),
+    [afterEnd],
+  );
+
+  const renderStarted = useCallback(
+    (statusInfo: Status) => {
+      const startTime = DateTime.fromISO(statusInfo.contest.time.start, {
+        zone: "utc",
+      });
+      return (
+        <>
+          <li className="nav-item title">
+            <h5 className="text-uppercase">
+              <Trans>Your score</Trans>
+            </h5>
+            <ScoreView
+              style={{ textAlign: "right", marginRight: "1rem" }}
+              score={statusInfo.user?.total_score || 0}
+              max={statusInfo.contest.max_total_score || 0}
+              size={2}
+            />
+          </li>
+
+          <li className="divider-vertical" />
+
+          <li className="nav-item title">
+            <h5 className="text-uppercase">
+              <Trans>Remaining time</Trans>
+            </h5>
+            <p className="terry-remaining-time">
+              {serverTime() < startTime && "-"}
+              <Countdown
+                clock={() => serverTime()}
+                end={startTime}
+                afterEnd={() => afterStart(statusInfo)}
+              />
+            </p>
+          </li>
+          <li className="divider-vertical" />
+
+          <li className="nav-item title">
+            <h5 className="text-uppercase">
+              <Trans>Tasks</Trans>
+            </h5>
+          </li>
+          <li className="divider-vertical" />
+
+          {statusInfo.contest.tasks?.map((task: TaskData) => (
+            <NavbarItemView key={task.name} taskName={task.name} />
+          ))}
+
+          <li className="divider-vertical" />
+        </>
+      );
+    },
     [serverTime, afterEnd],
   );
 
