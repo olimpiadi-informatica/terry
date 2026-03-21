@@ -6,10 +6,13 @@ use axum::extract::Request;
 use axum::middleware::Next;
 use axum::response::Response;
 use axum::routing::{get, post};
+use http::HeaderValue;
 use sqlx::SqlitePool;
 use teloxide::Bot;
 use teloxide::types::ChatId;
+use tower::Layer;
 use tower_http::services::{ServeDir, ServeFile};
+use tower_http::set_header::SetResponseHeaderLayer;
 use tracing::{info, warn};
 
 use crate::cli::ServeArgs;
@@ -62,38 +65,45 @@ pub async fn trace_requests(request: Request, next: Next) -> Response {
 */
 
 fn create_router(app_state: AppState) -> Router {
-    Router::new()
-        .route("/api/status", get(info::get_status))
-        .route("/api/submission/{id}", get(info::get_submission))
-        .route("/api/submissions/{task}", get(info::get_submissions))
+    let api = Router::new()
+        .route("/status", get(info::get_status))
+        .route("/submission/{id}", get(info::get_submission))
+        .route("/submissions/{task}", get(info::get_submissions))
+        .route("/generate_input/{task_name}", post(contest::generate_input))
+        .route("/submit/{input_id}", post(contest::submit))
+        .route("/abandon_input/{input_id}", post(contest::abandon_input))
+        .route("/upload_output/{input_id}", post(upload::upload_output))
+        .route("/upload_source/{input_id}", post(upload::upload_source))
+        .route("/login", post(auth::login))
+        .route("/logout", post(auth::logout))
         .route(
-            "/api/generate_input/{task_name}",
-            post(contest::generate_input),
-        )
-        .route("/api/submit/{input_id}", post(contest::submit))
-        .route(
-            "/api/abandon_input/{input_id}",
-            post(contest::abandon_input),
-        )
-        .route("/api/upload_output/{input_id}", post(upload::upload_output))
-        .route("/api/upload_source/{input_id}", post(upload::upload_source))
-        .route("/api/login", post(auth::login))
-        .route("/api/logout", post(auth::logout))
-        .route(
-            "/api/communications",
+            "/communications",
             get(communication::list).post(communication::ask),
         )
-        .route(
-            "/api/admin/set_extra_time/{id}",
-            post(admin::set_extra_time),
-        )
-        .route("/api/admin/user_list", get(admin::user_list))
-        .route("/api/admin/questions", get(admin::questions))
-        .route(
-            "/api/admin/answer_question/{id}",
-            post(admin::answer_question),
-        )
-        .route("/api/admin/add_announcement", post(admin::add_announcement))
+        .route("/admin/set_extra_time/{id}", post(admin::set_extra_time))
+        .route("/admin/user_list", get(admin::user_list))
+        .route("/admin/questions", get(admin::questions))
+        .route("/admin/answer_question/{id}", post(admin::answer_question))
+        .route("/admin/add_announcement", post(admin::add_announcement))
+        .layer(SetResponseHeaderLayer::if_not_present(
+            http::header::CACHE_CONTROL,
+            HeaderValue::from_static("no-store, no-cache"),
+        ));
+
+    let serve_static = SetResponseHeaderLayer::if_not_present(
+        http::header::CACHE_CONTROL,
+        HeaderValue::from_static("public, max-age=31536000, immutable"),
+    )
+    .layer(ServeDir::new("static/static"));
+
+    let main = SetResponseHeaderLayer::if_not_present(
+        http::header::CACHE_CONTROL,
+        HeaderValue::from_static("no-cache"),
+    )
+    .layer(ServeDir::new("static").fallback(ServeFile::new("static/index.html")));
+
+    Router::new()
+        .nest("/api", api)
         .route(
             "/statements/{task}/{*path}",
             get(static_files::serve_statement),
@@ -102,7 +112,8 @@ fn create_router(app_state: AppState) -> Router {
             "/files/{*path}",
             get(static_files::serve_file_with_attachment),
         )
-        .fallback_service(ServeDir::new("static").fallback(ServeFile::new("static/index.html")))
+        .nest_service("/static", serve_static)
+        .fallback_service(main)
         .layer(axum::middleware::from_fn(trace_requests))
         .with_state(app_state)
 }
