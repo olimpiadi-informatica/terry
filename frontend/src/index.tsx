@@ -40,7 +40,7 @@ root.render(
   <TransProvider>
     <React.Suspense fallback={<Loading />}>
       <ToastContainer />
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <ContestContextProvider>
           <Routes>
             <Route path="/" element={<ContestView />}>
