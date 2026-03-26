@@ -1,11 +1,11 @@
 import axios from "axios";
 
 class Client {
-  apiBaseURI = process.env.REACT_APP_API_BASE_URI || "/api/";
+  apiBaseURI = process.env.REACT_APP_API_BASE_URI || `${process.env.PUBLIC_URL}/api/`;
 
-  filesBaseURI = process.env.REACT_APP_FILES_BASE_URI || "/files/";
+  filesBaseURI = process.env.REACT_APP_FILES_BASE_URI || `${process.env.PUBLIC_URL}/files/`;
 
-  statementsBaseURI = process.env.REACT_APP_STATEMENTS_BASE_URI || "/statements/";
+  statementsBaseURI = process.env.REACT_APP_STATEMENTS_BASE_URI || `${process.env.PUBLIC_URL}/statements/`;
 
   communicationsBaseURI = process.env.REACT_APP_COMMUNICATIONS_BASE_URI || null;
 
