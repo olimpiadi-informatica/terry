@@ -85,6 +85,7 @@ fn create_router(app_state: AppState) -> Router {
         .route("/admin/questions", get(admin::questions))
         .route("/admin/answer_question/{id}", post(admin::answer_question))
         .route("/admin/add_announcement", post(admin::add_announcement))
+        .route("/admin/ranking", get(admin::download_ranking))
         .layer(SetResponseHeaderLayer::if_not_present(
             http::header::CACHE_CONTROL,
             HeaderValue::from_static("no-store, no-cache"),

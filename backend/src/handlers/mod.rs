@@ -58,6 +58,12 @@ impl From<serde_json::Error> for ApiError {
     }
 }
 
+impl From<csv::Error> for ApiError {
+    fn from(err: csv::Error) -> Self {
+        ApiError::Internal(err.to_string())
+    }
+}
+
 impl From<sqlx::Error> for ApiError {
     fn from(err: sqlx::Error) -> Self {
         ApiError::Internal(err.to_string())
