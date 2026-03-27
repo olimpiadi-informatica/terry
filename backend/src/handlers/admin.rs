@@ -1,5 +1,6 @@
 use axum::Json;
 use axum::extract::{Path, State};
+use axum_extra::response::Attachment;
 use tracing::info;
 
 use super::ApiError;
@@ -32,6 +33,41 @@ pub async fn user_list(
         resp.push(super::get_user_status(&state.pool, u).await?);
     }
     Ok(Json(resp))
+}
+
+pub async fn download_ranking(
+    State(state): State<AppState>,
+    _: Admin,
+) -> Result<Attachment<Vec<u8>>, ApiError> {
+    let tasks = database::get_tasks(&state.pool).await?;
+    let task_names: Vec<&str> = tasks.iter().map(|task| task.name.as_str()).collect();
+
+    let users = database::get_users(&state.pool).await?;
+    let mut resp = vec![];
+    for u in users {
+        resp.push(super::get_user_status(&state.pool, u).await?);
+    }
+
+    let mut csv = csv::Writer::from_writer(vec![]);
+
+    let mut headers = vec!["name", "surname", "token", "role"];
+    headers.append(&mut task_names.clone());
+    headers.append(&mut vec!["total_score"]);
+
+    csv.write_record(&headers)?;
+
+    for user in resp {
+        let mut row = vec![user.name, user.surname, user.token, user.role.to_string()];
+        for t in &task_names {
+            row.push(user.tasks.get(*t).map_or(0f64, |x| x.score).to_string());
+        }
+        row.push(user.total_score.to_string());
+        csv.write_record(row)?;
+    }
+
+    Ok(Attachment::new(csv.into_inner().unwrap())
+        .content_type("text/csv")
+        .filename("ranking.csv"))
 }
 
 pub async fn questions(

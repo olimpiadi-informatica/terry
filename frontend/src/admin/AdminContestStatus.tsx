@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faDownload,
   faHourglassStart,
   faSort,
   faSortDown,
@@ -230,6 +231,16 @@ export function ContestStatusView() {
                 <option value="30000">30s</option>
                 <option value="120000">2m</option>
               </select>
+              <a
+                role="button"
+                className="btn btn-light ml-3"
+                href={`${client.apiBaseURI}admin/ranking`}
+                download
+              >
+                <FontAwesomeIcon icon={faDownload} />
+                {" "}
+                CSV
+              </a>
             </div>
             <table className="table table-striped">
               <thead>
