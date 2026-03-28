@@ -22,6 +22,7 @@ pub mod auth;
 pub mod communication;
 pub mod contest;
 pub mod info;
+pub mod proxy;
 pub mod static_files;
 pub mod upload;
 

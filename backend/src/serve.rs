@@ -3,10 +3,13 @@ use std::time::Instant;
 
 use axum::Router;
 use axum::extract::Request;
+use axum::handler::Handler;
 use axum::middleware::Next;
 use axum::response::Response;
 use axum::routing::{get, post};
 use http::HeaderValue;
+use hyper_util::client::legacy::connect::HttpConnector;
+use hyper_util::rt::TokioExecutor;
 use sqlx::SqlitePool;
 use teloxide::Bot;
 use teloxide::types::ChatId;
@@ -20,6 +23,7 @@ use crate::config;
 use crate::contest_manager::ContestManager;
 use crate::handlers::communication::TelegramBotData;
 use crate::handlers::info::CachedData;
+use crate::handlers::proxy::{ProxyState, proxy_handler};
 use crate::handlers::{admin, auth, communication, contest, info, static_files, upload};
 
 #[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
@@ -63,6 +67,26 @@ pub async fn trace_requests(request: Request, next: Next) -> Response {
         .route("/api/output/{id}", get(info::get_output))
         .route("/api/source/{id}", get(info::get_source))
 */
+
+pub fn proxy_router(app_state: AppState) -> Router {
+    let mut router = Router::new();
+
+    let http_client = hyper_util::client::legacy::Client::<(), ()>::builder(TokioExecutor::new())
+        .build(HttpConnector::new());
+
+    for proxy in &app_state.config.proxy {
+        router = router.nest_service(
+            &proxy.path,
+            proxy_handler.with_state(ProxyState {
+                app: app_state.clone(),
+                http_client: http_client.clone(),
+                upstream: proxy.upstream.parse().expect("Invalid proxy upstream Uri"),
+            }),
+        );
+    }
+
+    router
+}
 
 fn create_router(app_state: AppState) -> Router {
     let api = Router::new()
@@ -114,6 +138,7 @@ fn create_router(app_state: AppState) -> Router {
             get(static_files::serve_file_with_attachment),
         )
         .nest_service("/static", serve_static)
+        .merge(proxy_router(app_state.clone()).with_state(()))
         .fallback_service(main)
         .layer(axum::middleware::from_fn(trace_requests))
         .with_state(app_state)

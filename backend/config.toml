@@ -45,3 +45,6 @@ name = "Extra Material 2"
 url = "extra-material-2"
 page = "config/extra_material.md"
 
+[[proxy]]
+path = "/proxy"
+upstream = "http://127.0.0.1:8080/"

@@ -3328,6 +3328,7 @@ dependencies = [
  "http",
  "humantime",
  "humantime-serde",
+ "hyper-util",
  "jsonwebtoken",
  "num_cpus",
  "once_cell",
