@@ -23,6 +23,12 @@ pub struct ExtraMaterialSectionConfig {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+pub struct ProxySectionConfig {
+    pub path: String,
+    pub upstream: String,
+}
+
+#[derive(Deserialize, Debug, Clone)]
 pub struct Config {
     /// The size of the input queue for each task.
     #[serde(default = "default_queue_size")]
@@ -65,6 +71,10 @@ pub struct Config {
     /// A list of extra material sections.
     #[serde(default)]
     pub extra_material: Vec<ExtraMaterialSectionConfig>,
+
+    /// A list of proxy sections.
+    #[serde(default)]
+    pub proxy: Vec<ProxySectionConfig>,
 
     // --- Telegram settings ---
     pub telegram_bot_token: Option<String>,
