@@ -5,7 +5,7 @@ use axum::{
 };
 use http::{HeaderValue, StatusCode, Uri, header::Entry};
 use hyper_util::client::legacy::{Client, connect::HttpConnector};
-use tracing::error;
+use tracing::{error, warn};
 
 use crate::{extractors::AuthUser, handlers::ApiError, serve::AppState};
 
@@ -57,9 +57,8 @@ pub async fn proxy_handler(
 
     *req.uri_mut() = new_uri.parse().map_err(|_| StatusCode::BAD_REQUEST)?;
 
-    state
-        .http_client
-        .request(req)
-        .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+    state.http_client.request(req).await.map_err(|e| {
+        warn!("Proxy http client error: {e:?}");
+        StatusCode::INTERNAL_SERVER_ERROR
+    })
 }
