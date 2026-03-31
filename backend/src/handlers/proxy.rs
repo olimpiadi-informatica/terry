@@ -1,13 +1,15 @@
-use axum::{
-    body::Body,
-    extract::{OptionalFromRequestParts, Request, State},
-    response::IntoResponse,
-};
-use http::{HeaderValue, StatusCode, Uri, header::Entry};
-use hyper_util::client::legacy::{Client, connect::HttpConnector};
+use axum::body::Body;
+use axum::extract::{OptionalFromRequestParts, Request, State};
+use axum::response::IntoResponse;
+use http::header::Entry;
+use http::{HeaderValue, StatusCode, Uri};
+use hyper_util::client::legacy::Client;
+use hyper_util::client::legacy::connect::HttpConnector;
 use tracing::{error, warn};
 
-use crate::{extractors::AuthUser, handlers::ApiError, serve::AppState};
+use crate::extractors::AuthUser;
+use crate::handlers::ApiError;
+use crate::serve::AppState;
 
 const AUTH_HEADER: &str = "X-OII-AUTH";
 

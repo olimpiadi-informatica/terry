@@ -1,7 +1,7 @@
 use std::net::SocketAddr;
 use std::path::PathBuf;
 
-use clap::{Args, Parser, Subcommand};
+use clap::{ArgGroup, Args, Parser, Subcommand};
 
 use crate::models::Role;
 
@@ -12,18 +12,26 @@ pub struct Cli {
     pub command: Commands,
 }
 
-#[derive(Parser, Debug)]
+#[derive(Debug, Args)]
+#[command(group(
+    ArgGroup::new("user_source")
+        .required(true)
+        .args(["csv", "token"]),
+))]
 pub struct ImportUserArgs {
+    /// Path to a CSV file with `token,name,surname[,role]` columns
+    #[arg(long, value_name = "FILE", conflicts_with_all = ["token", "name", "surname"])]
+    pub csv: Option<PathBuf>,
     /// The token of the user to import
-    #[clap(long)]
-    pub token: String,
+    #[clap(long, required_unless_present = "csv")]
+    pub token: Option<String>,
     /// The name of the user
-    #[clap(long)]
-    pub name: String,
+    #[clap(long, required_unless_present = "csv")]
+    pub name: Option<String>,
     /// The surname of the user
-    #[clap(long)]
-    pub surname: String,
-    /// Role of the new user
+    #[clap(long, required_unless_present = "csv")]
+    pub surname: Option<String>,
+    /// Role of the new user, or default role for CSV rows without a role column
     #[clap(long, value_enum, default_value_t = Role::Contestant)]
     pub role: Role,
 }

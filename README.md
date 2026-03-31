@@ -84,6 +84,22 @@ To import an admin:
 terry import-user --token "admin-secret-token" --name "Admin" --surname "User" --role admin
 ```
 
+To import multiple users from CSV:
+
+```bash
+terry import-user --csv users.csv
+```
+
+The CSV file must include `token,name,surname` headers and may optionally include a `role`
+column. If the `role` column is omitted or empty, the command uses `--role` as the default:
+
+```csv
+token,name,surname,role
+alice,Alice,Smith,Contestant
+bob,Bob,Jones,Admin
+charlie,Charlie,Brown,
+```
+
 ### Export Results
 
 Exports a ranking CSV and all submissions (including source, input, and output files).
@@ -95,4 +111,3 @@ terry export /path/to/export-dir
 ## Specification of the terry format
 
 You can find the specification of the format accepted by `terry` [here](format-specs.md).
-
