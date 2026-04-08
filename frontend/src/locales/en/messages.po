@@ -25,11 +25,11 @@ msgstr "Abandon this expired input"
 msgid "Abandon this input now"
 msgstr "Abandon this input now"
 
-#: src/contest/sidebar/SidebarView.tsx:162
+#: src/contest/sidebar/SidebarView.tsx:179
 msgid "Add Announcement"
 msgstr "Add Announcement"
 
-#: src/contest/sidebar/SidebarView.tsx:138
+#: src/contest/sidebar/SidebarView.tsx:155
 msgid "Admin"
 msgstr "Admin"
 
@@ -61,7 +61,7 @@ msgstr "Ask a question"
 #~ msgid "Auto-reload"
 #~ msgstr "Auto-reload"
 
-#: src/admin/AdminContestStatus.tsx:218
+#: src/admin/AdminContestStatus.tsx:219
 msgid "Auto-reload:"
 msgstr "Auto-reload:"
 
@@ -113,7 +113,7 @@ msgstr "Close"
 msgid "CodeBlocks project"
 msgstr "CodeBlocks project"
 
-#: src/contest/sidebar/SidebarView.tsx:102
+#: src/contest/sidebar/SidebarView.tsx:119
 msgid "Communication"
 msgstr "Communication"
 
@@ -157,8 +157,8 @@ msgstr "Compressed archive"
 msgid "Content"
 msgstr "Content"
 
-#: src/admin/AdminContestStatus.tsx:176
-#: src/contest/sidebar/SidebarView.tsx:146
+#: src/admin/AdminContestStatus.tsx:177
+#: src/contest/sidebar/SidebarView.tsx:163
 msgid "Contest Status"
 msgstr "Contest Status"
 
@@ -215,15 +215,15 @@ msgstr "Error loading contest"
 msgid "Excel document"
 msgstr "Excel document"
 
-#: src/contest/sidebar/SidebarView.tsx:118
+#: src/contest/sidebar/SidebarView.tsx:135
 msgid "Extra material"
 msgstr "Extra material"
 
-#: src/admin/AdminContestStatus.tsx:258
+#: src/admin/AdminContestStatus.tsx:269
 msgid "Extra Time"
 msgstr "Extra Time"
 
-#: src/admin/AdminContestStatus.tsx:364
+#: src/admin/AdminContestStatus.tsx:375
 msgid "Extra time (minutes)"
 msgstr "Extra time (minutes)"
 
@@ -296,7 +296,7 @@ msgid "Last update:"
 msgstr "Last update:"
 
 #: src/contest/LoginView.tsx:63
-#: src/contest/sidebar/SidebarView.tsx:95
+#: src/contest/sidebar/SidebarView.tsx:112
 msgid "Login"
 msgstr "Login"
 
@@ -304,11 +304,11 @@ msgstr "Login"
 msgid "Logout"
 msgstr "Logout"
 
-#: src/contest/sidebar/SidebarView.tsx:154
+#: src/contest/sidebar/SidebarView.tsx:171
 msgid "Manage Questions"
 msgstr "Manage Questions"
 
-#: src/admin/AdminContestStatus.tsx:243
+#: src/admin/AdminContestStatus.tsx:254
 msgid "Name"
 msgstr "Name"
 
@@ -336,11 +336,11 @@ msgstr "No new questions"
 msgid "No questions"
 msgstr "No questions"
 
-#: src/admin/AdminContestStatus.tsx:328
+#: src/admin/AdminContestStatus.tsx:339
 msgid "No users found."
 msgstr "No users found."
 
-#: src/admin/AdminContestStatus.tsx:227
+#: src/admin/AdminContestStatus.tsx:228
 msgid "None"
 msgstr "None"
 
@@ -372,7 +372,7 @@ msgstr "Output file info"
 msgid "Output file..."
 msgstr "Output file..."
 
-#: src/admin/AdminContestStatus.tsx:198
+#: src/admin/AdminContestStatus.tsx:199
 msgid "Page size"
 msgstr "Page size"
 
@@ -389,7 +389,7 @@ msgstr "Pascal"
 msgid "PDF file"
 msgstr "PDF file"
 
-#: src/admin/AdminContestStatus.tsx:333
+#: src/admin/AdminContestStatus.tsx:344
 msgid "Per-Contestant Extra Time"
 msgstr "Per-Contestant Extra Time"
 
@@ -433,11 +433,15 @@ msgstr "Question answered!"
 msgid "Questions"
 msgstr "Questions"
 
-#: src/contest/sidebar/SidebarView.tsx:110
+#: src/contest/sidebar/SidebarView.tsx:127
 msgid "Questions and Announcements"
 msgstr "Questions and Announcements"
 
-#: src/contest/sidebar/SidebarView.tsx:53
+#: src/components/RefreshButton.tsx:22
+msgid "Refresh"
+msgstr "Refresh"
+
+#: src/contest/sidebar/SidebarView.tsx:70
 msgid "Remaining time"
 msgstr "Remaining time"
 
@@ -453,7 +457,7 @@ msgstr "Request new input"
 msgid "Requesting..."
 msgstr "Requesting..."
 
-#: src/admin/AdminContestStatus.tsx:253
+#: src/admin/AdminContestStatus.tsx:264
 msgid "Role"
 msgstr "Role"
 
@@ -469,7 +473,7 @@ msgstr "Rust"
 msgid "Scheduled start at<0/>. This page will reload automatically."
 msgstr "Scheduled start at <0/>. This page will reload automatically."
 
-#: src/admin/AdminContestStatus.tsx:276
+#: src/admin/AdminContestStatus.tsx:287
 #: src/contest/submission/FeedbackView.tsx:59
 #: src/contest/submission/SubmissionListView.tsx:139
 msgid "Score"
@@ -479,7 +483,7 @@ msgstr "Score"
 msgid "Scratch"
 msgstr "Scratch"
 
-#: src/admin/AdminContestStatus.tsx:186
+#: src/admin/AdminContestStatus.tsx:187
 msgid "Search User"
 msgstr "Search User"
 
@@ -487,11 +491,11 @@ msgstr "Search User"
 msgid "Select a file with an extension"
 msgstr "Select a file with an extension"
 
-#: src/admin/AdminContestStatus.tsx:347
+#: src/admin/AdminContestStatus.tsx:358
 msgid "Select a user"
 msgstr "Select a user"
 
-#: src/admin/AdminContestStatus.tsx:337
+#: src/admin/AdminContestStatus.tsx:348
 msgid "Select User"
 msgstr "Select User"
 
@@ -499,7 +503,7 @@ msgstr "Select User"
 msgid "Send"
 msgstr "Send"
 
-#: src/admin/AdminContestStatus.tsx:385
+#: src/admin/AdminContestStatus.tsx:396
 msgid "Set extra time for user"
 msgstr "Set extra time for user"
 
@@ -544,7 +548,7 @@ msgstr "Submission for input"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/admin/AdminContestStatus.tsx:248
+#: src/admin/AdminContestStatus.tsx:259
 msgid "Surname"
 msgstr "Surname"
 
@@ -552,7 +556,7 @@ msgstr "Surname"
 msgid "Task not found"
 msgstr "Task not found"
 
-#: src/contest/sidebar/SidebarView.tsx:69
+#: src/contest/sidebar/SidebarView.tsx:85
 msgid "Tasks"
 msgstr "Tasks"
 
@@ -608,7 +612,7 @@ msgstr "This input will expire:"
 msgid "Title"
 msgstr "Title"
 
-#: src/admin/AdminContestStatus.tsx:238
+#: src/admin/AdminContestStatus.tsx:249
 #: src/contest/LoginView.tsx:50
 #: src/contest/LoginView.tsx:59
 msgid "Token"
@@ -618,7 +622,7 @@ msgstr "Token"
 msgid "Typescript"
 msgstr "Typescript"
 
-#: src/admin/AdminContestStatus.tsx:214
+#: src/admin/AdminContestStatus.tsx:215
 msgid "Unlimited"
 msgstr "Unlimited"
 
@@ -634,7 +638,7 @@ msgstr "Upload solution"
 msgid "Usage guide"
 msgstr "Usage guide"
 
-#: src/admin/AdminContestStatus.tsx:180
+#: src/admin/AdminContestStatus.tsx:181
 msgid "Users"
 msgstr "Users"
 
@@ -698,6 +702,6 @@ msgstr "You selected a file with an unknown extension. This submission may be in
 msgid "You selected an empty file"
 msgstr "You selected an empty file"
 
-#: src/contest/sidebar/SidebarView.tsx:39
+#: src/contest/sidebar/SidebarView.tsx:56
 msgid "Your score"
 msgstr "Your score"

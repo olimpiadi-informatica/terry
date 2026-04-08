@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 import { LanguageSwitcher } from "src/LanguageSwitcher";
 
 import { LogoutButton } from "src/components/LogoutButton";
+import { RefreshButton } from "src/components/RefreshButton";
 
 import { SidebarView } from "./sidebar/SidebarView";
 import {
@@ -16,7 +17,7 @@ import { ContestFeatures } from "./ContestFeatures"; // Updated import
 
 function ContestViewInternal() {
   const statusLoadable = useStatus();
-  const { logout } = useActions();
+  const { logout, reloadContest } = useActions();
   const token = useToken();
   const status = statusLoadable.isReady() ? statusLoadable.value() : null;
   const contest = status?.contest;
@@ -38,6 +39,7 @@ function ContestViewInternal() {
           </span>
         )}
         {user && <LogoutButton onClick={() => logout()} />}
+        <RefreshButton onClick={() => reloadContest()} />
         <LanguageSwitcher />
       </nav>
 
