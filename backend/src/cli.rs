@@ -53,6 +53,9 @@ pub struct ExportArgs {
     /// The directory where to export the submissions
     #[arg(required = true)]
     pub export_dir: PathBuf,
+    /// Skip exporting submissions with a score less than or equal to zero
+    #[arg(long)]
+    pub filter_zero_score: bool,
 }
 
 #[derive(Debug, Args)]
