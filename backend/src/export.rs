@@ -11,6 +11,7 @@ use crate::cli::ExportArgs;
 use crate::database::submission::get_submissions;
 use crate::database::task::get_tasks;
 use crate::database::user::get_users;
+use crate::models::SubmissionFull;
 use crate::storage_manager;
 
 pub async fn export(pool: &SqlitePool, args: &ExportArgs) -> Result<()> {
@@ -41,6 +42,11 @@ pub async fn export(pool: &SqlitePool, args: &ExportArgs) -> Result<()> {
 
         for task in &tasks {
             let submissions = get_submissions(pool, &user.token, &task.name).await?;
+            let submissions: Vec<SubmissionFull> = submissions
+                .into_iter()
+                .filter(|submission| !args.filter_zero_score || submission.score > 0.0)
+                .collect();
+
             if submissions.is_empty() {
                 task_scores.insert(task.name.clone(), 0.0);
                 continue;

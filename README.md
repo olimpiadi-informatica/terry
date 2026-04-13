@@ -108,6 +108,12 @@ Exports a ranking CSV and all submissions (including source, input, and output f
 terry export /path/to/export-dir
 ```
 
+To skip exporting submissions whose score is `0` or lower:
+
+```bash
+terry export /path/to/export-dir --filter-zero-score
+```
+
 ## Specification of the terry format
 
 You can find the specification of the format accepted by `terry` [here](format-specs.md).
