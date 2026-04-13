@@ -114,6 +114,12 @@ To skip exporting submissions whose score is `0` or lower:
 terry export /path/to/export-dir --filter-zero-score
 ```
 
+To export submissions without their input files:
+
+```bash
+terry export /path/to/export-dir --skip-inputs
+```
+
 ## Specification of the terry format
 
 You can find the specification of the format accepted by `terry` [here](format-specs.md).

@@ -56,6 +56,9 @@ pub struct ExportArgs {
     /// Skip exporting submissions with a score less than or equal to zero
     #[arg(long)]
     pub filter_zero_score: bool,
+    /// Do not export input files inside submission folders
+    #[arg(long)]
+    pub skip_inputs: bool,
 }
 
 #[derive(Debug, Args)]

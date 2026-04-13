@@ -76,7 +76,7 @@ pub async fn export(pool: &SqlitePool, args: &ExportArgs) -> Result<()> {
                     )
                     .await?;
                 }
-                if input_path.exists() {
+                if !args.skip_inputs && input_path.exists() {
                     fs::copy(
                         &input_path,
                         submission_dir.join(input_path.file_name().unwrap()),
